@@ -7,7 +7,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
 from econml.dr import LinearDRLearner
 
-
 def kl_mvn(m0, S0, m1, S1):
     """
     https://stackoverflow.com/questions/44549369/kullback-leibler-divergence-from-gaussian-pm-pv-to-gaussian-qm-qv
@@ -129,3 +128,57 @@ def generate_maskes(X):
     
     return (unif > ref).float()
     
+class CooperativeGame:
+    '''Base class for cooperative games.'''
+
+    def __init__(self):
+        raise NotImplementedError
+
+    def __call__(self, S):
+        '''Evaluate cooperative game.'''
+        raise NotImplementedError
+
+    def grand(self):
+        '''Get grand coalition value.'''
+        return self.__call__(np.ones((1, self.players), dtype=bool))[0]
+
+    def null(self):
+        '''Get null coalition value.'''
+        return self.__call__(np.zeros((1, self.players), dtype=bool))[0]
+
+class CateGame(CooperativeGame):
+    '''
+    Cooperative game for CATE mdoels 
+    '''
+
+    def __init__(self, sample, cate_model):
+        '''
+        Cooperative game for an individual example's prediction.
+
+        Args:
+        sample: numpy array representing a single model input.
+        cate_morel: treatment effect model that takes masking. 
+        '''
+        self.sample = sample
+        self.model = cate_model
+        self.players = self.sample.size()[1]
+
+    def __call__(self, S):
+        '''
+        Evaluate cooperative game.
+
+        Args:
+          S: array of player coalitions with size (batch, players).
+        '''
+        device = next(self.model.parameters()).device
+        S = torch.from_numpy(S).to(device)
+        if len(S.shape) == 1:
+            S = S.reshape(1, -1)
+
+        if len(S) != len(self.sample):
+            input_data = self.sample.repeat((len(S), 1))
+        else:
+            input_data = self.sample
+
+        values = self.model.predict(input_data, S).detach().cpu().numpy()
+        return values[:, 0]

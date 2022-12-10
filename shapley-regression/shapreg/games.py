@@ -27,7 +27,7 @@ class CateGame(CooperativeGame):
     Cooperative game for CATE mdoels 
     '''
 
-    def __init__(self, sample,cate_model, device):
+    def __init__(self, sample, cate_model):
         '''
         Cooperative game for an individual example's prediction.
 
@@ -38,7 +38,6 @@ class CateGame(CooperativeGame):
         self.sample = sample
         self.model = cate_model
         self.players = self.sample.size()[1]
-        self.device = device
 
     def __call__(self, S):
         '''
@@ -47,21 +46,18 @@ class CateGame(CooperativeGame):
         Args:
           S: array of player coalitions with size (batch, players).
         '''
-        mask_size = len(S)
-        S =  torch.reshape(torch.from_numpy(S), (mask_size, -1)).to(self.device)
+        device = next(self.model.parameters()).device
+        S = torch.from_numpy(S).to(device)
+        if len(S.shape) == 1:
+            S = S.reshape(1, -1)
 
-        # Check masking length == sample
-
-        if S.size()[0] != self.sample.size()[0]:
-            input_data = self.sample.repeat((S.size()[0],1))
+        if len(S) != len(self.sample):
+            input_data = self.sample.repeat((len(S), 1))
         else:
             input_data = self.sample
 
         values = self.model.predict(input_data, S).detach().cpu().numpy()
-        
-        ## return prediction over samples
-
-        return np.mean(values, axis=0)
+        return values[:, 0]
 
 
 

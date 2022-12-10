@@ -11,7 +11,7 @@ from scipy import stats
 from utilities import *
 from models import *
 from sklearn import preprocessing
-from shapreg import removal, games, shapley
+from shapreg import shapley, games
 
 
 #### import CATE model
@@ -83,6 +83,7 @@ if __name__ == "__main__":
                 batch_norm=False,
                 nonlin="relu",
                 ).to(device)
+                
     mask_layer = MaskLayer().to(device)
     cate_model = Cate(torch_DR, mask_layer, device)
 
@@ -105,7 +106,7 @@ if __name__ == "__main__":
 
     for test_ind in range(x_oracle_test.size()[0]):
         instance = torch.reshape(torch.from_numpy(X_scaled[test_ind, :]), (1,-1)).to(device)
-        game  = games.CateGame(instance, cate_model, device)
+        game  = games.CateGame(instance, cate_model)
         explanation = shapley.ShapleyRegression(game, batch_size=32)
 
         test_values[test_ind] = explanation.values
