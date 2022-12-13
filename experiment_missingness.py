@@ -102,19 +102,17 @@ if __name__ == "__main__":
                                                     )
     
     ### Train model with maskes
+    
     torch_DRNet_Mask.fit(x_oracle_train, y_oracle_train, w_oracle_train)
     #cate_model.fit(x_oracle_train, y_oracle_train, w_oracle_train, epoches)
-    
-    x_oracle_test = torch.from_numpy(X_scaled[test_inds,:]).to(device)
-    w_oracle_test = torch.from_numpy(w[test_inds,:]).to(device)
-    test_mask = torch.ones(x_oracle_test.size()).to(device)
 
+    test_mask = torch.ones(x_oracle_test.size()).to(device)
     test_phe = torch_DRNet_Mask.predict(x_oracle_test,test_mask).cpu().detach().numpy()
 
     print("phe is %s" %mse(test_phe, y_test_cate))
 
-    #### Explanation method
-
+    # Explanation method
+    # init test result
     test_values = np.zeros((len(test_inds) ,feature_size ))
     
     print("======explanation starts.=======")
