@@ -24,7 +24,7 @@ from catenets.models.constants import (
     LARGE_VAL,
 )
 from catenets.models.torch.utils.decorators import benchmark, check_input_train
-from catenets.models.torch.utils.model_utils import make_val_split, generate_masks
+from catenets.models.torch.utils.model_utils import make_val_split
 from catenets.models.torch.utils.weight_utils import compute_importance_weights
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -82,6 +82,7 @@ class BasicNet(nn.Module):
         self,
         name: str,
         n_unit_in: int,
+        device: str,
         n_layers_out: int = DEFAULT_LAYERS_OUT,
         n_units_out: int = DEFAULT_UNITS_OUT,
         binary_y: bool = False,
@@ -99,7 +100,7 @@ class BasicNet(nn.Module):
         batch_norm: bool = True,
         early_stopping: bool = True,
         dropout: bool = False,
-        dropout_prob: float = 0.2,
+        dropout_prob: float = 0.2
     ) -> None:
         super(BasicNet, self).__init__()
 
@@ -148,7 +149,8 @@ class BasicNet(nn.Module):
             layers.append(nn.Sigmoid())
 
         # return final architecture
-        self.model = nn.Sequential(*layers).to(DEVICE)
+        self.device = device
+        self.model = nn.Sequential(*layers).to(self.device)
         self.binary_y = binary_y
 
         self.n_iter = n_iter
@@ -175,10 +177,9 @@ class BasicNet(nn.Module):
 
         X = self._check_tensor(X)
         y = self._check_tensor(y).squeeze()
-
         # get validation split (can be none)
         X, y, X_val, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
         )
         y_val = y_val.squeeze()
         n = X.shape[0]  # could be different from before due to split
@@ -201,17 +202,8 @@ class BasicNet(nn.Module):
                 idx_next = train_indices[
                     (b * batch_size) : min((b + 1) * batch_size, n - 1)
                 ]
-
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-
-                # generate mask matrices
-                
-                masks = generate_masks(X_next)
-
-                out = X_next * masks
-                if X_next.shape[1] == m.shape[1]:
-                    out = torch.cat([out, masks], dim=1)
                 
                 weight_next = None
                 if weight is not None:
@@ -219,9 +211,7 @@ class BasicNet(nn.Module):
 
                 loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
 
-                preds = self.forward(out).squeeze()
-
-                #preds = self.forward(X_next).squeeze()
+                preds = self.forward(X_next).squeeze()
 
                 batch_loss = loss(preds, y_next)
 
@@ -233,7 +223,7 @@ class BasicNet(nn.Module):
 
                 train_loss.append(batch_loss.detach())
 
-            train_loss = torch.Tensor(train_loss).to(DEVICE)
+            train_loss = torch.Tensor(train_loss).to(self.device)
 
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
@@ -260,9 +250,9 @@ class BasicNet(nn.Module):
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
-            return X.to(DEVICE)
+            return X.to(self.device)
         else:
-            return torch.from_numpy(np.asarray(X)).to(DEVICE)
+            return torch.from_numpy(np.asarray(X)).to(self.device)
 
 
 class RepresentationNet(nn.Module):
@@ -360,6 +350,7 @@ class PropensityNet(nn.Module):
     def __init__(
         self,
         name: str,
+        device: str,
         n_unit_in: int,
         n_unit_out: int,
         weighting_strategy: str,
@@ -428,7 +419,8 @@ class PropensityNet(nn.Module):
             ]
         )
 
-        self.model = nn.Sequential(*layers).to(DEVICE)
+        self.model = nn.Sequential(*layers).to(device)
+        self.device = device
         self.name = name
         self.weighting_strategy = weighting_strategy
         self.n_iter = n_iter
@@ -465,7 +457,7 @@ class PropensityNet(nn.Module):
 
         # get validation split (can be none)
         X, y, X_val, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
         )
         y_val = y_val.squeeze()
         n = X.shape[0]  # could be different from before due to split
@@ -503,7 +495,7 @@ class PropensityNet(nn.Module):
                 self.optimizer.step()
                 train_loss.append(batch_loss.detach())
 
-            train_loss = torch.Tensor(train_loss).to(DEVICE)
+            train_loss = torch.Tensor(train_loss).to(self.device)
 
             if self.early_stopping or i % self.n_iter_print == 0:
                 with torch.no_grad():
@@ -529,9 +521,9 @@ class PropensityNet(nn.Module):
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
-            return X.to(DEVICE)
+            return X.to(self.device)
         else:
-            return torch.from_numpy(np.asarray(X)).to(DEVICE)
+            return torch.from_numpy(np.asarray(X)).to(self.device)
 
 
 class BaseCATEEstimator(nn.Module):
@@ -632,6 +624,6 @@ class BaseCATEEstimator(nn.Module):
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
-            return X.to(DEVICE)
+            return X.to(self.device)
         else:
-            return torch.from_numpy(np.asarray(X)).to(DEVICE)
+            return torch.from_numpy(np.asarray(X)).to(self.device)

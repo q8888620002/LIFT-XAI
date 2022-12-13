@@ -106,11 +106,17 @@ def oracle(X_train, w_train, y_train, X_test, model):
     model.fit(X_train, y_train, w_train)
     ### TODOs implement prediction function for different cate
     
-    model_lam = lambda x: model.predict(x)
+    if torch.is_tensor(X_train):
+        X_train = X_train.detach().numpy()
+        X_test = X_test.detach().numpy()
+        model_lam = lambda x: model.predict(x).detach().numpy()
+    else:
+        model_lam = lambda x: model.predict(x)
+
 
     explainer = shap.Explainer(model_lam, X_train)
 
-    #### showing explanation on cate
+    #### showing explanation on oracle cate
     shap_values = explainer(X_test)
     shap_mean = (shap_values.values).mean(0)
     shap_abs_mean = np.abs(shap_values.values).mean(0)
@@ -118,7 +124,7 @@ def oracle(X_train, w_train, y_train, X_test, model):
     return (shap_mean, shap_abs_mean)
     
     
-def generate_maskes(X):
+def generate_masks(X):
     
     batch_size = X.shape[0]
     num_features = X.shape[1]

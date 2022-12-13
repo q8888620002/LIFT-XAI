@@ -23,6 +23,7 @@ def make_val_split(
     val_split_prop: float = DEFAULT_VAL_SPLIT,
     seed: int = DEFAULT_SEED,
     stratify_w: bool = True,
+    device: Optional[str] = None
 ) -> Any:
     if val_split_prop == 0:
         # return original data
@@ -39,10 +40,10 @@ def make_val_split(
             X, y, test_size=val_split_prop, random_state=seed, shuffle=True
         )
         return (
-            X_t.to(DEVICE),
-            y_t.to(DEVICE),
-            X_val.to(DEVICE),
-            y_val.to(DEVICE),
+            X_t.to(device),
+            y_t.to(device),
+            X_val.to(device),
+            y_val.to(device),
             VALIDATION_STRING,
         )
 
@@ -64,12 +65,12 @@ def make_val_split(
         )
 
     return (
-        X_t.to(DEVICE),
-        y_t.to(DEVICE),
-        w_t.to(DEVICE),
-        X_val.to(DEVICE),
-        y_val.to(DEVICE),
-        w_val.to(DEVICE),
+        X_t.to(device),
+        y_t.to(device),
+        w_t.to(device),
+        X_val.to(device),
+        y_val.to(device),
+        w_val.to(device),
         VALIDATION_STRING,
     )
 
@@ -90,8 +91,26 @@ def train_wrapper(
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
 
 
-def predict_wrapper(estimator: Any, X: torch.Tensor, M:torch.tensor) -> torch.Tensor:
+def predict_wrapper(estimator: Any, X: torch.Tensor) -> torch.Tensor:
+
+    if hasattr(estimator, "forward"):
+        return estimator(X)
     
+    elif hasattr(estimator, "predict_proba"):
+        X_np = X.detach().cpu().numpy()
+        no_event_proba = estimator.predict_proba(X_np)[:, 0]  # no event probability
+
+        return torch.Tensor(no_event_proba)
+    elif hasattr(estimator, "predict"):
+        X_np = X.detach().cpu().numpy()
+        no_event_proba = estimator.predict(X_np)
+
+        return torch.Tensor(no_event_proba)
+    else:
+        raise NotImplementedError(f"Invalid estimator for the {estimator}")
+
+def predict_wrapper_mask(estimator: Any, X: torch.Tensor, M:torch.tensor) -> torch.Tensor:
+
     if hasattr(estimator, "forward"):
         return estimator(X, M)
     
