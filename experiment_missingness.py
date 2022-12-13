@@ -21,7 +21,7 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
-import catenets.models.pseudo_outcome_nets_mask as cate_models
+import catenets.models.pseudo_outcome_nets_mask as cate_models_mask
 
 
 if __name__ == "__main__":
@@ -29,7 +29,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('-d','--d', help='feature dimension', required=True)
     parser.add_argument('-n','--n', help='sample size',required=True)
-    parser.add_argument('-e','--e', help='training epoches',required=True)
     parser.add_argument('-r','--r', help='random state',required=True)
 
     args = vars(parser.parse_args())
@@ -37,7 +36,6 @@ if __name__ == "__main__":
     n = int(args["n"])
     feature_size = int(args["d"])
     random_state = int(args["r"])
-    epoches = int(args["e"])
     device = "cuda:0"
     #path = ("results_d=%s_n=%s_r=%s/"%(feature_size, n, random_state))
     
@@ -74,14 +72,14 @@ if __name__ == "__main__":
     ### Create Cate model 
     print("training masking explainer.")
 
-    torch_DR = cate_models.DRLearner(
+    torch_DR = cate_models_mask.DRLearner(
                 feature_size,
                 binary_y=(len(np.unique(y_po)) == 2),
                 n_layers_out=2,
-                n_units_out=100,
+                n_units_out=50,
                 n_iter=1000,
-                batch_size=128,
-                batch_norm=False,
+                batch_size=64,
+                batch_norm=True,
                 nonlin="relu",
                 ).to(device)
     

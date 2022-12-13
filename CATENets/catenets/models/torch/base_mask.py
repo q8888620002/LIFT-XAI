@@ -259,8 +259,8 @@ class BasicNet(nn.Module):
                 with torch.no_grad():
 
                     masks = torch.ones(X_val.size())
-
                     masks = self._check_tensor(masks)
+                    
                     preds = self.forward(X_val,masks ).squeeze()
                     val_loss = loss(preds, y_val)
 
