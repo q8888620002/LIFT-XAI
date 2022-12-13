@@ -90,9 +90,11 @@ def train_wrapper(
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
 
 
-def predict_wrapper(estimator: Any, X: torch.Tensor) -> torch.Tensor:
+def predict_wrapper(estimator: Any, X: torch.Tensor, M:torch.tensor) -> torch.Tensor:
+    
     if hasattr(estimator, "forward"):
-        return estimator(X)
+        return estimator(X, M)
+    
     elif hasattr(estimator, "predict_proba"):
         X_np = X.detach().cpu().numpy()
         no_event_proba = estimator.predict_proba(X_np)[:, 0]  # no event probability
@@ -105,3 +107,13 @@ def predict_wrapper(estimator: Any, X: torch.Tensor) -> torch.Tensor:
         return torch.Tensor(no_event_proba)
     else:
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
+
+def generate_masks(X):
+    
+    batch_size = X.shape[0]
+    num_features = X.shape[1]
+    
+    unif = torch.rand(batch_size, num_features)
+    ref = torch.rand(batch_size, 1)
+    
+    return (unif > ref).float()

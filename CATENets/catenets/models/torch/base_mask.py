@@ -40,6 +40,21 @@ NONLIN = {
 }
 
 
+class MaskLayer(nn.Module):
+    '''
+    Mask layer for tabular data.
+    
+    '''
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x, m):
+        out = x * m
+        if x.shape[1] == m.shape[1]:
+            out = torch.cat([out, m], dim=1)
+        return out
+
+
 class BasicNet(nn.Module):
     """
     Basic hypothesis neural net.
@@ -106,18 +121,20 @@ class BasicNet(nn.Module):
         self.name = name
         if nonlin not in list(NONLIN.keys()):
             raise ValueError("Unknown nonlinearity")
-
+        
         NL = NONLIN[nonlin]
+        
+        # adding mask layer as the first layer 
 
         if n_layers_out > 0:
             if batch_norm:
                 layers = [
-                    nn.Linear(n_unit_in, n_units_out),
+                    nn.Linear(2*n_unit_in, n_units_out),
                     nn.BatchNorm1d(n_units_out),
                     NL(),
                 ]
             else:
-                layers = [nn.Linear(n_unit_in, n_units_out), NL()]
+                layers = [ nn.Linear(2*n_unit_in, n_units_out), NL()]
 
             # add required number of layers
             for i in range(n_layers_out - 1):
@@ -142,7 +159,9 @@ class BasicNet(nn.Module):
             # add final layers
             layers.append(nn.Linear(n_units_out, 1))
         else:
-            layers = [nn.Linear(n_unit_in, 1)]
+            layers = [ 
+                       nn.Linear(2*n_unit_in, 1)
+                    ]
 
         if binary_y:
             layers.append(nn.Sigmoid())
@@ -165,8 +184,13 @@ class BasicNet(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
-        return self.model(X)
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+        out = X * M
+
+        if X.shape[1] == M.shape[1]:
+            out = torch.cat([out, M], dim=1)
+
+        return self.model(out)
 
     def fit(
         self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
@@ -204,24 +228,19 @@ class BasicNet(nn.Module):
 
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-
-                # generate mask matrices
                 
+                # generate masks
+
                 masks = generate_masks(X_next)
+                masks = self._check_tensor(masks)
 
-                out = X_next * masks
-                if X_next.shape[1] == m.shape[1]:
-                    out = torch.cat([out, masks], dim=1)
-                
                 weight_next = None
                 if weight is not None:
                     weight_next = weight[idx_next].detach()
 
                 loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
 
-                preds = self.forward(out).squeeze()
-
-                #preds = self.forward(X_next).squeeze()
+                preds = self.forward(X_next, masks).squeeze()
 
                 batch_loss = loss(preds, y_next)
 
@@ -238,7 +257,11 @@ class BasicNet(nn.Module):
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
-                    preds = self.forward(X_val).squeeze()
+
+                    masks = torch.ones(X_val.size())
+
+                    masks = self._check_tensor(masks)
+                    preds = self.forward(X_val,masks ).squeeze()
                     val_loss = loss(preds, y_val)
 
                     if self.early_stopping:
@@ -389,13 +412,13 @@ class PropensityNet(nn.Module):
 
         if batch_norm:
             layers = [
-                nn.Linear(in_features=n_unit_in, out_features=n_units_out_prop),
+                nn.Linear(in_features=2*n_unit_in, out_features=n_units_out_prop),
                 nn.BatchNorm1d(n_units_out_prop),
                 NL(),
             ]
         else:
             layers = [
-                nn.Linear(in_features=n_unit_in, out_features=n_units_out_prop),
+                nn.Linear(in_features=2*n_unit_in, out_features=n_units_out_prop),
                 NL(),
             ]
 
@@ -445,13 +468,23 @@ class PropensityNet(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
-        return self.model(X)
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+
+        out = X * M
+
+        if X.shape[1] == M.shape[1]:
+            out = torch.cat([out, M], dim=1)
+
+        return self.model(out)
 
     def get_importance_weights(
         self, X: torch.Tensor, w: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
-        p_pred = self.forward(X).squeeze()[:, 1]
+
+        masks = torch.ones(X.size())
+        masks = self._check_tensor(masks)
+
+        p_pred = self.forward(X,masks).squeeze()[:, 1]
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
 
     def loss(self, y_pred: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:
@@ -491,8 +524,12 @@ class PropensityNet(nn.Module):
 
                 X_next = X[idx_next]
                 y_next = y[idx_next].squeeze()
+                # generate masks
 
-                preds = self.forward(X_next).squeeze()
+                masks = generate_masks(X_next)
+                masks = self._check_tensor(masks)
+
+                preds = self.forward(X_next,masks).squeeze()
 
                 batch_loss = self.loss(preds, y_next)
 
@@ -507,7 +544,9 @@ class PropensityNet(nn.Module):
 
             if self.early_stopping or i % self.n_iter_print == 0:
                 with torch.no_grad():
-                    preds = self.forward(X_val).squeeze()
+                    masks = torch.ones(X_val.size())
+                    masks = self._check_tensor(masks)
+                    preds = self.forward(X_val,masks).squeeze()
                     val_loss = self.loss(preds, y_val)
 
                     if self.early_stopping:
