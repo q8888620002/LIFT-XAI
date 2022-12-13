@@ -25,12 +25,6 @@ from catenets.models.constants import (
     DEFAULT_UNITS_OUT_T,
     DEFAULT_VAL_SPLIT,
 )
-#from catenets.models.torch.base import (
-#    DEVICE,
-#    BaseCATEEstimator,
-#    BasicNet,
-#    PropensityNet,
-#)
 
 from catenets.models.torch.base_mask import (
     DEVICE,
@@ -38,7 +32,7 @@ from catenets.models.torch.base_mask import (
     BasicNet,
     PropensityNet,
 )
-from catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper
+from catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper, predict_wrapper_mask
 from catenets.models.torch.utils.transformations import (
     dr_transformation_cate,
     pw_transformation_cate,
@@ -112,6 +106,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
     def __init__(
         self,
         n_unit_in: int,
+        device:str,
         binary_y: bool,
         po_estimator: Any = None,
         te_estimator: Any = None,
@@ -142,6 +137,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
     ):
         super(PseudoOutcomeLearner, self).__init__()
         self.n_unit_in = n_unit_in
+        self.device = device
         self.binary_y = binary_y
         self.n_layers_out = n_layers_out
         self.n_units_out = n_units_out
@@ -185,6 +181,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         return BasicNet(
             name,
             self.n_unit_in,
+            device = self.device,
             binary_y=False,
             n_layers_out=self.n_layers_out_t,
             n_units_out=self.n_units_out_t,
@@ -202,7 +199,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
             early_stopping=self.early_stopping,
             dropout=self.dropout,
             dropout_prob=self.dropout_prob,
-        ).to(DEVICE)
+        ).to(self.device)
 
     def _generate_po_estimator(self, name: str = "po_estimator") -> nn.Module:
         if self._po_template is not None:
@@ -211,6 +208,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         return BasicNet(
             name,
             self.n_unit_in,
+            device=self.device,
             binary_y=self.binary_y,
             n_layers_out=self.n_layers_out,
             n_units_out=self.n_units_out,
@@ -228,7 +226,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
             early_stopping=self.early_stopping,
             dropout=self.dropout,
             dropout_prob=self.dropout_prob,
-        ).to(DEVICE)
+        ).to(self.device)
 
     def _generate_propensity_estimator(
         self, name: str = "propensity_estimator"
@@ -237,6 +235,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
             raise ValueError("Invalid weighting_strategy for PropensityNet")
         return PropensityNet(
             name,
+            self.device,
             self.n_unit_in,
             2,  # number of treatments
             self.weighting_strategy,
@@ -254,7 +253,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
             early_stopping=self.early_stopping,
             dropout_prob=self.dropout_prob,
             dropout=self.dropout,
-        ).to(DEVICE)
+        ).to(self.device)
 
     def fit(
         self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor
@@ -288,9 +287,9 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
             )
         else:
             mu_0_pred, mu_1_pred, p_pred = (
-                torch.zeros(n).to(DEVICE),
-                torch.zeros(n).to(DEVICE),
-                torch.zeros(n).to(DEVICE),
+                torch.zeros(n).to(self.device),
+                torch.zeros(n).to(self.device),
+                torch.zeros(n).to(self.device),
             )
 
             # create folds stratified by treatment assignment to ensure balance
@@ -300,7 +299,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
 
             for train_index, test_index in splitter.split(X.cpu(), w.cpu()):
                 # create masks
-                pred_mask = torch.zeros(n, dtype=bool).to(DEVICE)
+                pred_mask = torch.zeros(n, dtype=bool).to(self.device)
                 pred_mask[test_index] = 1
 
                 # fit plug-in te_estimator
@@ -344,7 +343,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         X = self._check_tensor(X).float()
         M = self._check_tensor(M)
 
-        return predict_wrapper(self._te_estimator, X, M)
+        return predict_wrapper_mask(self._te_estimator, X, M)
 
     @abc.abstractmethod
     def _first_step(
@@ -392,8 +391,8 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         masks = torch.ones(X[pred_mask, :].size())
         masks = self._check_tensor(masks)
 
-        mu_0_pred = predict_wrapper(temp_model_0, X[pred_mask, :],masks)
-        mu_1_pred = predict_wrapper(temp_model_1, X[pred_mask, :],masks)
+        mu_0_pred = predict_wrapper_mask(temp_model_0, X[pred_mask, :], masks)
+        mu_1_pred = predict_wrapper_mask(temp_model_1, X[pred_mask, :], masks)
 
         return mu_0_pred, mu_1_pred
 
@@ -451,9 +450,9 @@ class DRLearner(PseudoOutcomeLearner):
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
         return (
-            mu0_pred.squeeze().to(DEVICE),
-            mu1_pred.squeeze().to(DEVICE),
-            p_pred.to(DEVICE),
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred.to(self.device),
         )
 
     def _second_step(
