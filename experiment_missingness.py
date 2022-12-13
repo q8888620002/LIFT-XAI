@@ -21,7 +21,7 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
-import catenets.models as cate_models
+import catenets.models.pseudo_outcome_nets_mask as cate_models
 
 
 if __name__ == "__main__":
@@ -72,29 +72,28 @@ if __name__ == "__main__":
                                         X_scaled[test_inds,:], 
                                         DRNet(nonlin="relu"))
     ### Create Cate model 
+    print("training masking explainer.")
 
-    torch_DR = cate_models.torch.DRLearner(
-                2*feature_size,
+    torch_DR = cate_models.DRLearner(
+                feature_size,
                 binary_y=(len(np.unique(y_po)) == 2),
                 n_layers_out=2,
                 n_units_out=100,
-                n_iter=1,
+                n_iter=1000,
                 batch_size=128,
                 batch_norm=False,
                 nonlin="relu",
                 ).to(device)
-                
-    mask_layer = MaskLayer().to(device)
-    cate_model = Cate(torch_DR, mask_layer, device)
-
+    
     ### Train model with maskes
-
-    cate_model.fit(x_oracle_train, y_oracle_train, w_oracle_train, epoches)
+    torch_DR.fit(x_oracle_train, y_oracle_train, w_oracle_train)
+    #cate_model.fit(x_oracle_train, y_oracle_train, w_oracle_train, epoches)
 
     x_oracle_test = torch.from_numpy(X_scaled[test_inds,:]).to(device)
     w_oracle_test = torch.from_numpy(w[test_inds,:]).to(device)
-    test_mask = torch.ones(x_oracle_test.size()[0],x_oracle_test.size()[1]).to(device)
-    test_phe = cate_model.predict(x_oracle_test, test_mask).cpu().detach().numpy()
+    test_mask = torch.ones(x_oracle_test.size()).to(device)
+
+    test_phe = torch_DR.predict(x_oracle_test,test_mask).cpu().detach().numpy()
 
     print("phe is %s" %mse(test_phe, y_test_cate))
 
@@ -106,7 +105,7 @@ if __name__ == "__main__":
 
     for test_ind in range(x_oracle_test.size()[0]):
         instance = torch.reshape(torch.from_numpy(X_scaled[test_ind, :]), (1,-1)).to(device)
-        game  = games.CateGame(instance, cate_model)
+        game  = games.CateGame(instance, torch_DR)
         explanation = shapley.ShapleyRegression(game, batch_size=32)
 
         test_values[test_ind] = explanation.values
