@@ -1,4 +1,4 @@
-# Explaning Conditional Average Treatment Effect Model. 
+# Explaning Conditional Average Treatment Effect 
 
 Main script that generates synthetic dataset and test spearman correlation between Kernel SHAP and shapley-regression with masks.
 
