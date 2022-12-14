@@ -12,6 +12,7 @@ from utilities import *
 from models import *
 from sklearn import preprocessing
 from shapreg import shapley, games
+from captum.attr import IntegratedGradients
 
 
 #### import CATE model
@@ -39,6 +40,7 @@ if __name__ == "__main__":
     random_state = int(args["r"])
     device = "cuda:0"
     oracle_device = "cpu"
+
     #path = ("results_d=%s_n=%s_r=%s/"%(feature_size, n, random_state))
     
     #if not os.path.exists(path):
@@ -67,45 +69,52 @@ if __name__ == "__main__":
 
     ### obtain oracle with DRNet()
     print("training oracle.")
-
-
-    dr_unbiased_jax, dr_unbiased_abs_jax, jaxDR = oracle(   
-                                                         X_scaled[train_inds,:], 
-                                                         w[train_inds,:],
-                                                         np.take_along_axis(y_po,w, 1)[train_inds, :], 
-                                                         X_scaled[test_inds,:], 
-                                                         DRNet(nonlin="relu")
-                                                        )
                                                  
     torch_DRNet = cate_models.DRLearner(
                                         feature_size,
                                         binary_y=(len(np.unique(y_po)) == 2),
                                         nonlin="relu",
+                                        early_stopping= False,
                                         device=oracle_device
                                         )
     
-    dr_unbiased, dr_unbiased_abs, torchDR = oracle( x_oracle_train, 
-                                                    w_oracle_train,
-                                                    y_oracle_train, 
-                                                    x_oracle_test, 
-                                                    torch_DRNet
-                                                    )
-    ### Create Cate model 
+    dr_unbiased, dr_unbiased_abs, torch_DRNet = oracle( 
+                                                        x_oracle_train, 
+                                                        w_oracle_train,
+                                                        y_oracle_train, 
+                                                        x_oracle_test, 
+                                                        torch_DRNet
+                                                        )
+
+    ### IntGrad
+    print("compute gradient")
+    ig = IntegratedGradients(torch_DRNet)
+
+    attr, delta = ig.attribute( 
+                                x_oracle_test.requires_grad_(), 
+                                n_steps= 500, 
+                                return_convergence_delta=True
+                                )
+
+    attr = attr.detach().cpu().numpy()
+    attr_mean = np.mean(attr, axis=0)
+    attr_abs = np.mean(np.abs(attr), axis=0)
 
     print("training masking explainer.")
 
+    ### Init Cate model 
     torch_DRNet_Mask = cate_models_mask.DRLearner(  
                                                     feature_size,
                                                     binary_y=(len(np.unique(y_po)) == 2),
                                                     n_iter=10**6,
                                                     nonlin="relu",
+                                                    early_stopping= False,
                                                     device=device
                                                     )
     
-    ### Train model with maskes
+    # Train model with masks
     
     torch_DRNet_Mask.fit(x_oracle_train, y_oracle_train, w_oracle_train)
-    #cate_model.fit(x_oracle_train, y_oracle_train, w_oracle_train, epoches)
 
     test_mask = torch.ones(x_oracle_test.size()).to(device)
     test_phe = torch_DRNet_Mask.predict(x_oracle_test,test_mask).cpu().detach().numpy()
@@ -119,9 +128,9 @@ if __name__ == "__main__":
     print("======explanation starts.=======")
 
     for test_ind in range(x_oracle_test.size()[0]):
-        instance = torch.reshape(torch.from_numpy(X_scaled[test_ind, :]), (1,-1)).to(device)
+        instance = torch.from_numpy(X_scaled[test_ind, :])[None,:].to(device)
         game  = games.CateGame(instance, torch_DRNet_Mask)
-        explanation = shapley.ShapleyRegression(game, batch_size=64)
+        explanation = shapley.ShapleyRegression(game, batch_size=32)
 
         test_values[test_ind] = explanation.values
     
@@ -129,15 +138,18 @@ if __name__ == "__main__":
     mask_shap_abs = np.mean(np.abs(test_values), axis=0)
 
     print("Final results.")
-    print("== Oracle MSE ==")
-    print("phe is %s" %mse(jaxDR.predict(X_scaled[test_inds,:]), y_test_cate))
+    print("== Oracle, torchDRNet, MSE ==")
+    print("phe is %s" %mse(torch_DRNet.predict(x_oracle_test).cpu().detach().numpy(), y_test_cate))
 
-    print("==jax vs torch ==")
-    print("phe is %s" %mse(torchDR.predict(x_oracle_test).cpu().detach().numpy(), y_test_cate))
-    print(stats.spearmanr(dr_unbiased , dr_unbiased_jax).correlation)
-    print(stats.spearmanr(dr_unbiased_abs , dr_unbiased_abs_jax).correlation)
+    print("== Kernel SHAP (torchDRNet) vs IntGrad (torchDRNet) ==")
+    print(stats.spearmanr(dr_unbiased, attr_mean).correlation)
+    print(stats.spearmanr(dr_unbiased_abs, attr_abs).correlation)
 
-    print("==torch_mask vs torch ==")
+    print("==Shapley Regression (torch_mask) vs Kernel SHAP (torchDRNet) ==")
     print("phe is %s" %mse(test_phe, y_test_cate))
     print(stats.spearmanr(dr_unbiased , mask_shap).correlation)
     print(stats.spearmanr(dr_unbiased , mask_shap_abs).correlation)
+
+    print("== Kernel SHAP (torchDRNet) vs IntGrad (torch_mask) ==")
+    print(stats.spearmanr(attr_mean, mask_shap).correlation)
+    print(stats.spearmanr(attr_abs, mask_shap_abs).correlation)
