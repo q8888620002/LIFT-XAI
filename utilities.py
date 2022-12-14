@@ -5,7 +5,6 @@ import torch
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
-from econml.dr import LinearDRLearner
 
 def kl_mvn(m0, S0, m1, S1):
     """
@@ -105,7 +104,8 @@ def oracle(X_train, w_train, y_train, X_test, model):
 
     model.fit(X_train, y_train, w_train)
     ### TODOs implement prediction function for different cate
-    
+    prediction = model.predict(X_test)
+
     if torch.is_tensor(X_train):
         X_train = X_train.detach().numpy()
         X_test = X_test.detach().numpy()
@@ -121,7 +121,7 @@ def oracle(X_train, w_train, y_train, X_test, model):
     shap_mean = (shap_values.values).mean(0)
     shap_abs_mean = np.abs(shap_values.values).mean(0)
     
-    return (shap_mean, shap_abs_mean)
+    return (shap_mean, shap_abs_mean, model)
     
     
 def generate_masks(X):
