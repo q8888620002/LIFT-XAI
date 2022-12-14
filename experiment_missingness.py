@@ -69,13 +69,14 @@ if __name__ == "__main__":
     print("training oracle.")
 
 
-    dr_unbiased_jax, dr_unbiased_abs_jax = oracle(X_scaled[train_inds,:], 
-                                                  w[train_inds,:],
-                                                  np.take_along_axis(y_po,w, 1)[train_inds, :], 
-                                                  X_scaled[test_inds,:], 
-                                                  DRNet(nonlin="relu")
-                                                 )
-
+    dr_unbiased_jax, dr_unbiased_abs_jax, jaxDR = oracle(   
+                                                         X_scaled[train_inds,:], 
+                                                         w[train_inds,:],
+                                                         np.take_along_axis(y_po,w, 1)[train_inds, :], 
+                                                         X_scaled[test_inds,:], 
+                                                         DRNet(nonlin="relu")
+                                                        )
+                                                 
     torch_DRNet = cate_models.DRLearner(
                                         feature_size,
                                         binary_y=(len(np.unique(y_po)) == 2),
@@ -83,20 +84,20 @@ if __name__ == "__main__":
                                         device=oracle_device
                                         )
     
-    dr_unbiased, dr_unbiased_abs = oracle(  x_oracle_train, 
-                                            w_oracle_train,
-                                            y_oracle_train, 
-                                            x_oracle_test, 
-                                            torch_DRNet)
+    dr_unbiased, dr_unbiased_abs, torchDR = oracle( x_oracle_train, 
+                                                    w_oracle_train,
+                                                    y_oracle_train, 
+                                                    x_oracle_test, 
+                                                    torch_DRNet
+                                                    )
     ### Create Cate model 
-    print(stats.spearmanr(dr_unbiased , dr_unbiased_jax).correlation)
-    print(stats.spearmanr(dr_unbiased_abs , dr_unbiased_abs_jax).correlation)
 
     print("training masking explainer.")
 
-    torch_DRNet_Mask = cate_models_mask.DRLearner(
+    torch_DRNet_Mask = cate_models_mask.DRLearner(  
                                                     feature_size,
                                                     binary_y=(len(np.unique(y_po)) == 2),
+                                                    n_iter=10**6,
                                                     nonlin="relu",
                                                     device=device
                                                     )
@@ -128,5 +129,15 @@ if __name__ == "__main__":
     mask_shap_abs = np.mean(np.abs(test_values), axis=0)
 
     print("Final results.")
+    print("== Oracle MSE ==")
+    print("phe is %s" %mse(jaxDR.predict(X_scaled[test_inds,:]), y_test_cate))
+
+    print("==jax vs torch ==")
+    print("phe is %s" %mse(torchDR.predict(x_oracle_test).cpu().detach().numpy(), y_test_cate))
+    print(stats.spearmanr(dr_unbiased , dr_unbiased_jax).correlation)
+    print(stats.spearmanr(dr_unbiased_abs , dr_unbiased_abs_jax).correlation)
+
+    print("==torch_mask vs torch ==")
+    print("phe is %s" %mse(test_phe, y_test_cate))
     print(stats.spearmanr(dr_unbiased , mask_shap).correlation)
     print(stats.spearmanr(dr_unbiased , mask_shap_abs).correlation)
