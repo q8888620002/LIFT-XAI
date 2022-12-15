@@ -1,6 +1,5 @@
 import os
 import sys
-import xgboost
 import shap
 import argparse
 import pickle as pkl
