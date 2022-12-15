@@ -34,7 +34,7 @@ if __name__ == "__main__":
     n = int(args["n"])
     feature_size = int(args["d"])
     random_state = int(args["r"])
-    oracle_device = "cpu"
+    oracle_device = "cuda:0"
     path = ("results/igs/results_d=%s_n=%s_r=%s/"%(feature_size, n, random_state))
     
     if not os.path.exists(path):
@@ -83,13 +83,18 @@ if __name__ == "__main__":
     dr_unbiased_abs = np.mean(np.abs(attr), axis=0)
 
     models = [ 
-                cate_models.TARNet(    
+                cate_models.RLearner(    
                                         feature_size,
                                         binary_y=False,
                                         nonlin="relu",
                                         device=oracle_device
                                         ),
-
+                cate_models.XLearner(    
+                                        feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device
+                                        ),
                 cate_models.DRLearner(
                                         feature_size,
                                         binary_y=False,
@@ -141,14 +146,13 @@ if __name__ == "__main__":
             
             print("train model %s"%str(cate_net))
             
-
             X_train, X_test = X_scaled[train_inds,:], X_scaled[test_inds,:]
-
             cate_net.fit(X_train, y_train, w_train)   
 
             #### predict potential outcomes
 
             pred_cate = cate_net.predict(X_test).detach().cpu().numpy()
+
             pehe = mse(y_test_cate, pred_cate)
 
             pehes[model_index, i] = pehe

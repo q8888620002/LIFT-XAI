@@ -676,4 +676,4 @@ class XLearner(PseudoOutcomeLearner):
 
         weight = self._propensity_estimator.get_importance_weights(X)
 
-        return weight * tau0_pred + (1 - weight) * tau1_pred
+        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
