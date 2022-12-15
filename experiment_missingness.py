@@ -22,7 +22,7 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
-import catenets.models.pseudo_outcome_nets_mask as cate_models_mask
+import catenets.models.torch.pseudo_outcome_nets_mask as cate_models_mask
 import catenets.models.torch as cate_models
 
 
