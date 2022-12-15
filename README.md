@@ -13,3 +13,6 @@ Model modifications for explanation with mask are in ```CATENets/catenets/models
 - pseudo_outcome_nets_mask.py (It contains abstract class for PseudoOutcomeLearner e.g. RA, DR, and PW-learner.)
 - base_mask.py (This script contains the actual model e.g. BasicNet, PropensityNet ,and RepresentationNet.)
 - utils/model_utlis.py
+
+Shapley Value Calculation is in ```shapley-regression/game```
+- game.py (It contain CateGame.)
