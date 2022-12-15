@@ -17,7 +17,7 @@ from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PW
 
 #### filtering out procedure
 
-fluid_cohort = pd.read_pickle("data/low_bp_survival.pkl")
+fluid_cohort = pd.read_pickle("data/low_bp_responder.pkl")
 
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='proc')))]
 x_train = fluid_cohort.loc[:, ~fluid_cohort.columns.isin(["registryid","treated","outcome"])]
@@ -61,7 +61,7 @@ for i in seeds:
 
     for model in models:
         model.fit(X_train, y_train, w_train)
-        model_lam = lambda x: model.predicr(x)
+        model_lam = lambda x: model.predict(x)
 
         explainer = shap.Explainer(model_lam, X_train)
         #### showing explanation on cate
@@ -75,4 +75,4 @@ results = collections.Counter(top_k_results)
 summary = pd.DataFrame(results.items(), columns=['feature', 'count (%)']).sort_values(by="count (%)", ascending=False)
 summary["count (%)"] = np.round(summary["count (%)"]/(len(models)*len(seeds)),2)*100
 
-summary.to_csv("results/top_10_fatures.csv")
+summary.to_csv("results/top_10_fatures_responder.csv")

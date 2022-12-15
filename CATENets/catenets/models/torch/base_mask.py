@@ -275,8 +275,11 @@ class BasicNet(nn.Module):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-
+                    
                     if i % self.n_iter_print == 0:
+                        print( 
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )

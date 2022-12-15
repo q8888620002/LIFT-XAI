@@ -68,14 +68,16 @@ if __name__ == "__main__":
     y_test_cate = y_po[test_inds, 1] - y_po[test_inds, 0]
 
     ### obtain oracle with DRNet()
-    print("training oracle.")
+    print("Training Baseline.")
                                                  
     torch_DRNet = cate_models.DRLearner(
                                         feature_size,
-                                        binary_y=(len(np.unique(y_po)) == 2),
+                                        binary_y=False,
                                         nonlin="relu",
+                                        n_iter=2000,
+                                        n_iter_print=250,
                                         early_stopping= False,
-                                        device=oracle_device
+                                        device=oracle_device,
                                         )
     
     dr_unbiased, dr_unbiased_abs, torch_DRNet = oracle( 
@@ -87,7 +89,7 @@ if __name__ == "__main__":
                                                         )
 
     ### IntGrad
-    print("compute gradient")
+    print("compute Intgradient")
     ig = IntegratedGradients(torch_DRNet)
 
     attr, delta = ig.attribute( 
@@ -105,8 +107,9 @@ if __name__ == "__main__":
     ### Init Cate model 
     torch_DRNet_Mask = cate_models_mask.DRLearner(  
                                                     feature_size,
-                                                    binary_y=(len(np.unique(y_po)) == 2),
-                                                    n_iter=10**6,
+                                                    binary_y=False,
+                                                    n_iter=2000,
+                                                    n_iter_print=250,
                                                     nonlin="relu",
                                                     early_stopping= False,
                                                     device=device
@@ -130,7 +133,7 @@ if __name__ == "__main__":
     for test_ind in range(x_oracle_test.size()[0]):
         instance = torch.from_numpy(X_scaled[test_ind, :])[None,:].to(device)
         game  = games.CateGame(instance, torch_DRNet_Mask)
-        explanation = shapley.ShapleyRegression(game, batch_size=32)
+        explanation = shapley.ShapleyRegression(game, batch_size=64)
 
         test_values[test_ind] = explanation.values
     
@@ -145,11 +148,11 @@ if __name__ == "__main__":
     print(stats.spearmanr(dr_unbiased, attr_mean).correlation)
     print(stats.spearmanr(dr_unbiased_abs, attr_abs).correlation)
 
-    print("==Shapley Regression (torch_mask) vs Kernel SHAP (torchDRNet) ==")
+    print("== Kernel SHAP (torchDRNet) vs Shapley Regression (torch_mask) ==")
     print("phe is %s" %mse(test_phe, y_test_cate))
     print(stats.spearmanr(dr_unbiased , mask_shap).correlation)
     print(stats.spearmanr(dr_unbiased , mask_shap_abs).correlation)
 
-    print("== Kernel SHAP (torchDRNet) vs IntGrad (torch_mask) ==")
+    print("== IntGrad (torch_mask) vs Shapley Regression (torch_mask) ==")
     print(stats.spearmanr(attr_mean, mask_shap).correlation)
     print(stats.spearmanr(attr_abs, mask_shap_abs).correlation)

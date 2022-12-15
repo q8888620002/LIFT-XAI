@@ -224,7 +224,6 @@ class BasicNet(nn.Module):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
@@ -240,8 +239,11 @@ class BasicNet(nn.Module):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-
+                            
                     if i % self.n_iter_print == 0:
+                        print(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
