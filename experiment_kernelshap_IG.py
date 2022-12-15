@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from utilities import *
 from sklearn import preprocessing
+from captum.attr import IntegratedGradients
 
 #### import CATE model
 module_path = os.path.abspath(os.path.join('CATENets/'))
@@ -16,15 +17,16 @@ module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
+from catenets.models.jax import  DRNet, RANet, PWNet, RNet, XNet, TNet, SNet,SNet1, SNet2, SNet3
 from catenets.experiment_utils.simulation_utils import simulate_treatment_setup
+import catenets.models.torch as cate_models
 
 
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Description of your program')
-    parser.add_argument('-d','--d', help='feature dimension', required=True)
     parser.add_argument('-n','--n', help='sample size',required=True)
+    parser.add_argument('-d','--d', help='feature dimension', required=True)
     parser.add_argument('-r','--r', help='random state',required=True)
 
     args = vars(parser.parse_args())
@@ -32,8 +34,8 @@ if __name__ == "__main__":
     n = int(args["n"])
     feature_size = int(args["d"])
     random_state = int(args["r"])
-    
-    path = ("results_d=%s_n=%s_r=%s/"%(feature_size, n, random_state))
+    oracle_device = "cpu"
+    path = ("results/igs/results_d=%s_n=%s_r=%s/"%(feature_size, n, random_state))
     
     if not os.path.exists(path):
         os.makedirs(path)
@@ -53,31 +55,59 @@ if __name__ == "__main__":
     train_inds = inds[:n_train]
     test_inds = inds[n_train:]
 
-    w_oracle_train = w[train_inds,:]
-    y_oracle_train = np.take_along_axis(y_po,w, 1)[train_inds, :]
+    x_oracle_train = torch.from_numpy(X_scaled[train_inds,:]).to(oracle_device)
+    x_oracle_test = torch.from_numpy(X_scaled[test_inds,:]).to(oracle_device)
+    w_oracle_train = torch.from_numpy(w[train_inds,:]).to(oracle_device)
+    y_oracle_train = torch.from_numpy(np.take_along_axis(y_po,w, 1)[train_inds, :]).to(oracle_device)
     y_test_cate = y_po[test_inds, 1] - y_po[test_inds, 0]
     
-    ### obtain oracle shap 
-        
-    dr_unbiased, dr_unbiased_abs = oracle(X[train_inds,:], 
-                                          w_oracle_train,
-                                          y_oracle_train, 
-                                          X[test_inds,:], 
-                                          DRNet(nonlin="relu"))
-    
-    norm_dr_unbiased, norm_dr_unbiased_abs = oracle(X_scaled[train_inds,:], 
-                                                    w_oracle_train, 
-                                                    y_oracle_train,  
-                                                    X_scaled[test_inds,:],
-                                                    DRNet(nonlin="relu"))
+    # init DRNet
+    torch_DRNet = cate_models.DRLearner(
+                                        feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device
+                                       )
+    torch_DRNet.fit(x_oracle_train, y_oracle_train,w_oracle_train )
 
-    models = [TNet(nonlin="relu"),  DRNet(nonlin="relu"), RANet(nonlin="relu"),
-              PWNet(nonlin="relu"), XNet(nonlin="relu"),
-              SNet(nonlin="relu") , SNet1(nonlin="relu"), SNet2(nonlin="relu"), 
-              SNet3(nonlin="relu")]
-    
-    # RNet(nonlin="relu") TBD 
-    
+    ig = IntegratedGradients(torch_DRNet)
+
+    attr, delta = ig.attribute( 
+                                x_oracle_test.requires_grad_(), 
+                                n_steps= 500, 
+                                return_convergence_delta=True
+                                )
+
+    attr = attr.detach().cpu().numpy()
+    dr_unbiased = np.mean(attr, axis=0)
+    dr_unbiased_abs = np.mean(np.abs(attr), axis=0)
+
+    models = [ 
+                cate_models.TARNet(    
+                                        feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device
+                                        ),
+
+                cate_models.DRLearner(
+                                        feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device
+                                     ), 
+                cate_models.RALearner( feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device),
+
+                cate_models.PWLearner( feature_size,
+                                        binary_y=False,
+                                        nonlin="relu",
+                                        device=oracle_device)
+            ]
+
+            
     ### treated group mu1
     
     mu_t = np.arange(0, -6.5, -0.25, dtype=float)
@@ -97,10 +127,10 @@ if __name__ == "__main__":
         print("mu1 %s; %s KL is %s" %( mu1_low, mu1_high, KL))
         
         KL_results[i] = KL
-        
-        X_scaled = min_max_scaler.transform(X)
-        w_train = w[train_inds,:]
-        y_train = np.take_along_axis(y_po,w, 1)[train_inds, :]
+
+        X_scaled =  torch.from_numpy(min_max_scaler.transform(X)).to(oracle_device)
+        w_train = torch.from_numpy(w[train_inds,:]).to(oracle_device)
+        y_train = torch.from_numpy(np.take_along_axis(y_po,w, 1)[train_inds, :]).to(oracle_device)
 
         y_test_cate = y_po[test_inds, 1] - y_po[test_inds, 0]
 
@@ -111,21 +141,14 @@ if __name__ == "__main__":
             
             print("train model %s"%str(cate_net))
             
-            if "SNet" in str(cate_net):
-                X_train, X_test = X[train_inds,:], X[test_inds,:]
-                shap_unbiased = norm_dr_unbiased
-                shap_unbiased_abs = norm_dr_unbiased_abs
 
-            else:
-                X_train, X_test = X_scaled[train_inds,:], X_scaled[test_inds,:]
-                shap_unbiased = dr_unbiased
-                shap_unbiased_abs = dr_unbiased_abs
-                
+            X_train, X_test = X_scaled[train_inds,:], X_scaled[test_inds,:]
+
             cate_net.fit(X_train, y_train, w_train)   
 
             #### predict potential outcomes
 
-            pred_cate = cate_net.predict(X_test)
+            pred_cate = cate_net.predict(X_test).detach().cpu().numpy()
             pehe = mse(y_test_cate, pred_cate)
 
             pehes[model_index, i] = pehe
@@ -134,17 +157,20 @@ if __name__ == "__main__":
 
             #### explaining CATE on testing sets.
 
-            def model_predict(X):
-                return cate_net.predict(X)
-            
-            explainer = shap.Explainer(model_predict, X_train)
-            shap_values = explainer(X_test)
+            ig = IntegratedGradients(cate_net)
 
-            feature_imp = (shap_values.values).mean(0).round(2)
-            feature_imp_abs = np.abs(shap_values.values).mean(0).round(2)
+            attr, delta = ig.attribute( 
+                                        X_test.requires_grad_(), 
+                                        n_steps= 500, 
+                                        return_convergence_delta=True
+                                        )
 
-            spearman_results[model_index, i, 0] = stats.spearmanr(shap_unbiased , feature_imp).correlation
-            spearman_results[model_index, i, 1] = stats.spearmanr(shap_unbiased_abs , feature_imp_abs).correlation
+            attr = attr.detach().cpu().numpy()
+            ig_imp = np.mean(attr, axis=0)
+            ig_imp_abs = np.mean(np.abs(attr), axis=0)
+
+            spearman_results[model_index, i, 0] = stats.spearmanr(dr_unbiased , ig_imp).correlation
+            spearman_results[model_index, i, 1] = stats.spearmanr(dr_unbiased_abs , ig_imp_abs).correlation
             print(spearman_results[model_index, i, 0], spearman_results[model_index, i, 1])
 
     
