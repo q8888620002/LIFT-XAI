@@ -478,7 +478,7 @@ class PWLearner(PseudoOutcomeLearner):
 
         mu0_pred, mu1_pred = np.nan, np.nan  # not needed
         p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
-        return mu0_pred.to(DEVICE), mu1_pred.to(DEVICE), p_pred.to(DEVICE)
+        return mu0_pred, mu1_pred, p_pred.to(self.device)
 
     def _second_step(
         self,
@@ -508,7 +508,7 @@ class RALearner(PseudoOutcomeLearner):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan  # not needed
-        return mu0_pred.squeeze().to(DEVICE), mu1_pred.squeeze().to(DEVICE), p_pred
+        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
 
     def _second_step(
         self,
@@ -540,7 +540,7 @@ class ULearner(PseudoOutcomeLearner):
         mu_pred = self._impute_unconditional_mean(X, y, fit_mask, pred_mask).squeeze()
         mu1_pred = np.nan  # only have one thing to impute here
         p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
-        return mu_pred.to(DEVICE), mu1_pred, p_pred.to(DEVICE)
+        return mu_pred.to(self.device), mu1_pred, p_pred.to(self.device)
 
     def _second_step(
         self,
@@ -572,7 +572,7 @@ class RLearner(PseudoOutcomeLearner):
         mu_pred = self._impute_unconditional_mean(X, y, fit_mask, pred_mask).squeeze()
         mu1_pred = np.nan  # only have one thing to impute here
         p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
-        return mu_pred.to(DEVICE), mu1_pred, p_pred.to(DEVICE)
+        return mu_pred.to(self.device), mu1_pred, p_pred.to(self.device)
 
     def _second_step(
         self,
@@ -617,7 +617,7 @@ class XLearner(PseudoOutcomeLearner):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan
-        return mu0_pred.squeeze().to(DEVICE), mu1_pred.squeeze().to(DEVICE), p_pred
+        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
 
     def _second_step(
         self,
@@ -664,10 +664,10 @@ class XLearner(PseudoOutcomeLearner):
         if not training:
             self.eval()
 
-        X = self._check_tensor(X).float().to(DEVICE)
+        X = self._check_tensor(X).float().to(self.device)
         tau0_pred = predict_wrapper(self._te_estimator_0, X)
         tau1_pred = predict_wrapper(self._te_estimator_1, X)
 
         weight = self._propensity_estimator.get_importance_weights(X)
 
-        return weight * tau0_pred + (1 - weight) * tau1_pred
+        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred

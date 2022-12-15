@@ -300,7 +300,7 @@ class RepresentationNet(nn.Module):
             else:
                 layers.extend([nn.Linear(n_units, n_units), NL()])
 
-        self.model = nn.Sequential(*layers).to(DEVICE)
+        self.model = nn.Sequential(*layers).to(self.device)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         return self.model(X)
