@@ -73,9 +73,9 @@ if __name__ == "__main__":
                                         feature_size,
                                         binary_y=False,
                                         nonlin="relu",
-                                        n_iter=2000,
-                                        n_iter_print=250,
-                                        early_stopping= False,
+                                        #n_iter=2000,
+                                        #n_iter_print=250,
+                                        #early_stopping= False,
                                         device=oracle_device,
                                         )
     
@@ -107,10 +107,10 @@ if __name__ == "__main__":
     torch_DRNet_Mask = cate_models_mask.DRLearner(  
                                                     feature_size,
                                                     binary_y=False,
-                                                    n_iter=2000,
-                                                    n_iter_print=250,
+                                                    #n_iter=2000,
+                                                    #n_iter_print=250,
                                                     nonlin="relu",
-                                                    early_stopping= False,
+                                                    #early_stopping= False,
                                                     device=device
                                                     )
     
@@ -152,6 +152,6 @@ if __name__ == "__main__":
     print(stats.spearmanr(dr_unbiased , mask_shap).correlation)
     print(stats.spearmanr(dr_unbiased , mask_shap_abs).correlation)
 
-    print("== IntGrad (torch_mask) vs Shapley Regression (torch_mask) ==")
+    print("== IntGrad vs Shapley Regression (torch_mask) ==")
     print(stats.spearmanr(attr_mean, mask_shap).correlation)
     print(stats.spearmanr(attr_abs, mask_shap_abs).correlation)
