@@ -15,4 +15,4 @@ Model modifications for explanation with mask are in ```CATENets/catenets/models
 - utils/model_utlis.py
 
 Shapley Value Calculation is in ```shapley-regression/shapreg```
-- games.py (It contain CateGame.)
+- ```CateGame in games.py```
