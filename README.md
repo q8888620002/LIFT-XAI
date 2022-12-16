@@ -14,5 +14,5 @@ Model modifications for explanation with mask are in ```CATENets/catenets/models
 - base_mask.py (This script contains the actual model e.g. BasicNet, PropensityNet ,and RepresentationNet.)
 - utils/model_utlis.py
 
-Shapley Value Calculation is in ```shapley-regression/game```
-- game.py (It contain CateGame.)
+Shapley Value Calculation is in ```shapley-regression/shapreg```
+- games.py (It contain CateGame.)
