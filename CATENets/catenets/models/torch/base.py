@@ -24,7 +24,7 @@ from catenets.models.constants import (
     LARGE_VAL,
 )
 from catenets.models.torch.utils.decorators import benchmark, check_input_train
-from catenets.models.torch.utils.model_utils import make_val_split
+from catenets.models.torch.utils.model_utils import make_val_split, generate_masks
 from catenets.models.torch.utils.weight_utils import compute_importance_weights
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -256,6 +256,114 @@ class BasicNet(nn.Module):
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
 
+class BasicNetMask(BasicNet):
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+
+        out = X * M
+
+        out = torch.cat([out, M], dim=1)
+
+        return self.model(out)
+
+    def fit(
+        self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
+    ) -> "BasicNet":
+        self.train()
+
+        X = self._check_tensor(X)
+        y = self._check_tensor(y).squeeze()
+
+        # get validation split (can be none)
+        X, y, X_val, y_val, val_string = make_val_split(
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
+        )
+        y_val = y_val.squeeze()
+        n = X.shape[0]  # could be different from before due to split
+
+        # calculate number of batches per epoch
+        batch_size = self.batch_size if self.batch_size < n else n
+        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
+        train_indices = np.arange(n)
+
+        # do training
+        val_loss_best = LARGE_VAL
+        patience = 0
+        for i in range(self.n_iter):
+            # shuffle data for minibatches
+            np.random.shuffle(train_indices)
+            train_loss = []
+            for b in range(n_batches):
+                self.optimizer.zero_grad()
+
+                idx_next = train_indices[
+                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
+                ]
+
+                X_next = X[idx_next]
+                y_next = y[idx_next]
+                
+                # generate masks
+                if self.name != "te_estimator":
+                    
+                    # Training nuisance function with X_s
+                    masks = torch.ones(X_next.size()).to(self.device)
+
+                else:
+                    # Training nuisance function with X
+                    
+                    masks = generate_masks(X_next)
+                    masks = self._check_tensor(masks)
+
+
+                weight_next = None
+                if weight is not None:
+                    weight_next = weight[idx_next].detach()
+
+                loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
+
+                preds = self.forward(X_next, masks).squeeze()
+
+                batch_loss = loss(preds, y_next)
+
+                batch_loss.backward()
+
+                torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
+
+                self.optimizer.step()
+
+                train_loss.append(batch_loss.detach())
+
+            train_loss = torch.Tensor(train_loss).to(self.device)
+
+            if self.early_stopping or i % self.n_iter_print == 0:
+                loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
+                with torch.no_grad():
+
+                    masks = torch.ones(X_val.size())
+                    masks = self._check_tensor(masks)
+                    
+                    preds = self.forward(X_val,masks ).squeeze()
+                    val_loss = loss(preds, y_val)
+
+                    if self.early_stopping:
+                        if val_loss_best > val_loss:
+                            val_loss_best = val_loss
+                            patience = 0
+                        else:
+                            patience += 1
+
+                        if patience > self.patience and i > self.n_iter_min:
+                            break
+                    
+                    if i % self.n_iter_print == 0:
+                        print( 
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+                        log.info(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+
+        return self
 
 class RepresentationNet(nn.Module):
     """
@@ -526,6 +634,91 @@ class PropensityNet(nn.Module):
             return X.to(self.device)
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
+
+class PropensityNetMask(PropensityNet):
+
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+
+        out = X * M
+        out = torch.cat([out, M], dim=1)
+
+        return self.model(out)
+        
+    def fit(self, X: torch.Tensor, y: torch.Tensor) -> "PropensityNet":
+        self.train()
+
+        X = self._check_tensor(X)
+        y = self._check_tensor(y).long()
+
+        # get validation split (can be none)
+        X, y, X_val, y_val, val_string = make_val_split(
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
+        )
+        y_val = y_val.squeeze()
+        n = X.shape[0]  # could be different from before due to split
+
+        # calculate number of batches per epoch
+        batch_size = self.batch_size if self.batch_size < n else n
+        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
+        train_indices = np.arange(n)
+
+        # do training
+        val_loss_best = LARGE_VAL
+        patience = 0
+        for i in range(self.n_iter):
+            # shuffle data for minibatches
+            np.random.shuffle(train_indices)
+            train_loss = []
+            for b in range(n_batches):
+                self.optimizer.zero_grad()
+
+                idx_next = train_indices[
+                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
+                ]
+
+                X_next = X[idx_next]
+                y_next = y[idx_next].squeeze()
+                # generate masks
+
+                masks = generate_masks(X_next)
+                masks = self._check_tensor(masks)
+
+                preds = self.forward(X_next,masks).squeeze()
+
+                batch_loss = self.loss(preds, y_next)
+
+                batch_loss.backward()
+
+                torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
+
+                self.optimizer.step()
+                train_loss.append(batch_loss.detach())
+
+            train_loss = torch.Tensor(train_loss).to(self.device)
+
+            if self.early_stopping or i % self.n_iter_print == 0:
+                with torch.no_grad():
+                    masks = torch.ones(X_val.size())
+                    masks = self._check_tensor(masks)
+                    preds = self.forward(X_val,masks).squeeze()
+                    val_loss = self.loss(preds, y_val)
+
+                    if self.early_stopping:
+                        if val_loss_best > val_loss:
+                            val_loss_best = val_loss
+                            patience = 0
+                        else:
+                            patience += 1
+                        if patience > self.patience and (
+                            (i + 1) * n_batches > self.n_iter_min
+                        ):
+                            break
+                    if i % self.n_iter_print == 0:
+                        log.info(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+
+        return self
 
 
 class BaseCATEEstimator(nn.Module):
