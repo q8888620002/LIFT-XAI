@@ -235,12 +235,14 @@ class BasicNet(nn.Module):
                 if self.name != "te_estimator":
                     
                     # Training nuisance function with X_s
+                    masks = torch.ones(X_next.size()).to(self.device)
 
-                    masks = generate_masks(X_next)
-                    masks = self._check_tensor(masks)
                 else:
                     # Training nuisance function with X
-                    masks = torch.ones(X_next.size()).to(self.device)
+                    
+                    masks = generate_masks(X_next)
+                    masks = self._check_tensor(masks)
+
 
                 weight_next = None
                 if weight is not None:
