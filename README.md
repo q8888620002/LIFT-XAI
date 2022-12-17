@@ -10,8 +10,8 @@ Main script that generates synthetic dataset and test spearman correlation betwe
 
 Model modifications for explanation with mask are in ```CATENets/catenets/models/torch``` 
 
-- ```pseudo_outcome_nets_mask.py``` It contains abstract class for PseudoOutcomeLearner e.g. RA, DR, and PW-learner.
-- ```base_mask.py``` This script contains the actual model e.g. BasicNet, PropensityNet ,and RepresentationNet.
+- ```pseudo_outcome_nets.py``` It contains abstract class for PseudoOutcomeLearner e.g. RA, DR, and PW-learner and Learner with Masks e.g. DRLearnerMask.
+- ```base.py``` This script contains the prediction model e.g. propensity score model (PropensityNet), treatment effect (BasicNet) and their masks version. 
 - ```utils/model_utlis.py```
 
 Shapley Value Calculation is in ```shapley-regression/shapreg```
