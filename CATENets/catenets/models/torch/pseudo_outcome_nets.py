@@ -29,9 +29,11 @@ from catenets.models.torch.base import (
     DEVICE,
     BaseCATEEstimator,
     BasicNet,
+    BasicNetMask,
     PropensityNet,
+    PropensityNetMask
 )
-from catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper
+from catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper, predict_wrapper_mask
 from catenets.models.torch.utils.transformations import (
     dr_transformation_cate,
     pw_transformation_cate,
@@ -428,6 +430,68 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         return predict_wrapper(temp_model, X[pred_mask, :])
 
 
+class PseudoOutcomeLearnerMask(PseudoOutcomeLearner):
+    """
+    Class for training with missingness
+    """
+    def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+        if self._te_template is not None:
+            return copy.deepcopy(self._te_template)
+        return BasicNetMask(
+            name,
+            2*self.n_unit_in,
+            device = self.device,
+            binary_y=False,
+            n_layers_out=self.n_layers_out_t,
+            n_units_out=self.n_units_out_t,
+            weight_decay=self.weight_decay_t,
+            lr=self.lr_t,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+    def predict(
+        self, X: torch.Tensor, M: torch.Tensor ,return_po: bool = False, training: bool = False
+    ) -> torch.Tensor:
+        """
+        Predict treatment effects
+
+        Parameters
+        ----------
+        X: array-like of shape (n_samples, n_features)
+            Test-sample features
+        M: feature masking tensor
+
+        Returns
+        -------
+        te_est: array-like of shape (n_samples,)
+            Predicted treatment effects
+        """
+        if return_po:
+            raise NotImplementedError(
+                "PseudoOutcomeLearners have no Potential outcome predictors."
+            )
+        if not training:
+            self.eval()
+
+
+        X = self._check_tensor(X).float()
+        M = self._check_tensor(M)
+
+        return predict_wrapper_mask(self._te_estimator, X, M)
+
+
+
 class DRLearner(PseudoOutcomeLearner):
     """
     DR-learner for CATE estimation, based on doubly robust AIPW pseudo-outcome
@@ -461,6 +525,39 @@ class DRLearner(PseudoOutcomeLearner):
         pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
 
+
+class DRLearnerMask(PseudoOutcomeLearnerMask):
+    """
+    DR-learner for CATE estimation (Training with Masks)
+    """
+
+    def _first_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        fit_mask: torch.Tensor,
+        pred_mask: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
+        p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred.to(self.device),
+        )
+
+    def _second_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        p: torch.Tensor,
+        mu_0: torch.Tensor,
+        mu_1: torch.Tensor,
+    ) -> None:
+        pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
+        train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
 
 class PWLearner(PseudoOutcomeLearner):
     """

@@ -21,8 +21,7 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
-import catenets.models.torch.pseudo_outcome_nets_mask as cate_models_mask
-import catenets.models.torch as cate_models
+import catenets.models.torch.pseudo_outcome_nets as cate_models
 
 
 if __name__ == "__main__":
@@ -104,7 +103,7 @@ if __name__ == "__main__":
     print("training masking explainer.")
 
     ### Init Cate model 
-    torch_DRNet_Mask = cate_models_mask.DRLearner(  
+    torch_DRNet_Mask = cate_models.DRLearnerMask(  
                                                     feature_size,
                                                     binary_y=False,
                                                     #n_iter=2000,
@@ -119,7 +118,7 @@ if __name__ == "__main__":
     torch_DRNet_Mask.fit(x_oracle_train, y_oracle_train, w_oracle_train)
 
     test_mask = torch.ones(x_oracle_test.size()).to(device)
-    test_phe = torch_DRNet_Mask.predict(x_oracle_test,test_mask).cpu().detach().numpy()
+    test_phe = torch_DRNet_Mask.predict(x_oracle_test, test_mask).cpu().detach().numpy()
 
     print("phe is %s" %mse(test_phe, y_test_cate))
 
