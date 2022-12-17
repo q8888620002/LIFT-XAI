@@ -257,10 +257,13 @@ class BasicNet(nn.Module):
             return torch.from_numpy(np.asarray(X)).to(self.device)
 
 class BasicNetMask(BasicNet):
+
+    """
+    Class of Mask version of BasicNet.
+    """
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
         out = X * M
-
         out = torch.cat([out, M], dim=1)
 
         return self.model(out)
@@ -303,17 +306,9 @@ class BasicNetMask(BasicNet):
                 y_next = y[idx_next]
                 
                 # generate masks
-                if self.name != "te_estimator":
-                    
-                    # Training nuisance function with X_s
-                    masks = torch.ones(X_next.size()).to(self.device)
 
-                else:
-                    # Training nuisance function with X
-                    
-                    masks = generate_masks(X_next)
-                    masks = self._check_tensor(masks)
-
+                masks = generate_masks(X_next)
+                masks = self._check_tensor(masks)
 
                 weight_next = None
                 if weight is not None:
