@@ -3,7 +3,7 @@ import sys
 from typing import Any
 
 import src.iterpretability.logger as log
-from src.iterpretability.experiments import (
+from src.iterpretability.experiments_mask import (
     PredictiveSensitivity,
     PropensitySensitivity,
     NonLinearitySensitivity,
@@ -96,7 +96,7 @@ def init_arg() -> Any:
     )
 
     parser.add_argument("--run_name", type=str, default="results")
-    parser.add_argument("--explainer_limit", type=int, default=700)
+    parser.add_argument("--explainer_limit", type=int, default=1000)
     return parser.parse_args()
 
 
