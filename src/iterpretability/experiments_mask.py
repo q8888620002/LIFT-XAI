@@ -12,10 +12,12 @@ if module_path not in sys.path:
 
 #from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
 import catenets.models as cate_models
+import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
 
 
 import numpy as np
 import pandas as pd
+from shapreg import shapley, games
 
 import src.iterpretability.logger as log
 from src.iterpretability.explain import Explainer
@@ -40,7 +42,7 @@ class PredictiveSensitivity:
         n_units_hidden: int = 50,
         n_layers: int = 1,
         penalty_orthogonal: float = 0.01,
-        batch_size: int = 256,
+        batch_size: int = 1024,
         n_iter: int = 1000,
         seed: int = 42,
         explainer_limit: int = 1000,
@@ -70,10 +72,7 @@ class PredictiveSensitivity:
         binary_outcome: bool = False,
         random_feature_selection: bool = True,
         explainer_list: list = [
-            "feature_ablation",
-            "feature_permutation",
-            "integrated_gradients",
-            "shapley_value_sampling",
+            "explanation_with_missingness"
         ],
     ) -> None:
         log.info(
@@ -152,29 +151,27 @@ class PredictiveSensitivity:
               #      batch_norm=False,
               #      nonlin="relu",
               #  ),
-                "DRLearner": cate_models.torch.DRLearner(
-                    X_train.shape[1],
-                    device = "cuda:0",
-                    binary_y=(len(np.unique(Y_train)) == 2),
-                    n_layers_out=2,
-                    n_units_out=100,
-                    n_iter=self.n_iter,
-                    batch_size=self.batch_size,
-                    batch_norm=False,
-                    nonlin="relu",
-                ),
-
-                "XLearner": cate_models.torch.XLearner(
-                    X_train.shape[1],
-                    device="cuda:0",
-                    binary_y=(len(np.unique(Y_train)) == 2),
-                    n_layers_out=2,
-                    n_units_out=100,
-                    n_iter=self.n_iter,
-                    batch_size=self.batch_size,
-                    batch_norm=False,
-                    nonlin="relu",
-                ),
+                "DRLearnerMask": cate_models_masks.DRLearnerMask(  
+                                                                    X_train.shape[1],
+                                                                    binary_y=False,
+                                                                    n_layers_out=2,
+                                                                    n_units_out=100,
+                                                                    n_iter=self.n_iter,
+                                                                    batch_size=1024,
+                                                                    nonlin="relu",
+                                                                    device="cuda:1"
+                                                                    )
+               # "XLearner": cate_models.torch.XLearner(
+               #     X_train.shape[1],
+               #     device="cuda:1",
+               #     binary_y=(len(np.unique(Y_train)) == 2),
+               #     n_layers_out=2,
+               ##     n_units_out=100,
+                #    n_iter=self.n_iter,
+                #    batch_size=1024,
+                #    batch_norm=False,
+                #    nonlin="relu",
+                #),
             }
 
             learner_explainers = {}
@@ -248,7 +245,7 @@ class PredictiveSensitivity:
             ],
         )
 
-        results_path = self.save_path / "results/predictive_sensitivity"
+        results_path = self.save_path / "results/predictive_sensitivity_mask"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)

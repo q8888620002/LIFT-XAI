@@ -3,6 +3,8 @@ from typing import Dict, List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+
+from shapreg import shapley, games
 from captum._utils.models.linear_model import SkLearnLinearRegression
 from captum.attr import (
     DeepLift,
@@ -121,6 +123,19 @@ class Explainer:
         def gradient_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
             return gradient_shap_model.attribute(X_test, baselines=self.baseline)
 
+        # Explain with missingness
+        def explain_with_missingness_cbk(X_test:torch.Tensor) -> torch.Tensor:
+
+            test_values = np.zeros((X_test.size()))
+
+            for test_ind in range(len(X_test)):
+                instance = X_test[test_ind, :][None, :]
+                game  = games.CateGame(instance, model)
+                explanation = shapley.ShapleyRegression(game, batch_size=64)
+                test_values[test_ind] = explanation.values
+            
+            return test_values
+
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
             "integrated_gradients": integrated_gradients_cbk,
@@ -130,6 +145,7 @@ class Explainer:
             "shapley_value_sampling": shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
+            "explain_with_missingness":explain_with_missingness_cbk
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
