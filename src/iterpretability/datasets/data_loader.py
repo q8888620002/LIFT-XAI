@@ -9,17 +9,17 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         try:
             tcga_dataset = pickle.load(
                 open(
-                    "/data/tcga/tcga_full_dataset.p",
+                    "srt/",
                     "rb",
                 )
             )
         except:
             process_tcga(
-                max_num_genes=100, file_location="src/iterpretability/datasets/tcga/"
+                max_num_genes=100, file_location="/data/tcga/"
             )
             tcga_dataset = pickle.load(
                 open(
-                    "src/iterpretability/datasets/tcga/" + str(dataset_name) + ".p",
+                    "/data/tcga/tcga_100.p",
                     "rb",
                 )
             )
@@ -34,11 +34,11 @@ def load(dataset_name: str, train_ratio: float = 1.0):
             )
         except:
             process_news(
-                max_num_features=100, file_location="src/iterpretability/datasets/news/"
+                max_num_features=100, file_location="data/"
             )
             news_dataset = pickle.load(
                 open(
-                    "src/iterpretability/datasets/news/" + str(dataset_name) + ".p",
+                    "data/" + str(dataset_name) + ".p",
                     "rb",
                 )
             )
