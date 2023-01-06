@@ -1,5 +1,6 @@
 import sys
 import os
+import torch
 from pathlib import Path
 
 #import catenets.models as cate_models
@@ -72,7 +73,7 @@ class PredictiveSensitivity:
         binary_outcome: bool = False,
         random_feature_selection: bool = True,
         explainer_list: list = [
-            "explanation_with_missingness"
+            "explain_with_missingness"
         ],
     ) -> None:
         log.info(
@@ -153,7 +154,7 @@ class PredictiveSensitivity:
               #  ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
                                                                     X_train.shape[1],
-                                                                    binary_y=False,
+                                                                    binary_y=(len(np.unique(Y_train)) == 2),
                                                                     n_layers_out=2,
                                                                     n_units_out=100,
                                                                     n_iter=self.n_iter,
@@ -210,7 +211,8 @@ class PredictiveSensitivity:
                     acc_scores_prog_features = attribution_accuracy(
                         prog_features, attribution_est
                     )
-                    cate_pred = learners[learner_name].predict(X=X_test)
+                    test_mask = torch.ones(X_test.shape)
+                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
@@ -294,10 +296,7 @@ class NonLinearitySensitivity:
         dataset: str = "tcga_100",
         num_important_features: int = 15,
         explainer_list: list = [
-            "feature_ablation",
-            "feature_permutation",
-            "integrated_gradients",
-            "shapley_value_sampling",
+            "explain_with_missingness"
         ],
         train_ratio: float = 0.8,
         binary_outcome: bool = False,
@@ -371,7 +370,7 @@ class NonLinearitySensitivity:
                 # ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
                                                                     X_train.shape[1],
-                                                                    binary_y=False,
+                                                                    binary_y=(len(np.unique(Y_train)) == 2),
                                                                     n_layers_out=2,
                                                                     n_units_out=100,
                                                                     n_iter=self.n_iter,
@@ -428,7 +427,9 @@ class NonLinearitySensitivity:
                         prog_features, attribution_est
                     )
 
-                    cate_pred = learners[learner_name].predict(X=X_test)
+                    test_mask = torch.ones(X_test.shape)
+                    
+                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
@@ -465,7 +466,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity_mask/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -521,10 +522,8 @@ class PropensitySensitivity:
         predictive_scale: float = 1,
         nonlinearity_scale: float = 0.5,
         explainer_list: list = [
-            "feature_ablation",
-            "feature_permutation",
-            "integrated_gradients",
-            "shapley_value_sampling",
+            "explain_with_missingness"
+
         ],
     ) -> None:
         log.info(
@@ -614,7 +613,7 @@ class PropensitySensitivity:
                 # ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
                                                                     X_train.shape[1],
-                                                                    binary_y=False,
+                                                                    binary_y=(len(np.unique(Y_train)) == 2),
                                                                     n_layers_out=2,
                                                                     n_units_out=100,
                                                                     n_iter=self.n_iter,
@@ -710,7 +709,9 @@ class PropensitySensitivity:
                         prog_features, attribution_est
                     )
 
-                    cate_pred = learners[learner_name].predict(X=X_test)
+                    test_mask = torch.ones(X_test.shape)
+                    
+                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
                     explainability_data.append(
@@ -746,7 +747,7 @@ class PropensitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity/{self.synthetic_simulator_type}"
+            / f"results/propensity_sensitivity_mask/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
