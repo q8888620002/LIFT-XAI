@@ -131,10 +131,10 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind, :][None, :]
                 game  = games.CateGame(instance, model)
-                explanation = shapley.ShapleyRegression(game, batch_size=64)
+                explanation = shapley.ShapleyRegression(game, batch_size=128)
                 test_values[test_ind] = explanation.values
             
-            return test_values
+            return self._check_tensor(test_values)
 
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
