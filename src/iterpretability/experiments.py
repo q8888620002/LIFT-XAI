@@ -10,7 +10,7 @@ module_path = os.path.abspath(os.path.join('./CATENets/'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-#from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
+from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
 import catenets.models as cate_models
 
 
