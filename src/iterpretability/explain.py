@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from shapreg import shapley, games
+from shapreg import shapley, games, removal
 from captum._utils.models.linear_model import SkLearnLinearRegression
 from captum.attr import (
     DeepLift,
@@ -110,6 +110,7 @@ class Explainer:
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
 
+
         def kernel_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
             return kernel_shap_model.attribute(
                 X_test,
@@ -131,9 +132,24 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind, :][None, :]
                 game  = games.CateGame(instance, model)
-                explanation = shapley.ShapleyRegression(game, batch_size=128)
+                explanation = shapley.ShapleyRegression(game, batch_size=n_samples)
                 test_values[test_ind] = explanation.values
             
+            return self._check_tensor(test_values)
+
+        def naive_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
+
+            test_values = np.zeros((X_test.size()))
+            X_test  = X_test.detach().cpu().numpy()
+
+            marginal_extension = removal.MarginalExtension(X_test, model)
+
+            for test_ind in range(len(X_test)):
+                instance = X_test[test_ind]
+                game = games.PredictionGame(marginal_extension, instance)
+                explanation = shapley.ShapleyRegression(game, batch_size=32)
+                test_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
+
             return self._check_tensor(test_values)
 
         self.explainers = {
@@ -145,7 +161,8 @@ class Explainer:
             "shapley_value_sampling": shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
-            "explain_with_missingness":explain_with_missingness_cbk
+            "explain_with_missingness":explain_with_missingness_cbk,
+            "naive_shap":naive_shap_cbk
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:

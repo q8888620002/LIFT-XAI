@@ -41,14 +41,14 @@ class PredictiveSensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
-        batch_size: int = 1024,
-        n_iter: int = 1000,
+        batch_size: int = 256,
+        n_iter: int = 2000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
-        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5, 1, 2],
+        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5, 1,  2],
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
     ) -> None:
@@ -153,15 +153,16 @@ class PredictiveSensitivity:
               #      nonlin="relu",
               #  ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
-                                                                    X_train.shape[1],
-                                                                    binary_y=(len(np.unique(Y_train)) == 2),
-                                                                    n_layers_out=2,
-                                                                    n_units_out=100,
-                                                                    n_iter=self.n_iter,
-                                                                    batch_size=1024,
-                                                                    nonlin="relu",
-                                                                    device="cuda:1"
-                                                                    )
+                                                                X_train.shape[1],
+                                                                binary_y=(len(np.unique(Y_train)) == 2),
+                                                                n_layers_out=2,
+                                                                n_units_out=100,
+                                                                n_iter=self.n_iter,
+                                                                batch_size=self.batch_size,
+                                                                batch_norm=False,
+                                                                nonlin="relu",
+                                                                device="cuda:1"
+                                                                )
                # "XLearner": cate_models.torch.XLearner(
                #     X_train.shape[1],
                #     device="cuda:1",
@@ -180,6 +181,7 @@ class PredictiveSensitivity:
 
             for name in learners:
                 log.info(f"Fitting {name}.")
+
                 learners[name].fit(X=X_train, y=Y_train, w=W_train)
                 learner_explainers[name] = Explainer(
                     learners[name],
@@ -188,7 +190,7 @@ class PredictiveSensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[: self.explainer_limit]
+                    X_test[:1 ]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -199,6 +201,12 @@ class PredictiveSensitivity:
 
             for explainer_name in explainer_list:
                 for learner_name in learners:
+                    test_mask = torch.ones(X_test.shape)
+                    cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
+
+                    pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
+                    print(pehe_test)
+                    
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
@@ -211,10 +219,8 @@ class PredictiveSensitivity:
                     acc_scores_prog_features = attribution_accuracy(
                         prog_features, attribution_est
                     )
-                    test_mask = torch.ones(X_test.shape)
-                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
 
-                    pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
+
 
                     explainability_data.append(
                         [
@@ -247,7 +253,7 @@ class PredictiveSensitivity:
             ],
         )
 
-        results_path = self.save_path / "results/predictive_sensitivity_mask"
+        results_path = self.save_path / "results/predictive_sensitivity_mask/debug"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -369,15 +375,16 @@ class NonLinearitySensitivity:
                 #     nonlin="relu",
                 # ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
-                                                                    X_train.shape[1],
-                                                                    binary_y=(len(np.unique(Y_train)) == 2),
-                                                                    n_layers_out=2,
-                                                                    n_units_out=100,
-                                                                    n_iter=self.n_iter,
-                                                                    batch_size=1024,
-                                                                    nonlin="relu",
-                                                                    device="cuda:1"
-                                                                    )
+                                                                X_train.shape[1],
+                                                                binary_y=(len(np.unique(Y_train)) == 2),
+                                                                n_layers_out=2,
+                                                                n_units_out=100,
+                                                                n_iter=self.n_iter,
+                                                                batch_size=self.batch_size,
+                                                                batch_norm=False,
+                                                                nonlin="relu",
+                                                                device="cuda:1"
+                                                                )
                 # "XLearner": cate_models.torch.XLearner(
                 #     X_train.shape[1],
                 #     binary_y=(len(np.unique(Y_train)) == 2),

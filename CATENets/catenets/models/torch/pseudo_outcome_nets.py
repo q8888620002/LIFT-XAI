@@ -175,6 +175,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         self._po_estimator = self._generate_po_estimator()
         if weighting_strategy is not None:
             self._propensity_estimator = self._generate_propensity_estimator()
+            
 
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
@@ -434,9 +435,11 @@ class PseudoOutcomeLearnerMask(PseudoOutcomeLearner):
     """
     Class for training with missingness
     """
+
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
+
         return BasicNetMask(
             name,
             2*self.n_unit_in,

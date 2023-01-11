@@ -41,11 +41,13 @@ class PredictiveSensitivity:
         n_layers: int = 1,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 1000,
+        n_iter: int = 10000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
-        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5, 1, 2],
+        predictive_scales: list = [#1e-3, 1e-2, 1e-1, 0.5,
+                                    # 1,
+                                      2],
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
     ) -> None:
@@ -247,7 +249,7 @@ class PredictiveSensitivity:
                 "Normalized PEHE",
             ],
         )
-
+        
         results_path = self.save_path / "results/predictive_sensitivity"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
