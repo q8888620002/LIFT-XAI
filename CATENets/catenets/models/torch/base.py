@@ -4,6 +4,7 @@ from typing import Optional
 import numpy as np
 import torch
 from torch import nn
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 import catenets.logger as log
 from catenets.models.constants import (
@@ -192,8 +193,12 @@ class BasicNet(nn.Module):
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
+
+        scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor = 0.5)
+
         for i in range(self.n_iter):
             # shuffle data for minibatches
+
             np.random.shuffle(train_indices)
             train_loss = []
             for b in range(n_batches):
@@ -220,7 +225,6 @@ class BasicNet(nn.Module):
                 torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
 
                 self.optimizer.step()
-
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
@@ -229,6 +233,8 @@ class BasicNet(nn.Module):
                 with torch.no_grad():
                     preds = self.forward(X_val).squeeze()
                     val_loss = loss(preds, y_val)
+                    
+                    scheduler.step(val_loss)
 
                     if self.early_stopping:
                         if val_loss_best > val_loss:
@@ -261,6 +267,7 @@ class BasicNetMask(BasicNet):
     """
     Class of Mask version of BasicNet.
     """
+    
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
         out = X * M
@@ -272,7 +279,6 @@ class BasicNetMask(BasicNet):
         self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
     ) -> "BasicNet":
         self.train()
-
         X = self._check_tensor(X)
         y = self._check_tensor(y).squeeze()
 
@@ -287,6 +293,7 @@ class BasicNetMask(BasicNet):
         batch_size = self.batch_size if self.batch_size < n else n
         n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
         train_indices = np.arange(n)
+        scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor = 0.5)
 
         # do training
         val_loss_best = LARGE_VAL
@@ -329,7 +336,8 @@ class BasicNetMask(BasicNet):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-
+            self.early_stopping = False
+            
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
@@ -339,6 +347,7 @@ class BasicNetMask(BasicNet):
                     
                     preds = self.forward(X_val,masks ).squeeze()
                     val_loss = loss(preds, y_val)
+                    scheduler.step(val_loss)
 
                     if self.early_stopping:
                         if val_loss_best > val_loss:

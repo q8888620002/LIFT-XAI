@@ -25,6 +25,46 @@ class DefaultExtension:
         return self.model(x_)
 
 
+class MarginalExtensionTorch:
+    '''Extend a model by marginalizing out removed features using their
+    marginal distribution.'''
+    def __init__(self, data, model):
+        self.model = model
+        self.data = data
+        self.data_repeat = data
+        self.samples = len(data)
+        # self.x_addr = None
+        # self.x_repeat = None
+
+    def __call__(self, x, S):
+        # Prepare x and S.
+        n = len(x)
+
+        device = next(self.model.parameters()).device
+        S = torch.from_numpy(S).to(device)
+
+        x = x.repeat(self.samples, 1)
+        S = S.repeat(self.samples, 1)
+
+        # if self.x_addr != id(x):
+        #     self.x_addr = id(x)
+        #     self.x_repeat = x.repeat(self.samples, 0)
+        # x = self.x_repeat
+
+
+        # Prepare samples.
+        if len(self.data_repeat) != self.samples * n:
+            self.data_repeat = self.data.repeat(n, 1)
+
+        # Replace specified indices.
+        x_ = x.clone()
+        x_[~S] = self.data_repeat[~S]
+
+        # Make predictions.
+        pred = self.model.predict(x_).detach().cpu().numpy()
+        pred = pred.reshape(-1, self.samples, *pred.shape[1:])
+        return np.mean(pred, axis=1)
+
 class MarginalExtension:
     '''Extend a model by marginalizing out removed features using their
     marginal distribution.'''
@@ -41,6 +81,9 @@ class MarginalExtension:
         n = len(x)
         x = x.repeat(self.samples, 0)
         S = S.repeat(self.samples, 0)
+
+        device = next(self.model.parameters()).device
+
         # if self.x_addr != id(x):
         #     self.x_addr = id(x)
         #     self.x_repeat = x.repeat(self.samples, 0)
@@ -53,42 +96,42 @@ class MarginalExtension:
         # Replace specified indices.
         x_ = x.copy()
         x_[~S] = self.data_repeat[~S]
-
+        x_ = torch.from_numpy(x_).to(device)
         # Make predictions.
-        pred = self.model(x_)
+        pred = self.model(x_).detach().cpu().numpy()
+        
         pred = pred.reshape(-1, self.samples, *pred.shape[1:])
         return np.mean(pred, axis=1)
 
+# class CateExtension:
+#     '''
+#     Remove features using with Cate models
+#     '''
+#     def __init__(self, data, model):
+#         self.model = model
+#         self.data = data
+#         self.data_repeat = data
+#         self.samples = len(data)
+#         # self.x_addr = None
+#         # self.x_repeat = None
 
-class CateExtension:
-    '''
-    Remove features using with Cate models
-    '''
-    def __init__(self, data, model):
-        self.model = model
-        self.data = data
-        self.data_repeat = data
-        self.samples = len(data)
-        # self.x_addr = None
-        # self.x_repeat = None
+#     def __call__(self, x, S):
+#         # Prepare x and S.
+#         n = len(x)
+#         print(x.size(), S)
+#         x = x.repeat(self.samples, 0)
+#         S = S.repeat(self.samples, 0)
+#         # Prepare samples.
+#         if len(self.data_repeat) != self.samples * n:
+#             self.data_repeat = np.tile(self.data, (n, 1))
 
-    def __call__(self, x, S):
-        # Prepare x and S.
-        n = len(x)
-        print(x.size(), S)
-        x = x.repeat(self.samples, 0)
-        S = S.repeat(self.samples, 0)
-        # Prepare samples.
-        if len(self.data_repeat) != self.samples * n:
-            self.data_repeat = np.tile(self.data, (n, 1))
-
-        x_ = x.clone()
-        S = torch.from_numpy(S)
-        # Make predictions.
-        print(x_.size(), S.size())
-        pred = self.model(x_, S)
-        pred = pred.reshape(-1, self.samples, *pred.shape[1:])
-        return np.mean(pred, axis=1)
+#         x_ = x.clone()
+#         S = torch.from_numpy(S)
+#         # Make predictions.
+#         print(x_.size(), S.size())
+#         pred = self.model(x_, S)
+#         pred = pred.reshape(-1, self.samples, *pred.shape[1:])
+#         return np.mean(pred, axis=1)
     
 
 class UniformExtension:
