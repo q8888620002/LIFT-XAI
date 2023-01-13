@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from torch import nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from copy import deepcopy
 
 import catenets.logger as log
 from catenets.models.constants import (
@@ -25,7 +26,7 @@ from catenets.models.constants import (
     LARGE_VAL,
 )
 from catenets.models.torch.utils.decorators import benchmark, check_input_train
-from catenets.models.torch.utils.model_utils import make_val_split, generate_masks
+from catenets.models.torch.utils.model_utils import make_val_split, generate_masks,restore_parameters
 from catenets.models.torch.utils.weight_utils import compute_importance_weights
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -110,7 +111,6 @@ class BasicNet(nn.Module):
             raise ValueError("Unknown nonlinearity")
 
         NL = NONLIN[nonlin]
-
         if n_layers_out > 0:
             if batch_norm:
                 layers = [
@@ -193,9 +193,13 @@ class BasicNet(nn.Module):
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
+        best_model = None
 
-        scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor = 0.5)
-
+        scheduler = ReduceLROnPlateau(self.optimizer, 
+                                        patience=self.patience//2,
+                                         mode='min', 
+                                         min_lr=1e-5,
+                                         factor = 0.5)
         for i in range(self.n_iter):
             # shuffle data for minibatches
 
@@ -228,6 +232,7 @@ class BasicNet(nn.Module):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
+            
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
@@ -240,6 +245,7 @@ class BasicNet(nn.Module):
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
                             patience = 0
+                            best_model  = deepcopy(self.model)
                         else:
                             patience += 1
 
@@ -253,6 +259,7 @@ class BasicNet(nn.Module):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
+        restore_parameters(self.model, best_model)
 
         return self
 
@@ -293,11 +300,18 @@ class BasicNetMask(BasicNet):
         batch_size = self.batch_size if self.batch_size < n else n
         n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
         train_indices = np.arange(n)
-        scheduler = ReduceLROnPlateau(self.optimizer, 'min', factor = 0.5)
+
+        scheduler = ReduceLROnPlateau(self.optimizer, 
+                                        patience=self.patience//2,
+                                         mode='min', 
+                                         min_lr=1e-5,
+                                         factor = 0.5)
 
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
+        best_model = None
+
         for i in range(self.n_iter):
             # shuffle data for minibatches
             np.random.shuffle(train_indices)
@@ -336,8 +350,8 @@ class BasicNetMask(BasicNet):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-            self.early_stopping = False
-            
+#            self.early_stopping = False
+
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
@@ -345,7 +359,7 @@ class BasicNetMask(BasicNet):
                     masks = torch.ones(X_val.size())
                     masks = self._check_tensor(masks)
                     
-                    preds = self.forward(X_val,masks ).squeeze()
+                    preds = self.forward(X_val, masks ).squeeze()
                     val_loss = loss(preds, y_val)
                     scheduler.step(val_loss)
 
@@ -353,6 +367,7 @@ class BasicNetMask(BasicNet):
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
                             patience = 0
+                            best_model = deepcopy(self.model)
                         else:
                             patience += 1
 
@@ -367,6 +382,7 @@ class BasicNetMask(BasicNet):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
+        restore_parameters(self.model, best_model)
         return self
 
 class RepresentationNet(nn.Module):
@@ -584,6 +600,7 @@ class PropensityNet(nn.Module):
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
+        best_model = None
         for i in range(self.n_iter):
             # shuffle data for minibatches
             np.random.shuffle(train_indices)
@@ -619,6 +636,8 @@ class PropensityNet(nn.Module):
                     if self.early_stopping:
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
+                            best_model = deepcopy(self.model)
+
                             patience = 0
                         else:
                             patience += 1
@@ -630,7 +649,7 @@ class PropensityNet(nn.Module):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
-
+        restore_parameters(self.model, best_model)
         return self
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
@@ -669,6 +688,13 @@ class PropensityNetMask(PropensityNet):
         # do training
         val_loss_best = LARGE_VAL
         patience = 0
+        best_model = None
+        scheduler = ReduceLROnPlateau(self.optimizer, 
+                                        patience=self.patience//2,
+                                         mode='min', 
+                                         min_lr=1e-5,
+                                         factor = 0.5)
+
         for i in range(self.n_iter):
             # shuffle data for minibatches
             np.random.shuffle(train_indices)
@@ -706,10 +732,12 @@ class PropensityNetMask(PropensityNet):
                     masks = self._check_tensor(masks)
                     preds = self.forward(X_val,masks).squeeze()
                     val_loss = self.loss(preds, y_val)
+                    scheduler.step(val_loss)
 
                     if self.early_stopping:
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
+                            best_model = deepcopy(self.model)
                             patience = 0
                         else:
                             patience += 1
@@ -721,7 +749,7 @@ class PropensityNetMask(PropensityNet):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
-
+        restore_parameters(self.model, best_model)
         return self
 
 

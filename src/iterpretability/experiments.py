@@ -43,11 +43,9 @@ class PredictiveSensitivity:
         batch_size: int = 256,
         n_iter: int = 10000,
         seed: int = 42,
-        explainer_limit: int = 1000,
+        explainer_limit: int = 200,
         save_path: Path = Path.cwd(),
-        predictive_scales: list = [#1e-3, 1e-2, 1e-1, 0.5,
-                                    # 1,
-                                      2],
+        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5,  1, 2],
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
     ) -> None:
@@ -75,7 +73,7 @@ class PredictiveSensitivity:
             "feature_ablation",
             "feature_permutation",
             "integrated_gradients",
-            "shapley_value_sampling",
+            "shapley_value_sampling"
         ],
     ) -> None:
         log.info(
@@ -161,9 +159,11 @@ class PredictiveSensitivity:
                     n_layers_out=2,
                     n_units_out=100,
                     n_iter=self.n_iter,
+                    lr=1e-3,
+                    patience=20,
                     batch_size=self.batch_size,
                     batch_norm=False,
-                    nonlin="relu",
+                    nonlin="relu"
                 ),
 
                 # "XLearner": cate_models.torch.XLearner(
@@ -192,7 +192,7 @@ class PredictiveSensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[: self.explainer_limit]
+                    X_test[:10]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -250,7 +250,7 @@ class PredictiveSensitivity:
             ],
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity"
+        results_path = self.save_path / "results/predictive_sensitivity/debug"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -258,7 +258,7 @@ class PredictiveSensitivity:
         metrics_df.to_csv(
             results_path / f"predictive_scale_{dataset}_{num_important_features}_"
             f"{self.synthetic_simulator_type}_random_{random_feature_selection}_"
-            f"binary_{binary_outcome}-seed{self.seed}.csv"
+            f"binary_{binary_outcome}_200testsamples-seed{self.seed}.csv"
         )
 
 
@@ -275,7 +275,7 @@ class NonLinearitySensitivity:
         batch_size: int = 1024,
         n_iter: int = 1000,
         seed: int = 42,
-        explainer_limit: int = 1000,
+        explainer_limit: int = 1,
         save_path: Path = Path.cwd(),
         nonlinearity_scales: list = [0.0, 0.2, 0.5, 0.7, 1.0],
         predictive_scale: float = 1,
@@ -299,10 +299,11 @@ class NonLinearitySensitivity:
         dataset: str = "tcga_100",
         num_important_features: int = 15,
         explainer_list: list = [
-            "feature_ablation",
-            "feature_permutation",
+            #"feature_ablation",
+            #"feature_permutation",
             "integrated_gradients",
-            "shapley_value_sampling",
+            #"shapley_value_sampling",
+            #"naive_shap"
         ],
         train_ratio: float = 0.8,
         binary_outcome: bool = False,
@@ -376,14 +377,16 @@ class NonLinearitySensitivity:
                 # ),
                 "DRLearner": cate_models.torch.DRLearner(
                     X_train.shape[1],
+                    device = "cuda:0",
                     binary_y=(len(np.unique(Y_train)) == 2),
                     n_layers_out=2,
                     n_units_out=100,
                     n_iter=self.n_iter,
-                    batch_size=1024,
+                    lr=1e-3,
+                    patience=20,
+                    batch_size=self.batch_size,
                     batch_norm=False,
-                    nonlin="relu",
-                    device= "cuda:1"
+                    nonlin="relu"
                 ),
                 # "XLearner": cate_models.torch.XLearner(
                 #     X_train.shape[1],
@@ -410,7 +413,7 @@ class NonLinearitySensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[: self.explainer_limit]
+                    X_test[:10]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -471,7 +474,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity/debug/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -479,7 +482,7 @@ class NonLinearitySensitivity:
 
         metrics_df.to_csv(
             results_path
-            / f"{dataset}_{num_important_features}_binary_{binary_outcome}-seed{self.seed}.csv"
+            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_200testsamples-seed{self.seed}.csv"
         )
 
 

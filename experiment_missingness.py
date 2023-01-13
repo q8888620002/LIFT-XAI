@@ -131,7 +131,7 @@ if __name__ == "__main__":
     for test_ind in range(x_oracle_test.size()[0]):
         instance = torch.from_numpy(X_scaled[test_ind, :])[None,:].to(device)
         game  = games.CateGame(instance, torch_DRNet_Mask)
-        explanation = shapley.ShapleyRegression(game, batch_size=64)
+        explanation = shapley.ShapleyRegression(game, batch_size=128)
 
         test_values[test_ind] = explanation.values
     

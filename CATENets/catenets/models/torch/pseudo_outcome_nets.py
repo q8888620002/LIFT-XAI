@@ -235,6 +235,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
     ) -> nn.Module:
         if self.weighting_strategy is None:
             raise ValueError("Invalid weighting_strategy for PropensityNet")
+
         return PropensityNet(
             name,
             self.device,
@@ -439,7 +440,6 @@ class PseudoOutcomeLearnerMask(PseudoOutcomeLearner):
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
-
         return BasicNetMask(
             name,
             2*self.n_unit_in,

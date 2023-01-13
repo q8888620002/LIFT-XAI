@@ -44,7 +44,7 @@ class PredictiveSensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 2000,
+        n_iter: int = 10000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -160,6 +160,8 @@ class PredictiveSensitivity:
                                                                 n_iter=self.n_iter,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
+                                                                lr=1e-3,
+                                                                patience=20,
                                                                 nonlin="relu",
                                                                 device="cuda:1"
                                                                 )
@@ -190,7 +192,7 @@ class PredictiveSensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[:1 ]
+                    X_test[:1]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -205,7 +207,6 @@ class PredictiveSensitivity:
                     cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
-                    print(pehe_test)
                     
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
@@ -261,7 +262,7 @@ class PredictiveSensitivity:
         metrics_df.to_csv(
             results_path / f"predictive_scale_{dataset}_{num_important_features}_"
             f"{self.synthetic_simulator_type}_random_{random_feature_selection}_"
-            f"binary_{binary_outcome}-seed{self.seed}.csv"
+            f"binary_{binary_outcome}-_200testsamples_seed{self.seed}.csv"
         )
 
 
@@ -273,12 +274,12 @@ class NonLinearitySensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
-        batch_size: int = 1024,
-        n_iter: int = 1000,
+        batch_size: int = 256,
+        n_iter: int = 10000,
         seed: int = 42,
-        explainer_limit: int = 1000,
+        explainer_limit: int = 1,
         save_path: Path = Path.cwd(),
         nonlinearity_scales: list = [0.0, 0.2, 0.5, 0.7, 1.0],
         predictive_scale: float = 1,
@@ -382,6 +383,8 @@ class NonLinearitySensitivity:
                                                                 n_iter=self.n_iter,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
+                                                                lr=1e-3,
+                                                                patience=20,
                                                                 nonlin="relu",
                                                                 device="cuda:1"
                                                                 )
@@ -410,7 +413,7 @@ class NonLinearitySensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[: self.explainer_limit]
+                    X_test[:1]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -473,7 +476,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity_mask/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -481,7 +484,7 @@ class NonLinearitySensitivity:
 
         metrics_df.to_csv(
             results_path
-            / f"{dataset}_{num_important_features}_binary_{binary_outcome}-seed{self.seed}.csv"
+            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_200testsamples-seed{self.seed}.csv"
         )
 
 
@@ -493,10 +496,10 @@ class PropensitySensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
-        batch_size: int = 1024,
-        n_iter: int = 1000,
+        batch_size: int = 256,
+        n_iter: int = 10000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -624,7 +627,7 @@ class PropensitySensitivity:
                                                                     n_layers_out=2,
                                                                     n_units_out=100,
                                                                     n_iter=self.n_iter,
-                                                                    batch_size=1024,
+                                                                    batch_size=self.batch_size,
                                                                     nonlin="relu",
                                                                     device="cuda:1"
                                                                     )
@@ -692,7 +695,7 @@ class PropensitySensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[: self.explainer_limit]
+                    X_test[:1]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -754,7 +757,7 @@ class PropensitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity_mask/{self.synthetic_simulator_type}"
+            / f"results/propensity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():

@@ -9,7 +9,7 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         try:
             tcga_dataset = pickle.load(
                 open(
-                    "src/iterpretability/datasets/tcga/"+ str(dataset_name) + ".p",
+                    "/data/tcga/"+ str(dataset_name) + ".p",
                     "rb",
                 )
             )
@@ -28,7 +28,7 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         try:
             news_dataset = pickle.load(
                 open(
-                    "src/iterpretability/datasets/news/" + str(dataset_name) + ".p",
+                    "data/" + str(dataset_name) + ".p",
                     "rb",
                 )
             )
