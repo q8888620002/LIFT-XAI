@@ -132,7 +132,7 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind, :][None, :]
                 game  = games.CateGame(instance, model)
-                explanation = shapley.ShapleyRegression(game, batch_size=n_samples)
+                explanation = shapley.ShapleyRegression(game, batch_size=128)
                 test_values[test_ind] = explanation.values
             
             return self._check_tensor(test_values)
@@ -147,7 +147,7 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley.ShapleyRegression(game, batch_size=32)
+                explanation = shapley.ShapleyRegression(game, batch_size=128)
                 test_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
 
             return self._check_tensor(test_values)

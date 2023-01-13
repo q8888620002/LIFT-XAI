@@ -20,19 +20,26 @@ import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
 
 #### filtering out procedure
 
-#fluid_cohort = pd.read_pickle("data/low_bp_survival.pkl")
-fluid_cohort = pd.read_pickle("data/trauma_team_activated.pkl")
+fluid_cohort = pd.read_pickle("data/low_bp_survival.pkl")
+#fluid_cohort = pd.read_pickle("data/trauma_team_activated.pkl")
+#fluid_cohort = pd.read_pickle("data/trauma_responder.pkl")
+
 #
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='proc')))]
+fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='toxicologyresults')))]
+
 x_train = fluid_cohort.loc[:, ~fluid_cohort.columns.isin(["registryid",
                                                             "treated",
+                                                            "COV",
+                                                            "TT",
                                                             "scenegcsmotor",
                                                             "scenegcseye",
                                                             "scenegcsverbal",
                                                             "edgcsmotor",
                                                             "edgcseye",
                                                             "edgcsverbal",
-                                                            "outcome"])]
+                                                            "outcome",
+                                                            ])]
 
 ### normalize x_train 
 #x = x_train.values 
@@ -75,6 +82,7 @@ for i, seed in enumerate(seeds):
                                             n_layers_out=2,
                                             n_units_out=100,
                                             batch_size=128,
+                                            n_iter=3000,
                                             nonlin="relu",
                                             device=device
                                             )
@@ -86,7 +94,7 @@ for i, seed in enumerate(seeds):
 
         instance = torch.from_numpy(X_test[test_ind, :])[None,:].to(device)
         game  = games.CateGame(instance, model)
-        explanation = shapley.ShapleyRegression(game, batch_size=64)
+        explanation = shapley.ShapleyRegression(game, batch_size=128)
         feature_values[test_ind] = explanation.values
 
     for col in range(feature_size):
@@ -104,4 +112,4 @@ summary["count (%)"] = np.round(summary["count (%)"]/len(seeds),2)*100
 indices = [names.tolist().index(i) for i in summary.feature.tolist()]
 summary["sign"] = np.sign(np.mean(results_sign,axis=0)[indices])
 
-summary.to_csv("results/trauma_top_10_fatures_responder_mask.csv")
+summary.to_csv("results/trauma_top_10_fatures_survival_mask.csv")
