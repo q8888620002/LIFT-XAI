@@ -338,9 +338,7 @@ class BasicNetMask(BasicNet):
                 loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
 
                 preds = self.forward(X_next, masks).squeeze()
-
                 batch_loss = loss(preds, y_next)
-
                 batch_loss.backward()
 
                 torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
@@ -355,8 +353,12 @@ class BasicNetMask(BasicNet):
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
+                    
+                    ## generating random masking for validation.
 
-                    masks = torch.ones(X_val.size())
+                    ## masks = torch.ones(X_val.size())
+
+                    masks = generate_masks(X_val)
                     masks = self._check_tensor(masks)
                     
                     preds = self.forward(X_val, masks).squeeze()
@@ -382,7 +384,7 @@ class BasicNetMask(BasicNet):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
-        #restore_parameters(self.model, best_model)
+        restore_parameters(self.model, best_model)
         return self
 
 class RepresentationNet(nn.Module):
