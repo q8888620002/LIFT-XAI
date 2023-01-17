@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from shapreg import shapley, games, removal
+from shapreg import shapley, games, removal, shapley_sampling
 from captum._utils.models.linear_model import SkLearnLinearRegression
 from captum.attr import (
     DeepLift,
@@ -110,7 +110,6 @@ class Explainer:
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
 
-
         def kernel_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
             return kernel_shap_model.attribute(
                 X_test,
@@ -132,7 +131,7 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind, :][None, :]
                 game  = games.CateGame(instance, model)
-                explanation = shapley.ShapleyRegression(game, batch_size=128)
+                explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
                 test_values[test_ind] = explanation.values
             
             return self._check_tensor(test_values)
@@ -147,7 +146,7 @@ class Explainer:
             for test_ind in range(len(X_test)):
                 instance = X_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley.ShapleyRegression(game, batch_size=128)
+                explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
                 test_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
 
             return self._check_tensor(test_values)

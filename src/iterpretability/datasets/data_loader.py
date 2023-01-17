@@ -1,4 +1,6 @@
 import pickle
+import numpy as np
+
 from catenets.datasets import load as catenets_load
 from src.iterpretability.datasets.news.process_news import process_news
 from src.iterpretability.datasets.tcga.process_tcga import process_tcga
@@ -28,7 +30,7 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         try:
             news_dataset = pickle.load(
                 open(
-                    "data/" + str(dataset_name) + ".p",
+                    "data/news_100.p",
                     "rb",
                 )
             )
@@ -57,4 +59,8 @@ def load(dataset_name: str, train_ratio: float = 1.0):
     else:
         X_raw_train = X_raw[: int(train_ratio * X_raw.shape[0])]
         X_raw_test = X_raw[int(train_ratio * X_raw.shape[0]) :]
+
+        X_raw_train -= np.mean(X_raw_train, axis=0)
+        X_raw_test -= np.mean(X_raw_train, axis=0)
+
         return X_raw_train, X_raw_test

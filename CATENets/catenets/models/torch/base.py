@@ -232,7 +232,7 @@ class BasicNet(nn.Module):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-            
+
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
@@ -350,7 +350,7 @@ class BasicNetMask(BasicNet):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-#            self.early_stopping = False
+            #self.early_stopping = False
 
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
@@ -359,7 +359,7 @@ class BasicNetMask(BasicNet):
                     masks = torch.ones(X_val.size())
                     masks = self._check_tensor(masks)
                     
-                    preds = self.forward(X_val, masks ).squeeze()
+                    preds = self.forward(X_val, masks).squeeze()
                     val_loss = loss(preds, y_val)
                     scheduler.step(val_loss)
 
@@ -382,7 +382,7 @@ class BasicNetMask(BasicNet):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
-        restore_parameters(self.model, best_model)
+        #restore_parameters(self.model, best_model)
         return self
 
 class RepresentationNet(nn.Module):
