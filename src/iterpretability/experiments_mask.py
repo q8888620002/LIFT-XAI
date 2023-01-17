@@ -92,6 +92,9 @@ class PredictiveSensitivity:
         else:
             raise Exception("Unknown simulator type.")
 
+        X_raw_train -= np.mean(X_raw_train, axis=0)
+        X_raw_test -= np.mean(X_raw_train, axis=0)
+
         explainability_data = []
 
         for predictive_scale in self.predictive_scales:
@@ -114,6 +117,9 @@ class PredictiveSensitivity:
                 predictive_scale=predictive_scale,
                 binary_outcome=binary_outcome,
             )
+            
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -257,7 +263,7 @@ class PredictiveSensitivity:
             ],
         )
 
-        results_path = self.save_path / "results/predictive_sensitivity_mask/normalized"
+        results_path = self.save_path / "results/predictive_sensitivity_mask/debug"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -343,6 +349,9 @@ class NonLinearitySensitivity:
                 predictive_scale=self.predictive_scale,
                 binary_outcome=binary_outcome,
             )
+            
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -540,7 +549,6 @@ class PropensitySensitivity:
         nonlinearity_scale: float = 0.5,
         explainer_list: list = [
             "explain_with_missingness"
-
         ],
     ) -> None:
         log.info(
@@ -593,6 +601,9 @@ class PropensitySensitivity:
                 treatment_assign=self.propensity_type,
                 prop_scale=propensity_scale,
             )
+            
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {

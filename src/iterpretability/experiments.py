@@ -92,6 +92,7 @@ class PredictiveSensitivity:
         else:
             raise Exception("Unknown simulator type.")
 
+
         explainability_data = []
 
         for predictive_scale in self.predictive_scales:
@@ -114,6 +115,9 @@ class PredictiveSensitivity:
                 predictive_scale=predictive_scale,
                 binary_outcome=binary_outcome,
             )
+
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -256,7 +260,7 @@ class PredictiveSensitivity:
             ],
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity/normalized"
+        results_path = self.save_path / "results/predictive_sensitivity/debug"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -348,6 +352,9 @@ class NonLinearitySensitivity:
                 predictive_scale=self.predictive_scale,
                 binary_outcome=binary_outcome,
             )
+            
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -600,6 +607,9 @@ class PropensitySensitivity:
                 prop_scale=propensity_scale,
             )
 
+            X_train -= np.mean(X_train, axis=0)
+            X_test -= np.mean(X_train, axis=0)
+            
             log.info("Fitting and explaining learners...")
             learners = {
                 # "TLearner": cate_models.torch.TLearner(
