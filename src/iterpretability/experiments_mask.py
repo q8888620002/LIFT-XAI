@@ -41,7 +41,7 @@ class PredictiveSensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 2,
+        n_layers: int = 1,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
         n_iter: int = 10000,
@@ -157,7 +157,7 @@ class PredictiveSensitivity:
                                                                 binary_y=(len(np.unique(Y_train)) == 2),
                                                                 n_layers_out=2,
                                                                 n_units_out=100,
-                                                                n_iter=self.n_iter,
+                                                                n_iter=3000,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
                                                                 lr=1e-3,
@@ -192,7 +192,7 @@ class PredictiveSensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[:1]
+                    X_test[:self.explainer_limit]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -203,25 +203,22 @@ class PredictiveSensitivity:
 
             for explainer_name in explainer_list:
                 for learner_name in learners:
+                    attribution_est = np.abs(
+                        learner_explanations[learner_name][explainer_name]
+                    )
+                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
+                        all_important_features, attribution_est
+                    )
+                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
+                        pred_features, attribution_est
+                    )
+                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
+                        prog_features, attribution_est
+                    )
                     test_mask = torch.ones(X_test.shape)
                     cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
-                    
-                    attribution_est = np.abs(
-                        learner_explanations[learner_name][explainer_name]
-                    )
-                    acc_scores_all_features = attribution_accuracy(
-                        all_important_features, attribution_est
-                    )
-                    acc_scores_predictive_features = attribution_accuracy(
-                        pred_features, attribution_est
-                    )
-                    acc_scores_prog_features = attribution_accuracy(
-                        prog_features, attribution_est
-                    )
-
-
 
                     explainability_data.append(
                         [
@@ -229,8 +226,11 @@ class PredictiveSensitivity:
                             learner_name,
                             explainer_name,
                             acc_scores_all_features,
+                            acc_scores_all_features_score,
                             acc_scores_predictive_features,
+                            acc_scores_predictive_features_score,
                             acc_scores_prog_features,
+                            acc_scores_prog_features_score,
                             pehe_test,
                             np.mean(cate_test),
                             np.var(cate_test),
@@ -245,8 +245,11 @@ class PredictiveSensitivity:
                 "Learner",
                 "Explainer",
                 "All features ACC",
+                "All features ACC Score",
                 "Pred features ACC",
+                "Pred features ACC Score",
                 "Prog features ACC",
+                "Prog features ACC Score",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -254,7 +257,7 @@ class PredictiveSensitivity:
             ],
         )
 
-        results_path = self.save_path / "results/predictive_sensitivity_mask/debug"
+        results_path = self.save_path / "results/predictive_sensitivity_mask/normalized"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -262,7 +265,7 @@ class PredictiveSensitivity:
         metrics_df.to_csv(
             results_path / f"predictive_scale_{dataset}_{num_important_features}_"
             f"{self.synthetic_simulator_type}_random_{random_feature_selection}_"
-            f"binary_{binary_outcome}-_200testsamples_seed{self.seed}.csv"
+            f"binary_{binary_outcome}_seed{self.seed}.csv"
         )
 
 
@@ -380,7 +383,7 @@ class NonLinearitySensitivity:
                                                                 binary_y=(len(np.unique(Y_train)) == 2),
                                                                 n_layers_out=2,
                                                                 n_units_out=100,
-                                                                n_iter=self.n_iter,
+                                                                n_iter=3000,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
                                                                 lr=1e-3,
@@ -413,7 +416,7 @@ class NonLinearitySensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[:1]
+                    X_test[:self.explainer_limit]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -427,19 +430,17 @@ class NonLinearitySensitivity:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features = attribution_accuracy(
+                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
                         all_important_features, attribution_est
                     )
-                    acc_scores_predictive_features = attribution_accuracy(
+                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
                         pred_features, attribution_est
                     )
-                    acc_scores_prog_features = attribution_accuracy(
+                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
                         prog_features, attribution_est
                     )
-
                     test_mask = torch.ones(X_test.shape)
-                    
-                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
+                    cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
@@ -449,8 +450,11 @@ class NonLinearitySensitivity:
                             learner_name,
                             explainer_name,
                             acc_scores_all_features,
+                            acc_scores_all_features_score,
                             acc_scores_predictive_features,
+                            acc_scores_predictive_features_score,
                             acc_scores_prog_features,
+                            acc_scores_prog_features_score,
                             pehe_test,
                             np.mean(cate_test),
                             np.var(cate_test),
@@ -465,8 +469,11 @@ class NonLinearitySensitivity:
                 "Learner",
                 "Explainer",
                 "All features ACC",
+                "All features ACC Score",
                 "Pred features ACC",
+                "Pred features ACC Score",
                 "Prog features ACC",
+                "Prog features ACC Score",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -476,7 +483,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity_mask/normalized/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -484,7 +491,7 @@ class NonLinearitySensitivity:
 
         metrics_df.to_csv(
             results_path
-            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_200testsamples-seed{self.seed}.csv"
+            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.csv"
         )
 
 
@@ -695,7 +702,7 @@ class PropensitySensitivity:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    X_test[:1]
+                    X_test[:self.explainer_limit]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -709,19 +716,18 @@ class PropensitySensitivity:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features = attribution_accuracy(
+                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
                         all_important_features, attribution_est
                     )
-                    acc_scores_predictive_features = attribution_accuracy(
+                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
                         pred_features, attribution_est
                     )
-                    acc_scores_prog_features = attribution_accuracy(
+                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
                         prog_features, attribution_est
                     )
-
                     test_mask = torch.ones(X_test.shape)
-                    
-                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
+                    cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
+
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
                     explainability_data.append(
@@ -730,8 +736,11 @@ class PropensitySensitivity:
                             learner_name,
                             explainer_name,
                             acc_scores_all_features,
+                            acc_scores_all_features_score,
                             acc_scores_predictive_features,
+                            acc_scores_predictive_features_score,
                             acc_scores_prog_features,
+                            acc_scores_prog_features_score,
                             pehe_test,
                             np.mean(cate_test),
                             np.var(cate_test),
@@ -746,8 +755,11 @@ class PropensitySensitivity:
                 "Learner",
                 "Explainer",
                 "All features ACC",
+                "All features ACC Score",
                 "Pred features ACC",
+                "Pred features ACC Score",
                 "Prog features ACC",
+                "Prog features ACC Score",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -757,7 +769,7 @@ class PropensitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
+            / f"results/propensity_sensitivity_mask/normalized/{self.synthetic_simulator_type}/{self.propensity_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
