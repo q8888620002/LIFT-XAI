@@ -41,7 +41,7 @@ class PredictiveSensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
         n_iter: int = 10000,
@@ -92,9 +92,6 @@ class PredictiveSensitivity:
         else:
             raise Exception("Unknown simulator type.")
 
-        X_raw_train -= np.mean(X_raw_train, axis=0)
-        X_raw_test -= np.mean(X_raw_train, axis=0)
-
         explainability_data = []
 
         for predictive_scale in self.predictive_scales:
@@ -117,9 +114,6 @@ class PredictiveSensitivity:
                 predictive_scale=predictive_scale,
                 binary_outcome=binary_outcome,
             )
-            
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -163,7 +157,7 @@ class PredictiveSensitivity:
                                                                 binary_y=(len(np.unique(Y_train)) == 2),
                                                                 n_layers_out=2,
                                                                 n_units_out=100,
-                                                                n_iter=3000,
+                                                                n_iter=self.n_iter,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
                                                                 lr=1e-3,
@@ -286,9 +280,9 @@ class NonLinearitySensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 10000,
+        n_iter: int = 2000,
         seed: int = 42,
-        explainer_limit: int = 1,
+        explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
         nonlinearity_scales: list = [0.0, 0.2, 0.5, 0.7, 1.0],
         predictive_scale: float = 1,
@@ -349,9 +343,6 @@ class NonLinearitySensitivity:
                 predictive_scale=self.predictive_scale,
                 binary_outcome=binary_outcome,
             )
-            
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -392,11 +383,11 @@ class NonLinearitySensitivity:
                                                                 binary_y=(len(np.unique(Y_train)) == 2),
                                                                 n_layers_out=2,
                                                                 n_units_out=100,
-                                                                n_iter=3000,
+                                                                n_iter=self.n_iter,
                                                                 batch_size=self.batch_size,
                                                                 batch_norm=False,
                                                                 lr=1e-3,
-                                                                patience=20,
+                                                                patience=10,
                                                                 nonlin="relu",
                                                                 device="cuda:1"
                                                                 )
@@ -492,7 +483,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity_mask/normalized/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -601,9 +592,6 @@ class PropensitySensitivity:
                 treatment_assign=self.propensity_type,
                 prop_scale=propensity_scale,
             )
-            
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {

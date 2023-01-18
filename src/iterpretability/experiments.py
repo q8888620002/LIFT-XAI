@@ -38,12 +38,12 @@ class PredictiveSensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
         n_iter: int = 10000,
         seed: int = 42,
-        explainer_limit: int = 200,
+        explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
         predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5,  1, 2],
         num_interactions: int = 1,
@@ -115,9 +115,6 @@ class PredictiveSensitivity:
                 predictive_scale=predictive_scale,
                 binary_outcome=binary_outcome,
             )
-
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -280,12 +277,12 @@ class NonLinearitySensitivity:
     def __init__(
         self,
         n_units_hidden: int = 50,
-        n_layers: int = 1,
+        n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
-        batch_size: int = 1024,
-        n_iter: int = 1000,
+        batch_size: int = 256,
+        n_iter: int = 2000,
         seed: int = 42,
-        explainer_limit: int = 1,
+        explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
         nonlinearity_scales: list = [0.0, 0.2, 0.5, 0.7, 1.0],
         predictive_scale: float = 1,
@@ -323,7 +320,6 @@ class NonLinearitySensitivity:
         )
         X_raw_train, X_raw_test = load(dataset, train_ratio=train_ratio)
 
-
         explainability_data = []
 
         for nonlinearity_scale in self.nonlinearity_scales:
@@ -352,9 +348,7 @@ class NonLinearitySensitivity:
                 predictive_scale=self.predictive_scale,
                 binary_outcome=binary_outcome,
             )
-            
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
+
 
             log.info("Fitting and explaining learners...")
             learners = {
@@ -398,7 +392,7 @@ class NonLinearitySensitivity:
                     n_units_out=100,
                     n_iter=self.n_iter,
                     lr=1e-3,
-                    patience=20,
+                    patience=10,
                     batch_size=self.batch_size,
                     batch_norm=False,
                     nonlin="relu"
@@ -494,7 +488,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity/normalized/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity/debug/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -517,7 +511,7 @@ class PropensitySensitivity:
         n_layers: int = 1,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 1024,
-        n_iter: int = 1000,
+        n_iter: int = 10000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -607,9 +601,6 @@ class PropensitySensitivity:
                 prop_scale=propensity_scale,
             )
 
-            X_train -= np.mean(X_train, axis=0)
-            X_test -= np.mean(X_train, axis=0)
-            
             log.info("Fitting and explaining learners...")
             learners = {
                 # "TLearner": cate_models.torch.TLearner(
