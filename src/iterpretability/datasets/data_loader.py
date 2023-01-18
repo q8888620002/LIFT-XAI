@@ -60,4 +60,8 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         X_raw_train = X_raw[: int(train_ratio * X_raw.shape[0])]
         X_raw_test = X_raw[int(train_ratio * X_raw.shape[0]) :]
 
+        train_mean = np.mean(X_raw_train, axis=0)
+        X_raw_train -= train_mean
+        X_raw_test -= train_mean
+
         return X_raw_train, X_raw_test
