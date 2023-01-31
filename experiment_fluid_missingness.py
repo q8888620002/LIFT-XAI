@@ -7,7 +7,7 @@ import collections
 import torch
 
 from scipy import stats
-from shapreg import shapley, games
+from shapreg import shapley, games, shapley_sampling
 from sklearn.impute import SimpleImputer
 from sklearn import preprocessing
 
@@ -20,14 +20,15 @@ import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
 
 #### filtering out procedure
 
-fluid_cohort = pd.read_pickle("data/low_bp_survival.pkl")
+#fluid_cohort = pd.read_pickle("data/low_bp_survival.pkl")
 #fluid_cohort = pd.read_pickle("data/trauma_team_activated.pkl")
-#fluid_cohort = pd.read_pickle("data/trauma_responder.pkl")
+fluid_cohort = pd.read_pickle("data/trauma_responder.pkl")
 
 #
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='proc')))]
+fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='ethnicity')))]
+fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='residencestate')))]
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='toxicologyresults')))]
-
 x_train = fluid_cohort.loc[:, ~fluid_cohort.columns.isin(["registryid",
                                                             "treated",
                                                             "COV",
@@ -76,7 +77,7 @@ results_sign = np.zeros((len(seeds), feature_size))
 
 for i, seed in enumerate(seeds):
     np.random.seed(seed)
-    model = cate_models_masks.DRLearnerMask(  
+    model = cate_models_masks.XLearnerMask(  
                                             X_train.shape[1],
                                             binary_y=(len(np.unique(y_train)) == 2),
                                             n_layers_out=2,
@@ -94,8 +95,8 @@ for i, seed in enumerate(seeds):
 
         instance = torch.from_numpy(X_test[test_ind, :])[None,:].to(device)
         game  = games.CateGame(instance, model)
-        explanation = shapley.ShapleyRegression(game, batch_size=128)
-        feature_values[test_ind] = explanation.values
+        explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
+        feature_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
 
     for col in range(feature_size):
         results_sign[i, col] = stats.pearsonr(X_test[:,col], feature_values[:, col])[0]
@@ -112,4 +113,4 @@ summary["count (%)"] = np.round(summary["count (%)"]/len(seeds),2)*100
 indices = [names.tolist().index(i) for i in summary.feature.tolist()]
 summary["sign"] = np.sign(np.mean(results_sign,axis=0)[indices])
 
-summary.to_csv("results/trauma_top_10_fatures_survival_mask.csv")
+summary.to_csv("results/trauma_top_10_fatures_responder_xlearner_mask.csv")

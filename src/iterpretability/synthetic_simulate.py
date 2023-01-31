@@ -164,6 +164,25 @@ class SyntheticSimulatorBase:
         prog_features = np.where((self.prog_mask).astype(np.int32) != 0)
         return prog_features
 
+    def __sample_indices__(self, X: np.array, num_important_features: int, input_list: list, filtered_list :list) -> list:
+        
+        indices = []
+        random_index = random.choice([i for i in input_list if i not in filtered_list])
+        feature_index = random_index
+        correlations = np.abs(np.corrcoef(X.T))
+
+        for i in range(num_important_features):
+            indices.append(feature_index)
+            index = -2
+            next_feature = np.abs(correlations).argsort()[feature_index, index]
+
+            while next_feature in indices or next_feature in filtered_list:
+                index -= 1
+                next_feature = np.abs(correlations).argsort()[feature_index, index]
+
+            feature_index = next_feature
+
+        return indices
 
 class SyntheticSimulatorLinear(SyntheticSimulatorBase):
     """
@@ -217,16 +236,26 @@ class SyntheticSimulatorLinear(SyntheticSimulatorBase):
         pred1_mask = np.zeros(shape=(X.shape[1]))
 
         all_indices = np.array(range(X.shape[1]))
-        if random_feature_selection:
-            np.random.shuffle(all_indices)
 
-        prog_indices = all_indices[:num_important_features]
-        pred0_indices = all_indices[
-            num_important_features : (2 * num_important_features)
-        ]
-        pred1_indices = all_indices[
-            (2 * num_important_features) : (3 * num_important_features)
-        ]
+        prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
+        pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
+        pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
+
+        prog_indices = all_indices[prog_indices]
+        pred0_indices = all_indices[pred0_indices]
+        pred1_indices = all_indices[pred1_indices]
+        
+        # if random_feature_selection:
+        #    np.random.shuffle(all_indices)
+        #
+        #prog_indices = all_indices[:num_important_features]
+        #pred0_indices = all_indices[
+        #    num_important_features : (2 * num_important_features)
+        #]
+        #pred1_indices = all_indices[
+        #    (2 * num_important_features) : (3 * num_important_features)
+        #]
+
 
         prog_mask[prog_indices] = 1
         pred0_mask[pred0_indices] = 1
@@ -320,14 +349,23 @@ class SyntheticSimulatorModulatedNonLinear(SyntheticSimulatorBase):
 
         if self.selection_type == "random":
             all_indices = np.array(range(X.shape[1]))
-            np.random.shuffle(all_indices)
-            prog_indices = all_indices[:num_important_features]
-            pred0_indices = all_indices[
-                num_important_features : 2 * num_important_features
-            ]
-            pred1_indices = all_indices[
-                2 * num_important_features : 3 * num_important_features
-            ]
+            #np.random.shuffle(all_indices)
+            #prog_indices = all_indices[:num_important_features]
+            #pred0_indices = all_indices[
+            #    num_important_features : 2 * num_important_features
+            #]
+            #pred1_indices = all_indices[
+            #    2 * num_important_features : 3 * num_important_features
+            #]
+
+            prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
+            pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
+            pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
+
+            prog_indices = all_indices[prog_indices]
+            pred0_indices = all_indices[pred0_indices]
+            pred1_indices = all_indices[pred1_indices]
+
         prog_mask[prog_indices] = 1
         pred0_mask[pred0_indices] = 1
         pred1_mask[pred1_indices] = 1

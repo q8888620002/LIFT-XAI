@@ -178,16 +178,12 @@ def attribution_accuracy(
         1
     ]  # Features with largest attribution
     accuracy = 0  # Attribution accuracy
-    accuracy_proportion = 0 # Attribution score accuracy
-
+    accuracy_proportion_abs = 0 # Attribution score accuracy
+        
     for k in range(len(largest_attribution_idx)):
         accuracy += len(np.intersect1d(largest_attribution_idx[k], target_features))
     
-    #print(target_features, target_features.shape)
-
-    #print(feature_attributions.shape)
-    
     for k in target_features:
-        accuracy_proportion += np.sum(np.abs(feature_attributions[:,k]))
+        accuracy_proportion_abs += np.sum(np.abs(feature_attributions[:,k]))
 
-    return accuracy / (len(feature_attributions) * n_important), accuracy_proportion/np.sum(np.abs(feature_attributions))
+    return accuracy / (len(feature_attributions) * n_important), accuracy_proportion_abs/np.sum(np.abs(feature_attributions))

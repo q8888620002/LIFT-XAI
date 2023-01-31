@@ -348,7 +348,7 @@ class BasicNetMask(BasicNet):
                 train_loss.append(batch_loss.detach())
 
             train_loss = torch.Tensor(train_loss).to(self.device)
-            #self.early_stopping = False
+            self.early_stopping = False
 
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
@@ -384,7 +384,7 @@ class BasicNetMask(BasicNet):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
-        restore_parameters(self.model, best_model)
+        #restore_parameters(self.model, best_model)
         return self
 
 class RepresentationNet(nn.Module):
@@ -575,7 +575,12 @@ class PropensityNet(nn.Module):
     def get_importance_weights(
         self, X: torch.Tensor, w: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
-        p_pred = self.forward(X).squeeze()[:, 1]
+
+        if X.size()[0] != 1:
+            p_pred = self.forward(X).squeeze()[:, 1]
+        else:
+            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:,1]
+
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
 
     def loss(self, y_pred: torch.Tensor, y_target: torch.Tensor) -> torch.Tensor:

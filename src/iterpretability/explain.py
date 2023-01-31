@@ -183,6 +183,7 @@ class Explainer:
             explainer = self.explainers[name]
             output[name] = explainer(X_test).detach().cpu().numpy()
         return output
+ 
 
     def plot(self, X: torch.Tensor) -> None:
         explanations = self.explain(X)
