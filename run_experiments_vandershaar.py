@@ -88,11 +88,12 @@ def init_arg() -> Any:
         nargs="+",
         type=str,
         default=[
-           # "feature_ablation",
-           # "feature_permutation",
+            "feature_ablation",
+            "feature_permutation",
             "integrated_gradients",
-           # "shapley_value_sampling",
-           # "naive_shap",
+            "shapley_value_sampling",
+            "naive_shap",
+            "explain_with_missingness"
         ],
     )
 

@@ -44,7 +44,7 @@ class PredictiveSensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 10000,
+        n_iter: int = 2000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -152,30 +152,33 @@ class PredictiveSensitivity:
               #      batch_norm=False,
               #      nonlin="relu",
               #  ),
+                 "XLearnerMask": cate_models_masks.XLearnerMask(
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=2,
+                     n_units_out=100,
+                     n_iter=self.n_iter,
+                     batch_size=self.batch_size,
+                    lr=1e-3,
+                    patience=10,
+                     batch_norm=False,
+                     nonlin="relu",
+                     device="cuda:1"
+                 ),
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
-                                                                X_train.shape[1],
-                                                                binary_y=(len(np.unique(Y_train)) == 2),
-                                                                n_layers_out=2,
-                                                                n_units_out=100,
-                                                                n_iter=self.n_iter,
-                                                                batch_size=self.batch_size,
-                                                                batch_norm=False,
-                                                                lr=1e-3,
-                                                                patience=20,
-                                                                nonlin="relu",
-                                                                device="cuda:1"
-                                                                )
-               # "XLearner": cate_models.torch.XLearner(
-               #     X_train.shape[1],
-               #     device="cuda:1",
-               #     binary_y=(len(np.unique(Y_train)) == 2),
-               #     n_layers_out=2,
-               ##     n_units_out=100,
-                #    n_iter=self.n_iter,
-                #    batch_size=1024,
-                #    batch_norm=False,
-                #    nonlin="relu",
-                #),
+                    X_train.shape[1],
+                    binary_y=(len(np.unique(Y_train)) == 2),
+                    n_layers_out=2,
+                    n_units_out=100,
+                    n_iter=self.n_iter,
+                    batch_size=self.batch_size,
+                    batch_norm=False,
+                    lr=1e-3,
+                    patience=10,
+                    nonlin="relu",
+                    device="cuda:1"
+                    ),
+
             }
 
             learner_explainers = {}
@@ -195,6 +198,24 @@ class PredictiveSensitivity:
                     X_test[:self.explainer_limit]
                 )
 
+                feature_indices = np.argsort(np.abs(learner_explanations[learner_name][explainer_name]), 
+                                             axis=1)
+                feature_indices = [list(reversed(i)) for i in feature_indices]
+                feature_indices = list(map(list, zip(*feature_indices)))
+
+                M = torch.ones(X_test.shape)
+
+                for feature_index in feature_indices:
+
+                    ### remove feature & make prediction
+
+                    M[[i for i in range(X_test.shape[0])], feature_index] = 0.
+                    cate_pred_subset = learners[learner_name].predict(X=X_test, M=M)
+                    cate_pred = learners[learner_name].predict(X=X_test, M=torch.ones(X_test.size()))
+                    
+                    ### calculate AUC
+                    
+
             all_important_features = sim.get_all_important_features()
             pred_features = sim.get_predictive_features()
             prog_features = sim.get_prognostic_features()
@@ -206,18 +227,19 @@ class PredictiveSensitivity:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
+                    acc_scores_all_features, acc_scores_all_features_score  = attribution_accuracy(
                         all_important_features, attribution_est
                     )
-                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
+                    acc_scores_predictive_features, acc_scores_predictive_features_score = attribution_accuracy(
                         pred_features, attribution_est
                     )
                     acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
                         prog_features, attribution_est
                     )
-                    test_mask = torch.ones(X_test.shape)
-                    cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
 
+                    test_mask = torch.ones(X_test.shape)
+                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
+                    
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
                     explainability_data.append(
@@ -245,11 +267,11 @@ class PredictiveSensitivity:
                 "Learner",
                 "Explainer",
                 "All features ACC",
-                "All features ACC Score",
+                "All features ACC Score ",
                 "Pred features ACC",
-                "Pred features ACC Score",
+                "Pred features ACC Score ",
                 "Prog features ACC",
-                "Prog features ACC Score",
+                "Prog features ACC Score ",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -257,7 +279,7 @@ class PredictiveSensitivity:
             ],
         )
 
-        results_path = self.save_path / "results/predictive_sensitivity_mask/debug"
+        results_path = self.save_path / "results/predictive_sensitivity_mask/sample"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -378,29 +400,33 @@ class NonLinearitySensitivity:
                 #     batch_norm=False,
                 #     nonlin="relu",
                 # ),
+                 "XLearnerMask": cate_models_masks.XLearnerMask(
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=2,
+                     n_units_out=100,
+                     n_iter=self.n_iter,
+                     batch_size=self.batch_size,
+                    lr=1e-3,
+                    patience=10,
+                     batch_norm=False,
+                     nonlin="relu",
+                     device="cuda:1"
+                 ),
+
                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
-                                                                X_train.shape[1],
-                                                                binary_y=(len(np.unique(Y_train)) == 2),
-                                                                n_layers_out=2,
-                                                                n_units_out=100,
-                                                                n_iter=self.n_iter,
-                                                                batch_size=self.batch_size,
-                                                                batch_norm=False,
-                                                                lr=1e-3,
-                                                                patience=10,
-                                                                nonlin="relu",
-                                                                device="cuda:1"
-                                                                )
-                # "XLearner": cate_models.torch.XLearner(
-                #     X_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_out=2,
-                #     n_units_out=100,
-                #     n_iter=self.n_iter,
-                #     batch_size=1024,
-                #     batch_norm=False,
-                #     nonlin="relu",
-                # ),
+                    X_train.shape[1],
+                    binary_y=(len(np.unique(Y_train)) == 2),
+                    n_layers_out=2,
+                    n_units_out=100,
+                    n_iter=self.n_iter,
+                    batch_size=self.batch_size,
+                    batch_norm=False,
+                    lr=1e-3,
+                    patience=10,
+                    nonlin="relu",
+                    device="cuda:1"
+                    ),
             }
 
             learner_explainers = {}
@@ -430,17 +456,17 @@ class NonLinearitySensitivity:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
+                    acc_scores_all_features, acc_scores_all_features_score  = attribution_accuracy(
                         all_important_features, attribution_est
                     )
-                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
+                    acc_scores_predictive_features, acc_scores_predictive_features_score = attribution_accuracy(
                         pred_features, attribution_est
                     )
                     acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
                         prog_features, attribution_est
                     )
                     test_mask = torch.ones(X_test.shape)
-                    cate_pred = learners[learner_name].predict(X=X_test, M=test_mask)
+                    cate_pred = learners[learner_name].predict(X=X_test,M=test_mask)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
@@ -469,11 +495,11 @@ class NonLinearitySensitivity:
                 "Learner",
                 "Explainer",
                 "All features ACC",
-                "All features ACC Score",
+                "All features ACC Score ",
                 "Pred features ACC",
-                "Pred features ACC Score",
+                "Pred features ACC Score ",
                 "Prog features ACC",
-                "Prog features ACC Score",
+                "Prog features ACC Score ",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -483,7 +509,7 @@ class NonLinearitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity_mask/debug/{self.synthetic_simulator_type}"
+            / f"results/nonlinearity_sensitivity_mask/sample/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -506,7 +532,7 @@ class PropensitySensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 10000,
+        n_iter: int = 2000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -634,19 +660,25 @@ class PropensitySensitivity:
                                                                     n_units_out=100,
                                                                     n_iter=self.n_iter,
                                                                     batch_size=self.batch_size,
+                                                                    lr=1e-3,
+                                                                    patience=10,
                                                                     nonlin="relu",
                                                                     device="cuda:1"
-                                                                    )
-                # "XLearner": cate_models.torch.XLearner(
-                #     X_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_out=2,
-                #     n_units_out=100,
-                #     n_iter=self.n_iter,
-                #     batch_size=1024,
-                #     batch_norm=False,
-                #     nonlin="relu",
-                # ),
+                                                                    ),
+
+                 "XLearnerMask": cate_models_masks.XLearnerMask(
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=2,
+                     n_units_out=100,
+                     n_iter=self.n_iter,
+                     batch_size=self.batch_size,
+                     lr=1e-3,
+                     patience=10,
+                     batch_norm=False,
+                     nonlin="relu",
+                     device="cuda:1"
+                 ),
                 # "CFRNet_0.01": cate_models.torch.TARNet(
                 #     X_train.shape[1],
                 #     binary_y=(len(np.unique(Y_train)) == 2),
@@ -768,7 +800,7 @@ class PropensitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity_mask/normalized/{self.synthetic_simulator_type}/{self.propensity_type}"
+            / f"results/propensity_sensitivity_mask/sample/{self.synthetic_simulator_type}/{self.propensity_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():

@@ -771,3 +771,88 @@ class XLearner(PseudoOutcomeLearner):
         weight = self._propensity_estimator.get_importance_weights(X)
 
         return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
+
+class XLearnerMask(PseudoOutcomeLearnerMask):
+    """
+    X-learner for CATE estimation. Combines two CATE estimates via a weighting function g(x):
+    tau(x) = g(x) tau_0(x) + (1-g(x)) tau_1(x)
+    """
+
+    def __init__(
+        self,
+        *args: Any,
+        weighting_strategy: str = "prop",
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(
+            *args,
+            **kwargs,
+        )
+        self.weighting_strategy = weighting_strategy
+
+    def _first_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        fit_mask: torch.Tensor,
+        pred_mask: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
+        p_pred = np.nan
+        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+
+    def _second_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        p: torch.Tensor,
+        mu_0: torch.Tensor,
+        mu_1: torch.Tensor,
+    ) -> None:
+        # split by treatment status, fit one model per group
+        pseudo_0 = mu_1[w == 0] - y[w == 0]
+        self._te_estimator_0 = self._generate_te_estimator("te_estimator_0_xnet")
+        train_wrapper(self._te_estimator_0, X[w == 0], pseudo_0.detach())
+
+        pseudo_1 = y[w == 1] - mu_0[w == 1]
+        self._te_estimator_1 = self._generate_te_estimator("te_estimator_1_xnet")
+        train_wrapper(self._te_estimator_1, X[w == 1], pseudo_1.detach())
+
+        train_wrapper(self._propensity_estimator, X, w)
+
+    def predict(
+        self, X: torch.Tensor, M: torch.Tensor, return_po: bool = False, training: bool = False
+    ) -> torch.Tensor:
+        """
+        Predict treatment effects
+
+        Parameters
+        ----------
+        X: array-like of shape (n_samples, n_features)
+            Test-sample features
+        return_po: bool, default False
+            Whether to return potential outcome predictions. Placeholder, can only accept False.
+        Returns
+        -------
+        te_est: array-like of shape (n_samples,)
+            Predicted treatment effects
+        """
+        if return_po:
+            raise NotImplementedError(
+                "PseudoOutcomeLearners have no Potential outcome predictors."
+            )
+
+        if not training:
+            self.eval()
+
+        X = self._check_tensor(X).float()
+        M = self._check_tensor(M)
+
+        tau0_pred = predict_wrapper_mask(self._te_estimator_0, X, M)
+        tau1_pred = predict_wrapper_mask(self._te_estimator_1, X, M)
+
+        weight = self._propensity_estimator.get_importance_weights(X)
+
+        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred

@@ -6,7 +6,7 @@ import sys
 import collections
 
 from sklearn.impute import SimpleImputer
-from shapreg import shapley, games, removal
+from shapreg import shapley, games, removal, shapley_sampling
 from sklearn import preprocessing
 from scipy import stats
 
@@ -25,6 +25,8 @@ import catenets.models as cate_models
 fluid_cohort = pd.read_pickle("data/trauma_responder.pkl")
 
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='proc')))]
+fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='ethnicity')))]
+fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='residencestate')))]
 fluid_cohort = fluid_cohort[fluid_cohort.columns.drop(list(fluid_cohort.filter(regex='toxicologyresults')))]
 
 x_train = fluid_cohort.loc[:, ~fluid_cohort.columns.isin(["registryid",
@@ -67,7 +69,7 @@ y_train, y_test = fluid_cohort["outcome"].values[train_inds], fluid_cohort["outc
 top_k_results = []
 
 models = [ #TNet(), 
-           cate_models.torch.DRLearner(
+           cate_models.torch.XLearner(
                                         X_train.shape[1],
                                         binary_y=(len(np.unique(y_train)) == 2),
                                         n_layers_out=2,
@@ -101,7 +103,7 @@ for i, seed in enumerate(seeds):
         for test_ind in range(len(X_test)):
             instance = X_test[test_ind]
             game = games.PredictionGame(marginal_extension, instance)
-            explanation = shapley.ShapleyRegression(game, batch_size=128)
+            explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
             shap_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
 
         for col in range(feature_size):
@@ -119,4 +121,4 @@ summary["count (%)"] = np.round(summary["count (%)"]/(len(models)*len(seeds)),2)
 indices = [names.tolist().index(i) for i in summary.feature.tolist()]
 summary["sign"] = np.sign(np.mean(results_sign, axis=(0,1))[indices])
 
-summary.to_csv("results/trauma_top_10_fatures_responder_drlearner.csv")
+summary.to_csv("results/trauma_top_10_fatures_responder_xlearner.csv")
