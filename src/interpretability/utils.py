@@ -8,6 +8,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch
+
+import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
+
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
 
@@ -158,9 +161,10 @@ def compute_cate_metrics(
     return pehe, factual_rmse
 
 
+
 def attribution_accuracy(
     target_features: list, feature_attributions: np.ndarray
-) -> float:
+) -> tuple:
     """
     Computes the fraction of the most important features that are truly important
     Args:
@@ -186,4 +190,77 @@ def attribution_accuracy(
     for k in target_features:
         accuracy_proportion_abs += np.sum(np.abs(feature_attributions[:,k]))
 
-    return accuracy / (len(feature_attributions) * n_important), accuracy_proportion_abs/np.sum(np.abs(feature_attributions))
+    overlapped_features = accuracy / (len(feature_attributions) * n_important)
+    overlapped_features_score =  accuracy_proportion_abs/np.sum(np.abs(feature_attributions))
+
+    return overlapped_features, overlapped_features_score
+
+
+def attribution_insertion_deletion(
+    X_test: np.ndarray, 
+    rank_indices:list,
+    pate_model: cate_models_masks.PseudoOutcomeLearnerMask,
+) -> tuple:
+    """
+    Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
+
+    Args:
+        X_test: testing set for explanation with insertion and deletion 
+        feature_attributions: feature attribution outputted by a feature importance method
+        pate_model: masking models for PATE estimation. 
+    Returns:
+        results of insertion and deletion of PATE. 
+    """
+
+    n_samples, n_features = X_test.shape
+    deletion_results = np.zeros((n_samples, n_features+1))
+    insertion_results = np.zeros((n_samples, n_features+1))
+    row_indices = [i for i in range(n_samples)]
+
+    removal_mask = torch.ones((n_samples, n_features))
+
+    for rank_index, col_indices in enumerate(rank_indices):
+        
+        removal_mask[row_indices, col_indices] = 0.
+
+        cate_pred_subset = pate_model.predict(X=X_test, M=removal_mask)
+        cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
+        cate_pred = pate_model.predict(X=X_test, M=torch.ones(X_test.shape))
+        cate_pred = cate_pred.detach().cpu().numpy()
+
+        deletion_results[:, 0] = cate_pred.flatten()
+        deletion_results[:, rank_index+1] = cate_pred_subset.flatten()
+
+    # Inserting feature & make prediction with masked model
+
+    insertion_mask = torch.zeros((X_test.shape))
+
+    for rank_index, col_indices in enumerate(rank_indices):
+        
+        insertion_mask[row_indices, col_indices] = 1.
+
+        cate_pred_subset = pate_model.predict(X=X_test, M=insertion_mask)
+        cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
+        cate_pred = pate_model.predict(X=X_test, M=torch.zeros(X_test.shape))
+        cate_pred = cate_pred.detach().cpu().numpy()
+
+        insertion_results[:, 0] = cate_pred.flatten()
+        insertion_results[:, rank_index+1] = cate_pred_subset.flatten()
+
+    return insertion_results, deletion_results
+
+def attribution_ranking(feature_attributions: np.ndarray) -> list:
+    """"
+    Compute the ranking of features according to atribution score
+
+    Args:
+        feature_attributions: an n x d array of feature attribution scores
+    Return:
+        a d x n list of indices starting from the highest attribution score
+    """
+
+    rank_indices = np.argsort(feature_attributions, axis=1)
+    rank_indices = [list(reversed(i)) for i in rank_indices]
+    rank_indices = list(map(list, zip(*rank_indices)))
+
+    return rank_indices

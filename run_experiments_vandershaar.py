@@ -2,8 +2,8 @@ import argparse
 import sys
 from typing import Any
 
-import src.iterpretability.logger as log
-from src.iterpretability.experiments import (
+import src.interpretability.logger as log
+from src.interpretability.experiments import (
     PredictiveSensitivity,
     PropensitySensitivity,
     NonLinearitySensitivity,

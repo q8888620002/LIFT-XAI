@@ -8,7 +8,7 @@ import torch
 from scipy.special import expit
 from scipy.stats import zscore
 
-from src.iterpretability.utils import enable_reproducible_results
+from src.interpretability.utils import enable_reproducible_results
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
