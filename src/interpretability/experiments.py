@@ -20,16 +20,18 @@ import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
 import numpy as np
 import pandas as pd
 
-import src.iterpretability.logger as log
-from src.iterpretability.explain import Explainer
-from src.iterpretability.datasets.data_loader import load
-from src.iterpretability.synthetic_simulate import (
+import src.interpretability.logger as log
+from src.interpretability.explain import Explainer
+from src.interpretability.datasets.data_loader import load
+from src.interpretability.synthetic_simulate import (
     SyntheticSimulatorLinear,
     SyntheticSimulatorModulatedNonLinear,
 )
-from src.iterpretability.utils import (
+from src.interpretability.utils import (
     attribution_accuracy,
     compute_pehe,
+    attribution_ranking,
+    attribution_insertion_deletion
 )
 
 
@@ -164,7 +166,7 @@ class PredictiveSensitivity:
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=1000,
+                     n_iter=10,
                      batch_size=self.batch_size,
                     lr=1e-3,
                     patience=10,
@@ -185,56 +187,56 @@ class PredictiveSensitivity:
                      nonlin="relu",
                      device="cuda:1"
                  ),
-                "DRLearnerMask": cate_models_masks.DRLearnerMask(  
+                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=1000,
+                     n_iter=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
                      lr=1e-3,
                      patience=10,
                      nonlin="relu",
                      device="cuda:1"
-                 ),
+                     ),
                  "DRLearner": cate_models.torch.DRLearner(
                      X_train.shape[1],
                      device = "cuda:0",
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=self.n_iter,
+                     n_iter=1000,
                      lr=1e-3,
                      patience=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
                      nonlin="relu"
                  ),
-
-
             }
 
             learner_explainers = {}
             learner_explanations = {}
+            learner_explaintion_lists = {}
 
             for name in learners:                    
-
                 if "mask" in name.lower():
-                    explainer_list = ["explain_with_missingness"]
+                    learner_explaintion_lists[name] = [
+                        "explain_with_missingness"
+                    ]
                 else:
-                    explainer_list = [           
-                                        "integrated_gradients",
-                                        "shapley_value_sampling",
-                                        "naive_shap"
-                                     ]
+                    learner_explaintion_lists[name] = [           
+                        "integrated_gradients",
+                        "shapley_value_sampling",
+                        "naive_shap"
+                    ]
 
                 log.info(f"Fitting {name}.")
                 learners[name].fit(X=X_train, y=Y_train, w=W_train)
                 learner_explainers[name] = Explainer(
                     learners[name],
                     feature_names=list(range(X_train.shape[1])),
-                    explainer_list=explainer_list,
+                    explainer_list=learner_explaintion_lists[name],
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
@@ -251,18 +253,7 @@ class PredictiveSensitivity:
 
                 mask_model_type = True if  "mask" in learner_name.lower() else False
 
-                if mask_model_type:
-                    explainer_list = [
-                                        "explain_with_missingness"
-                                     ]
-                else:
-                    explainer_list = [           
-                                        "integrated_gradients",
-                                        "shapley_value_sampling",
-                                        "naive_shap"
-                                     ]
-
-                for explainer_name in explainer_list:
+                for explainer_name in learner_explaintion_lists[learner_name]:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
@@ -275,53 +266,36 @@ class PredictiveSensitivity:
                     acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
                         prog_features, attribution_est
                     )
-                    ### computing insertion/deletion results
+                    # Computing insertion & deletion results
 
                     if not mask_model_type:
                         cate_pred = learners[learner_name].predict(X=X_test)
+                        mask_model_name = learner_name + "Mask"
                     else:
                         prediction_mask = torch.ones(X_test.shape)
                         cate_pred = learners[learner_name].predict(X=X_test, M=prediction_mask)
+                        mask_model_name = learner_name
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
-                    removal_results = np.zeros((self.explainer_limit, X_test.shape[1] + 1))
+                    # Obtain feature importance rank
+                    rank_indices = attribution_ranking(learner_explanations[learner_name][explainer_name])
+
+                    # Using PATE to predict CATE
+                    insertion_results, deletion_results = attribution_insertion_deletion(
+                            X_test[:self.explainer_limit, :],
+                            rank_indices,
+                            learners[mask_model_name]
+                    )
                     
-                    # obtain feature importance rank
-
-                    rank_indices = np.argsort(learner_explanations[learner_name][explainer_name], 
-                                             axis=1)
-                    rank_indices = [list(reversed(i)) for i in rank_indices]
-                    rank_indices = list(map(list, zip(*rank_indices)))
-
-                    X_test_removal = X_test[:self.explainer_limit, :]
-
-                    removal_mask = torch.ones((X_test_removal.shape))
-
-                    mask_model_name = learner_name + "Mask" if not mask_model_type else learner_name
-
-                    for rank_index, col_indices in enumerate(rank_indices):
-                        
-                        ## remove feature & make prediction with masked model
-
-                        row_indices = [i for i in range(self.explainer_limit)]
-
-                        removal_mask[row_indices, col_indices] = 0.
-
-                        cate_pred_subset = learners[mask_model_name].predict(X=X_test_removal, M=removal_mask)
-                        cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
-                        cate_pred = learners[mask_model_name].predict(X=X_test_removal, M=torch.ones(X_test_removal.shape))
-                        cate_pred = cate_pred.detach().cpu().numpy()
-
-                        removal_results[:, 0] = cate_pred.flatten()
-                        removal_results[:, rank_index + 1] = cate_pred_subset.flatten()
-                        
                     insertion_deletion_data.append(
                         [
                             predictive_scale,
                             learner_name,
                             explainer_name,
-                            removal_results
+                            insertion_results,
+                            deletion_results,
+                            rank_indices
                         ]
                     )
 
@@ -373,8 +347,6 @@ class PredictiveSensitivity:
             f"binary_{binary_outcome}_seed{self.seed}.csv"
         )
         
-
-
         results_path = self.save_path / "results/predictive_sensitivity/insertion_deletion/insertion_deletion"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -507,7 +479,7 @@ class NonLinearitySensitivity:
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=1000,
+                     n_iter=10,
                      batch_size=self.batch_size,
                     lr=1e-3,
                     patience=10,
@@ -528,54 +500,54 @@ class NonLinearitySensitivity:
                      nonlin="relu",
                      device="cuda:1"
                  ),
-                "DRLearnerMask": cate_models_masks.DRLearnerMask(  
+                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=1000,
+                     n_iter=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
                      lr=1e-3,
                      patience=10,
                      nonlin="relu",
-                     device="cuda:0"
-                 ),
+                     device="cuda:1"
+                     ),
                  "DRLearner": cate_models.torch.DRLearner(
                      X_train.shape[1],
                      device = "cuda:0",
                      binary_y=(len(np.unique(Y_train)) == 2),
                      n_layers_out=2,
                      n_units_out=100,
-                     n_iter=self.n_iter,
+                     n_iter=1000,
                      lr=1e-3,
                      patience=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
                      nonlin="relu"
                  ),
-
             }
 
             learner_explainers = {}
+            learner_explaintion_lists = {}
             learner_explanations = {}
 
-            for name in learners:
-
+            for name in learners:                    
                 if "mask" in name.lower():
-                    explainer_list = ["explain_with_missingness"]
+                    learner_explaintion_lists[name] = ["explain_with_missingness"]
                 else:
-                    explainer_list = [           
-                                        "integrated_gradients",
-                                        "shapley_value_sampling",
-                                        "naive_shap"
-                                     ]
+                    learner_explaintion_lists[name] = [           
+                                                        "integrated_gradients",
+                                                        "shapley_value_sampling",
+                                                        "naive_shap"
+                                                    ]
+
                 log.info(f"Fitting {name}.")
                 learners[name].fit(X=X_train, y=Y_train, w=W_train)
                 learner_explainers[name] = Explainer(
                     learners[name],
                     feature_names=list(range(X_train.shape[1])),
-                    explainer_list=explainer_list,
+                    explainer_list=learner_explaintion_lists[name],
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
@@ -592,18 +564,7 @@ class NonLinearitySensitivity:
 
                 mask_model_type = True if  "mask" in learner_name.lower() else False
 
-                if mask_model_type:
-                    explainer_list = [
-                                        "explain_with_missingness"
-                                     ]
-                else:
-                    explainer_list = [           
-                                        "integrated_gradients",
-                                        "shapley_value_sampling",
-                                        "naive_shap"
-                                     ]
-
-                for explainer_name in explainer_list:
+                for explainer_name in learner_explaintion_lists[learner_name]:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
@@ -620,53 +581,52 @@ class NonLinearitySensitivity:
 
                     if not mask_model_type:
                         cate_pred = learners[learner_name].predict(X=X_test)
+                        mask_model_name = learner_name + "Mask"
                     else:
                         prediction_mask = torch.ones(X_test.shape)
                         cate_pred = learners[learner_name].predict(X=X_test, M=prediction_mask)
+                        mask_model_name = learner_name
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
 
-                    removal_results = np.zeros((self.explainer_limit, X_test.shape[1] + 1))
-                    
-                    # obtain feature importance rank
+                    # Obtain feature importance rank
+                    rank_indices = attribution_ranking(learner_explanations[learner_name][explainer_name])
 
-                    rank_indices = np.argsort(learner_explanations[learner_name][explainer_name], 
-                                             axis=1)
-                    rank_indices = [list(reversed(i)) for i in rank_indices]
-                    rank_indices = list(map(list, zip(*rank_indices)))
-
-                    X_test_removal = X_test[:self.explainer_limit, :]
-
-                    removal_mask = torch.ones((X_test_removal.shape))
-
-                    mask_model_name = learner_name + "Mask" if not mask_model_type else learner_name
-
-                    for rank_index, col_indices in enumerate(rank_indices):
-                        
-                        ## remove feature & make prediction with masked model
-
-                        row_indices = [i for i in range(self.explainer_limit)]
-
-                        removal_mask[row_indices, col_indices] = 0.
-
-                        cate_pred_subset = learners[mask_model_name].predict(X=X_test_removal, M=removal_mask)
-                        cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
-                        
-                        cate_pred = learners[mask_model_name].predict(X=X_test_removal, M=torch.ones(X_test_removal.shape))
-                        cate_pred = cate_pred.detach().cpu().numpy()
-
-                        removal_results[:, 0] = cate_pred.flatten()
-                        removal_results[:, rank_index + 1] = cate_pred_subset.flatten()
+                    # Using PATE to predict CATE
+                    insertion_results, deletion_results = attribution_insertion_deletion(
+                            X_test[:self.explainer_limit, :],
+                            rank_indices,
+                            learners[mask_model_name]
+                    )
 
                     insertion_deletion_data.append(
                         [
                             nonlinearity_scale,
                             learner_name,
                             explainer_name,
-                            removal_results
+                            insertion_results,
+                            deletion_results,
+                            rank_indices
                         ]
                     )
 
+                    explainability_data.append(
+                        [
+                            nonlinearity_scale,
+                            learner_name,
+                            explainer_name,
+                            acc_scores_all_features,
+                            acc_scores_all_features_score,
+                            acc_scores_predictive_features,
+                            acc_scores_predictive_features_score,
+                            acc_scores_prog_features,
+                            acc_scores_prog_features_score,
+                            pehe_test,
+                            np.mean(cate_test),
+                            np.var(cate_test),
+                            pehe_test / np.sqrt(np.var(cate_test)),
+                        ]
+                    )
 
         metrics_df = pd.DataFrame(
             explainability_data,
@@ -686,7 +646,7 @@ class NonLinearitySensitivity:
                 "Normalized PEHE",
             ],
         )
-
+        
         results_path = (
             self.save_path
             / f"results/nonlinearity_sensitivity/insertion_deletion/{self.synthetic_simulator_type}"
@@ -705,8 +665,7 @@ class NonLinearitySensitivity:
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
 
-        with open(  
-            results_path
+        with open( results_path
             / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.pkl", 'wb') as handle:
             pkl.dump(insertion_deletion_data , handle)
 

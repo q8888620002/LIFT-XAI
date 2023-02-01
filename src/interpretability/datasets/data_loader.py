@@ -2,8 +2,8 @@ import pickle
 import numpy as np
 
 from catenets.datasets import load as catenets_load
-from src.iterpretability.datasets.news.process_news import process_news
-from src.iterpretability.datasets.tcga.process_tcga import process_tcga
+from src.interpretability.datasets.news.process_news import process_news
+from src.interpretability.datasets.tcga.process_tcga import process_tcga
 
 
 def load(dataset_name: str, train_ratio: float = 1.0):
