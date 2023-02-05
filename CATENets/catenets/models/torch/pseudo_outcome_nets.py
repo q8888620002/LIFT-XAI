@@ -651,7 +651,7 @@ class PseudoOutcomeLearnerPate(BaseCATEEstimator):
         if self.weighting_strategy is not None:
             p = p_pred
 
-        # STEP 2: direct TE estimation
+        # STEP 2: direct TE estimation, training with subset X_s
         self._second_step(X_subset, y, w, p, mu_0_pred, mu_1_pred)
 
         return self
