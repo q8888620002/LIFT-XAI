@@ -558,6 +558,9 @@ class PredictiveSensitivityHeldOutOne:
 
                 log.info(f"Fitting {name}.")
                 learners[name].fit(X=X_train, y=Y_train, w=W_train)
+
+                # Obtaining explanation 
+
                 learner_explainers[name] = Explainer(
                     learners[name],
                     feature_names=list(range(X_train.shape[1])),
@@ -569,6 +572,7 @@ class PredictiveSensitivityHeldOutOne:
                 )
 
             cate_test = sim.te(X_test)
+
 
             for learner_name in learners:
                 for explainer_name in learner_explaintion_lists[learner_name]:
@@ -593,7 +597,7 @@ class PredictiveSensitivityHeldOutOne:
                         ]
                     )
 
-            # Iterating x_s = D \ {i} for all i in features. 
+            # Held out experiment - iterating x_s = D \ {i} for all i in features. 
 
             for feature_index in range(X_train.shape[1]):
                 
@@ -636,15 +640,17 @@ class PredictiveSensitivityHeldOutOne:
                         y=Y_train, 
                         w=W_train
                     )
+
                     cate_pred = learners[learner_name].predict(X=X_test[:self.explainer_limit]).detach().cpu().numpy()
                     pate_pred = pate_learners[learner_name].predict(X=X_test_subset[:self.explainer_limit ]).detach().cpu().numpy()
+
                     delta_tau = (cate_pred - pate_pred).reshape(-1)
-                    
+
+                    # loading attribution score from learner_explanations
+
                     for explainer_name in subset_explainer_list:
                         if explainer_name == "explain_with_missingness":
                             learner_name += "Mask"
-
-                        # Checking correlation between A(x_s) and tau(x) - tau(x_s) 
 
                         attribution = learner_explanations[learner_name][explainer_name][:, feature_index]
 
