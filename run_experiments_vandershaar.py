@@ -5,6 +5,7 @@ from typing import Any
 import src.interpretability.logger as log
 from src.interpretability.experiments import (
     PredictiveSensitivity,
+    PredictiveSensitivityHeldOutOne,
     PropensitySensitivity,
     NonLinearitySensitivity,
 )
@@ -111,6 +112,27 @@ if __name__ == "__main__":
         )
         if args.experiment_name == "predictive_sensitivity":
             exp = PredictiveSensitivity(
+                seed=seed,
+                explainer_limit=args.explainer_limit,
+                synthetic_simulator_type=args.synthetic_simulator_type,
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, {args.num_important_features_list[experiment_id]} with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
+
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
+
+        elif args.experiment_name == "predictive_heldout":
+            exp = PredictiveSensitivityHeldOutOne(
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
