@@ -6,6 +6,12 @@ from src.interpretability.datasets.news.process_news import process_news
 from src.interpretability.datasets.tcga.process_tcga import process_tcga
 
 
+
+def normalize_data(X):
+    X_normalized = (X - np.min(X, axis=0)) / (np.max(X, axis=0) - np.min(X, axis=0))
+
+    return X_normalized
+
 def load(dataset_name: str, train_ratio: float = 1.0):
     if "tcga" in dataset_name:
         try:
@@ -45,12 +51,17 @@ def load(dataset_name: str, train_ratio: float = 1.0):
                 )
             )
         X_raw = news_dataset
+        # X_raw = 3*(X_raw - np.min(X_raw, axis=0)) / (np.max(X_raw, axis=0) - np.min(X_raw, axis=0)) -1
+
     elif "twins" in dataset_name:
         # Total features  = 39
         X_raw, _, _, _, _, _ = catenets_load(dataset_name, train_ratio=1.0)
     elif "acic" in dataset_name:
         # Total features  = 55
         X_raw, _, _, _, _, _, _, _ = catenets_load("acic2016")
+        X_raw = normalize_data(X_raw)
+        # X_raw -= np.mean(X_raw, axis=0)
+
     else:
         print("Unknown dataset " + str(dataset_name))
 

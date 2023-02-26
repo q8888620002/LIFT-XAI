@@ -48,7 +48,7 @@ class PredictiveSensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 3000,
+        n_iter: int = 2000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -163,39 +163,39 @@ class PredictiveSensitivity:
               #      batch_norm=False,
               #      nonlin="relu",
               #  ),
-                 "XLearnerMask": cate_models_masks.XLearnerMask(
-                     X_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=10,
-                     batch_size=self.batch_size,
-                    lr=1e-3,
-                    patience=10,
-                     batch_norm=False,
-                     nonlin="relu",
-                     device="cuda:1"
-                 ),
-                "XLearner": cate_models.torch.XLearner(
-                     X_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=self.n_iter,
-                     batch_size=self.batch_size,
-                     batch_norm=False,
-                     lr=1e-3,
-                     patience=10,
-                     nonlin="relu",
-                     device="cuda:1"
-                 ),
+                #  "XLearnerMask": cate_models_masks.XLearnerMask(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=10,
+                #      batch_size=self.batch_size,
+                #     lr=1e-3,
+                #     patience=10,
+                #      batch_norm=False,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                # "XLearner": cate_models.torch.XLearner(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=self.n_iter,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      lr=1e-3,
+                #      patience=10,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
                  "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=10,
-                     batch_size=self.batch_size,
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     batch_size=256,
                      batch_norm=False,
                      lr=1e-3,
                      patience=10,
@@ -206,9 +206,9 @@ class PredictiveSensitivity:
                      X_train.shape[1],
                      device = "cuda:0",
                      binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=1000,
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
                      lr=1e-3,
                      patience=10,
                      batch_size=self.batch_size,
@@ -221,27 +221,31 @@ class PredictiveSensitivity:
             learner_explanations = {}
             learner_explaintion_lists = {}
 
-            for name in learners:                    
+            for learner_name in learners:                    
                 if not  "mask" in learner_name.lower():
-                    learner_explaintion_lists[name] = [           
+                    learner_explaintion_lists[learner_name] = [           
                     "integrated_gradients",
                     "shapley_value_sampling",
                     "naive_shap"
                     ]
+                elif  "half" in learner_name.lower():
+                    learner_explaintion_lists[learner_name] = [
+                        "shapley_value_sampling"
+                    ]
                 else:
-                    learner_explaintion_lists[name] = [
+                    learner_explaintion_lists[learner_name] = [
                         "explain_with_missingness"
                     ]
 
-                log.info(f"Fitting {name}.")
-                learners[name].fit(X=X_train, y=Y_train, w=W_train)
-                learner_explainers[name] = Explainer(
-                    learners[name],
+                log.info(f"Fitting {learner_name}.")
+                learners[learner_name].fit(X=X_train, y=Y_train, w=W_train)
+                learner_explainers[learner_name] = Explainer(
+                    learners[learner_name],
                     feature_names=list(range(X_train.shape[1])),
-                    explainer_list=learner_explaintion_lists[name],
+                    explainer_list=learner_explaintion_lists[learner_name],
                 )
-                log.info(f"Explaining {name}.")
-                learner_explanations[name] = learner_explainers[name].explain(
+                log.info(f"Explaining {learner_name}.")
+                learner_explanations[learner_name] = learner_explainers[learner_name].explain(
                     X_test[:self.explainer_limit]
                 )
 
@@ -270,7 +274,7 @@ class PredictiveSensitivity:
 
                     if  not "mask" in learner_name.lower():
                         cate_pred = learners[learner_name].predict(X=X_test)
-                        pate_model_name = learner_name + "Mask"
+                        pate_model_name = "DRLearnerMask"
                     else:
                         prediction_mask = torch.ones(X_test.shape)
                         cate_pred = learners[learner_name].predict(X=X_test, M=prediction_mask)
@@ -336,7 +340,7 @@ class PredictiveSensitivity:
             ],
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity/insertion_deletion"
+        results_path = self.save_path / "results/hidden=3_hidden=50/predictive_sensitivity/model_performance"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -347,7 +351,7 @@ class PredictiveSensitivity:
             f"binary_{binary_outcome}_seed{self.seed}.csv"
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity/insertion_deletion/insertion_deletion"
+        results_path = self.save_path / "results/hidden=3_hidden=50/predictive_sensitivity/insertion_deletion"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -357,6 +361,280 @@ class PredictiveSensitivity:
             f"binary_{binary_outcome}_seed{self.seed}.pkl", 'wb') as handle:
             pkl.dump(insertion_deletion_data , handle)
 
+
+
+class PredictiveSensitivityLoss:
+    """
+    Sensitivity analysis for predictive scale.
+    """
+
+    def __init__(
+        self,
+        n_units_hidden: int = 50,
+        n_layers: int = 2,
+        penalty_orthogonal: float = 0.01,
+        batch_size: int = 256,
+        n_iter: int = 1500,
+        seed: int = 42,
+        explainer_limit: int = 1000,
+        save_path: Path = Path.cwd(),
+        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5,  1, 2],
+        num_interactions: int = 1,
+        synthetic_simulator_type: str = "linear",
+    ) -> None:
+
+        self.n_units_hidden = n_units_hidden
+        self.n_layers = n_layers
+        self.penalty_orthogonal = penalty_orthogonal
+        self.batch_size = batch_size
+        self.n_iter = n_iter
+        self.seed = seed
+        self.explainer_limit = explainer_limit
+        self.save_path = save_path
+        self.predictive_scales = predictive_scales
+        self.num_interactions = num_interactions
+        self.synthetic_simulator_type = synthetic_simulator_type
+
+    def run(
+        self,
+        dataset: str = "tcga_10",
+        train_ratio: float = 0.8,
+        num_important_features: int = 2,
+        binary_outcome: bool = False,
+        random_feature_selection: bool = True,
+        explainer_list: list = [
+            "feature_ablation",
+            "feature_permutation",
+            "integrated_gradients",
+            "shapley_value_sampling",
+            "naive_shap",
+            "explain_with_missingness"
+        ],
+    ) -> None:
+        log.info(
+            f"Using dataset {dataset} with num_important features = {num_important_features}."
+        )
+
+        X_raw_train, X_raw_test = load(dataset, train_ratio=train_ratio)
+
+        if self.synthetic_simulator_type == "linear":
+            sim = SyntheticSimulatorLinear(
+                X_raw_train,
+                num_important_features=num_important_features,
+                random_feature_selection=random_feature_selection,
+                seed=self.seed,
+            )
+        else:
+            raise Exception("Unknown simulator type.")
+
+
+        explainability_data = []
+        insertion_deletion_data = []
+
+        for predictive_scale in self.predictive_scales:
+            log.info(f"Now working with predictive_scale = {predictive_scale}...")
+            (
+                X_train,
+                W_train,
+                Y_train,
+                po0_train,
+                po1_train,
+                propensity_train,
+            ) = sim.simulate_dataset(
+                X_raw_train,
+                predictive_scale=predictive_scale,
+                binary_outcome=binary_outcome,
+            )
+
+            X_test, W_test, Y_test, po0_test, po1_test, _ = sim.simulate_dataset(
+                X_raw_test,
+                predictive_scale=predictive_scale,
+                binary_outcome=binary_outcome,
+            )
+
+            log.info("Fitting and explaining learners...")
+            learners = {
+                   # "TLearner": cate_models.torch.TLearner(
+                   # X_train.shape[1],
+                   # device = "cuda:1",
+                   # binary_y=(len(np.unique(Y_train)) == 2),
+                   # n_layers_out=2,
+                   # n_units_out=100,
+                   # batch_size=1024,
+                   # n_iter=self.n_iter,
+                   # batch_norm=False,
+                   # nonlin="relu",
+               # ),
+               # "SLearner": cate_models.torch.SLearner(
+               #     X_train.shape[1],
+               #     device = "cuda:1",
+               #     binary_y=(len(np.unique(Y_train)) == 2),
+               #     n_layers_out=2,
+               #     n_units_out=100,
+               #     n_iter=self.n_iter,
+               #     batch_size=1024,
+               #     batch_norm=False,
+               #     nonlin="relu",
+               # ),
+              #  "TARNet": cate_models.torch.TARNet(
+              #      X_train.shape[1],
+              #      device = "cuda:1",
+              #      binary_y=(len(np.unique(Y_train)) == 2),
+              #      n_layers_r=1,
+              #      n_layers_out=1,
+              #      n_units_out=100,
+              #      n_units_r=100,
+              #      batch_size=1024,
+              #      n_iter=self.n_iter,
+              #      batch_norm=False,
+              #      nonlin="relu",
+              #  ),
+                #  "XLearnerMask": cate_models_masks.XLearnerMask(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=10,
+                #      batch_size=self.batch_size,
+                #     lr=1e-3,
+                #     patience=10,
+                #      batch_norm=False,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                # "XLearner": cate_models.torch.XLearner(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=self.n_iter,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      lr=1e-3,
+                #      patience=10,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                 "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     batch_size=256,
+                     batch_norm=False,
+                     lr=1e-3,
+                     patience=10,
+                     nonlin="relu",
+                     device="cuda:1"
+                     ),
+                 "DRLearnerMask1": pseudo_outcome_nets.DRLearnerMask1(  
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     batch_size=256,
+                     batch_norm=False,
+                     lr=1e-3,
+                     patience=10,
+                     nonlin="relu",
+                     device="cuda:1"
+                     ),
+                 "DRLearnerMask0": pseudo_outcome_nets.DRLearnerMask0(  
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     batch_size=256,
+                     batch_norm=False,
+                     lr=1e-3,
+                     patience=10,
+                     nonlin="relu",
+                     device="cuda:1"
+                     ),
+                 "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
+                     X_train.shape[1],
+                     device = "cuda:0",
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     lr=1e-3,
+                     patience=10,
+                     batch_size=self.batch_size,
+                     batch_norm=False,
+                     nonlin="relu"
+                 ),
+                 "DRLearner": cate_models.torch.DRLearner(
+                     X_train.shape[1],
+                     device = "cuda:0",
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     lr=1e-3,
+                     patience=10,
+                     batch_size=self.batch_size,
+                     batch_norm=False,
+                     nonlin="relu"
+                 ),
+            }
+
+            learner_explainers = {}
+            learner_explanations = {}
+            learner_explaintion_lists = {}
+
+            for learner_name in learners:                    
+
+                log.info(f"Fitting {learner_name}.")
+                learners[learner_name].fit(X=X_train, y=Y_train, w=W_train)
+                cate_test = sim.te(X_test)
+
+                if  not "mask" in learner_name.lower():
+                    print(learner_name)
+                    cate_pred = learners[learner_name].predict(X=X_test)
+
+                else:
+                    prediction_mask = torch.ones(X_test.shape)
+                    cate_pred = learners[learner_name].predict(X=X_test, M=prediction_mask)
+
+                pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
+
+                explainability_data.append(
+                    [
+                        predictive_scale,
+                        learner_name,
+                        pehe_test,
+                        np.mean(cate_test),
+                        np.var(cate_test),
+                        pehe_test / np.sqrt(np.var(cate_test)),
+                    ]
+                )
+
+        metrics_df = pd.DataFrame(
+            explainability_data,
+            columns=[
+                "Predictive Scale",
+                "Learner",
+                "PEHE",
+                "CATE true mean",
+                "CATE true var",
+                "Normalized PEHE",
+            ],
+        )
+        
+        results_path = self.save_path / "results/losses/predictive_sensitivity/model_performance"
+        log.info(f"Saving results in {results_path}...")
+        if not results_path.exists():
+            results_path.mkdir(parents=True, exist_ok=True)
+
+        metrics_df.to_csv(
+            results_path / f"predictive_scale_{dataset}_{num_important_features}_"
+            f"{self.synthetic_simulator_type}_random_{random_feature_selection}_"
+            f"binary_{binary_outcome}_seed{self.seed}.csv"
+        )
 
 class PredictiveSensitivityHeldOutOne:
     """
@@ -486,12 +764,12 @@ class PredictiveSensitivityHeldOutOne:
               #      batch_norm=False,
               #      nonlin="relu",
               #  ),
-                #  "XLearnerMask": cate_models_masks.XLearnerMask(
+                #  "XLearnerMask": pseudo_outcome_nets.XLearnerMask(
                 #      X_train.shape[1],
                 #      binary_y=(len(np.unique(Y_train)) == 2),
                 #      n_layers_out=2,
                 #      n_units_out=100,
-                #      n_iter=10,
+                #      n_iter=self.n_iter,
                 #      batch_size=self.batch_size,
                 #      lr=1e-3,
                 #      patience=10,
@@ -516,7 +794,7 @@ class PredictiveSensitivityHeldOutOne:
                       X_train.shape[1],
                       binary_y=(len(np.unique(Y_train)) == 2),
                       n_layers_out=2,
-                      n_units_out=100,
+                      n_units_out=50,
                       n_iter=self.n_iter,
                       batch_size=self.batch_size,
                       batch_norm=False,
@@ -530,7 +808,7 @@ class PredictiveSensitivityHeldOutOne:
                       device = "cuda:0",
                       binary_y=(len(np.unique(Y_train)) == 2),
                       n_layers_out=2,
-                      n_units_out=100,
+                      n_units_out=50,
                       n_iter=self.n_iter,
                       lr=1e-3,
                       patience=10,
@@ -544,35 +822,34 @@ class PredictiveSensitivityHeldOutOne:
             learner_explanations = {}
             learner_explaintion_lists = {}
 
-            for name in learners:                    
-                if not  "mask" in name.lower():
-                    learner_explaintion_lists[name] = [           
+            for learner_name in learners:                    
+                if not  "mask" in learner_name.lower():
+                    learner_explaintion_lists[learner_name] = [           
                     "integrated_gradients",
                     "shapley_value_sampling",
                     "naive_shap"
                     ]
                 else:
-                    learner_explaintion_lists[name] = [
+                    learner_explaintion_lists[learner_name] = [
                         "explain_with_missingness"
                     ]
 
-                log.info(f"Fitting {name}.")
-                learners[name].fit(X=X_train, y=Y_train, w=W_train)
+                log.info(f"Fitting {learner_name}.")
+                learners[learner_name].fit(X=X_train, y=Y_train, w=W_train)
 
                 # Obtaining explanation 
 
-                learner_explainers[name] = Explainer(
-                    learners[name],
+                learner_explainers[learner_name] = Explainer(
+                    learners[learner_name],
                     feature_names=list(range(X_train.shape[1])),
-                    explainer_list=learner_explaintion_lists[name],
+                    explainer_list=learner_explaintion_lists[learner_name],
                 )
-                log.info(f"Explaining {name}.")
-                learner_explanations[name] = learner_explainers[name].explain(
+                log.info(f"Explaining {learner_name}.")
+                learner_explanations[learner_name] = learner_explainers[learner_name].explain(
                     X_test[:self.explainer_limit]
                 )
 
             cate_test = sim.te(X_test)
-
 
             for learner_name in learners:
                 for explainer_name in learner_explaintion_lists[learner_name]:
@@ -614,7 +891,7 @@ class PredictiveSensitivityHeldOutOne:
                         device="cuda:1",
                         binary_y=(len(np.unique(Y_train)) == 2),
                         n_layers_out=2,
-                        n_units_out=100,
+                        n_units_out=50,
                         n_iter=self.n_iter,
                         batch_size=self.batch_size,
                         batch_norm=False,
@@ -628,7 +905,8 @@ class PredictiveSensitivityHeldOutOne:
                     "integrated_gradients",
                     "shapley_value_sampling",
                     "naive_shap",
-                    "explain_with_missingness"
+                    "explain_with_missingness",
+                    # "shapley_value_sampling_half_mask"
                 ]
                 
                 for learner_name in pate_learners:
@@ -642,15 +920,24 @@ class PredictiveSensitivityHeldOutOne:
                     )
 
                     cate_pred = learners[learner_name].predict(X=X_test[:self.explainer_limit]).detach().cpu().numpy()
-                    pate_pred = pate_learners[learner_name].predict(X=X_test_subset[:self.explainer_limit ]).detach().cpu().numpy()
 
-                    delta_tau = (cate_pred - pate_pred).reshape(-1)
+                    pate_pred = pate_learners[learner_name].predict(X=X_test_subset[:self.explainer_limit ]).detach().cpu().numpy()\
+
+                    prediction_mask =   torch.ones((X_test[:self.explainer_limit ].shape))
+                    prediction_mask[:, feature_index] = 0
+                    
+                    pate_pred_mask = learners["DRLearnerMask"].predict(X_test[:self.explainer_limit ], prediction_mask).detach().cpu().numpy()
+
+                    pate_pehe = np.sqrt(np.square(pate_pred - pate_pred_mask))
 
                     # loading attribution score from learner_explanations
 
                     for explainer_name in subset_explainer_list:
                         if explainer_name == "explain_with_missingness":
                             learner_name += "Mask"
+                        elif explainer_name == "shapley_value_sampling_half_mask":
+                            learner_name = "DRLearnerHalf"
+                            explainer_name = "shapley_value_sampling"
 
                         attribution = learner_explanations[learner_name][explainer_name][:, feature_index]
 
@@ -661,7 +948,10 @@ class PredictiveSensitivityHeldOutOne:
                                 learner_name,
                                 explainer_name, 
                                 attribution,
-                                delta_tau
+                                pate_pred,
+                                pate_pred_mask,
+                                cate_pred,
+                                pate_pehe/np.sqrt(np.var(pate_pred)),
                             ]
                         )
 
@@ -678,7 +968,7 @@ class PredictiveSensitivityHeldOutOne:
             ],
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity/held_out/model_performance"
+        results_path = self.save_path / "results/held_out/predictive_sensitivity/model_performance"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -689,7 +979,7 @@ class PredictiveSensitivityHeldOutOne:
             f"binary_{binary_outcome}_seed{self.seed}.csv"
         )
         
-        results_path = self.save_path / "results/predictive_sensitivity/held_out/"
+        results_path = self.save_path / "results/held_out/predictive_sensitivity/held_out/"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -710,7 +1000,7 @@ class NonLinearitySensitivity:
         n_layers: int = 2,
         penalty_orthogonal: float = 0.01,
         batch_size: int = 256,
-        n_iter: int = 3000,
+        n_iter: int = 2000,
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
@@ -815,24 +1105,37 @@ class NonLinearitySensitivity:
                 #     batch_norm=False,
                 #     nonlin="relu",
                 # ),
-                 "XLearnerMask": pseudo_outcome_nets.XLearnerMask(
+                #  "XLearnerMask": pseudo_outcome_nets.XLearnerMask(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=10,
+                #      batch_size=self.batch_size,
+                #     lr=1e-3,
+                #     patience=10,
+                #      batch_norm=False,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                # "XLearner": pseudo_outcome_nets.XLearner(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=self.n_iter,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      lr=1e-3,
+                #      patience=10,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                 "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=10,
-                     batch_size=self.batch_size,
-                    lr=1e-3,
-                    patience=10,
-                     batch_norm=False,
-                     nonlin="relu",
-                     device="cuda:1"
-                 ),
-                "XLearner": cate_models.torch.XLearner(
-                     X_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
                      n_iter=self.n_iter,
                      batch_size=self.batch_size,
                      batch_norm=False,
@@ -840,27 +1143,27 @@ class NonLinearitySensitivity:
                      patience=10,
                      nonlin="relu",
                      device="cuda:1"
-                 ),
-                 "DRLearnerMask": cate_models_masks.DRLearnerMask(  
-                     X_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=10,
-                     batch_size=self.batch_size,
-                     batch_norm=False,
-                     lr=1e-3,
-                     patience=10,
-                     nonlin="relu",
-                     device="cuda:1"
                      ),
+                #  "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
+                #      X_train.shape[1],
+                #      device = "cuda:0",
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=self.n_layers,
+                #      n_units_out=self.n_units_hidden,
+                #      n_iter=self.n_iter,
+                #      lr=1e-3,
+                #      patience=10,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      nonlin="relu"
+                #  ),
                  "DRLearner": cate_models.torch.DRLearner(
                      X_train.shape[1],
                      device = "cuda:0",
                      binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=1000,
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
                      lr=1e-3,
                      patience=10,
                      batch_size=self.batch_size,
@@ -873,25 +1176,32 @@ class NonLinearitySensitivity:
             learner_explaintion_lists = {}
             learner_explanations = {}
 
-            for name in learners:                    
+            for learner_name in learners:                    
                 if not  "mask" in learner_name.lower():
-                    learner_explaintion_lists[name] = [           
+                    learner_explaintion_lists[learner_name] = [           
                                                         "integrated_gradients",
                                                         "shapley_value_sampling",
                                                         "naive_shap"
                                                     ]
+                elif "half" in learner_name.lower():
+                    learner_explaintion_lists[learner_name] = [
+                        "shapley_value_sampling"
+                        ]
                 else:
-                    learner_explaintion_lists[name] = ["explain_with_missingness"]
+                    learner_explaintion_lists[learner_name] = [
+                        "explain_with_missingness"
+                        ]
 
-                log.info(f"Fitting {name}.")
-                learners[name].fit(X=X_train, y=Y_train, w=W_train)
-                learner_explainers[name] = Explainer(
-                    learners[name],
+                log.info(f"Fitting {learner_name}.")
+                learners[learner_name].fit(X=X_train, y=Y_train, w=W_train)
+                learner_explainers[learner_name] = Explainer(
+                    learners[learner_name],
                     feature_names=list(range(X_train.shape[1])),
-                    explainer_list=learner_explaintion_lists[name],
+                    explainer_list=learner_explaintion_lists[learner_name],
                 )
-                log.info(f"Explaining {name}.")
-                learner_explanations[name] = learner_explainers[name].explain(
+
+                log.info(f"Explaining {learner_name}.")
+                learner_explanations[learner_name] = learner_explainers[learner_name].explain(
                     X_test[:self.explainer_limit]
                 )
 
@@ -918,9 +1228,9 @@ class NonLinearitySensitivity:
                     )
                     ### computing insertion/deletion results
 
-                    if not  "mask" in learner_name.lower():
+                    if  not "mask" in learner_name.lower():
                         cate_pred = learners[learner_name].predict(X=X_test)
-                        pate_model_name = learner_name + "Mask"
+                        pate_model_name =  "DRLearnerMask"
                     else:
                         prediction_mask = torch.ones(X_test.shape)
                         cate_pred = learners[learner_name].predict(X=X_test, M=prediction_mask)
@@ -988,7 +1298,7 @@ class NonLinearitySensitivity:
         
         results_path = (
             self.save_path
-            / f"results/nonlinearity_sensitivity/insertion_deletion/{self.synthetic_simulator_type}"
+            / f"results/hidden=3_hidden=50/nonlinearity_sensitivity/insertion_deletion/{self.synthetic_simulator_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -999,7 +1309,7 @@ class NonLinearitySensitivity:
             / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.csv"
         )
 
-        results_path = self.save_path / "results/nonlinearity_sensitivity/insertion_deletion/insertion_deletion"
+        results_path = self.save_path / "results/hidden=3_hidden=50/nonlinearity_sensitivity/insertion_deletion/insertion_deletion"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -1007,6 +1317,369 @@ class NonLinearitySensitivity:
         with open( results_path
             / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.pkl", 'wb') as handle:
             pkl.dump(insertion_deletion_data , handle)
+
+
+class NonLinearityHeldOutOne:
+    """
+    Held out one analysis for predictive scale.
+    """
+
+    def __init__(
+        self,
+        n_units_hidden: int = 50,
+        n_layers: int = 2,
+        penalty_orthogonal: float = 0.01,
+        batch_size: int = 256,
+        n_iter: int = 1500,
+        seed: int = 42,
+        explainer_limit: int = 1000,
+        save_path: Path = Path.cwd(),
+        nonlinearity_scales: list = [0.0, 0.2, 0.5, 0.7, 1.0],
+        predictive_scale: float = 1,
+        synthetic_simulator_type: str = "random",
+    ) -> None:
+
+        self.n_units_hidden = n_units_hidden
+        self.n_layers = n_layers
+        self.penalty_orthogonal = penalty_orthogonal
+        self.batch_size = batch_size
+        self.n_iter = n_iter
+        self.seed = seed
+        self.explainer_limit = explainer_limit
+        self.save_path = save_path
+        self.nonlinearity_scales = nonlinearity_scales
+        self.predictive_scale = predictive_scale
+        self.synthetic_simulator_type = synthetic_simulator_type
+
+    def run(
+        self,
+        dataset: str = "tcga_100",
+        num_important_features: int = 15,
+        explainer_list: list = [
+            "feature_ablation",
+            "feature_permutation",
+            "integrated_gradients",
+            "shapley_value_sampling",
+            "naive_shap"
+        ],
+        train_ratio: float = 0.8,
+        binary_outcome: bool = False,
+    ) -> None:
+        log.info(
+            f"Using dataset {dataset} with num_important features = {num_important_features}."
+        )
+        X_raw_train, X_raw_test = load(dataset, train_ratio=train_ratio)
+
+        explainability_data = []
+        held_out_data = []
+
+        for nonlinearity_scale in self.nonlinearity_scales:
+            log.info(f"Now working with a nonlinearity scale {nonlinearity_scale}...")
+            sim = SyntheticSimulatorModulatedNonLinear(
+                X_raw_train,
+                num_important_features=num_important_features,
+                non_linearity_scale=nonlinearity_scale,
+                seed=self.seed,
+                selection_type=self.synthetic_simulator_type,
+            )
+            (
+                X_train,
+                W_train,
+                Y_train,
+                po0_train,
+                po1_train,
+                propensity_train,
+            ) = sim.simulate_dataset(
+                X_raw_train,
+                predictive_scale=self.predictive_scale,
+                binary_outcome=binary_outcome,
+            )
+            X_test, W_test, Y_test, po0_test, po1_test, _ = sim.simulate_dataset(
+                X_raw_test,
+                predictive_scale=self.predictive_scale,
+                binary_outcome=binary_outcome,
+            )
+
+            
+            learners = {
+                   # "TLearner": cate_models.torch.TLearner(
+                   # X_train.shape[1],
+                   # device = "cuda:1",
+                   # binary_y=(len(np.unique(Y_train)) == 2),
+                   # n_layers_out=2,
+                   # n_units_out=100,
+                   # batch_size=1024,
+                   # n_iter=self.n_iter,
+                   # batch_norm=False,
+                   # nonlin="relu",
+               # ),
+               # "SLearner": cate_models.torch.SLearner(
+               #     X_train.shape[1],
+               #     device = "cuda:1",
+               #     binary_y=(len(np.unique(Y_train)) == 2),
+               #     n_layers_out=2,
+               #     n_units_out=100,
+               #     n_iter=self.n_iter,
+               #     batch_size=1024,
+               #     batch_norm=False,
+               #     nonlin="relu",
+               # ),
+              #  "TARNet": cate_models.torch.TARNet(
+              #      X_train.shape[1],
+              #      device = "cuda:1",
+              #      binary_y=(len(np.unique(Y_train)) == 2),
+              #      n_layers_r=1,
+              #      n_layers_out=1,
+              #      n_units_out=100,
+              #      n_units_r=100,
+              #      batch_size=1024,
+              #      n_iter=self.n_iter,
+              #      batch_norm=False,
+              #      nonlin="relu",
+              #  ),
+                #  "XLearnerMask": cate_models_masks.XLearnerMask(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=10,
+                #      batch_size=self.batch_size,
+                #      lr=1e-3,
+                #      patience=10,
+                #      batch_norm=False,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                # "XLearner": cate_models.torch.XLearner(
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=100,
+                #      n_iter=self.n_iter,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      lr=1e-3,
+                #      patience=10,
+                #      nonlin="relu",
+                #      device="cuda:1"
+                #  ),
+                  "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
+                      X_train.shape[1],
+                      binary_y=(len(np.unique(Y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=50,
+                      n_iter=self.n_iter,
+                      batch_size=self.batch_size,
+                      batch_norm=False,
+                      lr=1e-3,
+                      patience=10,
+                      nonlin="relu",
+                      device="cuda:1"
+                      ),
+                #  "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
+                #      X_train.shape[1],
+                #      device = "cuda:0",
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=2,
+                #      n_units_out=50,
+                #      n_iter=self.n_iter,
+                #      lr=1e-3,
+                #      patience=10,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      nonlin="relu"
+                #  ),
+                  "DRLearner": cate_models.torch.DRLearner(
+                      X_train.shape[1],
+                      device = "cuda:0",
+                      binary_y=(len(np.unique(Y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=50,
+                      n_iter=self.n_iter,
+                      lr=1e-3,
+                      patience=10,
+                      batch_size=self.batch_size,
+                      batch_norm=False,
+                      nonlin="relu"
+                  ),
+            }
+
+            learner_explainers = {}
+            learner_explanations = {}
+            learner_explaintion_lists = {}
+
+            for name in learners:                    
+                if not  "mask" in name.lower():
+                    learner_explaintion_lists[name] = [           
+                    "integrated_gradients",
+                    "shapley_value_sampling",
+                    "naive_shap"
+                    ]
+                else:
+                    learner_explaintion_lists[name] = [
+                        "explain_with_missingness"
+                    ]
+
+                log.info(f"Fitting {name}.")
+                learners[name].fit(X=X_train, y=Y_train, w=W_train)
+
+                # Obtaining explanation 
+
+                learner_explainers[name] = Explainer(
+                    learners[name],
+                    feature_names=list(range(X_train.shape[1])),
+                    explainer_list=learner_explaintion_lists[name],
+                )
+                log.info(f"Explaining {name}.")
+                learner_explanations[name] = learner_explainers[name].explain(
+                    X_test[:self.explainer_limit]
+                )
+
+            cate_test = sim.te(X_test)
+
+
+            for learner_name in learners:
+                for explainer_name in learner_explaintion_lists[learner_name]:
+
+                    if  not "mask" in learner_name.lower():
+                        cate_pred = learners[learner_name].predict(X=X_test)
+                    else:
+                        prediction_mask = torch.ones(X_test.shape)
+                        cate_pred = learners[learner_name].predict(X=X_test, M=torch.ones((X_test.shape)))
+
+                    pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
+
+                    explainability_data.append(
+                        [
+                            nonlinearity_scale,
+                            learner_name,
+                            explainer_name,
+                            pehe_test,
+                            np.mean(cate_test),
+                            np.var(cate_test),
+                            pehe_test / np.sqrt(np.var(cate_test)),
+                        ]
+                    )
+
+            # Held out experiment - iterating x_s = D \ {i} for all i in features. 
+        
+            for feature_index in range(X_train.shape[1]):
+                
+                masks = np.ones((X_train.shape[1]))
+                masks[feature_index] = 0
+
+                X_train_subset = X_train[:, masks.astype(bool)]
+                X_test_subset = X_test[:, masks.astype(bool)]
+
+                pate_learners = {
+                    "DRLearner": pseudo_outcome_nets.DRLearnerPate(
+                        X_train.shape[1],
+                        X_train_subset.shape[1],
+                        device="cuda:1",
+                        binary_y=(len(np.unique(Y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=50,
+                        n_iter=self.n_iter,
+                        batch_size=self.batch_size,
+                        batch_norm=False,
+                        lr=1e-3,
+                        patience=10,
+                        nonlin="relu"
+                 )
+                }
+
+                subset_explainer_list = [
+                    "integrated_gradients",
+                    "shapley_value_sampling",
+                    "naive_shap",
+                    "explain_with_missingness",
+                    # "shapley_value_sampling_half_mask"
+                ]
+                
+                for learner_name in pate_learners:
+                    log.info("Fitting PATE models"+ learner_name)
+                    
+                    pate_learners[learner_name].fit(
+                        X=X_train,
+                        X_subset=X_train_subset,
+                        y=Y_train, 
+                        w=W_train
+                    )
+
+                    cate_pred = learners[learner_name].predict(X=X_test[:self.explainer_limit]).detach().cpu().numpy()
+
+                    pate_pred = pate_learners[learner_name].predict(X=X_test_subset[:self.explainer_limit ]).detach().cpu().numpy()\
+
+                    prediction_mask =   torch.ones((X_test[:self.explainer_limit ].shape))
+                    prediction_mask[:, feature_index] = 0
+                    
+                    pate_pred_mask = learners["DRLearnerMask"].predict(X_test[:self.explainer_limit ], prediction_mask).detach().cpu().numpy()
+
+                    pate_pehe = np.sqrt(np.square(pate_pred - pate_pred_mask))
+
+                    # loading attribution score from learner_explanations
+
+                    for explainer_name in subset_explainer_list:
+                        if explainer_name == "explain_with_missingness":
+                            learner_name += "Mask"
+                        elif explainer_name == "shapley_value_sampling_half_mask":
+                            learner_name = "DRLearnerHalf"
+                            explainer_name = "shapley_value_sampling"
+
+                        attribution = learner_explanations[learner_name][explainer_name][:, feature_index]
+
+                        held_out_data.append(
+                            [
+                                nonlinearity_scale,
+                                feature_index,
+                                learner_name,
+                                explainer_name, 
+                                attribution,
+                                pate_pred,
+                                pate_pred_mask,
+                                cate_pred,
+                                pate_pehe/np.sqrt(np.var(pate_pred)),
+                            ]
+                        )
+
+        metrics_df = pd.DataFrame(
+            explainability_data,
+            columns=[
+                "Nonlinearity Scale",
+                "Learner",
+                "Explainer",
+                "PEHE",
+                "CATE true mean",
+                "CATE true var",
+                "Normalized PEHE",
+            ],
+        )
+        
+        results_path = (
+            self.save_path
+            / f"results/held_out/nonlinearity_sensitivity/model_preformance/{self.synthetic_simulator_type}"
+        )
+
+        log.info(f"Saving results in {results_path}...")
+        if not results_path.exists():
+            results_path.mkdir(parents=True, exist_ok=True)
+
+        metrics_df.to_csv(
+            results_path
+            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.csv"
+        )
+
+        results_path = self.save_path / "results/held_out/nonlinearity_sensitivity/"
+        log.info(f"Saving results in {results_path}...")
+        if not results_path.exists():
+            results_path.mkdir(parents=True, exist_ok=True)
+
+        with open( results_path
+            / f"{dataset}_{num_important_features}_binary_{binary_outcome}_seed{self.seed}.pkl", 'wb') as handle:
+            pkl.dump(held_out_data , handle)
+
+
+
 
 class PropensitySensitivity:
     """

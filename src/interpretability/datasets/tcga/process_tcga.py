@@ -48,6 +48,7 @@ def process_tcga(max_num_genes, file_location=""):
     tcga_dataset["rnaseq"] = np.log(np.array(tcga_dataset["rnaseq"]) + 1.0)
 
     # Remove genes that have constant gene expression across all patients
+    
     tcga_dataset["rnaseq"] = tcga_dataset["rnaseq"][
         :,
         np.where(
