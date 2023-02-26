@@ -30,6 +30,9 @@ from catenets.models.torch.base import (
     BaseCATEEstimator,
     BasicNet,
     BasicNetMask,
+    BasicNetMaskHalf,
+    BasicNetMask0,
+    BasicNetMask1,
     PropensityNet,
     PropensityNetMask
 )
@@ -651,7 +654,7 @@ class PseudoOutcomeLearnerPate(BaseCATEEstimator):
         if self.weighting_strategy is not None:
             p = p_pred
 
-        # STEP 2: direct TE estimation, training with subset X_s
+        # STEP 2: direct TE estimation, training with subset
         self._second_step(X_subset, y, w, p, mu_0_pred, mu_1_pred)
 
         return self
@@ -828,44 +831,176 @@ class PseudoOutcomeLearnerMask(PseudoOutcomeLearner):
 
         return predict_wrapper_mask(self._te_estimator, X, M)
 
-
-
-class DRLearner(PseudoOutcomeLearner):
+class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
     """
-    DR-learner for CATE estimation, based on doubly robust AIPW pseudo-outcome
+    Class for training with missingness
     """
 
-    def _first_step(
+    def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+        if self._te_template is not None:
+            return copy.deepcopy(self._te_template)
+        return BasicNetMask(
+            name,
+            2*self.n_unit_in,
+            device = self.device,
+            binary_y=False,
+            n_layers_out=self.n_layers_out_t,
+            n_units_out=self.n_units_out_t,
+            weight_decay=self.weight_decay_t,
+            lr=self.lr_t,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+    def _generate_po_estimator(self, name: str = "po_estimator") -> nn.Module:
+        if self._po_template is not None:
+            return copy.deepcopy(self._po_template)
+
+        return BasicNetMask(
+            name,
+            2*self.n_unit_in,
+            device=self.device,
+            binary_y=self.binary_y,
+            n_layers_out=self.n_layers_out,
+            n_units_out=self.n_units_out,
+            weight_decay=self.weight_decay,
+            lr=self.lr,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+    def _generate_propensity_estimator(
+        self, name: str = "propensity_estimator"
+    ) -> nn.Module:
+        if self.weighting_strategy is None:
+            raise ValueError("Invalid weighting_strategy for PropensityNet")
+
+        return PropensityNetMask(
+            name,
+            self.device,
+            2*self.n_unit_in,
+            2,  # number of treatments
+            self.weighting_strategy,
+            n_units_out_prop=self.n_units_out_prop,
+            n_layers_out_prop=self.n_layers_out_prop,
+            weight_decay=self.weight_decay,
+            lr=self.lr,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            val_split_prop=self.val_split_prop,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout_prob=self.dropout_prob,
+            dropout=self.dropout,
+        ).to(self.device)
+
+    def _impute_pos(
         self,
         X: torch.Tensor,
         y: torch.Tensor,
         w: torch.Tensor,
         fit_mask: torch.Tensor,
         pred_mask: torch.Tensor,
-    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
-        p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
-        return (
-            mu0_pred.squeeze().to(self.device),
-            mu1_pred.squeeze().to(self.device),
-            p_pred.to(self.device),
-        )
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        # split sample
+        X_fit, Y_fit, W_fit = X[fit_mask, :], y[fit_mask], w[fit_mask]
 
-    def _second_step(
+        # fit two separate (standard) models
+        # untreated model
+        temp_model_0 = self._generate_po_estimator("po_estimator_0_impute_pos")
+        train_wrapper(temp_model_0, X_fit[W_fit == 0], Y_fit[W_fit == 0])
+
+        # treated model
+        temp_model_1 = self._generate_po_estimator("po_estimator_1_impute_pos")
+        train_wrapper(temp_model_1, X_fit[W_fit == 1], Y_fit[W_fit == 1])
+
+        X = self._check_tensor(X).float()
+        M = self._check_tensor(torch.ones(X[pred_mask, :].size()))
+
+        mu_0_pred = predict_wrapper_mask(temp_model_0, X[pred_mask, :],M)
+        mu_1_pred = predict_wrapper_mask(temp_model_1, X[pred_mask, :],M)
+
+        return mu_0_pred, mu_1_pred
+        
+    def _impute_propensity(
         self,
         X: torch.Tensor,
-        y: torch.Tensor,
         w: torch.Tensor,
-        p: torch.Tensor,
-        mu_0: torch.Tensor,
-        mu_1: torch.Tensor,
-    ) -> None:
-        pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
-        train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+        fit_mask: torch.tensor,
+        pred_mask: torch.Tensor,
+    ) -> torch.Tensor:
+        # split sample
+        X_fit, W_fit = X[fit_mask, :], w[fit_mask]
 
-class DRLearnerPate(PseudoOutcomeLearnerPate):
+        # fit propensity estimator
+        temp_propensity_estimator = self._generate_propensity_estimator(
+            "prop_estimator_impute_propensity"
+        )
+        train_wrapper(temp_propensity_estimator, X_fit, W_fit)
+
+        # predict propensity on hold out
+        return temp_propensity_estimator.get_importance_weights(
+            X[pred_mask, :], w[pred_mask]
+        )
+
+    def predict(
+        self, X: torch.Tensor, M: torch.Tensor ,return_po: bool = False, training: bool = False
+    ) -> torch.Tensor:
+        """
+        Predict treatment effects
+
+        Parameters
+        ----------
+        X: array-like of shape (n_samples, n_features)
+            Test-sample features
+        M: feature masking tensor
+
+        Returns
+        -------
+        te_est: array-like of shape (n_samples,)
+            Predicted treatment effects
+        """
+        if return_po:
+            raise NotImplementedError(
+                "PseudoOutcomeLearners have no Potential outcome predictors."
+            )
+        if not training:
+            self.eval()
+
+
+        X = self._check_tensor(X).float()
+        M = self._check_tensor(M)
+
+        return predict_wrapper_mask(self._te_estimator, X, M)
+
+
+
+class DRLearner(PseudoOutcomeLearner):
     """
-    DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
+    DR-learner for CATE estimation, based on doubly robust AIPW pseudo-outcome
     """
 
     def _first_step(
@@ -929,6 +1064,200 @@ class DRLearnerMask(PseudoOutcomeLearnerMask):
     ) -> None:
         pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
+class DRLearnerMaskFull(PseudoOutcomeLearnerMaskfull):
+    """
+    DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
+    """
+
+    def _first_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        fit_mask: torch.Tensor,
+        pred_mask: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
+        p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred.to(self.device),
+        )
+
+    def _second_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        p: torch.Tensor,
+        mu_0: torch.Tensor,
+        mu_1: torch.Tensor,
+    ) -> None:
+        pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
+        train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
+
+class DRLearnerMask1(DRLearnerMask):
+    """
+    DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
+    """
+
+    def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+        if self._te_template is not None:
+            return copy.deepcopy(self._te_template)
+        return BasicNetMask1(
+            name,
+            2*self.n_unit_in,
+            device=self.device,
+            binary_y=False,
+            n_layers_out=self.n_layers_out_t,
+            n_units_out=self.n_units_out_t,
+            weight_decay=self.weight_decay_t,
+            lr=self.lr_t,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+
+class DRLearnerMask0(DRLearnerMask):
+    """
+    DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
+    """
+
+    def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+        if self._te_template is not None:
+            return copy.deepcopy(self._te_template)
+        return BasicNetMask0(
+            name,
+            2*self.n_unit_in,
+            device=self.device,
+            binary_y=False,
+            n_layers_out=self.n_layers_out_t,
+            n_units_out=self.n_units_out_t,
+            weight_decay=self.weight_decay_t,
+            lr=self.lr_t,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+
+class DRLearnerPate(PseudoOutcomeLearnerPate):
+    """
+    DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
+    """
+
+    def _first_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        fit_mask: torch.Tensor,
+        pred_mask: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
+        p_pred = self._impute_propensity(X, w, fit_mask, pred_mask).squeeze()
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred.to(self.device),
+        )
+
+    def _second_step(
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        w: torch.Tensor,
+        p: torch.Tensor,
+        mu_0: torch.Tensor,
+        mu_1: torch.Tensor,
+    ) -> None:
+        pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
+        train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
+
+class DRLearnerMaskHalf(DRLearnerMask):
+    """
+    DR-learner for CATE estimation (Training with Masks)
+    """
+    def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+        if self._te_template is not None:
+            return copy.deepcopy(self._te_template)
+        return BasicNetMaskHalf(
+            name,
+            self.n_unit_in,
+            device=self.device,
+            binary_y=False,
+            n_layers_out=self.n_layers_out_t,
+            n_units_out=self.n_units_out_t,
+            weight_decay=self.weight_decay_t,
+            lr=self.lr_t,
+            n_iter=self.n_iter,
+            batch_size=self.batch_size,
+            val_split_prop=self.val_split_prop,
+            n_iter_print=self.n_iter_print,
+            seed=self.seed,
+            nonlin=self.nonlin,
+            patience=self.patience,
+            n_iter_min=self.n_iter_min,
+            batch_norm=self.batch_norm,
+            early_stopping=self.early_stopping,
+            dropout=self.dropout,
+            dropout_prob=self.dropout_prob,
+        ).to(self.device)
+
+    def predict(
+        self, X: torch.Tensor ,return_po: bool = False, training: bool = False
+    ) -> torch.Tensor:
+        """
+        Predict treatment effects
+
+        Parameters
+        ----------
+        X: array-like of shape (n_samples, n_features)
+            Test-sample features
+        M: feature masking tensor
+
+        Returns
+        -------
+        te_est: array-like of shape (n_samples,)
+            Predicted treatment effects
+        """
+        if return_po:
+            raise NotImplementedError(
+                "PseudoOutcomeLearners have no Potential outcome predictors."
+            )
+        if not training:
+            self.eval()
+
+
+        X = self._check_tensor(X).float()
+
+        return predict_wrapper(self._te_estimator, X)
+
+
+
 
 class PWLearner(PseudoOutcomeLearner):
     """
@@ -1225,7 +1554,7 @@ class XLearnerMask(PseudoOutcomeLearnerMask):
 
         return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
 
-class XLearnerPate(PseudoOutcomeLearner):
+class XLearnerPate(PseudoOutcomeLearnerPate):
     """
     X-learner for CATE estimation. Combines two CATE estimates via a weighting function g(x):
     tau(x) = g(x) tau_0(x) + (1-g(x)) tau_1(x)

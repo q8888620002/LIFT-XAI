@@ -5,6 +5,7 @@ Model utils shared across different nets
 from typing import Any, Optional
 
 import torch
+import numpy as np
 from sklearn.model_selection import train_test_split
 
 import catenets.logger as log
@@ -133,7 +134,9 @@ def generate_masks(X):
     num_features = X.shape[1]
     
     unif = torch.rand(batch_size, num_features)
-    ref = torch.rand(batch_size, 1)
+    ref = torch.rand(batch_size, 1) 
+
+    #ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size,1))
     
     return (unif > ref).float()
 
@@ -141,3 +144,23 @@ def restore_parameters(model, best_model):
     '''Move parameters from best model to current model.'''
     for param, best_param in zip(model.parameters(), best_model.parameters()):
         param.data = best_param
+
+
+def weights_init(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+
+    init_type = "normal"
+
+    if classname.find('Linear') != -1:
+        if init_type == "normal":
+            # Gaussian distribution for initialization 
+            m.weight.data.normal_(mean=0.0, std=1.0/np.sqrt(m.in_features))
+
+        elif init_type == "uniform":
+            # apply a uniform distribution to the weights and a bias=0
+
+            m.weight.data.normal_(0.0,1)
+        
+        if m.bias is not None:
+            m.bias.data.zero_()
