@@ -421,7 +421,7 @@ class BasicNetMask(nn.Module):
 
     def fit(
         self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
-    ) -> "BasicNet":
+    ) -> "BasicNetMask":
         self.train()
         X = self._check_tensor(X)
         y = self._check_tensor(y).squeeze()
@@ -514,6 +514,8 @@ class BasicNetMask(nn.Module):
                             break
                     
                     if i % self.n_iter_print == 0:
+
+                        print(self.early_stopping)
                         print( 
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )

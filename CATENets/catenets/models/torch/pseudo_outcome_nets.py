@@ -616,7 +616,6 @@ class PseudoOutcomeLearnerPate(PseudoOutcomeLearner):
         w = self._check_tensor(w).squeeze().float()
 
         n = len(y)
-
         # STEP 1: fit plug-in estimators via cross-fitting
         if self.n_folds == 1:
             pred_mask = np.ones(n, dtype=bool)
@@ -960,6 +959,7 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         ).to(self.device)
     
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
+
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
         return BasicNetMask(
@@ -985,6 +985,70 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
             dropout_prob=self.dropout_prob,
             mask_dis = self.mask_dis
         ).to(self.device)
+
+    def fit(
+        self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor
+    ) -> "PseudoOutcomeLearner":
+        """
+        Train treatment effects nets.
+
+        Parameters
+        ----------
+        X: array-like of shape (n_samples, n_features)
+            Train-sample features
+        y: array-like of shape (n_samples,)
+            Train-sample labels
+        w: array-like of shape (n_samples,)
+            Train-sample treatments
+        """
+        self.train()
+
+        X = self._check_tensor(X).float()
+        y = self._check_tensor(y).squeeze().float()
+        w = self._check_tensor(w).squeeze().float()
+
+        n = len(y)
+
+        # STEP 1: fit plug-in estimators via cross-fitting
+        if self.n_folds == 1:
+            pred_mask = np.ones(n, dtype=bool)
+            # fit plug-in models
+            mu_0_pred, mu_1_pred, p_pred = self._first_step(
+                X, y, w, pred_mask, pred_mask
+            )
+        else:
+            mu_0_pred, mu_1_pred, p_pred = (
+                torch.zeros(n).to(self.device),
+                torch.zeros(n).to(self.device),
+                torch.zeros(n).to(self.device),
+            )
+
+            # create folds stratified by treatment assignment to ensure balance
+            splitter = StratifiedKFold(
+                n_splits=self.n_folds, shuffle=True, random_state=self.seed
+            )
+
+            for train_index, test_index in splitter.split(X.cpu(), w.cpu()):
+                # create masks
+                pred_mask = torch.zeros(n, dtype=bool).to(self.device)
+                pred_mask[test_index] = 1
+
+                # fit plug-in te_estimator
+                (
+                    mu_0_pred[pred_mask],
+                    mu_1_pred[pred_mask],
+                    p_pred[pred_mask],
+                ) = self._first_step(X, y, w, ~pred_mask, pred_mask)
+
+        # use estimated propensity scores
+        if self.weighting_strategy is not None:
+            p = p_pred
+
+        # STEP 2: direct TE estimation
+        self._second_step(X, y, w, p, mu_0_pred, mu_1_pred)
+
+        return self
+
 
     def predict(
         self, X: torch.Tensor, M: torch.Tensor ,return_po: bool = False, training: bool = False
