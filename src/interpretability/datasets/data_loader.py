@@ -59,6 +59,7 @@ def load(dataset_name: str, train_ratio: float = 1.0):
     elif "acic" in dataset_name:
         # Total features  = 55
         X_raw, _, _, _, _, _, _, _ = catenets_load("acic2016")
+
         X_raw = normalize_data(X_raw)
         # X_raw -= np.mean(X_raw, axis=0)
 
@@ -72,6 +73,8 @@ def load(dataset_name: str, train_ratio: float = 1.0):
         X_raw_test = X_raw[int(train_ratio * X_raw.shape[0]) :]
 
         train_mean = np.mean(X_raw_train, axis=0)
+        train_std = np.std(X_raw_train, axis=0)
+
         X_raw_train -= train_mean
         X_raw_test -= train_mean
 
