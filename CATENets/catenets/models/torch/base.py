@@ -168,7 +168,7 @@ class BasicNet(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-        self.model.apply(weights_init)
+        # self.model.apply(weights_init)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         return self.model(X)
@@ -406,7 +406,7 @@ class BasicNetMask(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-        self.model.apply(weights_init)
+        # self.model.apply(weights_init)
 
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
@@ -536,7 +536,7 @@ class BasicNetMask0(BasicNetMask):
 
     def fit(
         self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
-    ) -> "BasicNetMask":
+    ) -> "BasicNetMask0":
         self.train()
         X = self._check_tensor(X)
         y = self._check_tensor(y).squeeze()
@@ -650,6 +650,16 @@ class BasicNetMask0(BasicNetMask):
 
         return self.model(out)
 
+
+class BasicNetMask1(BasicNetMask):
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+        M = torch.ones(X.size())
+        M = self._check_tensor(M)
+
+        out = torch.cat([X, M], dim=1)
+
+        return self.model(out)
+    
 class BasicNetMaskHalf(BasicNetMask):
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
@@ -657,8 +667,6 @@ class BasicNetMaskHalf(BasicNetMask):
 
         return self.model(out)
 
-
-    
 
 class RepresentationNet(nn.Module):
     """

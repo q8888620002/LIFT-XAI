@@ -162,7 +162,7 @@ def weights_init(m):
         elif init_type == "uniform":
             # apply a uniform distribution to the weights and a bias=0
 
-            m.weight.data.normal_(0.0,1)
+            m.weight.data.uniform_(0.0, 1.0)
         
         if m.bias is not None:
             m.bias.data.zero_()

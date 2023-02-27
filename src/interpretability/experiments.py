@@ -657,7 +657,7 @@ class PredictiveSensitivityLoss:
             ],
         )
         
-        results_path = self.save_path / "results/losses/predictive_sensitivity/model_performance"
+        results_path = self.save_path / "results/losses/default/predictive_sensitivity/model_performance"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -831,7 +831,7 @@ class PredictiveSensitivityHeldOutOne:
                       n_iter=self.n_iter,
                       batch_size=self.batch_size,
                       batch_norm=False,
-                      lr=1e-3,
+                      lr=1e-4,
                       patience=10,
                       nonlin="relu",
                       mask_dis="Uniform"
