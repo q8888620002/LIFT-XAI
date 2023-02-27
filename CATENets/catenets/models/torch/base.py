@@ -273,124 +273,148 @@ class BasicNet(nn.Module):
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
 
-class BasicNetMaskHalf(BasicNet):
-    def fit(
-        self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
-    ) -> "BasicNet":
-        self.train()
 
-        X = self._check_tensor(X)
-        y = self._check_tensor(y).squeeze()
-        # get validation split (can be none)
-        X, y, X_val, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
-        )
-        y_val = y_val.squeeze()
-        n = X.shape[0]  # could be different from before due to split
 
-        # calculate number of batches per epoch
-        batch_size = self.batch_size if self.batch_size < n else n
-        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
-        train_indices = np.arange(n)
-
-        # do training
-        val_loss_best = LARGE_VAL
-        patience = 0
-        best_model = None
-
-        scheduler = ReduceLROnPlateau(
-            self.optimizer, 
-            patience=self.patience//2,
-            mode='min', 
-            min_lr=1e-6,
-            factor = 0.5
-        )
-        for i in range(self.n_iter):
-            # shuffle data for minibatches
-
-            np.random.shuffle(train_indices)
-            train_loss = []
-
-            for b in range(n_batches):
-                self.optimizer.zero_grad()
-
-                idx_next = train_indices[
-                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
-                ]
-                X_next = X[idx_next]
-                y_next = y[idx_next]
-                
-                weight_next = None
-                if weight is not None:
-                    weight_next = weight[idx_next].detach()
-
-                loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
-
-                masks = generate_masks(X_next)
-                masks = self._check_tensor(masks)
-                X_next = X_next * masks
-                
-                preds = self.forward(X_next).squeeze()
-
-                batch_loss = loss(preds, y_next)
-
-                batch_loss.backward()
-
-                torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
-
-                self.optimizer.step()
-                train_loss.append(batch_loss.detach())
-
-            train_loss = torch.Tensor(train_loss).to(self.device)
-            
-            self.early_stopping = False
-
-            if self.early_stopping or i % self.n_iter_print == 0:
-                loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
-
-                with torch.no_grad():
-                    masks = generate_masks(X_val)
-                    masks = self._check_tensor(masks)
-                    X_val = X_val * masks
-                    
-                    preds = self.forward(X_val).squeeze()
-                    val_loss = loss(preds, y_val)
-                    scheduler.step(val_loss)
-
-                    if self.early_stopping:
-                        if val_loss_best > val_loss:
-                            val_loss_best = val_loss
-                            patience = 0
-                            best_model  = deepcopy(self.model)
-                        else:
-                            patience += 1
-
-                        if patience > self.patience and i > self.n_iter_min:
-                            break
-                            
-                    if i % self.n_iter_print == 0:
-                        print(
-                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
-                        )
-                        log.info(
-                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
-                        )
-        # restore_parameters(self.model, best_model)
-
-        return self
-
-class BasicNetMask(BasicNet):
+class BasicNetMask(nn.Module):
 
     """
     Class of Mask version of BasicNet.
     """
-    
+    """
+    Basic hypothesis neural net.
+
+    Parameters
+    ----------
+    n_unit_in: int
+        Number of features
+    n_layers_out: int
+        Number of hypothesis layers (n_layers_out x n_units_out + 1 x Linear layer)
+    n_units_out: int
+        Number of hidden units in each hypothesis layer
+    binary_y: bool, default False
+        Whether the outcome is binary. Impacts the loss function.
+    nonlin: string, default 'elu'
+        Nonlinearity to use in NN. Can be 'elu', 'relu', 'selu' or 'leaky_relu'.
+    lr: float
+        learning rate for optimizer. step_size equivalent in the JAX version.
+    weight_decay: float
+        l2 (ridge) penalty for the weights.
+    n_iter: int
+        Maximum number of iterations.
+    batch_size: int
+        Batch size
+    n_iter_print: int
+        Number of iterations after which to print updates and check the validation loss.
+    seed: int
+        Seed used
+    val_split_prop: float
+        Proportion of samples used for validation split (can be 0)
+    patience: int
+        Number of iterations to wait before early stopping after decrease in validation loss
+    n_iter_min: int
+        Minimum number of iterations to go through before starting early stopping
+    clipping_value: int, default 1
+        Gradients clipping value
+    """
+
+    def __init__(
+        self,
+        name: str,
+        n_unit_in: int,
+        device: str,
+        n_layers_out: int = DEFAULT_LAYERS_OUT,
+        n_units_out: int = DEFAULT_UNITS_OUT,
+        binary_y: bool = False,
+        nonlin: str = DEFAULT_NONLIN,
+        lr: float = DEFAULT_STEP_SIZE,
+        weight_decay: float = DEFAULT_PENALTY_L2,
+        n_iter: int = DEFAULT_N_ITER,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+        n_iter_print: int = DEFAULT_N_ITER_PRINT,
+        seed: int = DEFAULT_SEED,
+        val_split_prop: float = DEFAULT_VAL_SPLIT,
+        patience: int = DEFAULT_PATIENCE,
+        n_iter_min: int = DEFAULT_N_ITER_MIN,
+        clipping_value: int = 1,
+        batch_norm: bool = True,
+        early_stopping: bool = True,
+        dropout: bool = False,
+        dropout_prob: float = 0.2,
+        mask_dis: str = "Uniform"
+    ) -> None:
+        super(BasicNetMask, self).__init__()
+
+        self.name = name
+        if nonlin not in list(NONLIN.keys()):
+            raise ValueError("Unknown nonlinearity")
+
+        NL = NONLIN[nonlin]
+        if n_layers_out > 0:
+            if batch_norm:
+                layers = [
+                    nn.Linear(n_unit_in, n_units_out),
+                    nn.BatchNorm1d(n_units_out),
+                    NL(),
+                ]
+            else:
+                layers = [nn.Linear(n_unit_in, n_units_out), NL()]
+
+            # add required number of layers
+            for i in range(n_layers_out - 1):
+                if dropout:
+                    layers.extend([nn.Dropout(dropout_prob)])
+                if batch_norm:
+                    layers.extend(
+                        [
+                            nn.Linear(n_units_out, n_units_out),
+                            nn.BatchNorm1d(n_units_out),
+                            NL(),
+                        ]
+                    )
+                else:
+                    layers.extend(
+                        [
+                            nn.Linear(n_units_out, n_units_out),
+                            NL(),
+                        ]
+                    )
+
+            # add final layers
+            layers.append(nn.Linear(n_units_out, 1))
+        else:
+            layers = [nn.Linear(n_unit_in, 1)]
+
+        if binary_y:
+            layers.append(nn.Sigmoid())
+
+        # return final architecture
+        self.device = device
+        self.model = nn.Sequential(*layers).to(self.device)
+        self.binary_y = binary_y
+
+        self.n_iter = n_iter
+        self.batch_size = batch_size
+        self.n_iter_print = n_iter_print
+        self.seed = seed
+        self.val_split_prop = val_split_prop
+        self.patience = patience
+        self.n_iter_min = n_iter_min
+        self.clipping_value = clipping_value
+        self.early_stopping = early_stopping
+        self.mask_dis = mask_dis
+        self.optimizer = torch.optim.Adam(
+            self.parameters(), lr=lr, weight_decay=weight_decay
+        )
+
+        self.model.apply(weights_init)
+
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
         M = self._check_tensor(M)
         out = X * M
         M = M.float()
-       # M /= 10.0
+        mask_indices = (1.0 - M).nonzero()
+        # X[mask_indices] = -1
         out = torch.cat([out, M], dim=1)
 
         return self.model(out)
@@ -443,7 +467,7 @@ class BasicNetMask(BasicNet):
                 
                 # generate masks
 
-                masks = generate_masks(X_next)
+                masks = generate_masks(X_next, self.mask_dis)
                 masks = self._check_tensor(masks)
 
                 weight_next = None
@@ -471,7 +495,7 @@ class BasicNetMask(BasicNet):
                     
                     ## generating random masking for validation.
 
-                    masks = generate_masks(X_val)
+                    masks = generate_masks(X_val, self.mask_dis)
                     masks = self._check_tensor(masks)
                     
                     preds = self.forward(X_val, masks).squeeze()
@@ -500,27 +524,17 @@ class BasicNetMask(BasicNet):
         #restore_parameters(self.model, best_model)
 
         return self
+    def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
+        if isinstance(X, torch.Tensor):
+            return X.to(self.device)
+        else:
+            return torch.from_numpy(np.asarray(X)).to(self.device)
+        
 
-
-class BasicNetMask0(BasicNetMask):
-
+class BasicNetMaskHalf(BasicNetMask):
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
-        M = torch.zeros((X.size()))
-        M = self._check_tensor(M)
-
-        out = torch.cat([X, M], dim=1)
-
-        return self.model(out)
-
-class BasicNetMask1(BasicNetMask):
-    
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
-
-        M = torch.ones((X.size()))
-        M = self._check_tensor(M)
-
-        out = torch.cat([X, M], dim=1)
+        out = X * M
 
         return self.model(out)
 

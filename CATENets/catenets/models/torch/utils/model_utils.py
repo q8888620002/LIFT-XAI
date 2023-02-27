@@ -128,15 +128,17 @@ def predict_wrapper_mask(estimator: Any, X: torch.Tensor, M:torch.tensor) -> tor
     else:
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
 
-def generate_masks(X):
+def generate_masks(X, mask_dis):
     
     batch_size = X.shape[0]
     num_features = X.shape[1]
     
     unif = torch.rand(batch_size, num_features)
-    ref = torch.rand(batch_size, 1) 
 
-    #ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size,1))
+    if mask_dis == "Uniform":
+        ref = torch.rand(batch_size, 1) 
+    elif mask_dis == "Beta":
+        ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size,1))
     
     return (unif > ref).float()
 

@@ -202,6 +202,19 @@ class PredictiveSensitivity:
                      nonlin="relu",
                      device="cuda:1"
                      ),
+                 "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
+                     X_train.shape[1],
+                     device = "cuda:0",
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     lr=1e-3,
+                     patience=10,
+                     batch_size=self.batch_size,
+                     batch_norm=False,
+                     nonlin="relu"
+                 ),
                  "DRLearner": cate_models.torch.DRLearner(
                      X_train.shape[1],
                      device = "cuda:0",
@@ -518,6 +531,7 @@ class PredictiveSensitivityLoss:
                  "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
+                     device="cuda:1",
                      n_layers_out=self.n_layers,
                      n_units_out=self.n_units_hidden,
                      n_iter=self.n_iter,
@@ -526,11 +540,26 @@ class PredictiveSensitivityLoss:
                      lr=1e-3,
                      patience=10,
                      nonlin="relu",
-                     device="cuda:1"
+                     mask_dis="Uniform"
+                     ),
+                 "DRLearnerMaskBeta": pseudo_outcome_nets.DRLearnerMask(  
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     device="cuda:1",
+                     n_layers_out=self.n_layers,
+                     n_units_out=self.n_units_hidden,
+                     n_iter=self.n_iter,
+                     batch_size=256,
+                     batch_norm=False,
+                     lr=1e-3,
+                     patience=10,
+                     nonlin="relu",
+                     mask_dis="Beta"
                      ),
                  "DRLearnerMask1": pseudo_outcome_nets.DRLearnerMask1(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
+                     device="cuda:1",
                      n_layers_out=self.n_layers,
                      n_units_out=self.n_units_hidden,
                      n_iter=self.n_iter,
@@ -539,11 +568,12 @@ class PredictiveSensitivityLoss:
                      lr=1e-3,
                      patience=10,
                      nonlin="relu",
-                     device="cuda:1"
+                     mask_dis="Uniform"
                      ),
                  "DRLearnerMask0": pseudo_outcome_nets.DRLearnerMask0(  
                      X_train.shape[1],
                      binary_y=(len(np.unique(Y_train)) == 2),
+                     device="cuda:1",
                      n_layers_out=self.n_layers,
                      n_units_out=self.n_units_hidden,
                      n_iter=self.n_iter,
@@ -552,9 +582,9 @@ class PredictiveSensitivityLoss:
                      lr=1e-3,
                      patience=10,
                      nonlin="relu",
-                     device="cuda:1"
+                     mask_dis="Uniform"
                      ),
-                 "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
+                 "DRLearnerHalfMask": pseudo_outcome_nets.DRLearnerMaskHalf(
                      X_train.shape[1],
                      device = "cuda:0",
                      binary_y=(len(np.unique(Y_train)) == 2),
@@ -565,7 +595,8 @@ class PredictiveSensitivityLoss:
                      patience=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
-                     nonlin="relu"
+                     nonlin="relu",
+                     mask_dis="Uniform"
                  ),
                  "DRLearner": cate_models.torch.DRLearner(
                      X_train.shape[1],
