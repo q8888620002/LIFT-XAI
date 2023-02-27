@@ -531,7 +531,124 @@ class BasicNetMask(nn.Module):
             return X.to(self.device)
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
-        
+
+class BasicNetMask0(BasicNetMask):
+
+    def fit(
+        self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
+    ) -> "BasicNetMask":
+        self.train()
+        X = self._check_tensor(X)
+        y = self._check_tensor(y).squeeze()
+
+        # get validation split (can be none)
+        X, y, X_val, y_val, val_string = make_val_split(
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
+        )
+        y_val = y_val.squeeze()
+        n = X.shape[0]  # could be different from before due to split
+
+        # calculate number of batches per epoch
+        batch_size = self.batch_size if self.batch_size < n else n
+        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
+        train_indices = np.arange(n)
+
+        scheduler = ReduceLROnPlateau(
+            self.optimizer, 
+            patience=self.patience//2,
+            mode='min', 
+            min_lr=1e-6,
+            factor = 0.5
+        )
+
+        # do training
+        val_loss_best = LARGE_VAL
+        patience = 0
+        best_model = None
+
+        for i in range(self.n_iter):
+            # shuffle data for minibatches
+            np.random.shuffle(train_indices)
+            train_loss = []
+            for b in range(n_batches):
+                self.optimizer.zero_grad()
+
+                idx_next = train_indices[
+                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
+                ]
+
+                X_next = X[idx_next]
+                y_next = y[idx_next]
+                
+                # generate masks
+
+                masks = generate_masks(X_next, self.mask_dis)
+                masks = self._check_tensor(masks)
+
+                weight_next = None
+                if weight is not None:
+                    weight_next = weight[idx_next].detach()
+
+                loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
+
+                preds = self.forward(X_next, masks).squeeze()
+                batch_loss = loss(preds, y_next)
+                batch_loss.backward()
+
+                torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
+
+                self.optimizer.step()
+
+                train_loss.append(batch_loss.detach())
+
+            train_loss = torch.Tensor(train_loss).to(self.device)
+            self.early_stopping = False
+
+            if self.early_stopping or i % self.n_iter_print == 0:
+                loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
+                with torch.no_grad():
+                    
+                    ## generating random masking for validation.
+
+                    masks = generate_masks(X_val, self.mask_dis)
+                    masks = self._check_tensor(masks)
+                    
+                    preds = self.forward(X_val, masks).squeeze()
+                    val_loss = loss(preds, y_val)
+                    scheduler.step(val_loss)
+
+                    if self.early_stopping:
+                        if val_loss_best > val_loss:
+                            val_loss_best = val_loss
+                            patience = 0
+                            best_model = deepcopy(self.model)
+                        else:
+                            patience += 1
+
+                        if patience > self.patience and i > self.n_iter_min:
+                            break
+                    
+                    if i % self.n_iter_print == 0:
+
+                        print(self.early_stopping)
+                        print( 
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+                        log.info(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+
+        #restore_parameters(self.model, best_model)
+        return self
+
+
+    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+        M = torch.zeros(X.size())
+        M = self._check_tensor(M)
+
+        out = torch.cat([X, M], dim=1)
+
+        return self.model(out)
 
 class BasicNetMaskHalf(BasicNetMask):
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
@@ -540,6 +657,8 @@ class BasicNetMaskHalf(BasicNetMask):
 
         return self.model(out)
 
+
+    
 
 class RepresentationNet(nn.Module):
     """

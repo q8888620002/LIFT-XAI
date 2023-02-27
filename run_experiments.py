@@ -9,6 +9,7 @@ from src.interpretability.experiments import (
     PredictiveSensitivityLoss,
     PropensitySensitivity,
     NonLinearitySensitivity,
+    NonlinearitySensitivityLoss,
     NonLinearityHeldOutOne
 )
 
@@ -194,6 +195,27 @@ if __name__ == "__main__":
                     binary_outcome=args.binary_outcome_list[experiment_id],
                     explainer_list=args.explainer_list,
                 )
+        elif args.experiment_name == "nonlinearity_loss":
+            exp = NonlinearitySensitivityLoss(
+                seed=seed, explainer_limit=args.explainer_limit
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, "
+                    f"{args.num_important_features_list[experiment_id]} important features "
+                    f"with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
+
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
+
         elif args.experiment_name == "nonlinearity_heldout":
             exp = NonLinearityHeldOutOne(
                 seed=seed, explainer_limit=args.explainer_limit
