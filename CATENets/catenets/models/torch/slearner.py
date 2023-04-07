@@ -69,6 +69,7 @@ class SLearner(BaseCATEEstimator):
         self,
         n_unit_in: int,
         binary_y: bool,
+        device: str,
         po_estimator: Any = None,
         n_layers_out: int = DEFAULT_LAYERS_OUT,
         n_units_out: int = DEFAULT_UNITS_OUT,
@@ -89,6 +90,8 @@ class SLearner(BaseCATEEstimator):
         dropout_prob: float = 0.2,
     ) -> None:
         super(SLearner, self).__init__()
+        
+        self.device = device
 
         self._weighting_strategy = weighting_strategy
         if po_estimator is not None:
@@ -98,6 +101,7 @@ class SLearner(BaseCATEEstimator):
                 "slearner_po_estimator",
                 n_unit_in + 1,
                 binary_y=binary_y,
+                device = device,
                 n_layers_out=n_layers_out,
                 n_units_out=n_units_out,
                 weight_decay=weight_decay,
@@ -112,7 +116,7 @@ class SLearner(BaseCATEEstimator):
                 early_stopping=early_stopping,
                 dropout_prob=dropout_prob,
                 dropout=dropout,
-            ).to(DEVICE)
+            )
         if weighting_strategy is not None:
             self._propensity_estimator = PropensityNet(
                 "slearner_prop_estimator",
@@ -133,7 +137,7 @@ class SLearner(BaseCATEEstimator):
                 early_stopping=early_stopping,
                 dropout=dropout,
                 dropout_prob=dropout_prob,
-            ).to(DEVICE)
+            ).to(self.device)
 
     def fit(
         self,
@@ -155,12 +159,12 @@ class SLearner(BaseCATEEstimator):
         """
         self.train()
 
-        X = torch.Tensor(X).to(DEVICE)
-        y = torch.Tensor(y).to(DEVICE)
-        w = torch.Tensor(w).to(DEVICE)
+        X = self._check_tensor(X).float()
+        y = self._check_tensor(y).squeeze().float()
+        w = self._check_tensor(w).squeeze().float()
 
         # add indicator as additional variable
-        X_ext = torch.cat((X, w.reshape((-1, 1))), dim=1).to(DEVICE)
+        X_ext = torch.cat((X, w.reshape((-1, 1))), dim=1).to(self.device)
 
         if not (
             hasattr(self._po_estimator, "train") or hasattr(self._po_estimator, "fit")
@@ -193,10 +197,10 @@ class SLearner(BaseCATEEstimator):
         X = self._check_tensor(X)
 
         # create extended matrices
-        w_1 = torch.ones((n, 1)).to(DEVICE)
-        w_0 = torch.zeros((n, 1)).to(DEVICE)
-        X_ext_0 = torch.cat((X, w_0), dim=1).to(DEVICE)
-        X_ext_1 = torch.cat((X, w_1), dim=1).to(DEVICE)
+        w_1 = torch.ones((n, 1)).to(self.device)
+        w_0 = torch.zeros((n, 1)).to(self.device)
+        X_ext_0 = torch.cat((X, w_0), dim=1).to(self.device)
+        X_ext_1 = torch.cat((X, w_1), dim=1).to(self.device)
 
         return [X_ext_0, X_ext_1]
 

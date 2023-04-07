@@ -82,7 +82,8 @@ class MarginalExtension:
         x = x.repeat(self.samples, 0)
         S = S.repeat(self.samples, 0)
 
-        device = next(self.model.parameters()).device
+        #device = next(self.model.parameters()).device
+        device = self.model.device
 
         # if self.x_addr != id(x):
         #     self.x_addr = id(x)

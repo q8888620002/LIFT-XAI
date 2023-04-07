@@ -7,10 +7,12 @@ from src.interpretability.experiments import (
     PredictiveSensitivity,
     PredictiveSensitivityHeldOutOne,
     PredictiveSensitivityLoss,
+    PredictiveAssignment,
     PropensitySensitivity,
     NonLinearitySensitivity,
     NonlinearitySensitivityLoss,
-    NonLinearityHeldOutOne
+    NonLinearityHeldOutOne,
+    NonLinearityAssignment
 )
 
 
@@ -24,21 +26,21 @@ def init_arg() -> Any:
         "--dataset_list",
         nargs="+",
         type=str,
-        default=["twins", "acic", "tcga_100", "news_100"],
+        default=["twins", "acic",  "news_100"],
     )
 
     parser.add_argument(
         "--num_important_features_list",
         nargs="+",
         type=int,
-        default=[8, 10, 20, 20],
+        default=[8, 10, 20],
     )
 
     parser.add_argument(
         "--binary_outcome_list",
         nargs="+",
         type=bool,
-        default=[False, False, False, False],
+        default=[False, False, False],
     )
 
     parser.add_argument(
@@ -97,7 +99,7 @@ def init_arg() -> Any:
             "integrated_gradients",
             "shapley_value_sampling",
             "naive_shap",
-            "explain_with_missingness"
+            # "explain_with_missingness"
         ],
     )
 
@@ -154,6 +156,26 @@ if __name__ == "__main__":
                     explainer_list=args.explainer_list,
                 )
 
+        elif args.experiment_name == "predictive_assignment":
+            exp = PredictiveAssignment(
+                seed=seed,
+                explainer_limit=args.explainer_limit,
+                synthetic_simulator_type=args.synthetic_simulator_type,
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, {args.num_important_features_list[experiment_id]} with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
+
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
         elif args.experiment_name == "predictive_heldout":
             exp = PredictiveSensitivityHeldOutOne(
                 seed=seed,
@@ -236,7 +258,26 @@ if __name__ == "__main__":
                     binary_outcome=args.binary_outcome_list[experiment_id],
                     explainer_list=args.explainer_list,
                 )
+        elif args.experiment_name == "nonlinearity_assignment":
+            exp = NonLinearityAssignment(
+                seed=seed, explainer_limit=args.explainer_limit
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, "
+                    f"{args.num_important_features_list[experiment_id]} important features "
+                    f"with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
 
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
         elif args.experiment_name == "propensity_sensitivity":
             for propensity_type in args.propensity_types:
                 exp = PropensitySensitivity(
