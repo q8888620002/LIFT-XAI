@@ -142,8 +142,10 @@ class BasicNet(nn.Module):
                     )
 
             # add final layers
+
             layers.append(nn.Linear(n_units_out, 1))
         else:
+
             layers = [nn.Linear(n_unit_in, 1)]
 
         if binary_y:
@@ -168,7 +170,7 @@ class BasicNet(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-        # self.model.apply(weights_init)
+        self.model.apply(weights_init)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
         return self.model(X)
@@ -249,7 +251,7 @@ class BasicNet(nn.Module):
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
                             patience = 0
-                            best_model  = deepcopy(self.model)
+                            # best_model  = deepcopy(self.model)
                         else:
                             patience += 1
 
@@ -263,7 +265,7 @@ class BasicNet(nn.Module):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
-        restore_parameters(self.model, best_model)
+        # restore_parameters(self.model, best_model)
 
         return self
 
@@ -406,7 +408,7 @@ class BasicNetMask(nn.Module):
             self.parameters(), lr=lr, weight_decay=weight_decay
         )
 
-        # self.model.apply(weights_init)
+        self.model.apply(weights_init)
 
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
@@ -442,7 +444,7 @@ class BasicNetMask(nn.Module):
             self.optimizer, 
             patience=self.patience//2,
             mode='min', 
-            min_lr=1e-6,
+            min_lr=1e-5,
             factor = 0.5
         )
 
@@ -466,6 +468,8 @@ class BasicNetMask(nn.Module):
                 y_next = y[idx_next]
                 
                 # generate masks
+                batch_loss = 0
+
 
                 masks = generate_masks(X_next, self.mask_dis)
                 masks = self._check_tensor(masks)
@@ -478,6 +482,7 @@ class BasicNetMask(nn.Module):
 
                 preds = self.forward(X_next, masks).squeeze()
                 batch_loss = loss(preds, y_next)
+
                 batch_loss.backward()
 
                 torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
@@ -493,20 +498,22 @@ class BasicNetMask(nn.Module):
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
                     
+                    val_loss = 0
                     ## generating random masking for validation.
 
                     masks = generate_masks(X_val, self.mask_dis)
                     masks = self._check_tensor(masks)
-                    
+
                     preds = self.forward(X_val, masks).squeeze()
-                    val_loss = loss(preds, y_val)
+                    val_loss = loss(preds, y_val).item()
+                    
                     scheduler.step(val_loss)
 
                     if self.early_stopping:
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
                             patience = 0
-                            best_model = deepcopy(self.model)
+                            #best_model = deepcopy(self.model)
                         else:
                             patience += 1
 
@@ -514,9 +521,7 @@ class BasicNetMask(nn.Module):
                             break
                     
                     if i % self.n_iter_print == 0:
-
-                        print(self.early_stopping)
-                        print( 
+                        print(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
                         log.info(
@@ -557,7 +562,7 @@ class BasicNetMask0(BasicNetMask):
             self.optimizer, 
             patience=self.patience//2,
             mode='min', 
-            min_lr=1e-6,
+            min_lr=1e-5,
             factor = 0.5
         )
 
@@ -629,11 +634,6 @@ class BasicNetMask0(BasicNetMask):
                             break
                     
                     if i % self.n_iter_print == 0:
-
-                        print(self.early_stopping)
-                        print( 
-                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
-                        )
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
@@ -860,6 +860,7 @@ class PropensityNet(nn.Module):
         if X.size()[0] != 1:
             p_pred = self.forward(X).squeeze()[:, 1]
         else:
+            
             p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:,1]
 
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
@@ -937,6 +938,7 @@ class PropensityNet(nn.Module):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
+                        
         restore_parameters(self.model, best_model)
         return self
 

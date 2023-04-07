@@ -15,6 +15,8 @@ from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
 
 
+
+
 abbrev_dict = {
     "shapley_value_sampling": "SVS",
     "integrated_gradients": "IG",
@@ -49,6 +51,14 @@ learner_colors = {
     "Truth": cblind_palete[9],
 }
 
+
+class LogisticRegression(torch.nn.Module):
+     def __init__(self, input_dim, output_dim):
+         super(LogisticRegression, self).__init__()
+         self.linear = torch.nn.Linear(input_dim, output_dim)
+     def forward(self, x):
+         outputs = torch.sigmoid(self.linear(x))
+         return outputs
 
 def enable_reproducible_results(seed: int = 42) -> None:
     """

@@ -84,6 +84,7 @@ class Explainer:
         exp_eucl_distance = get_exp_kernel_similarity_function(
             kernel_width=kernel_width
         )
+        
         lime_model = Lime(
             model,
             interpretable_model=SkLearnLinearRegression(),

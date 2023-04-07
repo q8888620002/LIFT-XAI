@@ -57,6 +57,7 @@ class TLearner(BaseCATEEstimator):
         self,
         n_unit_in: int,
         binary_y: bool,
+        device: str,
         po_estimator: Any = None,
         n_layers_out: int = DEFAULT_LAYERS_OUT,
         n_units_out: int = DEFAULT_UNITS_OUT,
@@ -76,6 +77,7 @@ class TLearner(BaseCATEEstimator):
         super(TLearner, self).__init__()
 
         self._plug_in: Any = []
+        self.device = device
         plugins = [f"tlearner_po_estimator_{i}" for i in range(2)]
         if po_estimator is not None:
             for plugin in plugins:
@@ -87,6 +89,7 @@ class TLearner(BaseCATEEstimator):
                         plugin,
                         n_unit_in,
                         binary_y=binary_y,
+                        device = device,
                         n_layers_out=n_layers_out,
                         n_units_out=n_units_out,
                         weight_decay=weight_decay,
@@ -101,7 +104,7 @@ class TLearner(BaseCATEEstimator):
                         early_stopping=early_stopping,
                         dropout_prob=dropout_prob,
                         dropout=dropout,
-                    ).to(DEVICE),
+                    ),
                 )
 
     def predict(
@@ -155,10 +158,10 @@ class TLearner(BaseCATEEstimator):
             The treatment indicator
         """
         self.train()
-
-        X = torch.Tensor(X).to(DEVICE)
-        y = torch.Tensor(y).to(DEVICE)
-        w = torch.Tensor(w).to(DEVICE)
+        
+        X = self._check_tensor(X).float()
+        y = self._check_tensor(y).squeeze().float()
+        w = self._check_tensor(w).squeeze().float()
 
         for widx, plugin in enumerate(self._plug_in):
             train_wrapper(plugin, X[w == widx], y[w == widx])
