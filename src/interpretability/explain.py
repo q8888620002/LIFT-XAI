@@ -45,7 +45,7 @@ class Explainer:
         kernel_width: float = 1.0,
         baseline: Optional[torch.Tensor] = None,
     ) -> None:
-        self.device =  next(model.parameters()).device
+        self.device =  model.device
         self.baseline = baseline
         self.explainer_list = explainer_list
         self.feature_names = feature_names

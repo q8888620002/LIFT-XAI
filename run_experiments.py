@@ -12,7 +12,8 @@ from src.interpretability.experiments import (
     NonLinearitySensitivity,
     NonlinearitySensitivityLoss,
     NonLinearityHeldOutOne,
-    NonLinearityAssignment
+    NonLinearityAssignment,
+    PropensityAssignment
 )
 
 
@@ -281,6 +282,32 @@ if __name__ == "__main__":
         elif args.experiment_name == "propensity_sensitivity":
             for propensity_type in args.propensity_types:
                 exp = PropensitySensitivity(
+                    seed=seed,
+                    explainer_limit=args.explainer_limit,
+                    synthetic_simulator_type=args.synthetic_simulator_type,
+                    propensity_type=propensity_type,
+                )
+                for experiment_id in range(len(args.dataset_list)):
+                    log.info(
+                        f"Running experiment for {args.dataset_list[experiment_id]}, "
+                        f"{args.num_important_features_list[experiment_id]}, "
+                        f"propensity type {propensity_type}, with "
+                        f"binary outcome {args.binary_outcome_list[experiment_id]}"
+                    )
+
+                    exp.run(
+                        dataset=args.dataset_list[experiment_id],
+                        train_ratio=args.train_ratio,
+                        num_important_features=args.num_important_features_list[
+                            experiment_id
+                        ],
+                        binary_outcome=args.binary_outcome_list[experiment_id],
+                        explainer_list=args.explainer_list,
+                        predictive_scale=args.predictive_scale,
+                    )
+        elif args.experiment_name == "propensity_assignment":
+            for propensity_type in args.propensity_types:
+                exp = PropensityAssignment(
                     seed=seed,
                     explainer_limit=args.explainer_limit,
                     synthetic_simulator_type=args.synthetic_simulator_type,
