@@ -86,6 +86,7 @@ class BasicDragonNet(BaseCATEEstimator):
         n_unit_in: int,
         propensity_estimator: nn.Module,
         binary_y: bool = False,
+        device: str = "cpu",
         n_layers_r: int = DEFAULT_LAYERS_R,
         n_units_r: int = DEFAULT_UNITS_R,
         n_layers_out: int = DEFAULT_LAYERS_OUT,
@@ -111,6 +112,7 @@ class BasicDragonNet(BaseCATEEstimator):
         super(BasicDragonNet, self).__init__()
 
         self.name = name
+        self.device = device
         self.val_split_prop = val_split_prop
         self.seed = seed
         self.batch_size = batch_size
@@ -132,6 +134,7 @@ class BasicDragonNet(BaseCATEEstimator):
             n_units=n_units_r,
             n_layers=n_layers_r,
             nonlin=nonlin,
+            device = device,
             batch_norm=batch_norm,
         )
         self._po_estimators = []
@@ -140,6 +143,7 @@ class BasicDragonNet(BaseCATEEstimator):
                 BasicNet(
                     f"{name}_po_estimator_{idx}",
                     n_units_r,
+                    device=device,
                     binary_y=binary_y,
                     n_layers_out=n_layers_out,
                     n_units_out=n_units_out,
@@ -206,12 +210,12 @@ class BasicDragonNet(BaseCATEEstimator):
         """
         self.train()
 
-        X = torch.Tensor(X).to(DEVICE)
-        y = torch.Tensor(y).squeeze().to(DEVICE)
-        w = torch.Tensor(w).squeeze().long().to(DEVICE)
+        X = torch.Tensor(X).to(self.device)
+        y = torch.Tensor(y).squeeze().to(self.device)
+        w = torch.Tensor(w).squeeze().long().to(self.device)
 
         X, y, w, X_val, y_val, w_val, val_string = make_val_split(
-            X, y, w=w, val_split_prop=self.val_split_prop, seed=self.seed
+            X, y, w=w, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
         )
 
         n = X.shape[0]  # could be different from before due to split
@@ -647,6 +651,7 @@ class TARNet(BasicDragonNet):
         self,
         n_unit_in: int,
         binary_y: bool = False,
+        device: str = None, 
         n_units_out_prop: int = DEFAULT_UNITS_OUT,
         n_layers_out_prop: int = 0,
         nonlin: str = DEFAULT_NONLIN,
@@ -658,6 +663,7 @@ class TARNet(BasicDragonNet):
     ) -> None:
         propensity_estimator = PropensityNet(
             "tarnet_propensity_estimator",
+            device,
             n_unit_in,
             2,
             "prop",
@@ -667,12 +673,13 @@ class TARNet(BasicDragonNet):
             batch_norm=batch_norm,
             dropout_prob=dropout_prob,
             dropout=dropout,
-        ).to(DEVICE)
+        ).to(device)
         super(TARNet, self).__init__(
             "TARNet",
             n_unit_in,
             propensity_estimator,
             binary_y=binary_y,
+            device=device,
             nonlin=nonlin,
             penalty_disc=penalty_disc,
             batch_norm=batch_norm,
@@ -681,7 +688,7 @@ class TARNet(BasicDragonNet):
             **kwargs,
         )
         self.prop_loss_multiplier = 0
-
+        self.device = device
     def _step(
         self, X: torch.Tensor, w: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:

@@ -237,24 +237,24 @@ class SyntheticSimulatorLinear(SyntheticSimulatorBase):
 
         all_indices = np.array(range(X.shape[1]))
 
-        prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
-        pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
-        pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
+        # prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
+        # pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
+        # pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
 
-        prog_indices = all_indices[prog_indices]
-        pred0_indices = all_indices[pred0_indices]
-        pred1_indices = all_indices[pred1_indices]
+        # prog_indices = all_indices[prog_indices]
+        # pred0_indices = all_indices[pred0_indices]
+        # pred1_indices = all_indices[pred1_indices]
         
-        # if random_feature_selection:
-        #   np.random.shuffle(all_indices)
+        if random_feature_selection:
+          np.random.shuffle(all_indices)
         
-        # prog_indices = all_indices[:num_important_features]
-        # pred0_indices = all_indices[
-        #   num_important_features : (2 * num_important_features)
-        # ]
-        # pred1_indices = all_indices[
-        #   (2 * num_important_features) : (3 * num_important_features)
-        # ]
+        prog_indices = all_indices[:num_important_features]
+        pred0_indices = all_indices[
+          num_important_features : (2 * num_important_features)
+        ]
+        pred1_indices = all_indices[
+          (2 * num_important_features) : (3 * num_important_features)
+        ]
 
 
         prog_mask[prog_indices] = 1
@@ -349,18 +349,18 @@ class SyntheticSimulatorModulatedNonLinear(SyntheticSimulatorBase):
 
         if self.selection_type == "random":
             all_indices = np.array(range(X.shape[1]))
-            # np.random.shuffle(all_indices)
-            # prog_indices = all_indices[:num_important_features]
-            # pred0_indices = all_indices[
-            #    num_important_features : 2 * num_important_features
-            # ]
-            # pred1_indices = all_indices[
-            #    2 * num_important_features : 3 * num_important_features
-            # ]
+            np.random.shuffle(all_indices)
+            prog_indices = all_indices[:num_important_features]
+            pred0_indices = all_indices[
+               num_important_features : 2 * num_important_features
+            ]
+            pred1_indices = all_indices[
+               2 * num_important_features : 3 * num_important_features
+            ]
 
-            prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
-            pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
-            pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
+            # prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )
+            # pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
+            # pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
 
             prog_indices = all_indices[prog_indices]
             pred0_indices = all_indices[pred0_indices]

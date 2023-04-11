@@ -46,7 +46,7 @@ class CateGame(CooperativeGame):
         Args:
           S: array of player coalitions with size (batch, players).
         '''
-        device = next(self.model.parameters()).device
+        device = self.model.device
         S = torch.from_numpy(S).to(device)
         if len(S.shape) == 1:
             S = S.reshape(1, -1)

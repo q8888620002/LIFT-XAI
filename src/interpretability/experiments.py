@@ -21,8 +21,8 @@ if module_path not in sys.path:
 
 from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
 import catenets.models as cate_models
+import catenets.models.torch.tlearner as tlearner
 import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
-
 
 import numpy as np
 import pandas as pd
@@ -156,19 +156,19 @@ class PredictiveSensitivity:
                #     batch_norm=False,
                #     nonlin="relu",
                # ),
-              #  "TARNet": cate_models.torch.TARNet(
-              #      X_train.shape[1],
-              #      device = "cuda:1",
-              #      binary_y=(len(np.unique(Y_train)) == 2),
-              #      n_layers_r=1,
-              #      n_layers_out=1,
-              #      n_units_out=100,
-              #      n_units_r=100,
-              #      batch_size=1024,
-              #      n_iter=self.n_iter,
-              #      batch_norm=False,
-              #      nonlin="relu",
-              #  ),
+               "TARNet": cate_models.torch.TARNet(
+                   X_train.shape[1],
+                   binary_y=(len(np.unique(Y_train)) == 2),
+                   device = "cuda:1",
+                   n_layers_r=1,
+                   n_layers_out=1,
+                   n_units_out=100,
+                   n_units_r=100,
+                   batch_size=1024,
+                   n_iter=self.n_iter,
+                   batch_norm=False,
+                   nonlin="relu",
+               ),
                 #  "XLearnerMask": cate_models_masks.XLearnerMask(
                 #      X_train.shape[1],
                 #      binary_y=(len(np.unique(Y_train)) == 2),
@@ -195,34 +195,34 @@ class PredictiveSensitivity:
                 #      nonlin="relu",
                 #      device="cuda:1"
                 #  ),
-                 "DRLearner": cate_models.torch.DRLearner(
-                     X_train.shape[1],
-                     device = "cuda:1",
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=self.n_layers,
-                     n_units_out=self.n_units_hidden,
-                     n_iter=self.n_iter,
-                     lr=1e-3,
-                     patience=10,
-                     batch_size=self.batch_size,
-                     batch_norm=False,
-                     nonlin="relu"
-                 ),
+                #  "DRLearner": cate_models.torch.DRLearner(
+                #      X_train.shape[1],
+                #      device = "cuda:1",
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      n_layers_out=self.n_layers,
+                #      n_units_out=self.n_units_hidden,
+                #      n_iter=self.n_iter,
+                #      lr=1e-3,
+                #      patience=10,
+                #      batch_size=self.batch_size,
+                #      batch_norm=False,
+                #      nonlin="relu"
+                #  ),
 
-                 "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
-                     X_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     device="cuda:1",
-                     n_layers_out=self.n_layers,
-                     n_units_out=self.n_units_hidden,
-                     n_iter=self.n_iter,
-                     batch_size=256,
-                     batch_norm=False,
-                     lr=1e-3,
-                     patience=10,
-                     nonlin="relu",
-                     mask_dis = "Uniform"
-                     ),
+                #  "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
+                #      X_train.shape[1],
+                #      binary_y=(len(np.unique(Y_train)) == 2),
+                #      device="cuda:1",
+                #      n_layers_out=self.n_layers,
+                #      n_units_out=self.n_units_hidden,
+                #      n_iter=self.n_iter,
+                #      batch_size=256,
+                #      batch_norm=False,
+                #      lr=1e-3,
+                #      patience=10,
+                #      nonlin="relu",
+                #      mask_dis = "Uniform"
+                #      ),
                 #  "DRLearnerHalf": pseudo_outcome_nets.DRLearnerMaskHalf(
                 #      X_train.shape[1],
                 #      device = "cuda:0",
@@ -591,7 +591,7 @@ class PredictiveAssignment:
 
             for learner_name in learners:                    
                 if not  "mask" in learner_name.lower():
-                    learner_explaintion_lists[learner_name] = [           
+                    learner_explaintion_lists[learner_name] = [  
                     "integrated_gradients",
                     "shapley_value_sampling",
                     "naive_shap",
@@ -660,15 +660,19 @@ class PredictiveAssignment:
                     # Relabel positive outcome
 
                     new_y_train = learners[learner_name].predict(X=X_train)
-                    new_y_train = (new_y_train > 0.0).float().detach().cpu().numpy()
+                    # setting threshold
+                    
+                    cate_threshold = torch.mean(new_y_train)
+                    new_y_train = (new_y_train > cate_threshold ).float().detach().cpu().numpy()
 
                     new_y_test = learners[learner_name].predict(X=X_test)
-                    new_y_test = (new_y_test > 0.0).float().detach().cpu().numpy()
+                    new_y_test = (new_y_test > cate_threshold).float().detach().cpu().numpy()
 
                     xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
                     new_X_train = X_train[:,rank_indices[:5]]
                     new_X_test = X_test[:,rank_indices[:5]]
                     xgb_model.fit(new_X_train, new_y_train)
+
                     y_pred = xgb_model.predict(new_X_test)
                     auroc = metrics.roc_auc_score(new_y_test, y_pred)
                     s_hat = X_test[np.where(y_pred == 1), :]
@@ -688,12 +692,16 @@ class PredictiveAssignment:
 
                     random_auroc = metrics.roc_auc_score(new_y_test, y_pred)
                     
+                    s_hat_original = X_test[np.where(W_test == 1), :]
+
                     s_hat = X_test[np.where(y_pred == 1), :]
 
-                    if len(s_hat) <= 1:
-                        random_utility_index = 0
-                    else:
-                        random_utility_index = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
+                    # if len(s_hat) <= 1:
+                    #     random_utility_index = 0
+                    # else:
+
+                    random_utility_index = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
+                    random_assignment_utility_index = np.mean(learners[learner_name].predict(X=s_hat_original).detach().cpu().numpy())*len(s_hat)/total_num
 
                     explainability_data.append(
                         [
@@ -712,7 +720,8 @@ class PredictiveAssignment:
                             pehe_test / np.sqrt(np.var(cate_test)),
                             auroc,
                             utility_index,
-                            random_utility_index
+                            random_utility_index,
+                            random_assignment_utility_index
                         ]
                     )
 
@@ -734,7 +743,8 @@ class PredictiveAssignment:
                 "Normalized PEHE",
                 "AUROC",
                 "utility_score",
-                "utility_score_random"
+                "utility_score_random_feature",
+                "utility_score_random_assignment"
             ],
         )
         
@@ -1057,7 +1067,7 @@ class PredictiveSensitivityHeldOutOne:
         seed: int = 42,
         explainer_limit: int = 1000,
         save_path: Path = Path.cwd(),
-        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5,  1, 2],
+        predictive_scales: list = [1e-3, 1e-2, 1e-1, 0.5,  1, 2, 5, 10],
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
     ) -> None:
@@ -1135,17 +1145,28 @@ class PredictiveSensitivityHeldOutOne:
 
 
             learners = {
-                   # "TLearner": cate_models.torch.TLearner(
-                   # X_train.shape[1],
-                   # device = "cuda:1",
-                   # binary_y=(len(np.unique(Y_train)) == 2),
-                   # n_layers_out=2,
-                   # n_units_out=100,
-                   # batch_size=1024,
-                   # n_iter=self.n_iter,
-                   # batch_norm=False,
-                   # nonlin="relu",
-               # ),
+                   "TLearner": tlearner.TLearner(
+                   X_train.shape[1],
+                   device = "cuda:1",
+                   binary_y=(len(np.unique(Y_train)) == 2),
+                   n_layers_out=2,
+                   n_units_out=100,
+                   batch_size=self.batch_size,
+                   n_iter=self.n_iter,
+                   batch_norm=False,
+                   nonlin="relu",
+               ),
+                   "TLearnerMask": tlearner.TLearnerMask(
+                   X_train.shape[1],
+                   device = "cuda:1",
+                   binary_y=(len(np.unique(Y_train)) == 2),
+                   n_layers_out=2,
+                   n_units_out=100,
+                   batch_size=self.batch_size,
+                   n_iter=self.n_iter,
+                   batch_norm=False,
+                   nonlin="relu",
+               ),
                # "SLearner": cate_models.torch.SLearner(
                #     X_train.shape[1],
                #     device = "cuda:1",
@@ -1196,33 +1217,33 @@ class PredictiveSensitivityHeldOutOne:
                 #      nonlin="relu",
                 #      device="cuda:1"
                 #  ),
-                  "DRLearner": cate_models.torch.DRLearner(
-                      X_train.shape[1],
-                      device = "cuda:1",
-                      binary_y=(len(np.unique(Y_train)) == 2),
-                      n_layers_out=2,
-                      n_units_out=100,
-                      n_iter=self.n_iter,
-                      lr=1e-3,
-                      patience=10,
-                      batch_size=self.batch_size,
-                      batch_norm=False,
-                      nonlin="relu"
-                  ),
-                  "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
-                      X_train.shape[1],
-                      binary_y=(len(np.unique(Y_train)) == 2),
-                      device="cuda:1",
-                      n_layers_out=2,
-                      n_units_out=100,
-                      n_iter=self.n_iter,
-                      batch_size=self.batch_size,
-                      batch_norm=False,
-                      lr=1e-4,
-                      patience=10,
-                      nonlin="relu",
-                      mask_dis="Uniform"
-                      ),
+                #   "DRLearner": cate_models.torch.DRLearner(
+                #       X_train.shape[1],
+                #       device = "cuda:1",
+                #       binary_y=(len(np.unique(Y_train)) == 2),
+                #       n_layers_out=2,
+                #       n_units_out=100,
+                #       n_iter=self.n_iter,
+                #       lr=1e-3,
+                #       patience=10,
+                #       batch_size=self.batch_size,
+                #       batch_norm=False,
+                #       nonlin="relu"
+                #   ),
+                #   "DRLearnerMask": pseudo_outcome_nets.DRLearnerMask(  
+                #       X_train.shape[1],
+                #       binary_y=(len(np.unique(Y_train)) == 2),
+                #       device="cuda:1",
+                #       n_layers_out=2,
+                #       n_units_out=100,
+                #       n_iter=self.n_iter,
+                #       batch_size=self.batch_size,
+                #       batch_norm=False,
+                #       lr=1e-4,
+                #       patience=10,
+                #       nonlin="relu",
+                #       mask_dis="Uniform"
+                #       ),
 
                 #   "RALearnerMask": pseudo_outcome_nets.RALearnerMask(
                 #       X_train.shape[1],
@@ -1259,9 +1280,9 @@ class PredictiveSensitivityHeldOutOne:
             for learner_name in learners:                    
                 if not  "mask" in learner_name.lower():
                     learner_explaintion_lists[learner_name] = [           
-                    "integrated_gradients",
-                    "shapley_value_sampling",
-                    "naive_shap"
+                        "integrated_gradients",
+                        "shapley_value_sampling",
+                        "naive_shap"
                     ]
                 else:
                     learner_explaintion_lists[learner_name] = [
@@ -1330,10 +1351,10 @@ class PredictiveSensitivityHeldOutOne:
                     predictive_scale=predictive_scale,
                     binary_outcome=binary_outcome,
                 )
+                
 
                 pate_learners = {
-                    "DRLearner": pseudo_outcome_nets.DRLearnerPate(
-                        X_train.shape[1],
+                    "TLearner": tlearner.TLearner(
                         X_train_subset.shape[1],
                         device="cuda:1",
                         binary_y=(len(np.unique(Y_train)) == 2),
@@ -1343,7 +1364,6 @@ class PredictiveSensitivityHeldOutOne:
                         batch_size=self.batch_size,
                         batch_norm=False,
                         lr=1e-3,
-                        patience=10,
                         nonlin="relu"
                  ),
                 #     "DRLearner": pseudo_outcome_nets.DRLearner(
@@ -1366,19 +1386,29 @@ class PredictiveSensitivityHeldOutOne:
                     "shapley_value_sampling",
                     "naive_shap",
                     "explain_with_missingness",
-                    # "shapley_value_sampling_half_mask"
                 ]
                 
                 for learner_name in pate_learners:
+                    # model_path = f"models/{dataset}_{num_important_features}/predictive_scale_{predictive_scale}_feature_index_{feature_index}_seed{self.seed}.pt"
+
+                    # try:
+                    #     log.info("checking if PATE models"+ learner_name + " exists.")
+                    #     pate_learners[learner_name].load_state_dict(torch.load(model_path))
+                    #     pate_learners[learner_name].eval()
+                    
+                    # except:
                     log.info("Fitting PATE models"+ learner_name)
 
                     pate_learners[learner_name].fit(
                         # nuisance function params
-                        X=X_train,
-                        X_subset=X_train_subset,
+                        X=X_train_subset,
+                        # X_subset=X_train_subset,
                         y=Y_train,
                         w=W_train,
                     )
+
+                        # torch.save(pate_learners[learner_name].state_dict(), model_path)
+
                     # pate_learners[learner_name].fit(
                     #     # nuisance function params
                     #     X=X_train_subset,
@@ -1388,20 +1418,14 @@ class PredictiveSensitivityHeldOutOne:
 
                     cate_pred = learners[learner_name].predict(X=X_test[:self.explainer_limit]).detach().cpu().numpy()
                     
-                    if learner_name == "XLearner":
 
-                        pate_pred = pate_learners[learner_name].predict( 
-                            X=X_test[:self.explainer_limit], 
-                            X_subset=X_test_subset[:self.explainer_limit]
-                        ).detach().cpu().numpy()
-                    else:
-                        pate_pred = pate_learners[learner_name].predict( 
-                            X=X_test_subset[:self.explainer_limit]
-                        ).detach().cpu().numpy()
+                    pate_pred = pate_learners[learner_name].predict( 
+                        X=X_test_subset[:self.explainer_limit]
+                    ).detach().cpu().numpy()
 
-                    prediction_mask =   torch.ones((X_test[:self.explainer_limit ].shape))
+                    prediction_mask =  torch.ones((X_test[:self.explainer_limit ].shape))
                     prediction_mask[:, feature_index] = 0
-                    pate_mask_pred = learners["DRLearnerMask"].predict(X_test[:self.explainer_limit ], prediction_mask).detach().cpu().numpy()
+                    pate_mask_pred = learners["TLearnerMask"].predict(X_test[:self.explainer_limit ], prediction_mask).detach().cpu().numpy()
 
                     pate_pehe = np.sqrt(np.square(pate_pred - pate_mask_pred))
 
@@ -1443,7 +1467,7 @@ class PredictiveSensitivityHeldOutOne:
             ],
         )
         
-        results_path = self.save_path / "results/held_out/drlearner_reweight_1/predictive_sensitivity/model_performance"
+        results_path = self.save_path / "results/held_out/tlearner/predictive_sensitivity/model_performance"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -1454,7 +1478,7 @@ class PredictiveSensitivityHeldOutOne:
             f"binary_{binary_outcome}_seed{self.seed}.csv"
         )
         
-        results_path = self.save_path / "results/held_out/drlearner_reweight_1/predictive_sensitivity/held_out/"
+        results_path = self.save_path / "results/held_out/tlearner/predictive_sensitivity/held_out/"
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
@@ -2732,45 +2756,47 @@ class NonLinearityAssignment:
                     rank_indices = np.argsort(np.sum(attribution_est, axis=0))[::-1]
                     # Relabel positive outcome
 
-                    new_y_train = learners[learner_name].predict(X=X_train)
-                    new_y_train = (new_y_train > 0.0).float().detach().cpu().numpy()
+                    y_cate_train = learners[learner_name].predict(X=X_train)
+                    y_cate_test = learners[learner_name].predict(X=X_test)
 
-                    new_y_test = learners[learner_name].predict(X=X_test)
-                    new_y_test = (new_y_test > 0.0).float().detach().cpu().numpy()
+                    cate_threshold = torch.mean(y_cate_train)
+                    
+                    y_subgroup_train = (y_cate_train > cate_threshold).float().detach().cpu().numpy()
+                    y_subgroup_test = (y_cate_test > cate_threshold).float().detach().cpu().numpy()
 
-                    xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
-                    new_X_train, new_X_test = X_train[:,rank_indices[:5]],  X_test[:,rank_indices[:5]]
+                    # import ipdb; ipdb.set_trace()
 
-                    xgb_model.fit(new_X_train, new_y_train)
-                    y_pred = xgb_model.predict(new_X_test)
+                    xgb_model = xgb.XGBClassifier(objective="binary:logistic")
+                    X_subset_train, X_subset_test = X_train[:,rank_indices[:5]],  X_test[:,rank_indices[:5]]
 
-                    auroc = metrics.roc_auc_score(new_y_test, y_pred)
+                    xgb_model.fit(X_subset_train, y_subgroup_train)
+                    y_subgroup_pred = xgb_model.predict(X_subset_test)
+
+                    auroc = metrics.roc_auc_score(y_subgroup_test, y_subgroup_pred)
 
                     # subgroup identification 
-                    total_num = len(X_raw_test) + len(X_raw_train)
-                    s_hat = X_test[np.where(y_pred == 1), :]
+                    total_num = len(X_subset_test) + len(X_subset_train)
+
+                    s_hat = X_test[np.where(y_subgroup_pred == 1), :]
 
                     utility_index = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
 
                     # baseline with random features
 
-                    random_xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
+                    random_xgb_model = xgb.XGBClassifier(objective="binary:logistic")
                     np.random.shuffle(rank_indices)
-                    new_X_train = X_train[:,rank_indices[:5]]
-                    new_X_test = X_test[:,rank_indices[:5]]
+                    X_subset_train = X_train[:,rank_indices[:5]]
+                    X_subset_test = X_test[:,rank_indices[:5]]
 
-                    random_xgb_model.fit(new_X_train, new_y_train)
-                    y_pred = random_xgb_model.predict(new_X_test)
-
-                    random_auroc = metrics.roc_auc_score(new_y_test, y_pred)
+                    random_xgb_model.fit(X_subset_train, y_subgroup_train)
+                    y_subgroup_pred = random_xgb_model.predict(X_subset_test)
                     
-                    s_hat = X_test[np.where(y_pred == 1), :]
+                    s_hat = X_test[np.where(y_subgroup_pred == 1), :]
 
                     if len(s_hat) <=1 :
                         random_utility_index = 0
                     else:
                         random_utility_index = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
-
 
                     explainability_data.append(
                         [
@@ -2800,11 +2826,11 @@ class NonLinearityAssignment:
                 "Learner",
                 "Explainer",
                 "All features ACC",
-                "All features ACC Score ",
+                "All features ACC Score",
                 "Pred features ACC",
-                "Pred features ACC Score ",
+                "Pred features ACC Score",
                 "Prog features ACC",
-                "Prog features ACC Score ",
+                "Prog features ACC Score",
                 "PEHE",
                 "CATE true mean",
                 "CATE true var",
@@ -3130,3 +3156,396 @@ class PropensitySensitivity:
             f"trainratio_{train_ratio}_"
             f"binary_{binary_outcome}-seed{self.seed}.csv"
         )
+
+
+class PropensityAssignment:
+    """
+    Sensitivity analysis for confounding.
+    """
+
+    def __init__(
+        self,
+        n_units_hidden: int = 50,
+        n_layers: int = 1,
+        penalty_orthogonal: float = 0.01,
+        batch_size: int = 256,
+        n_iter: int = 1000,
+        seed: int = 42,
+        explainer_limit: int = 1000,
+        save_path: Path = Path.cwd(),
+        num_interactions: int = 1,
+        synthetic_simulator_type: str = "linear",
+        propensity_type: str = "pred",
+        propensity_scales: list = [0, 0.5, 1, 2, 5, 10],
+    ) -> None:
+
+        self.n_units_hidden = n_units_hidden
+        self.n_layers = n_layers
+        self.penalty_orthogonal = penalty_orthogonal
+        self.batch_size = batch_size
+        self.n_iter = n_iter
+        self.seed = seed
+        self.explainer_limit = explainer_limit
+        self.save_path = save_path
+        self.num_interactions = num_interactions
+        self.synthetic_simulator_type = synthetic_simulator_type
+        self.propensity_type = propensity_type
+        self.propensity_scales = propensity_scales
+
+    def run(
+        self,
+        dataset: str = "tcga_10",
+        train_ratio: float = 0.8,
+        num_important_features: int = 2,
+        binary_outcome: bool = False,
+        random_feature_selection: bool = True,
+        predictive_scale: float = 1,
+        nonlinearity_scale: float = 0.5,
+        explainer_list: list = [
+            "feature_ablation",
+            "feature_permutation",
+            "integrated_gradients",
+            "shapley_value_sampling",
+            "naive_shap"
+        ],
+    ) -> None:
+        log.info(
+            f"Using dataset {dataset} with num_important features = {num_important_features} and predictive scale {predictive_scale}."
+        )
+
+        X_raw_train, X_raw_test = load(dataset, train_ratio=train_ratio)
+
+        if self.synthetic_simulator_type == "linear":
+            sim = SyntheticSimulatorLinear(
+                X_raw_train,
+                num_important_features=num_important_features,
+                random_feature_selection=random_feature_selection,
+                seed=self.seed,
+            )
+        elif self.synthetic_simulator_type == "nonlinear":
+            sim = SyntheticSimulatorModulatedNonLinear(
+                X_raw_train,
+                num_important_features=num_important_features,
+                non_linearity_scale=nonlinearity_scale,
+                seed=self.seed,
+                selection_type="random",
+            )
+        else:
+            raise Exception("Unknown simulator type.")
+
+        explainability_data = []
+        assignment_data = []
+
+        for propensity_scale in self.propensity_scales:
+            log.info(f"Now working with propensity_scale = {propensity_scale}...")
+            (
+                X_train,
+                W_train,
+                Y_train,
+                po0_train,
+                po1_train,
+                propensity_train,
+            ) = sim.simulate_dataset(
+                X_raw_train,
+                predictive_scale=predictive_scale,
+                binary_outcome=binary_outcome,
+                treatment_assign=self.propensity_type,
+                prop_scale=propensity_scale,
+            )
+
+            X_test, W_test, Y_test, po0_test, po1_test, _ = sim.simulate_dataset(
+                X_raw_test,
+                predictive_scale=predictive_scale,
+                binary_outcome=binary_outcome,
+                treatment_assign=self.propensity_type,
+                prop_scale=propensity_scale,
+            )
+
+            log.info("Fitting and explaining learners...")
+            learners = {
+                # "TLearner": cate_models.torch.TLearner(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_out=2,
+                #     n_units_out=100,
+                #     batch_size=1024,
+                #     n_iter=self.n_iter,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                # ),
+                # "SLearner": cate_models.torch.SLearner(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_out=2,
+                #     n_units_out=100,
+                #     n_iter=self.n_iter,
+                #     batch_size=1024,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                # ),
+                # "TARNet": cate_models.torch.TARNet(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_r=1,
+                #     n_layers_out=1,
+                #     n_units_out=100,
+                #     n_units_r=100,
+                #     batch_size=1024,
+                #     n_iter=self.n_iter,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                # ),
+                # "DRLearner": pseudo_outcome_nets.DRLearner(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_out=2,
+                #     n_units_out=100,
+                #     n_iter=self.n_iter,
+                #     batch_size=self.batch_size,
+                #     batch_norm=False,
+                #     lr=1e-3,
+                #     patience=10,
+                #     nonlin="relu",
+                #     device= "cuda:1"
+                # ),
+                "XLearner": pseudo_outcome_nets.XLearner(
+                     X_train.shape[1],
+                     binary_y=(len(np.unique(Y_train)) == 2),
+                     n_layers_out=2,
+                     n_units_out=100,
+                     n_iter=self.n_iter,
+                    lr=1e-3,
+                    patience=10,
+                     batch_size=self.batch_size,
+                     batch_norm=False,
+                     nonlin="relu",
+                     device="cuda:1"
+                 ),
+                # "CFRNet_0.01": cate_models.torch.TARNet(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_r=1,
+                #     n_layers_out=1,
+                #     n_units_out=100,
+                #     n_units_r=100,
+                #     batch_size=self.batch_size,
+                #     n_iter=self.n_iter,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                #     penalty_disc=0.01,
+                # ),
+                # "CFRNet_0.001": cate_models.torch.TARNet(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_r=1,
+                #     n_layers_out=1,
+                #     n_units_out=100,
+                #     n_units_r=100,
+                #     batch_size=1024,
+                #     n_iter=self.n_iter,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                #     penalty_disc=0.001,
+                # ),
+                # "CFRNet_0.0001": cate_models.torch.TARNet(
+                #     X_train.shape[1],
+                #     binary_y=(len(np.unique(Y_train)) == 2),
+                #     n_layers_r=1,
+                #     n_layers_out=1,
+                #     n_units_out=100,
+                #     n_units_r=100,
+                #     batch_size=1024,
+                #     n_iter=self.n_iter,
+                #     batch_norm=False,
+                #     nonlin="relu",
+                #     penalty_disc=0.0001,
+                # ),
+            }
+
+            learner_explainers = {}
+            learner_explanations = {}
+
+            for name in learners:
+                log.info(f"Fitting {name}.")
+                learners[name].fit(X=X_train, y=Y_train, w=W_train)                    
+
+                learner_explainers[name] = Explainer(
+                    learners[name],
+                    feature_names=list(range(X_train.shape[1])),
+                    explainer_list=explainer_list,
+                )
+                log.info(f"Explaining {name}.")
+                learner_explanations[name] = learner_explainers[name].explain(
+                    X_test[: self.explainer_limit]
+                )
+
+            all_important_features = sim.get_all_important_features()
+            pred_features = sim.get_predictive_features()
+            prog_features = sim.get_prognostic_features()
+
+            cate_test = sim.te(X_test)
+
+            for explainer_name in explainer_list:
+                for learner_name in learners:
+                    attribution_est = np.abs(
+                        learner_explanations[learner_name][explainer_name]
+                    )
+                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
+                        all_important_features, attribution_est
+                    )
+                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
+                        pred_features, attribution_est
+                    )
+                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
+                        prog_features, attribution_est
+                    )
+                    cate_pred = learners[learner_name].predict(X=X_test)
+
+                    pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
+
+                    rank_indices = np.argsort(np.mean(attribution_est, axis=0))[::-1]
+                    # Relabel positive outcome
+
+                    new_y_train = learners[learner_name].predict(X=X_train)
+                    # setting threshold
+                    
+                    cate_threshold = torch.mean(new_y_train)
+                    new_y_train = (new_y_train > cate_threshold ).float().detach().cpu().numpy()
+
+                    new_y_test = learners[learner_name].predict(X=X_test)
+                    new_y_test = (new_y_test > cate_threshold).float().detach().cpu().numpy()
+
+                    result_auroc = []
+                    cate_policy = []
+                    cate_random = []
+                    cate_original = []
+
+                    true_cate_policy = []
+                    true_cate_random = []
+                    true_cate_original = []
+
+                    for num_feature in range(1, 6):
+                        xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
+                        new_X_train = X_train[:,rank_indices[:num_feature]]
+                        new_X_test = X_test[:,rank_indices[:num_feature]]
+
+                        xgb_model.fit(new_X_train, new_y_train)
+                        y_pred = xgb_model.predict(new_X_test)
+
+                        result_auroc.append(metrics.roc_auc_score(new_y_test, y_pred))
+                        s_hat = X_test[np.where(y_pred == 1), :]
+
+                        total_num = len(X_raw_test) + len(X_raw_train)
+                        utility_index = np.sum(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())/total_num
+
+                        cate_policy.append(utility_index)
+
+                        true_cate = po1_test - po0_test
+                        true_cate_policy.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
+
+                        # baseline with random features
+
+                        random_xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
+                        np.random.shuffle(rank_indices)
+                        new_X_train = X_train[:,rank_indices[:num_feature]]
+                        new_X_test = X_test[:,rank_indices[:num_feature]]
+
+                        random_xgb_model.fit(new_X_train, new_y_train)
+                        y_pred = random_xgb_model.predict(new_X_test)
+
+                        s_hat = X_test[np.where(y_pred == 1), :]
+                        s_original = X_test[np.where(W_test == 1), :]
+
+                        true_cate_random.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
+                        true_cate_original.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
+
+                        random_assignment_utility = np.sum(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())/total_num
+                        original_assignment_utility = np.sum(learners[learner_name].predict(X=s_original).detach().cpu().numpy())/total_num
+                        
+                        cate_random.append(random_assignment_utility)
+                        cate_original.append(original_assignment_utility)
+
+
+                    assignment_data.append(
+                        [
+                            propensity_scale,
+                            learner_name,
+                            explainer_name,
+                            result_auroc,
+                            cate_policy,
+                            cate_random,
+                            cate_original,
+                            true_cate_policy,
+                            true_cate_random,
+                            true_cate_original
+                        ]
+                    )
+
+                    explainability_data.append(
+                        [
+                            propensity_scale,
+                            learner_name,
+                            explainer_name,
+                            acc_scores_all_features,
+                            acc_scores_all_features_score,
+                            acc_scores_predictive_features,
+                            acc_scores_predictive_features_score,
+                            acc_scores_prog_features,
+                            acc_scores_prog_features_score,
+                            pehe_test,
+                            np.mean(cate_test),
+                            np.var(cate_test),
+                            pehe_test / np.sqrt(np.var(cate_test))
+                        ]
+                    )
+
+        metrics_df = pd.DataFrame(
+            explainability_data,
+            columns=[
+                "Propensity Scale",
+                "Learner",
+                "Explainer",
+                "All features ACC",
+                "All features ACC Score",
+                "Pred features ACC",
+                "Pred features ACC Score",
+                "Prog features ACC",
+                "Prog features ACC Score",
+                "PEHE",
+                "CATE true mean",
+                "CATE true var",
+                "Normalized PEHE",
+            ],
+        )
+
+        results_path = (
+            self.save_path
+            / f"results/propensity_sensitivity/assignment/model_performance/{self.synthetic_simulator_type}/{self.propensity_type}"
+        )
+        log.info(f"Saving results in {results_path}...")
+        if not results_path.exists():
+            results_path.mkdir(parents=True, exist_ok=True)
+
+        metrics_df.to_csv(
+            results_path / f"propensity_scale_{dataset}_{num_important_features}_"
+            f"proptype_{self.propensity_type}_"
+            f"predscl_{predictive_scale}_"
+            f"nonlinscl_{nonlinearity_scale}_"
+            f"trainratio_{train_ratio}_"
+            f"binary_{binary_outcome}-seed{self.seed}.csv"
+        )
+        results_path = (
+            self.save_path
+            / f"results/propensity_sensitivity/assignment/assignment/{self.synthetic_simulator_type}/{self.propensity_type}"
+        )
+        log.info(f"Saving results in {results_path}...")
+        if not results_path.exists():
+            results_path.mkdir(parents=True, exist_ok=True)
+
+        with open( results_path / f"propensity_scale_{dataset}_{num_important_features}_"
+            f"proptype_{self.propensity_type}_"
+            f"predscl_{predictive_scale}_"
+            f"nonlinscl_{nonlinearity_scale}_"
+            f"trainratio_{train_ratio}_"
+            f"binary_{binary_outcome}-seed{self.seed}.pkl", 'wb') as handle:
+            pkl.dump(assignment_data , handle)

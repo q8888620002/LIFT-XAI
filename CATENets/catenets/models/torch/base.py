@@ -690,11 +690,14 @@ class RepresentationNet(nn.Module):
         n_layers: int = DEFAULT_LAYERS_R,
         n_units: int = DEFAULT_UNITS_R,
         nonlin: str = DEFAULT_NONLIN,
+        device: str = "cpu",
         batch_norm: bool = True,
     ) -> None:
         super(RepresentationNet, self).__init__()
         if nonlin not in list(NONLIN.keys()):
             raise ValueError("Unknown nonlinearity")
+
+        self.device = device 
 
         NL = NONLIN[nonlin]
 
@@ -714,7 +717,16 @@ class RepresentationNet(nn.Module):
         self.model = nn.Sequential(*layers).to(self.device)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
+
+        X = self._check_tensor(X)
+
         return self.model(X)
+
+    def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
+        if isinstance(X, torch.Tensor):
+            return X.to(self.device)
+        else:
+            return torch.from_numpy(np.asarray(X)).to(self.device)
 
 
 class PropensityNet(nn.Module):
@@ -857,11 +869,10 @@ class PropensityNet(nn.Module):
         self, X: torch.Tensor, w: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
 
-        if X.size()[0] != 1:
-            p_pred = self.forward(X).squeeze()[:, 1]
+        if X.size()[0] == 1:
+            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))
         else:
-            
-            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:,1]
+            p_pred = self.forward(X).squeeze()[:, 1]
 
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
 
