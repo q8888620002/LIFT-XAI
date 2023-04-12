@@ -24,6 +24,7 @@ import catenets.models as cate_models
 import catenets.models.torch.tlearner as tlearner
 import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
 
+
 import numpy as np
 import pandas as pd
 
@@ -126,6 +127,21 @@ class PredictiveSensitivity:
                 binary_outcome=binary_outcome,
             )
 
+            encoder = cate_models.torch.base.MaskingModel(
+                   n_unit_in=X_train.shape[1],
+                   n_layers=2,
+                   n_units=X_train.shape[1]//2,
+                   n_iter=1000,
+                   batch_size=1024,
+                   batch_norm=False,
+                   nonlin="relu",
+                   mask_dis = "Uniform"
+
+            )
+
+            encoder.fit(X_train)
+
+            
             X_test, W_test, Y_test, po0_test, po1_test, _ = sim.simulate_dataset(
                 X_raw_test,
                 predictive_scale=predictive_scale,
@@ -3436,7 +3452,7 @@ class PropensityAssignment:
                         s_hat = X_test[np.where(y_pred == 1), :]
 
                         total_num = len(X_raw_test) + len(X_raw_train)
-                        utility_index = np.sum(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())/total_num
+                        utility_index = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
 
                         cate_policy.append(utility_index)
 
@@ -3456,12 +3472,17 @@ class PropensityAssignment:
                         s_hat = X_test[np.where(y_pred == 1), :]
                         s_original = X_test[np.where(W_test == 1), :]
 
-                        true_cate_random.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
-                        true_cate_original.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
 
-                        random_assignment_utility = np.sum(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())/total_num
-                        original_assignment_utility = np.sum(learners[learner_name].predict(X=s_original).detach().cpu().numpy())/total_num
-                        
+                        true_cate_random.append(np.sum(true_cate[np.where(y_pred == 1)])/total_num)
+                        true_cate_original.append(np.sum(true_cate[np.where(W_test == 1)])/total_num)
+
+                        if len(s_hat) != 0:
+                            random_assignment_utility = np.mean(learners[learner_name].predict(X=s_hat).detach().cpu().numpy())*len(s_hat)/total_num
+                        else:
+                            random_assignment_utility = 0
+
+                        original_assignment_utility = np.mean(learners[learner_name].predict(X=s_original).detach().cpu().numpy())*len(s_original)/total_num
+                            
                         cate_random.append(random_assignment_utility)
                         cate_original.append(original_assignment_utility)
 

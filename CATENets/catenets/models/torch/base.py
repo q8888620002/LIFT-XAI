@@ -668,6 +668,203 @@ class BasicNetMaskHalf(BasicNetMask):
         return self.model(out)
 
 
+class MaskingModel(nn.Module):
+    """
+    Encoder-decoder structure to ensure concatenatinon of masking vector would work
+    X * M = X_s
+
+    """
+    def __init__(
+        self,
+        n_unit_in: int,
+        n_layers: int = DEFAULT_LAYERS_R,
+        n_units: int = DEFAULT_UNITS_R,
+        n_iter: int = DEFAULT_N_ITER,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+        lr:int = 0.5,
+        weight_decay: int = DEFAULT_PENALTY_L2,
+        nonlin: str = DEFAULT_NONLIN,
+        mask_dis: str = "Uniform",
+        device: str = "cpu",
+        batch_norm: bool = True,
+        early_stopping: bool =False,
+        n_iter_min: int = DEFAULT_N_ITER_MIN,
+        n_iter_print: int = DEFAULT_N_ITER_PRINT
+        ) -> None:
+        super(MaskingModel, self).__init__()
+
+        self.device = device
+        self.patience = 10
+        self.batch_size = batch_size
+        self.n_iter = n_iter
+        self.mask_dis = mask_dis
+        self.early_stopping = early_stopping
+        self.n_iter_print = n_iter_print
+        self.n_iter_min = n_iter_min
+
+        self.name = "Masking model"
+
+        if nonlin not in list(NONLIN.keys()):
+            raise ValueError("Unknown nonlinearity")
+
+        NL = NONLIN[nonlin]
+        
+        if batch_norm:
+            encoder_layers = [nn.Linear(2*n_unit_in, n_units), nn.BatchNorm1d(n_units), NL()]
+        else:
+            encoder_layers = [nn.Linear(2*n_unit_in, n_units), NL()]
+        
+        decoder_layers = []
+
+        # add required number of layers
+        for i in range(n_layers - 1):
+            if batch_norm:
+                encoder_layers.extend(
+                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units), NL()]
+                )
+                decoder_layers.extend(
+                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units), NL()]
+                )
+            else:
+                encoder_layers.extend([nn.Linear(n_units, n_units), NL()])
+                decoder_layers.extend([nn.Linear(n_units, n_units), NL()])
+
+        decoder_layers.extend([nn.Linear(n_units, n_unit_in), NL()])
+
+        self.encoder = nn.Sequential(*encoder_layers).to(self.device)
+        self.decoder = nn.Sequential(*decoder_layers).to(self.device)
+
+        self.parameters = list(self.encoder.parameters())+ list(self.decoder.parameters())
+        self.optimizer = torch.optim.Adam(
+            self.parameters, lr=lr, weight_decay=weight_decay
+        )
+
+    def forward(self, X:torch.Tensor, M: torch.Tensor):
+
+        X = self._check_tensor(X)
+        M = self._check_tensor(M)
+
+        out = X * M
+        out = torch.cat([out, M], dim=1)
+
+        return self.encoder(out)
+
+    def decode(self, X:torch.Tensor):
+
+        return self.decoder(X)
+
+    def fit(self, X: torch.tensor):
+
+        self.train()
+        X = self._check_tensor(X)
+        y = torch.clone(X)
+
+        # get validation split (can be none)
+        X, y, X_val, y_val, val_string = make_val_split(
+            X, y, val_split_prop=0.3, seed=42, device=self.device
+        )
+        y_val = y_val.squeeze()
+        n = X.shape[0]  # could be different from before due to split
+
+        # calculate number of batches per epoch
+        batch_size = self.batch_size if self.batch_size < n else n
+        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
+        train_indices = np.arange(n)
+
+        scheduler = ReduceLROnPlateau(
+            self.optimizer, 
+            patience=self.patience//2,
+            mode='min', 
+            min_lr=1e-5,
+            factor = 0.5
+        )
+
+        # do training
+        val_loss_best = LARGE_VAL
+        patience = 0
+        best_model = None
+
+        for i in range(self.n_iter):
+            # shuffle data for minibatches
+            np.random.shuffle(train_indices)
+            train_loss = []
+            for b in range(n_batches):
+                self.optimizer.zero_grad()
+
+                idx_next = train_indices[
+                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
+                ]
+
+                X_next = X[idx_next]
+                y_next = y[idx_next]
+                
+                # generate masks
+
+                masks = generate_masks(X_next, self.mask_dis)
+                masks = self._check_tensor(masks)
+                nonzero_indices = torch.nonzero(masks)
+
+                y_next = y_next*masks
+
+                loss = nn.MSELoss()
+
+                preds = self.forward(X_next, masks).squeeze()
+                preds = self.decode(preds)*masks
+
+                batch_loss = loss(preds, y_next)
+                batch_loss.backward()
+
+                # import ipdb; ipdb.set_trace()
+                self.optimizer.step()
+
+                train_loss.append(batch_loss.detach())
+
+            train_loss = torch.Tensor(train_loss).to(self.device)
+
+            if self.early_stopping or i % self.n_iter_print == 0:
+                loss = nn.MSELoss()
+                with torch.no_grad():
+                    
+                    ## generating random masking for validation.
+
+                    masks = generate_masks(X_val, self.mask_dis)
+                    masks = self._check_tensor(masks)
+
+                    preds = self.forward(X_val, masks).squeeze()
+                    preds = self.decode(preds)*masks
+
+
+                    val_loss = loss(preds, y_val)
+                    scheduler.step(val_loss)
+
+                    if self.early_stopping:
+                        if val_loss_best > val_loss:
+                            val_loss_best = val_loss
+                            patience = 0
+                            # best_model = deepcopy(self.model)
+                        else:
+                            patience += 1
+
+                        if patience > self.patience and i > self.n_iter_min:
+                            break
+                    
+                    if i % self.n_iter_print == 0:
+                        log.info(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+
+        # restore_parameters(self.model, best_model)
+        return self
+
+
+    def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
+        if isinstance(X, torch.Tensor):
+            return X.to(self.device)
+        else:
+            return torch.from_numpy(np.asarray(X)).to(self.device).float()
+
+
+
 class RepresentationNet(nn.Module):
     """
     Basic representation neural net
