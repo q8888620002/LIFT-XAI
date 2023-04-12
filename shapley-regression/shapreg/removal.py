@@ -78,7 +78,7 @@ class MarginalExtension:
 
     def __call__(self, x, S):
         # Prepare x and S.
-        n = len(x)
+        n = len(x)  
         x = x.repeat(self.samples, 0)
         S = S.repeat(self.samples, 0)
 

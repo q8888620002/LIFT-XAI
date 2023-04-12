@@ -7,6 +7,8 @@ from scipy.stats import entropy
 from sklearn.decomposition import PCA
 
 
+
+
 def normalize_data(X):
     X_normalized = (X - np.min(X, axis=0)) / (np.max(X, axis=0) - np.min(X, axis=0))
 
