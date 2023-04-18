@@ -140,7 +140,44 @@ def generate_masks(X, mask_dis):
     elif mask_dis == "Beta":
         ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size,1))
     
-    return (unif > ref).float()
+    # remove all 0s 
+    
+    masks = (unif > ref).float()
+    # zeros = (torch.sum(masks, axis=1) == 0).float().nonzero()
+
+    # masks[zeros] = torch.ones(1,num_features)
+
+    return masks
+
+def generate_perturb_label(x, m ):
+    """Generate corrupted samples.
+    
+    Args:
+        m: mask matrix
+        x: feature matrix
+        
+    Returns:
+        m_new: final mask matrix after corruption
+        x_tilde: corrupted feature matrix
+    """
+    # Parameters
+    no, dim = x.size()
+  
+    # Randomly (and column-wise) shuffle data
+    x_bar = torch.zeros([no, dim])
+    for i in range(dim):
+        idx = torch.randperm(no)
+        x_bar[:, i] = x[idx, i]
+
+    # Corrupt samples
+    x_tilde = x * (1 - m) + x_bar * m
+    # Define new mask matrix
+    m_new = 1 * (x != x_tilde)
+
+    return m_new, x_tilde
+
+
+
 
 def restore_parameters(model, best_model):
     '''Move parameters from best model to current model.'''

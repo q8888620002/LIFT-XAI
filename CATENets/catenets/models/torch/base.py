@@ -26,7 +26,7 @@ from catenets.models.constants import (
     LARGE_VAL,
 )
 from catenets.models.torch.utils.decorators import benchmark, check_input_train
-from catenets.models.torch.utils.model_utils import make_val_split, generate_masks,restore_parameters, weights_init
+from catenets.models.torch.utils.model_utils import make_val_split, generate_masks,restore_parameters, weights_init, generate_perturb_label
 from catenets.models.torch.utils.weight_utils import compute_importance_weights
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -681,7 +681,7 @@ class MaskingModel(nn.Module):
         n_units: int = DEFAULT_UNITS_R,
         n_iter: int = DEFAULT_N_ITER,
         batch_size: int = DEFAULT_BATCH_SIZE,
-        lr:int = 0.5,
+        lr:int = 1e-2,
         weight_decay: int = DEFAULT_PENALTY_L2,
         nonlin: str = DEFAULT_NONLIN,
         mask_dis: str = "Uniform",
@@ -690,6 +690,7 @@ class MaskingModel(nn.Module):
         early_stopping: bool =False,
         n_iter_min: int = DEFAULT_N_ITER_MIN,
         n_iter_print: int = DEFAULT_N_ITER_PRINT
+
         ) -> None:
         super(MaskingModel, self).__init__()
 
@@ -701,40 +702,45 @@ class MaskingModel(nn.Module):
         self.early_stopping = early_stopping
         self.n_iter_print = n_iter_print
         self.n_iter_min = n_iter_min
-
+        self.alpha = 6
         self.name = "Masking model"
 
-        if nonlin not in list(NONLIN.keys()):
-            raise ValueError("Unknown nonlinearity")
+        # if nonlin not in list(NONLIN.keys()):
+        #     raise ValueError("Unknown nonlinearity")
 
         NL = NONLIN[nonlin]
         
         if batch_norm:
-            encoder_layers = [nn.Linear(2*n_unit_in, n_units), nn.BatchNorm1d(n_units), NL()]
+            encoder_layers = [nn.Linear(n_unit_in, n_units), nn.BatchNorm1d(n_units), NL()]
         else:
-            encoder_layers = [nn.Linear(2*n_unit_in, n_units), NL()]
+            encoder_layers = [nn.Linear(n_unit_in, n_units)]
         
-        decoder_layers = []
-
         # add required number of layers
         for i in range(n_layers - 1):
             if batch_norm:
                 encoder_layers.extend(
-                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units), NL()]
-                )
-                decoder_layers.extend(
-                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units), NL()]
+                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units),NL()]
                 )
             else:
-                encoder_layers.extend([nn.Linear(n_units, n_units), NL()])
-                decoder_layers.extend([nn.Linear(n_units, n_units), NL()])
+                encoder_layers.extend([nn.Linear(n_units, n_units),NL()])
 
-        decoder_layers.extend([nn.Linear(n_units, n_unit_in), NL()])
 
         self.encoder = nn.Sequential(*encoder_layers).to(self.device)
-        self.decoder = nn.Sequential(*decoder_layers).to(self.device)
 
-        self.parameters = list(self.encoder.parameters())+ list(self.decoder.parameters())
+        self.mask_predictor = nn.Sequential(
+            *[nn.Linear(n_units, n_unit_in),
+            nn.Sigmoid()]
+        ).to(self.device)
+        
+        self.feature_predictor = nn.Sequential(
+            *[nn.Linear(n_units, n_unit_in),
+               NL()]
+        ).to(self.device)
+
+        self.parameters = list(self.encoder.parameters())\
+                        + list(self.mask_predictor.parameters())\
+                         +list(self.feature_predictor.parameters())
+
         self.optimizer = torch.optim.Adam(
             self.parameters, lr=lr, weight_decay=weight_decay
         )
@@ -744,14 +750,14 @@ class MaskingModel(nn.Module):
         X = self._check_tensor(X)
         M = self._check_tensor(M)
 
-        out = X * M
-        out = torch.cat([out, M], dim=1)
+        mask_label, out = generate_perturb_label(X, M)
 
-        return self.encoder(out)
+        out = self.encoder(out)
 
-    def decode(self, X:torch.Tensor):
+        pred_features = self.feature_predictor(out)
+        pred_masks = self.mask_predictor(out)
 
-        return self.decoder(X)
+        return pred_features, pred_masks, mask_label.float()
 
     def fit(self, X: torch.tensor):
 
@@ -802,19 +808,18 @@ class MaskingModel(nn.Module):
 
                 masks = generate_masks(X_next, self.mask_dis)
                 masks = self._check_tensor(masks)
-                nonzero_indices = torch.nonzero(masks)
 
-                y_next = y_next*masks
+                feature_loss = nn.MSELoss()
+                mask_loss = nn.BCELoss()
+                # import ipdb; ipdb.set_trace()
 
-                loss = nn.MSELoss()
-
-                preds = self.forward(X_next, masks).squeeze()
-                preds = self.decode(preds)*masks
-
-                batch_loss = loss(preds, y_next)
-                batch_loss.backward()
+                pred_features, pred_masks, mask_label = self.forward(X_next, masks)
 
                 # import ipdb; ipdb.set_trace()
+
+                batch_loss = self.alpha*feature_loss(pred_features, X_next) + mask_loss(pred_masks, mask_label )
+
+                batch_loss.backward()
                 self.optimizer.step()
 
                 train_loss.append(batch_loss.detach())
@@ -822,7 +827,9 @@ class MaskingModel(nn.Module):
             train_loss = torch.Tensor(train_loss).to(self.device)
 
             if self.early_stopping or i % self.n_iter_print == 0:
-                loss = nn.MSELoss()
+                feature_loss = nn.MSELoss()
+                mask_loss = nn.BCELoss()
+
                 with torch.no_grad():
                     
                     ## generating random masking for validation.
@@ -830,11 +837,13 @@ class MaskingModel(nn.Module):
                     masks = generate_masks(X_val, self.mask_dis)
                     masks = self._check_tensor(masks)
 
-                    preds = self.forward(X_val, masks).squeeze()
-                    preds = self.decode(preds)*masks
+                    pred_features, pred_masks, mask_label = self.forward(X_val, masks)
+                    if i == 900:
 
+                        import ipdb; ipdb.set_trace()
+                        
+                    val_loss = self.alpha*feature_loss(pred_features, X_val) + mask_loss( pred_masks, mask_label)
 
-                    val_loss = loss(preds, y_val)
                     scheduler.step(val_loss)
 
                     if self.early_stopping:
@@ -1067,7 +1076,7 @@ class PropensityNet(nn.Module):
     ) -> torch.Tensor:
 
         if X.size()[0] == 1:
-            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))
+            p_pred = torch.reshape(self.forward(X).squeeze(), (-1, 1))[1]
         else:
             p_pred = self.forward(X).squeeze()[:, 1]
 

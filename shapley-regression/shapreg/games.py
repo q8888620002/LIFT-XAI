@@ -57,6 +57,7 @@ class CateGame(CooperativeGame):
             input_data = self.sample
 
         values = self.model.predict(input_data, S).detach().cpu().numpy()
+
         return values[:, 0]
 
 
