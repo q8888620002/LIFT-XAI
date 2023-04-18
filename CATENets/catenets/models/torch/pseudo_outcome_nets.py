@@ -863,7 +863,7 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         early_stopping: bool = True,
         dropout: bool = False,
         dropout_prob: float = 0.2,
-        mask_dis: str = "Uniform"
+        mask_dis: str = "Uniform",
     ):
         super(BaseCATEEstimator, self).__init__()
         self.n_unit_in = n_unit_in
@@ -1085,6 +1085,7 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
 
         X = self._check_tensor(X).float()
         M = self._check_tensor(M)
+        predict_wrapper_mask(self._te_estimator, X, M)
 
         return predict_wrapper_mask(self._te_estimator, X, M)
 
@@ -1943,6 +1944,7 @@ class XLearner(PseudoOutcomeLearner):
         tau1_pred = predict_wrapper(self._te_estimator_1, X)
 
         weight = self._propensity_estimator.get_importance_weights(X)
+        # import ipdb; ipdb.set_trace()
 
         return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
 

@@ -93,6 +93,7 @@ def ShapleySampling(game,
                 next_value = game(S, U)
             else:
                 next_value = game(S)
+
             deltas[arange, permutations[:, i]] = next_value - prev_value
             prev_value = next_value
 
