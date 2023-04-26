@@ -362,9 +362,9 @@ class SyntheticSimulatorModulatedNonLinear(SyntheticSimulatorBase):
             # pred0_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices)
             # pred1_indices = self.__sample_indices__(X,num_important_features, all_indices.tolist(), prog_indices+pred0_indices)
 
-            prog_indices = all_indices[prog_indices]
-            pred0_indices = all_indices[pred0_indices]
-            pred1_indices = all_indices[pred1_indices]
+            # prog_indices = all_indices[prog_indices]
+            # pred0_indices = all_indices[pred0_indices]
+            # pred1_indices = all_indices[pred1_indices]
 
         prog_mask[prog_indices] = 1
         pred0_mask[pred0_indices] = 1

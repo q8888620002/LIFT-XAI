@@ -1076,7 +1076,7 @@ class PropensityNet(nn.Module):
     ) -> torch.Tensor:
 
         if X.size()[0] == 1:
-            p_pred = torch.reshape(self.forward(X).squeeze(), (-1, 1))[1]
+            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:,1]
         else:
             p_pred = self.forward(X).squeeze()[:, 1]
 
