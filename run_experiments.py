@@ -8,10 +8,12 @@ from src.interpretability.experiments import (
     PredictiveSensitivityHeldOutOne,
     PredictiveSensitivityLoss,
     PredictiveAssignment,
+    PredictiveSensitivityHeldOutOneMask,
     PropensitySensitivity,
     NonLinearitySensitivity,
     NonlinearitySensitivityLoss,
     NonLinearityHeldOutOne,
+    NonLinearityHeldOutOneMask,
     NonLinearityAssignment,
     PropensityAssignment
 )
@@ -197,6 +199,26 @@ if __name__ == "__main__":
                     binary_outcome=args.binary_outcome_list[experiment_id],
                     explainer_list=args.explainer_list,
                 )
+        elif args.experiment_name == "predictive_heldout_mask":
+            exp = PredictiveSensitivityHeldOutOneMask(
+                seed=seed,
+                explainer_limit=args.explainer_limit,
+                synthetic_simulator_type=args.synthetic_simulator_type,
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, {args.num_important_features_list[experiment_id]} with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
+
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
 
         elif args.experiment_name == "nonlinearity_sensitivity":
             exp = NonLinearitySensitivity(
@@ -241,6 +263,26 @@ if __name__ == "__main__":
 
         elif args.experiment_name == "nonlinearity_heldout":
             exp = NonLinearityHeldOutOne(
+                seed=seed, explainer_limit=args.explainer_limit
+            )
+            for experiment_id in range(len(args.dataset_list)):
+                log.info(
+                    f"Running experiment for {args.dataset_list[experiment_id]}, "
+                    f"{args.num_important_features_list[experiment_id]} important features "
+                    f"with binary outcome {args.binary_outcome_list[experiment_id]}"
+                )
+
+                exp.run(
+                    dataset=args.dataset_list[experiment_id],
+                    train_ratio=args.train_ratio,
+                    num_important_features=args.num_important_features_list[
+                        experiment_id
+                    ],
+                    binary_outcome=args.binary_outcome_list[experiment_id],
+                    explainer_list=args.explainer_list,
+                )
+        elif args.experiment_name == "nonlinearity_heldout_mask":
+            exp = NonLinearityHeldOutOneMask(
                 seed=seed, explainer_limit=args.explainer_limit
             )
             for experiment_id in range(len(args.dataset_list)):
