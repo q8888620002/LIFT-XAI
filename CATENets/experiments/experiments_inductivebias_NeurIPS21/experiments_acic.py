@@ -72,7 +72,7 @@ def do_acic_experiments(n_exp: int = 10, file_name: str = 'results_catenets',
 
     for i_exp in range(n_exp):
         # get data
-        X, w, y, po_train, X_test, w_test, y_test, po_test = load(
+        X, w, y, po_train, x_test, w_test, y_test, po_test = load(
             "acic2016", preprocessed=pre_trans, original_acic_outcomes=True,
             keep_categorical=False, random_split=True,
             i_exp=i_exp, simu_num=simu_num, train_size=train_size)
@@ -95,7 +95,7 @@ def do_acic_experiments(n_exp: int = 10, file_name: str = 'results_catenets',
             estimator_temp.fit(X=X, y=y, w=w)
 
             cate_pred_in = estimator_temp.predict(X, return_po=False)
-            cate_pred_out = estimator_temp.predict(X_test, return_po=False)
+            cate_pred_out = estimator_temp.predict(x_test, return_po=False)
 
             pehe_in.append(eval_root_mse(cate_pred_in, cate_in))
             pehe_out.append(eval_root_mse(cate_pred_out, cate_out))

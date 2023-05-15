@@ -52,14 +52,14 @@ def test_nn_model_params_nonlin(nonlin: str, model_t: Any) -> None:
 @pytest.mark.parametrize("dataset, pehe_threshold", [("twins", 0.4), ("ihdp", 4)])
 @pytest.mark.parametrize("model_t", [DRLearner, RALearner, XLearner])
 def test_nn_model_sanity(dataset: str, pehe_threshold: float, model_t: Any) -> None:
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load(dataset)
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load(dataset)
     W_train = W_train.ravel()
 
     model = model_t(
-        X_train.shape[1], binary_y=(len(np.unique(Y_train)) == 2), n_iter=10
+        x_train.shape[1], binary_y=(len(np.unique(Y_train)) == 2), n_iter=10
     )
 
-    score = evaluate_treatments_model(model, X_train, Y_train, Y_train_full, W_train)
+    score = evaluate_treatments_model(model, x_train, Y_train, Y_train_full, W_train)
 
     print(
         f"Evaluation for model torch.{model_t} with NNs on {dataset} = {score['str']}"
@@ -105,11 +105,11 @@ def test_sklearn_model_pseudo_outcome_binary(
     te_estimator: Any,
     model_t: Any,
 ) -> None:
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load(dataset)
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load(dataset)
     W_train = W_train.ravel()
 
     model = model_t(
-        X_train.shape[1],
+        x_train.shape[1],
         binary_y=True,
         po_estimator=po_estimator,
         te_estimator=te_estimator,
@@ -118,7 +118,7 @@ def test_sklearn_model_pseudo_outcome_binary(
     )
 
     score = evaluate_treatments_model(
-        model, X_train, Y_train, Y_train_full, W_train, n_folds=3
+        model, x_train, Y_train, Y_train_full, W_train, n_folds=3
     )
 
     print(
@@ -128,16 +128,16 @@ def test_sklearn_model_pseudo_outcome_binary(
 
 
 def test_model_predict_api() -> None:
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load("ihdp")
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load("ihdp")
     W_train = W_train.ravel()
 
-    model = XLearner(X_train.shape[1], binary_y=False, batch_size=1024, n_iter=10)
-    model.fit(X_train, Y_train, W_train)
+    model = XLearner(x_train.shape[1], binary_y=False, batch_size=1024, n_iter=10)
+    model.fit(x_train, Y_train, W_train)
 
-    out = model.predict(X_test)
+    out = model.predict(x_test)
 
-    assert len(out) == len(X_test)
+    assert len(out) == len(x_test)
 
-    score = model.score(X_test, Y_test)
+    score = model.score(x_test, Y_test)
 
     assert score > 0

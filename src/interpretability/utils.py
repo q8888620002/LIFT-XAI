@@ -208,7 +208,7 @@ def attribution_accuracy(
 
 
 def attribution_insertion_deletion(
-    X_test: np.ndarray,
+    x_test: np.ndarray,
     rank_indices:list,
     pate_model: pseudo_outcome_nets.PseudoOutcomeLearnerMask,
 ) -> tuple:
@@ -216,14 +216,14 @@ def attribution_insertion_deletion(
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
 
     Args:
-        X_test: testing set for explanation with insertion and deletion
+        x_test: testing set for explanation with insertion and deletion
         feature_attributions: feature attribution outputted by a feature importance method
         pate_model: masking models for PATE estimation.
     Returns:
         results of insertion and deletion of PATE.
     """
 
-    n_samples, n_features = X_test.shape
+    n_samples, n_features = x_test.shape
     deletion_results = np.zeros((n_samples, n_features+1))
     insertion_results = np.zeros((n_samples, n_features+1))
     row_indices = [i for i in range(n_samples)]
@@ -234,9 +234,9 @@ def attribution_insertion_deletion(
 
         removal_mask[row_indices, col_indices] = 0.
 
-        cate_pred_subset = pate_model.predict(X=X_test, M=removal_mask)
+        cate_pred_subset = pate_model.predict(X=x_test, M=removal_mask)
         cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
-        cate_pred = pate_model.predict(X=X_test, M=torch.ones(X_test.shape))
+        cate_pred = pate_model.predict(X=x_test, M=torch.ones(x_test.shape))
         cate_pred = cate_pred.detach().cpu().numpy()
 
         deletion_results[:, 0] = cate_pred.flatten()
@@ -244,15 +244,15 @@ def attribution_insertion_deletion(
 
     # Inserting feature & make prediction with masked model
 
-    insertion_mask = torch.zeros((X_test.shape))
+    insertion_mask = torch.zeros((x_test.shape))
 
     for rank_index, col_indices in enumerate(rank_indices):
 
         insertion_mask[row_indices, col_indices] = 1.
 
-        cate_pred_subset = pate_model.predict(X=X_test, M=insertion_mask)
+        cate_pred_subset = pate_model.predict(X=x_test, M=insertion_mask)
         cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
-        cate_pred = pate_model.predict(X=X_test, M=torch.zeros(X_test.shape))
+        cate_pred = pate_model.predict(X=x_test, M=torch.zeros(x_test.shape))
         cate_pred = cate_pred.detach().cpu().numpy()
 
         insertion_results[:, 0] = cate_pred.flatten()

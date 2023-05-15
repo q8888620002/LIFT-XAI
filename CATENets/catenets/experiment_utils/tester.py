@@ -39,20 +39,20 @@ def evaluate_treatments_model(
 
     for train_index, test_index in skf.split(X, Y):
 
-        X_train = X[train_index]
+        x_train = X[train_index]
         Y_train = Y[train_index]
         W_train = W[train_index]
 
-        X_test = X[test_index]
+        x_test = X[test_index]
         Y_full_test = Y_full[test_index]
 
         model = copy.deepcopy(estimator)
-        model.fit(X_train, Y_train, W_train)
+        model.fit(x_train, Y_train, W_train)
 
         try:
-            te_pred = model.predict(X_test).detach().cpu().numpy()
+            te_pred = model.predict(x_test).detach().cpu().numpy()
         except BaseException:
-            te_pred = np.asarray(model.predict(X_test))
+            te_pred = np.asarray(model.predict(x_test))
 
         metric_ate[indx] = abs_error_ATE(Y_full_test, te_pred)
         metric_pehe[indx] = sqrt_PEHE(Y_full_test, te_pred)

@@ -13,12 +13,12 @@ X_display, y_display = shap.datasets.adult(display=True)
 num_features = X.shape[1]
 
 # Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7)
-d_train = lgb.Dataset(X_train, label=y_train)
-d_tx_train = lgb.Dataset(X_train.loc[:, ~X_train.columns.isin(["Sex"])], label=X_train["Sex"])
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=7)
+d_train = lgb.Dataset(x_train, label=y_train)
+d_tx_train = lgb.Dataset(x_train.loc[:, ~x_train.columns.isin(["Sex"])], label=x_train["Sex"])
 
-d_tx_test = lgb.Dataset(X_test.loc[:, ~X_test.columns.isin(["Sex"])], label=X_test["Sex"])
-d_test = lgb.Dataset(X_test, label=y_test)
+d_tx_test = lgb.Dataset(x_test.loc[:, ~x_test.columns.isin(["Sex"])], label=x_test["Sex"])
+d_test = lgb.Dataset(x_test, label=y_test)
 
 
 params = {
@@ -43,10 +43,10 @@ model = lgb.train(params, d_train, 10000, valid_sets=[d_test], early_stopping_ro
 model_lam = lambda x: model.predict(x)
 tx_model_lam = lambda x: tx_model.predict(x)
 # Model extension
-#marginal_extension = removal.MarginalExtension(X_test.values[:512], model_lam)
+#marginal_extension = removal.MarginalExtension(x_test.values[:512], model_lam)
 
-## Interventional 
-interventional_extension = removal.InterventionalExtension(X_test.values[:512], model_lam,tx_model_lam ,0.2)
+## Interventional
+interventional_extension = removal.InterventionalExtension(x_test.values[:512], model_lam,tx_model_lam ,0.2)
 # Set up game (single prediction)
 instance = X.values[0]
 

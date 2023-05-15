@@ -384,22 +384,22 @@ def one_simulation_experiment(
         covariate_model_params={"correlated": correlated_x},
     )
     # split data
-    X_train, y_train, w_train, _ = (
+    x_train, y_train, w_train, _ = (
         X[:n_train, :],
         y[:n_train],
         w[:n_train],
         p[:n_train],
     )
-    X_test, t_test = X[n_train:, :], t[n_train:]
+    x_test, t_test = X[n_train:, :], t[n_train:]
 
     rmses = []
     for model_name, model in models.items():
         log.debug(f"Training model {model_name}")
 
         estimator = clone(model)
-        estimator.fit(X=X_train, y=y_train, w=w_train)
+        estimator.fit(X=x_train, y=y_train, w=w_train)
 
-        cate_test = estimator.predict(X_test, return_po=False)
+        cate_test = estimator.predict(x_test, return_po=False)
         rmses.append(eval_root_mse(cate_test, t_test))
 
     return rmses

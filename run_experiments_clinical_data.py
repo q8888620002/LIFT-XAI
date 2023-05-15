@@ -48,9 +48,9 @@ if __name__ == "__main__":
     data = Dataset(cohort_name, 10)
     names = data.get_feature_names()
 
-    X_train, _, _ = data.get_training_data()
-    X_test, _, _ = data.get_testing_data()
-    feature_size = X_train.shape[1]
+    x_train, _, _ = data.get_training_data()
+    x_test, _, _ = data.get_testing_data()
+    feature_size = x_train.shape[1]
 
     explainers = [
         "integrated_gradients",
@@ -66,20 +66,20 @@ if __name__ == "__main__":
         np.zeros((trials,feature_size))
     )
 
-    results_train = np.zeros((trials, len(X_train)))
-    results_test = np.zeros((trials, len(X_test)))
+    results_train = np.zeros((trials, len(x_train)))
+    results_test = np.zeros((trials, len(x_test)))
 
     for i in range(trials):
 
         data = Dataset(cohort_name, i)
-        X_train, w_train, y_train = data.get_training_data()
-        X_test, w_test, y_test = data.get_testing_data()
+        x_train, w_train, y_train = data.get_training_data()
+        x_test, w_test, y_test = data.get_testing_data()
 
 
         models = {
             "xlearner":
                 pseudo_outcome_nets.XLearner(
-                    X_train.shape[1],
+                    x_train.shape[1],
                     binary_y=(len(np.unique(y_train)) == 2),
                     n_layers_out=2,
                     n_units_out=100,
@@ -90,7 +90,7 @@ if __name__ == "__main__":
                 ),
             # "drlearner":
             #     pseudo_outcome_nets.DRLearner(
-            #     X_train.shape[1],
+            #     x_train.shape[1],
             #     binary_y=(len(np.unique(y_train)) == 2),
             #     n_layers_out=2,
             #     n_units_out=100,
@@ -112,8 +112,8 @@ if __name__ == "__main__":
 
         rf = RandomForestClassifier(max_depth=6, random_state=i)
 
-        x0 = X_train[w_train==0]
-        x1 = X_train[w_train==1]
+        x0 = x_train[w_train==0]
+        x1 = x_train[w_train==1]
 
         y0 = y_train[w_train==0]
         y1 = y_train[w_train==1]
@@ -121,14 +121,14 @@ if __name__ == "__main__":
         xgb_plugin0.fit(x0, y0)
         xgb_plugin1.fit(x1, y1)
 
-        rf.fit(X_train, w_train)
+        rf.fit(x_train, w_train)
 
-        y_pred0 = xgb_plugin0.predict(X_test)
-        y_pred1 = xgb_plugin1.predict(X_test)
+        y_pred0 = xgb_plugin0.predict(x_test)
+        y_pred1 = xgb_plugin1.predict(x_test)
 
         t_plugin = y_pred1 - y_pred0
 
-        ps = rf.predict_proba(X_test)[:, 1]
+        ps = rf.predict_proba(x_test)[:, 1]
         a = w_test - ps
 
         ident = np.ones(len(ps))
@@ -141,20 +141,20 @@ if __name__ == "__main__":
 
         for model_name, model in models.items():
 
-            model.fit(X_train, y_train, w_train)
+            model.fit(x_train, y_train, w_train)
 
-            results_train[i] = model.predict(X=X_train).detach().cpu().numpy().flatten()
-            results_test[i] = model.predict(X=X_test).detach().cpu().numpy().flatten()
+            results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
+            results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
 
             learner_explainers[learner] = Explainer(
                 model,
-                feature_names=list(range(X_train.shape[1])),
+                feature_names=list(range(x_train.shape[1])),
                 explainer_list=explainers,
             )
 
             log.info(f"Explaining {learner}")
             learner_explanations[learner] = learner_explainers[learner].explain(
-                X_test
+                x_test
             )
             # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
                 rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
 
                 insertion_results, deletion_results = insertion_deletion_if_pehe(
-                    X_test,
+                    x_test,
                     rank_indices,
                     model,
                     data.get_replacement_value(),
@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
             for col in range(feature_size):
                 result_sign[explainer_name][i, col] = stats.pearsonr(
-                    X_test[:,col], learner_explanations[learner][explainer_name][:, col]
+                    x_test[:,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
 
 
