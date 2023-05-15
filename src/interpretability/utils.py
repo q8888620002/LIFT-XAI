@@ -9,10 +9,11 @@ import pandas as pd
 import seaborn as sns
 import torch
 
-import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
-
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
+
+from catenets.models.torch import pseudo_outcome_nets
+
 
 
 
@@ -193,10 +194,10 @@ def attribution_accuracy(
     ]  # Features with largest attribution
     accuracy = 0  # Attribution accuracy
     accuracy_proportion_abs = 0 # Attribution score accuracy
-        
+
     for k in range(len(largest_attribution_idx)):
         accuracy += len(np.intersect1d(largest_attribution_idx[k], target_features))
-    
+
     for k in target_features:
         accuracy_proportion_abs += np.sum(np.abs(feature_attributions[:,k]))
 
@@ -207,7 +208,7 @@ def attribution_accuracy(
 
 
 def attribution_insertion_deletion(
-    X_test: np.ndarray, 
+    X_test: np.ndarray,
     rank_indices:list,
     pate_model: pseudo_outcome_nets.PseudoOutcomeLearnerMask,
 ) -> tuple:
@@ -215,11 +216,11 @@ def attribution_insertion_deletion(
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
 
     Args:
-        X_test: testing set for explanation with insertion and deletion 
+        X_test: testing set for explanation with insertion and deletion
         feature_attributions: feature attribution outputted by a feature importance method
-        pate_model: masking models for PATE estimation. 
+        pate_model: masking models for PATE estimation.
     Returns:
-        results of insertion and deletion of PATE. 
+        results of insertion and deletion of PATE.
     """
 
     n_samples, n_features = X_test.shape
@@ -230,7 +231,7 @@ def attribution_insertion_deletion(
     removal_mask = torch.ones((n_samples, n_features))
 
     for rank_index, col_indices in enumerate(rank_indices):
-        
+
         removal_mask[row_indices, col_indices] = 0.
 
         cate_pred_subset = pate_model.predict(X=X_test, M=removal_mask)
@@ -246,7 +247,7 @@ def attribution_insertion_deletion(
     insertion_mask = torch.zeros((X_test.shape))
 
     for rank_index, col_indices in enumerate(rank_indices):
-        
+
         insertion_mask[row_indices, col_indices] = 1.
 
         cate_pred_subset = pate_model.predict(X=X_test, M=insertion_mask)

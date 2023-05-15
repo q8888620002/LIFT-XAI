@@ -60,7 +60,7 @@ def preprocess(
     """
     np.random.seed(seed)
     random.seed(seed)
-    
+
     # Load original data (11400 patients, 30 features, 2 dimensional potential outcomes)
     df = pd.read_csv(fn_csv)
 
