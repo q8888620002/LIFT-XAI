@@ -170,47 +170,50 @@ def insertion_deletion_if_pehe(
     deletion_results = np.zeros(n_features+1)
     insertion_results = np.zeros(n_features+1)
 
-    cate_pred_full = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
-
-    ident = np.ones(len(c))
-
     # Calculate IF-PEHE for deletion
 
-    plug_in = (t_plugin - cate_pred_full)**2
-    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_full) + (- a*(t_plugin - cate_pred_full)**2 + cate_pred_full**2)
-    deletion_results[0] = np.sum(l_de) + np.sum(plug_in)
+    cate_pred_subset = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+    deletion_results[0] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
 
     for rank_index, col_indices in enumerate(rank_indices):
 
         x_test_del[:, col_indices] = x_replacement[col_indices]
 
         cate_pred_subset = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
-
-        plug_in = (t_plugin - cate_pred_subset)**2
-        l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_subset) + (- a*(t_plugin - cate_pred_subset)**2 + cate_pred_subset**2)
-
-        deletion_results[ rank_index+1] = np.sum(l_de) + np.sum(plug_in)
-
+        deletion_results[rank_index+1] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
 
     # Calculate IF-PEHE for insertion
 
-    cate_pred_null = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
-    plug_in = (t_plugin - cate_pred_null)**2
-    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_null) + (- a*(t_plugin - cate_pred_null)**2 + cate_pred_null**2)
-
-    insertion_results[ 0] = np.sum(l_de) + np.sum(plug_in)
+    cate_pred_subset = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+    insertion_results[0] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
 
     for rank_index, col_indices in enumerate(rank_indices):
 
         x_test_ins[:, col_indices] = x_test[:, col_indices]
-
         cate_pred_subset = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
-
-        plug_in = (t_plugin - cate_pred_subset)**2
-        l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_subset) + (- a*(t_plugin - cate_pred_subset)**2 + cate_pred_subset**2)
-        insertion_results[rank_index+1] = np.sum(l_de) + np.sum(plug_in)
+        insertion_results[rank_index+1] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
 
     return insertion_results, deletion_results
+
+def calculate_if_pehe(
+        prediction: np.ndarray,
+        a: np.ndarray,
+        b: np.ndarray,
+        c: np.ndarray,
+        t_plugin: np.ndarray,
+        y_test:np.ndarray
+)-> np.ndarray:
+    """"
+    Method for calculating estimated pehe with influence function.
+    """
+
+    ident = np.ones(len(c))
+
+    plug_in = (t_plugin - prediction)**2
+    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - prediction) + (- a*(t_plugin - prediction)**2 + prediction**2)
+
+    return np.sum(l_de) + np.sum(plug_in)
+    
 
 
 class Dataset:
@@ -389,5 +392,11 @@ class Dataset:
         """
         return values for insertion & deletion
         """
-        return np.mean(self.x_train, axis=0)
+        # x_replacement = np.zeros(self.x_train.shape[1])
+        x_replacement = np.mean(self.x_train, axis=0)
+
+        # x_replacement = np.min(self.x_train, axis=0)
+
+        return x_replacement
+    
 

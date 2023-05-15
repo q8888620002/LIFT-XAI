@@ -57,14 +57,13 @@ if __name__ == "__main__":
         "shapley_value_sampling",
         # "naive_shap"
     ]
-    top_k_results = dict.fromkeys(
-        explainers,
-        []
-    )
-    result_sign = dict.fromkeys(
-        explainers,
-        np.zeros((trials,feature_size))
-    )
+    top_n_results = {
+        e:[] for e in explainers
+    }
+    
+    result_sign = {
+        e:np.zeros((trials,feature_size)) for e in explainers
+    }
 
     results_train = np.zeros((trials, len(x_train)))
     results_test = np.zeros((trials, len(x_test)))
@@ -74,7 +73,6 @@ if __name__ == "__main__":
         data = Dataset(cohort_name, i)
         x_train, w_train, y_train = data.get_training_data()
         x_test, w_test, y_test = data.get_testing_data()
-
 
         models = {
             "xlearner":
@@ -107,16 +105,13 @@ if __name__ == "__main__":
 
         np.random.seed(i)
 
-        xgb_plugin1 = xgb.XGBClassifier(max_depth=6, random_state=i, n_estimators=100)
-        xgb_plugin0 = xgb.XGBClassifier(max_depth=6, random_state=i, n_estimators=100)
+        xgb_plugin1 = xgb.XGBClassifier()
+        xgb_plugin0 = xgb.XGBClassifier()
 
-        rf = RandomForestClassifier(max_depth=6, random_state=i)
+        rf = RandomForestClassifier()
 
-        x0 = x_train[w_train==0]
-        x1 = x_train[w_train==1]
-
-        y0 = y_train[w_train==0]
-        y1 = y_train[w_train==1]
+        x0, x1 = x_train[w_train==0], x_train[w_train==1]
+        y0, y1 = y_train[w_train==0], y_train[w_train==1]
 
         xgb_plugin0.fit(x0, y0)
         xgb_plugin1.fit(x1, y1)
@@ -130,11 +125,8 @@ if __name__ == "__main__":
 
         ps = rf.predict_proba(x_test)[:, 1]
         a = w_test - ps
-
-        ident = np.ones(len(ps))
-        c = ps*(ident-ps)
-
-        b = np.array([2]*len(w_test))*w_test*(w_test-ps) / c
+        c = ps*(np.ones(len(ps))-ps)
+        b = np.array([2]*len(w_test))*w_test*(w_test-ps)/c
 
         learner_explainers = {}
         insertion_deletion_data = []
@@ -191,31 +183,36 @@ if __name__ == "__main__":
         #### Getting top n features
 
         for explainer_name in explainers:
+
             ind = np.argpartition(
                 np.abs(
                     learner_explanations[learner][explainer_name]
                 ).mean(0).round(2),
-             -top_n_features)[-top_n_features:]
+                -top_n_features
+            )[-top_n_features:]
 
-            top_k_results[explainer_name].extend(names[ind].tolist())
+            top_n_results[explainer_name].extend(names[ind].tolist())
 
             for col in range(feature_size):
                 result_sign[explainer_name][i, col] = stats.pearsonr(
                     x_test[:,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
 
-
     for explainer_name in explainers:
-        results = collections.Counter(top_k_results[explainer_name])
+        
+        results = collections.Counter(top_n_results[explainer_name])
         summary = pd.DataFrame(
                 results.items(),
-                columns=['feature', 'count (%)']
+                columns=[
+                    'feature', 
+                    'count (%)'
+                ]
             ).sort_values(
             by="count (%)",
             ascending=False
         )
 
-        summary["count (%)"] = np.round(summary["count (%)"]/trials,2)*100
+        summary["count (%)"] = np.round(summary["count (%)"]/(len(top_n_results[explainer_name])), 2)*100
 
         indices = [names.tolist().index(i) for i in summary.feature.tolist()]
         summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=0)[indices])
