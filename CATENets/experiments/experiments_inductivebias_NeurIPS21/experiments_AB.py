@@ -420,7 +420,7 @@ def acic_simu(
         inter: bool = True,
         return_ytest: bool = False,
 ) -> Tuple:
-    X_train, w_train, y_train, _, X_test, w_test, y_test, po_test = load(
+    x_train, w_train, y_train, _, x_test, w_test, y_test, po_test = load(
         "acic2016",
         i_exp=i_exp,
         n_0=n_0,
@@ -439,6 +439,6 @@ def acic_simu(
     cate_t = mu_1_t - mu_0_t
 
     if return_ytest:
-        return X_train, y_train, w_train, X_test, y_test, w_test, mu_0_t, mu_1_t, cate_t
+        return x_train, y_train, w_train, x_test, y_test, w_test, mu_0_t, mu_1_t, cate_t
 
-    return X_train, y_train, w_train, X_test, mu_0_t, mu_1_t, cate_t
+    return x_train, y_train, w_train, x_test, mu_0_t, mu_1_t, cate_t

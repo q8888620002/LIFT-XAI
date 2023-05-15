@@ -171,14 +171,14 @@ def preprocess_simu(
             + np.random.normal(0, error_sd, n_total).reshape((-1, 1))
     )
 
-    X_train, y_train, w_train, mu_0_train, mu_1_train = (
+    x_train, y_train, w_train, mu_0_train, mu_1_train = (
         X[ind[: (n_0 + n_1)], :],
         y[ind[: (n_0 + n_1)]],
         w[ind[: (n_0 + n_1)]],
         mu_0[ind[: (n_0 + n_1)]],
         mu_1[ind[: (n_0 + n_1)]],
     )
-    X_test, y_test, w_test, mu_0_t, mu_1_t = (
+    x_test, y_test, w_test, mu_0_t, mu_1_t = (
         X[ind_test, :],
         y[ind_test],
         w[ind_test],
@@ -187,11 +187,11 @@ def preprocess_simu(
     )
 
     return (
-        X_train,
+        x_train,
         w_train,
         y_train,
         np.asarray([mu_0_train, mu_1_train]).squeeze().T,
-        X_test,
+        x_test,
         w_test,
         y_test,
         np.asarray([mu_0_t, mu_1_t]).squeeze().T,
@@ -232,24 +232,24 @@ def preprocess_acic_orig(fn_csv: Path,
     y, w, mu_0, mu_1 = get_acic_orig_outcomes(data_path=data_path, simu_num=simu_num, i_exp=i_exp)
 
     if not random_split:
-        X_train, y_train, w_train, mu_0_train, mu_1_train = X[:train_size, :], y[:train_size], \
+        x_train, y_train, w_train, mu_0_train, mu_1_train = X[:train_size, :], y[:train_size], \
                                                             w[:train_size], mu_0[:train_size], \
                                                             mu_1[:train_size]
-        X_test, y_test, w_test, mu_0_test, mu_1_test = X[train_size:, :], y[train_size:], \
+        x_test, y_test, w_test, mu_0_test, mu_1_test = X[train_size:, :], y[train_size:], \
                                                        w[train_size:], mu_0[train_size:], \
                                                        mu_1[train_size:]
     else:
-        X_train, X_test, y_train, y_test, w_train, w_test, \
+        x_train, x_test, y_train, y_test, w_train, w_test, \
         mu_0_train, mu_0_test, mu_1_train, mu_1_test = train_test_split(X, y, w, mu_0, mu_1,
                                                                         test_size=1 - train_size,
                                                                         random_state=i_exp)
 
     return (
-        X_train,
+        x_train,
         w_train,
         y_train,
         np.asarray([mu_0_train, mu_1_train]).squeeze().T,
-        X_test,
+        x_test,
         w_test,
         y_test,
         np.asarray([mu_0_test, mu_1_test]).squeeze().T,

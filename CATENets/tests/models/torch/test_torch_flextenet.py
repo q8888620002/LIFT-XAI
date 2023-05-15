@@ -57,11 +57,11 @@ def test_flextenet_model_params() -> None:
 
 @pytest.mark.parametrize("dataset, pehe_threshold", [("twins", 0.4), ("ihdp", 1.5)])
 def test_flextenet_model_sanity(dataset: str, pehe_threshold: float) -> None:
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load(dataset)
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load(dataset)
     W_train = W_train.ravel()
 
     model = FlexTENet(
-        X_train.shape[1],
+        x_train.shape[1],
         binary_y=(len(np.unique(Y_train)) == 2),
         batch_size=1024,
         lr=1e-3,
@@ -69,7 +69,7 @@ def test_flextenet_model_sanity(dataset: str, pehe_threshold: float) -> None:
     )
 
     score = evaluate_treatments_model(
-        model, X_train, Y_train, Y_train_full, W_train, n_folds=2
+        model, x_train, Y_train, Y_train_full, W_train, n_folds=2
     )
 
     print(f"Evaluation for model FlexTENet on {dataset} = {score['str']}")
@@ -81,11 +81,11 @@ def test_flextenet_model_sanity(dataset: str, pehe_threshold: float) -> None:
 def test_flextenet_model_predict_api(
     shared_repr: bool, private_out: bool, n_units_p_r: int
 ) -> None:
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load("ihdp")
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load("ihdp")
     W_train = W_train.ravel()
 
     model = FlexTENet(
-        X_train.shape[1],
+        x_train.shape[1],
         binary_y=(len(np.unique(Y_train)) == 2),
         batch_size=1024,
         lr=1e-3,
@@ -94,17 +94,17 @@ def test_flextenet_model_predict_api(
         n_units_p_r=n_units_p_r,
         n_iter=10,
     )
-    model.fit(X_train, Y_train, W_train)
+    model.fit(x_train, Y_train, W_train)
 
-    out = model.predict(X_test)
+    out = model.predict(x_test)
 
-    assert len(out) == len(X_test)
+    assert len(out) == len(x_test)
 
-    out, p0, p1 = model.predict(X_test, return_po=True)
-    assert len(out) == len(X_test)
-    assert len(p0) == len(X_test)
-    assert len(p1) == len(X_test)
+    out, p0, p1 = model.predict(x_test, return_po=True)
+    assert len(out) == len(x_test)
+    assert len(p0) == len(x_test)
+    assert len(p1) == len(x_test)
 
-    score = model.score(X_test, Y_test)
+    score = model.score(x_test, Y_test)
 
     assert score > 0

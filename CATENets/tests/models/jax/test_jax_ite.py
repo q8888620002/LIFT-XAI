@@ -30,22 +30,22 @@ models = list(ALL_MODELS.keys())
 def test_model_sanity(dataset: str, pehe_threshold: float, model_name: str) -> None:
     model = deepcopy(ALL_MODELS[model_name])
 
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load(dataset)
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load(dataset)
 
-    score = evaluate_treatments_model(model, X_train, Y_train, Y_train_full, W_train)
+    score = evaluate_treatments_model(model, x_train, Y_train, Y_train_full, W_train)
     print(f"Evaluation for model jax.{model_name} on {dataset} = {score['str']}")
 
 
 def test_model_score() -> None:
     model = OffsetNet(n_iter=10)
 
-    X_train, W_train, Y_train, Y_train_full, X_test, Y_test = load("ihdp")
+    x_train, W_train, Y_train, Y_train_full, x_test, Y_test = load("ihdp")
 
-    model.fit(X_train[:10], Y_train[:10], W_train[:10])
+    model.fit(x_train[:10], Y_train[:10], W_train[:10])
 
-    result = model.score(X_test, Y_test)
+    result = model.score(x_test, Y_test)
 
     assert result > 0
 
     with pytest.raises(ValueError):
-        model.score(X_train, Y_train)  # Y_train has just one outcome
+        model.score(x_train, Y_train)  # Y_train has just one outcome

@@ -54,9 +54,9 @@ class Explainer:
         # Feature ablation
         feature_ablation_model = FeatureAblation(model)
 
-        def feature_ablation_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def feature_ablation_cbk(x_test: torch.Tensor) -> torch.Tensor:
             out = feature_ablation_model.attribute(
-                X_test, n_steps=n_steps, perturbations_per_eval=perturbations_per_eval
+                x_test, n_steps=n_steps, perturbations_per_eval=perturbations_per_eval
             )
 
             return out
@@ -64,37 +64,37 @@ class Explainer:
         # Integrated gradients
         integrated_gradients_model = IntegratedGradients(model)
 
-        def integrated_gradients_cbk(X_test: torch.Tensor) -> torch.Tensor:
-            return integrated_gradients_model.attribute(X_test, n_steps=n_steps)
+        def integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return integrated_gradients_model.attribute(x_test, n_steps=n_steps)
 
         # DeepLift
         deeplift_model = DeepLift(model)
 
-        def deeplift_cbk(X_test: torch.Tensor) -> torch.Tensor:
-            return deeplift_model.attribute(X_test)
+        def deeplift_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return deeplift_model.attribute(x_test)
 
         # Feature permutation
         feature_permutation_model = FeaturePermutation(model)
 
-        def feature_permutation_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def feature_permutation_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return feature_permutation_model.attribute(
-                X_test, n_steps=n_steps, perturbations_per_eval=perturbations_per_eval
+                x_test, n_steps=n_steps, perturbations_per_eval=perturbations_per_eval
             )
 
         # LIME
         exp_eucl_distance = get_exp_kernel_similarity_function(
             kernel_width=kernel_width
         )
-        
+
         lime_model = Lime(
             model,
             interpretable_model=SkLearnLinearRegression(),
             similarity_func=exp_eucl_distance,
         )
 
-        def lime_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def lime_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return lime_model.attribute(
-                X_test,
+                x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
             )
@@ -102,9 +102,9 @@ class Explainer:
         # Shapley value sampling
         shapley_value_sampling_model = ShapleyValueSampling(model)
 
-        def shapley_value_sampling_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return shapley_value_sampling_model.attribute(
-                X_test,
+                x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
             )
@@ -112,9 +112,9 @@ class Explainer:
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
 
-        def kernel_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def kernel_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return kernel_shap_model.attribute(
-                X_test,
+                x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
             )
@@ -122,34 +122,34 @@ class Explainer:
         # Gradient SHAP
         gradient_shap_model = GradientShap(model)
 
-        def gradient_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
-            return gradient_shap_model.attribute(X_test, baselines=self.baseline)
+        def gradient_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return gradient_shap_model.attribute(x_test, baselines=self.baseline)
 
         # Explain with missingness
-        def explain_with_missingness_cbk(X_test:torch.Tensor) -> torch.Tensor:
+        def explain_with_missingness_cbk(x_test:torch.Tensor) -> torch.Tensor:
 
-            test_values = np.zeros((X_test.size()))
+            test_values = np.zeros((x_test.size()))
 
-            for test_ind in range(len(X_test)):
-                instance = X_test[test_ind, :][None, :]
+            for test_ind in range(len(x_test)):
+                instance = x_test[test_ind, :][None, :]
                 game  = games.CateGame(instance, model)
                 explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
                 test_values[test_ind] = explanation.values
-            
+
             return self._check_tensor(test_values)
 
-        def naive_shap_cbk(X_test: torch.Tensor) -> torch.Tensor:
+        def naive_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
 
-            test_values = np.zeros((X_test.size()))
-            X_test  = X_test.detach().cpu().numpy()
+            test_values = np.zeros((x_test.size()))
+            x_test  = x_test.detach().cpu().numpy()
 
-            marginal_extension = removal.MarginalExtension(X_test, model)
+            marginal_extension = removal.MarginalExtension(x_test, model)
 
-            for test_ind in range(len(X_test)):
-                instance = X_test[test_ind]
+            for test_ind in range(len(x_test)):
+                instance = x_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
                 explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
-                test_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
+                test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)
 
@@ -179,13 +179,13 @@ class Explainer:
                 X.shape
             )  # Zero tensor as baseline if no baseline specified
         for name in self.explainer_list:
-            X_test = self._check_tensor(X)
+            x_test = self._check_tensor(X)
             self.baseline = self._check_tensor(self.baseline)
-            X_test.requires_grad_()
+            x_test.requires_grad_()
             explainer = self.explainers[name]
-            output[name] = explainer(X_test).detach().cpu().numpy()
+            output[name] = explainer(x_test).detach().cpu().numpy()
         return output
- 
+
 
     def plot(self, X: torch.Tensor) -> None:
         explanations = self.explain(X)
