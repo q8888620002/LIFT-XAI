@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
 from sklearn.impute import SimpleImputer
 from sklearn import preprocessing, model_selection
+from copy import deepcopy
 
 def kl_mvn(m0, S0, m1, S1):
     """
@@ -141,7 +142,80 @@ def normalize_data(X_train):
     
     X_normalized_train = (X_train - np.min(X_train, axis=0)) / (np.max(X_train, axis=0) - np.min(X_train, axis=0))
 
-    return X_normalized_train
+    return X_normalized_train, np.min(X_train, axis=0)
+
+def insertion_deletion_if_pehe(
+    X_test: np.ndarray, 
+    rank_indices:list,
+    cate_model: torch.nn.Module,
+    X_replacement: np.ndarray,
+    a: np.ndarray, 
+    b: np.ndarray, 
+    c: np.ndarray, 
+    t_plugin: np.ndarray,
+    y_test:np.ndarray
+) -> tuple:
+    """
+    Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
+
+    Args:
+        X_test: testing set for explanation with insertion and deletion 
+        feature_attributions: feature attribution outputted by a feature importance method
+        pate_model: masking models for PATE estimation. 
+    Returns:
+        results of insertion and deletion of PATE. 
+    """
+
+    n_samples, n_features = X_test.shape
+
+    X_test_del = X_test.copy()
+    X_test_ins = np.tile(X_replacement, (n_samples, 1))
+
+    deletion_results = np.zeros(n_features+1)
+    insertion_results = np.zeros(n_features+1)
+    
+    cate_pred_full = cate_model.predict(X=X_test_del).detach().cpu().numpy().flatten()
+
+    ident = np.ones(len(c))
+
+    # Calculate IF-PEHE for deletion 
+
+    plug_in = (t_plugin - cate_pred_full)**2
+    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_full) + (- a*(t_plugin - cate_pred_full)**2 + cate_pred_full**2)
+    deletion_results[0] = np.sum(l_de) + np.sum(plug_in)
+
+    for rank_index, col_indices in enumerate(rank_indices):
+        
+        X_test_del[:, col_indices] = X_replacement[col_indices]
+        
+        cate_pred_subset = cate_model.predict(X=X_test_del).detach().cpu().numpy().flatten()
+        
+        plug_in = (t_plugin - cate_pred_subset)**2
+        l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_subset) + (- a*(t_plugin - cate_pred_subset)**2 + cate_pred_subset**2)
+
+        deletion_results[ rank_index+1] = np.sum(l_de) + np.sum(plug_in)
+
+
+    # Calculate IF-PEHE for insertion
+
+    cate_pred_null = cate_model.predict(X=X_test_ins).detach().cpu().numpy().flatten()
+    plug_in = (t_plugin - cate_pred_null)**2
+    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_null) + (- a*(t_plugin - cate_pred_null)**2 + cate_pred_null**2)
+
+    insertion_results[ 0] = np.sum(l_de) + np.sum(plug_in)
+
+    for rank_index, col_indices in enumerate(rank_indices):
+        
+        X_test_ins[:, col_indices] = X_test[:, col_indices]
+
+        cate_pred_subset = cate_model.predict(X=X_test_ins).detach().cpu().numpy().flatten()
+
+        plug_in = (t_plugin - cate_pred_subset)**2
+        l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - cate_pred_subset) + (- a*(t_plugin - cate_pred_subset)**2 + cate_pred_subset**2)
+        insertion_results[rank_index+1] = np.sum(l_de) + np.sum(plug_in)
+
+    return insertion_results, deletion_results
+
 
 class Dataset:
     """
@@ -149,7 +223,7 @@ class Dataset:
 
     """
 
-    def __init__(self, name ):
+    def __init__(self, name, random_state ):
         
         if name == "massive_trans":
             data = pd.read_pickle("data/low_bp_survival.pkl")
@@ -248,6 +322,7 @@ class Dataset:
             data = pd.get_dummies(data, columns=cate_variables)
 
         self.data = data
+        self.random_state = random_state
         self.n, self.feature_size = data.shape
         self.names = data.drop([treatment_col, outcome_col], axis=1).columns
 
@@ -256,7 +331,8 @@ class Dataset:
 
         var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
 
-        x_norm = normalize_data(data)
+        x_norm, features_min = normalize_data(data)
+        
 
         ## impute missing value
 
@@ -268,7 +344,7 @@ class Dataset:
                                                     x_train_scaled,  
                                                     data[outcome_col], 
                                                     test_size=0.2, 
-                                                    random_state=10,
+                                                    random_state=random_state,
                                                     stratify=data[treatment_col]
                                             )
 
@@ -284,6 +360,8 @@ class Dataset:
             w_test =  X_test[:, treatment_index]
             X_train = X_train[:,var_index]
             X_test = X_test[:, var_index]
+
+        self.features_min = features_min[var_index]
 
         self.X_train = X_train
         self.w_train = w_train
@@ -310,3 +388,10 @@ class Dataset:
         return feature names
         """
         return self.names
+    
+    def get_replacement_value(self):
+        """
+        return values for insertion & deletion
+        """
+        return np.mean(self.X_train, axis=0) 
+

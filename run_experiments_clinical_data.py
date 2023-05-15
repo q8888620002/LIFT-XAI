@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import argparse
+import xgboost as xgb
 
 import os
 import sys
@@ -8,20 +9,20 @@ import collections
 import pickle
 import torch
 
-from  utilities import normalize_data, Dataset
+from  utilities import normalize_data, insertion_deletion_if_pehe, Dataset
 from scipy import stats
-from shapreg import shapley, games, removal, shapley_sampling
-
-from captum.attr import (
-    IntegratedGradients,
-    ShapleyValueSampling,
-)
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
 import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
+import src.interpretability.logger as log
+
+from src.interpretability.utils import  attribution_ranking
+from src.interpretability.explain import Explainer
+
 
 
 
@@ -39,125 +40,168 @@ if __name__ == "__main__":
     trials = int(args["num_trials"])
     top_n_features = int(args["top_n_features"])
     learner = args["learner"]
+    device = "cuda:1"
 
-    data = Dataset(cohort_name)
-    X_train, w_train, y_train = data.get_training_data()
-    X_test, w_test, y_test = data.get_training_data()
+
+    data = Dataset(cohort_name, 10)
     names = data.get_feature_names()
 
+    X_train, _, _ = data.get_training_data()
+    X_test, _, _ = data.get_testing_data()
     feature_size = X_train.shape[1]
 
-    device = "cuda:5"
-
-    learner_explanations = {}
-
-    models = {
-        "xlearner":
-            pseudo_outcome_nets.XLearner(  
-            X_train.shape[1],
-            binary_y=(len(np.unique(y_train)) == 2),
-            n_layers_out=2,
-            n_units_out=100,
-            batch_size=128,
-            n_iter=1500,
-            nonlin="relu",
-            device=device,
-        ),
-        "drlearner":
-            pseudo_outcome_nets.DRLearner(  
-            X_train.shape[1],
-            binary_y=(len(np.unique(y_train)) == 2),
-            n_layers_out=2,
-            n_units_out=100,
-            batch_size=128,
-            n_iter=1500,
-            nonlin="relu",
-            device=device,
-        )
-    }
     explainers = [
-        "ig", 
-        "shapley_sampling_0", 
-        "shap"
+        "integrated_gradients", 
+        "shapley_value_sampling", 
+        "naive_shap"
     ]
-
-    top_k_results = {
-        "ig":[],
-        "shapley_sampling_0":[],
-        "shap":[]
-        }
-    
-    result_sign = {
-        "ig": np.zeros((trials,feature_size)),
-        "shapley_sampling_0": np.zeros((trials,feature_size)),
-        "shap": np.zeros((trials,feature_size))
-        }
+    top_k_results = dict.fromkeys(
+        explainers, 
+        []
+    )    
+    result_sign = dict.fromkeys(
+        explainers, 
+        np.zeros((trials,feature_size))
+    )
 
     results_train = np.zeros((trials, len(X_train)))
     results_test = np.zeros((trials, len(X_test)))
 
-    #### Getting top n features from multiple runs. 
-
     for i in range(trials):
 
-        model = models[learner]
-        model.fit(X_train, y_train, w_train)
+        data = Dataset(cohort_name, i)
+        X_train, w_train, y_train = data.get_training_data()
+        X_test, w_test, y_test = data.get_testing_data()
         
-        results_train[i] = model(X_train).detach().cpu().numpy().flatten()
-        results_test[i] = model(X_test).detach().cpu().numpy().flatten()
 
-        ig = IntegratedGradients(model)
+        models = {
+            "xlearner":
+                pseudo_outcome_nets.XLearner(  
+                X_train.shape[1],
+                binary_y=(len(np.unique(y_train)) == 2),
+                n_layers_out=2,
+                n_units_out=100,
+                batch_size=128,
+                n_iter=1500,
+                nonlin="relu",
+                device=device,
+            ),
+            # "drlearner":
+            #     pseudo_outcome_nets.DRLearner(  
+            #     X_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     batch_size=128,
+            #     n_iter=1500,
+            #     nonlin="relu",
+            #     device=device,
+            # )
+        }
 
-        print("==================================================")
-        print("explaining with IG")
+        learner_explanations = {}
 
-        learner_explanations["ig"] = ig.attribute(
-                                            torch.from_numpy(X_test).to(device).requires_grad_(),
-                                            n_steps=500,
-                                    ).detach().cpu().numpy()
-        
-        print("==================================================")
-        print("explaining with shapley sampling -0")
+        # Calculate plg-in error
 
-        shapley_value_sampling_model = ShapleyValueSampling(model)
-        learner_explanations["shapley_sampling_0"] = shapley_value_sampling_model.attribute(
-                                                        torch.from_numpy(X_test).to(device).requires_grad_(),
-                                                        n_samples=500,
-                                                        perturbations_per_eval=10,
-                                                    ).detach().cpu().numpy()
-        
-        print("==================================================")
-        print("explaining with shapley sampling - marginal distribution")
+        np.random.seed(i)
 
-        marginal_extension = removal.MarginalExtension(X_test, model)
-        shap_values = np.zeros((X_test.shape))
+        xgb_plugin1 = xgb.XGBClassifier(max_depth=6, random_state=i, n_estimators=100)
+        xgb_plugin0 = xgb.XGBClassifier(max_depth=6, random_state=i, n_estimators=100)   
 
-        for test_ind in range(len(X_test)):
-            instance = X_test[test_ind]
-            game = games.PredictionGame(marginal_extension, instance)
-            explanation = shapley_sampling.ShapleySampling(game, thresh=0.01, batch_size=128)
-            shap_values[test_ind] = explanation.values.reshape(-1, X_test.shape[1])
-        
-        learner_explanations["shap"] = shap_values
+        rf = RandomForestClassifier(max_depth=6, random_state=i)
 
-        #### Getting top 5 features from multiple runs. 
+        x0 = X_train[w_train==0]
+        x1 = X_train[w_train==1]
 
-        for e in explainers:
-            ind = np.argpartition(np.abs(learner_explanations[e]).mean(0).round(2), -top_n_features)[-top_n_features:]
-            top_k_results[e].extend(names[ind].tolist())
+        y0 = y_train[w_train==0]
+        y1 = y_train[w_train==1]
+
+        xgb_plugin0.fit(x0, y0)
+        xgb_plugin1.fit(x1, y1)
+
+        rf.fit(X_train, w_train)
+
+        y_pred0 = xgb_plugin0.predict(X_test)
+        y_pred1 = xgb_plugin1.predict(X_test)
+
+        t_plugin = y_pred1 - y_pred0
+
+        ps = rf.predict_proba(X_test)[:, 1]
+        a = (w_test - ps)
+
+        ident = np.ones(len(ps))
+        c = (ps*(ident-ps))
+
+        b = np.array([2]*len(w_test))*w_test*(w_test-ps) / c
+
+        learner_explainers = {}
+        insertion_deletion_data = []
+
+        for learner in models:
+
+            models[learner].fit(X_train, y_train, w_train)
+            
+            results_train[i] = models[learner].predict(X=X_train).detach().cpu().numpy().flatten()
+            results_test[i] = models[learner].predict(X=X_test).detach().cpu().numpy().flatten()
+
+            learner_explainers[learner] = Explainer(
+                models[learner],
+                feature_names=list(range(X_train.shape[1])),
+                explainer_list=explainers,
+            )
+
+            log.info(f"Explaining {learner}")
+            learner_explanations[learner] = learner_explainers[learner].explain(
+                X_test
+            )
+            # Calculate IF-PEHE for insertion and deletion for each explanation methods
+
+            for explainer_name in explainers:
+
+                rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
+
+                insertion_results, deletion_results = insertion_deletion_if_pehe(
+                    X_test, 
+                    rank_indices,
+                    models[learner],
+                    data.get_replacement_value(),
+                    a, 
+                    b,
+                    c,
+                    t_plugin,
+                    y_test
+                )
+                        
+                insertion_deletion_data.append(
+                    [   
+                        learner,
+                        explainer_name,
+                        insertion_results, 
+                        deletion_results
+                    ]
+                )
+
+        with open( f"results/{cohort_name}/insertion_deletion_{learner}_{i}.pkl", "wb") as output_file:    
+            pickle.dump(insertion_deletion_data, output_file)
+
+        #### Getting top n features
+
+        for explainer_name in explainers:
+            ind = np.argpartition(np.abs(learner_explanations[learner][explainer_name]).mean(0).round(2), -top_n_features)[-top_n_features:]
+            top_k_results[explainer_name].extend(names[ind].tolist())
 
             for col in range(feature_size):
-                result_sign[e][i, col] = stats.pearsonr(X_test[:,col], learner_explanations[e][:, col])[0]
+                result_sign[explainer_name][i, col] = stats.pearsonr(X_test[:,col], learner_explanations[learner][explainer_name][:, col])[0]
 
-    for e in explainers:
-        results = collections.Counter(top_k_results[e])
+    for explainer_name in explainers:
+        results = collections.Counter(top_k_results[explainer_name])
         summary = pd.DataFrame(results.items(), columns=['feature', 'count (%)']).sort_values(by="count (%)", ascending=False)
         summary["count (%)"] = np.round(summary["count (%)"]/trials,2)*100
 
         indices = [names.tolist().index(i) for i in summary.feature.tolist()]
-        summary["sign"] = np.sign(np.mean(result_sign[e], axis=(0))[indices])
+        summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=(0))[indices])
 
-        summary.to_csv(f"results/{cohort_name}/{e}_top_{top_n_features}_features_{learner}.csv")
+        summary.to_csv(f"results/{cohort_name}/{explainer_name}_top_{top_n_features}_features_{learner}.csv")
     
     with open( f"results/{cohort_name}/train_{learner}.pkl", "wb") as output_file:    
         pickle.dump(results_train, output_file)

@@ -9,7 +9,7 @@ import pandas as pd
 import seaborn as sns
 import torch
 
-import catenets.models.torch.pseudo_outcome_nets as cate_models_masks
+import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
 
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
@@ -209,7 +209,7 @@ def attribution_accuracy(
 def attribution_insertion_deletion(
     X_test: np.ndarray, 
     rank_indices:list,
-    pate_model: cate_models_masks.PseudoOutcomeLearnerMask,
+    pate_model: pseudo_outcome_nets.PseudoOutcomeLearnerMask,
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -258,6 +258,9 @@ def attribution_insertion_deletion(
         insertion_results[:, rank_index+1] = cate_pred_subset.flatten()
 
     return insertion_results, deletion_results
+
+
+
 
 def attribution_ranking(feature_attributions: np.ndarray) -> list:
     """"
