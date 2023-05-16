@@ -1,138 +1,14 @@
+from __future__ import annotations
+from typing import List
+
 import shap
 import torch
 import numpy as np
 import pandas as pd
+import xgboost as xgb
 
 from sklearn.impute import SimpleImputer
 from sklearn import  model_selection
-
-def kl_mvn(m0, S0, m1, S1):
-    """
-    https://stackoverflow.com/questions/44549369/kullback-leibler-divergence-from-gaussian-pm-pv-to-gaussian-qm-qv
-    The following function computes the KL-Divergence between any two
-    multivariate normal distributions
-    (no need for the covariance matrices to be diagonal)
-    Kullback-Liebler divergence from Gaussian pm,pv to Gaussian qm,qv.
-    Also computes KL divergence from a single Gaussian pm,pv to a set
-    of Gaussians qm,qv.
-    Diagonal covariances are assumed.  Divergence is expressed in nats.
-    - accepts stacks of means, but only one S0 and S1
-    From wikipedia
-    KL( (m0, S0) || (m1, S1))
-         = .5 * ( tr(S1^{-1} S0) + log |S1|/|S0| +
-                  (m1 - m0)^T S1^{-1} (m1 - m0) - N )
-    # 'diagonal' is [1, 2, 3, 4]
-    tf.diag(diagonal) ==> [[1, 0, 0, 0]
-                          [0, 2, 0, 0]
-                          [0, 0, 3, 0]
-                          [0, 0, 0, 4]]
-    # See wikipedia on KL divergence special case.
-    #KL = 0.5 * tf.reduce_sum(1 + t_log_var - K.square(t_mean) - K.exp(t_log_var), axis=1)
-                if METHOD['name'] == 'kl_pen':
-                self.tflam = tf.placeholder(tf.float32, None, 'lambda')
-                kl = tf.distributions.kl_divergence(oldpi, pi)
-                self.kl_mean = tf.reduce_mean(kl)
-                self.aloss = -(tf.reduce_mean(surr - self.tflam * kl))
-    """
-    # store inv diag covariance of S1 and diff between means
-    N = m0.shape[0]
-    iS1 = np.linalg.inv(S1)
-    diff = m1 - m0
-
-    # kl is made of three terms
-    tr_term   = np.trace(iS1 @ S0)
-    det_term  = np.log(np.linalg.det(S1)/np.linalg.det(S0)) #np.sum(np.log(S1)) - np.sum(np.log(S0))
-    quad_term = diff.T @ np.linalg.inv(S1) @ diff #np.sum( (diff*diff) * iS1, axis=1)
-    #print(tr_term,det_term,quad_term)
-    return .5 * (tr_term + det_term + quad_term - N)
-
-
-def KL_divergence(a, b):
-    epsilon = 1e-35
-    a += epsilon
-    b += epsilon
-
-    return np.mean(a * np.log(a/b))
-
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
-def mse(x1, x2):
-    return (np.mean((x1 - x2)**2))
-
-def rmse(x1, x2):
-    return np.sqrt(np.mean((x1 - x2)**2))
-
-def normalize(data):
-    return (data - np.min(data)) / (np.max(data) - np.min(data))
-
-def simulation(var_size, n, low , high, random_state, oracle=bool):
-
-    np.random.seed(random_state)
-    cov = np.random.uniform(low=-1, high=1, size=((var_size,var_size)))
-
-    ### control
-    mu0 = np.zeros(var_size)
-    x0 = np.random.multivariate_normal(mu0, 0.5*cov, size=int(n/2))
-
-    ### treated
-    mu1 = np.random.uniform(low = low, high=high, size=(var_size))
-    x1 = np.random.multivariate_normal(mu1, 0.5*cov, size=int(n/2))
-
-    X = np.concatenate((x0, x1))
-
-    #### Treatment assignment
-    w_t = np.random.uniform(low=-0.1, high=0.1, size=((var_size,1)))
-    n_t = np.random.normal(0, 0.1)
-
-    p = sigmoid(np.dot(X, w_t) + n_t)
-
-    w = np.concatenate((np.zeros((int(n/2),1)), np.ones((int(n/2),1 ))), 0).astype(int)
-    #### Potential outcome
-    if oracle:
-        p = 0.5*np.ones((n,1))
-        w = np.random.binomial(1, p=p)
-
-    w_ty = np.random.uniform(low=-1, high=1, size=((var_size,2)))
-    n_ty = np.random.multivariate_normal(np.zeros((2)), 0.1*np.eye(2))
-    y_po = np.dot(X, w_ty) + n_ty
-
-    return X, y_po, w, p, kl_mvn(mu0, 0.5*cov, mu1, 0.5*cov)
-
-
-def oracle(x_train, w_train, y_train, x_test, model):
-
-    model.fit(x_train, y_train, w_train)
-    ### TODOs implement prediction function for different cate
-    prediction = model.predict(x_test)
-
-    if torch.is_tensor(x_train):
-        x_train = x_train.detach().numpy()
-        x_test = x_test.detach().numpy()
-        model_lam = lambda x: model.predict(x).detach().numpy()
-    else:
-        model_lam = lambda x: model.predict(x)
-
-
-    explainer = shap.Explainer(model_lam, x_train)
-
-    #### showing explanation on oracle cate
-    shap_values = explainer(x_test)
-    shap_mean = (shap_values.values).mean(0)
-    shap_abs_mean = np.abs(shap_values.values).mean(0)
-
-    return (shap_mean, shap_abs_mean, model)
-
-
-def generate_masks(X):
-
-    batch_size = X.shape[0]
-    num_features = X.shape[1]
-
-    unif = torch.rand(batch_size, num_features)
-    ref = torch.rand(batch_size, 1)
-
-    return (unif > ref).float()
 
 def normalize_data(x_train):
 
@@ -140,16 +16,12 @@ def normalize_data(x_train):
 
     return x_normalized_train, np.min(x_train, axis=0)
 
-def insertion_deletion_if_pehe(
-    x_test: np.ndarray,
+def insertion_deletion(
+    data: Dataset,
     rank_indices:list,
     cate_model: torch.nn.Module,
     x_replacement: np.ndarray,
-    a: np.ndarray,
-    b: np.ndarray,
-    c: np.ndarray,
-    t_plugin: np.ndarray,
-    y_test:np.ndarray
+    selection_types: List[str]
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -161,59 +33,158 @@ def insertion_deletion_if_pehe(
     Returns:
         results of insertion and deletion of PATE.
     """
+    ## training plugin estimator on
+    x_test, _, _ = data.get_testing_data()
 
-    n_samples, n_features = x_test.shape
-
+    n, d = x_test.shape
     x_test_del = x_test.copy()
-    x_test_ins = np.tile(x_replacement, (n_samples, 1))
+    x_test_ins = np.tile(x_replacement, (n, 1))
 
-    deletion_results = np.zeros(n_features+1)
-    insertion_results = np.zeros(n_features+1)
+    deletion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
+    insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
 
-    # Calculate IF-PEHE for deletion
+    for rank_index in range(len(rank_indices) + 1):
+        if rank_index > 0:  # Skip this on the first iteration
+            col_indices = rank_indices[rank_index - 1]
+            x_test_ins[:, col_indices] = x_test[:, col_indices]
+            x_test_del[:, col_indices] = x_replacement[col_indices]
 
-    cate_pred_subset = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
-    deletion_results[0] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
+        for selection_type in selection_types:
+            # For the insertion process
+            cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+            insertion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_ins,
+                data,
+                selection_type
+            )
 
-    for rank_index, col_indices in enumerate(rank_indices):
-
-        x_test_del[:, col_indices] = x_replacement[col_indices]
-
-        cate_pred_subset = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
-        deletion_results[rank_index+1] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
-
-    # Calculate IF-PEHE for insertion
-
-    cate_pred_subset = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
-    insertion_results[0] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
-
-    for rank_index, col_indices in enumerate(rank_indices):
-
-        x_test_ins[:, col_indices] = x_test[:, col_indices]
-        cate_pred_subset = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
-        insertion_results[rank_index+1] = calculate_if_pehe(cate_pred_subset, a,b,c,t_plugin, y_test)
+            # For the deletion process
+            cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+            deletion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_del,
+                data,
+                selection_type
+            )
 
     return insertion_results, deletion_results
 
+def train_nuisance_models(
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    w_train: np.ndarray
+)-> tuple:
+
+    mu0 = xgb.XGBClassifier()
+    mu1 = xgb.XGBClassifier()
+    m = xgb.XGBClassifier()
+
+    rf = xgb.XGBClassifier()
+
+    x0, x1 = x_train[w_train == 0], x_train[w_train == 1]
+    y0, y1 = y_train[w_train == 0], y_train[w_train == 1]
+
+    mu0.fit(x0, y0)
+    mu1.fit(x1, y1)
+
+    m.fit(np.column_stack([x_train, w_train]), y_train)
+
+    rf.fit(x_train, w_train)
+
+    return mu0, mu1, rf, m
+
 def calculate_if_pehe(
-        prediction: np.ndarray,
-        a: np.ndarray,
-        b: np.ndarray,
-        c: np.ndarray,
-        t_plugin: np.ndarray,
-        y_test:np.ndarray
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    t_plugin: np.ndarray,
+    y_test: np.ndarray,
+    ident: np.ndarray
 )-> np.ndarray:
-    """"
-    Method for calculating estimated pehe with influence function.
-    """
 
-    ident = np.ones(len(c))
+    EPS = 1e-7
+    a = w_test - p
+    c = p * (ident - p)
+    b = 2 * np.ones(len(w_test)) * w_test * (w_test - p) / (c + EPS)
 
-    plug_in = (t_plugin - prediction)**2
-    l_de = (ident - b) * t_plugin**2 + b*y_test*(t_plugin - prediction) + (- a*(t_plugin - prediction)**2 + prediction**2)
+    plug_in = (t_plugin - prediction) ** 2
+    l_de = (ident - b) * t_plugin ** 2 + b * y_test * (t_plugin - prediction) + (- a * (t_plugin - prediction) ** 2 + prediction ** 2)
 
     return np.sum(l_de) + np.sum(plug_in)
-    
+
+def calculate_pseudo_outcome_pehe_dr(
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    y_test: np.ndarray,
+    mu_1: np.ndarray,
+    mu_0: np.ndarray
+)-> np.ndarray:
+    """
+    calculating pseudo outcome for DR
+
+    """
+    EPS = 1e-7
+    w_1 = w_test / (p + EPS)
+    w_0 = (1 - w_test) / (EPS + 1 - p)
+    pseudo_outcome = (w_1 - w_0) * y_test + ((1 - w_1) * mu_1 - (1 - w_0) * mu_0)
+
+    return np.sqrt(np.mean((prediction - pseudo_outcome) ** 2))
+
+def calculate_pseudo_outcome_pehe_r(
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    y_test: np.ndarray,
+    m: np.ndarray
+)-> np.ndarray:
+    """
+    calculating pseudo outcome for R
+
+    """
+
+    y_pseudo = (y_test - m) - (prediction)*(w_test - p)
+
+    return np.sqrt(np.mean(y_pseudo** 2))
+
+def calculate_pehe(
+    prediction: np.ndarray,
+    data: Dataset,
+    selection_type: str
+) -> np.ndarray:
+
+    x_train, w_train, y_train = data.get_validation_data()
+    x_test, w_test, y_test = data.get_testing_data()
+
+    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_train, y_train, w_train)
+
+    mu_0 = xgb_plugin0.predict_proba(x_test)[:, 1]
+    mu_1 = xgb_plugin1.predict_proba(x_test)[:, 1]
+
+    mu = m.predict_proba(np.column_stack([x_test, w_test]))[:, 1]
+
+    p = rf.predict_proba(x_test)[:, 1]
+    t_plugin = mu_1 - mu_0
+
+    ident = np.ones(len(p))
+
+    selection_types = {
+        "if_pehe": calculate_if_pehe,
+        "pseudo_outcome_dr": calculate_pseudo_outcome_pehe_dr,
+        "pseudo_outcome_r": calculate_pseudo_outcome_pehe_r
+
+    }
+
+    pehe_calculator = selection_types.get(selection_type)
+
+    if pehe_calculator == calculate_if_pehe:
+        return pehe_calculator(w_test, p, prediction, t_plugin, y_test, ident)
+    elif pehe_calculator == calculate_pseudo_outcome_pehe_dr:
+        return pehe_calculator(w_test, p, prediction, y_test, mu_1, mu_0)
+    elif pehe_calculator == calculate_pseudo_outcome_pehe_r:
+        return pehe_calculator(w_test, p, prediction, y_test, mu)
+
+
+    raise ValueError(f"Unknown selection_type: {selection_type}")
 
 
 class Dataset:
@@ -347,17 +318,33 @@ class Dataset:
                                                     stratify=data[treatment_col]
                                             )
 
+        x_train, x_val, y_train, y_val = model_selection.train_test_split(
+                                                    x_train,
+                                                    y_train,
+                                                    test_size=0.2,
+                                                    random_state=random_state,
+                                                    stratify=x_train[:,treatment_index]
+                                            )
+
         if name == "ist3":
             w_train = x_train[:, treatment_index] == 0
+            w_val = x_val[:, treatment_index] == 0
             w_test =  x_test[:, treatment_index] == 0
+
             x_train = x_train[:,var_index]
+            x_val = x_val[:,var_index]
             x_test = x_test[:, var_index]
+
             y_train = y_train ==0
+            y_val = y_val ==0
             y_test = y_test ==0
         else:
             w_train = x_train[:, treatment_index]
+            w_val =  x_val[:, treatment_index]
             w_test =  x_test[:, treatment_index]
+
             x_train = x_train[:,var_index]
+            x_val = x_val[:,var_index]
             x_test = x_test[:, var_index]
 
         self.features_min = features_min[var_index]
@@ -365,6 +352,10 @@ class Dataset:
         self.x_train = x_train
         self.w_train = w_train
         self.y_train = y_train
+
+        self.x_val = x_val
+        self.w_val = w_val
+        self.y_val = y_val
 
         self.x_test = x_test
         self.w_test = w_test
@@ -375,6 +366,12 @@ class Dataset:
         return training tuples (X,W,Y)
         """
         return self.x_train, self.w_train, self.y_train
+
+    def get_validation_data(self):
+        """
+        return training tuples (X,W,Y)
+        """
+        return self.x_val, self.w_val, self.y_val
 
     def get_testing_data(self):
         """
@@ -398,5 +395,5 @@ class Dataset:
         # x_replacement = np.min(self.x_train, axis=0)
 
         return x_replacement
-    
+
 
