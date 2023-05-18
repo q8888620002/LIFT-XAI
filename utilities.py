@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import List
 
-import shap
 import torch
 import numpy as np
 import pandas as pd
@@ -10,11 +9,11 @@ import xgboost as xgb
 from sklearn.impute import SimpleImputer
 from sklearn import  model_selection
 
-def normalize_data(x_train):
+def normalize_data(x):
 
-    x_normalized_train = (x_train - np.min(x_train, axis=0)) / (np.max(x_train, axis=0) - np.min(x_train, axis=0))
+    x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
 
-    return x_normalized_train, np.min(x_train, axis=0)
+    return x
 
 def insertion_deletion(
     data: Dataset,
@@ -69,26 +68,28 @@ def insertion_deletion(
     return insertion_results, deletion_results
 
 def train_nuisance_models(
-    x_train: np.ndarray,
-    y_train: np.ndarray,
-    w_train: np.ndarray
+    x_val: np.ndarray,
+    y_val: np.ndarray,
+    w_val: np.ndarray
 )-> tuple:
 
     mu0 = xgb.XGBClassifier()
     mu1 = xgb.XGBClassifier()
     m = xgb.XGBClassifier()
+    rf = xgb.XGBClassifier(
+        reg_lambda=2,
+        max_depth=3,
+        colsample_bytree=0.2,
+        min_split_loss=10
+    )
 
-    rf = xgb.XGBClassifier()
-
-    x0, x1 = x_train[w_train == 0], x_train[w_train == 1]
-    y0, y1 = y_train[w_train == 0], y_train[w_train == 1]
+    x0, x1 = x_val[w_val == 0], x_val[w_val == 1]
+    y0, y1 = y_val[w_val == 0], y_val[w_val == 1]
 
     mu0.fit(x0, y0)
     mu1.fit(x1, y1)
-
-    m.fit(np.column_stack([x_train, w_train]), y_train)
-
-    rf.fit(x_train, w_train)
+    m.fit(x_val, y_val)
+    rf.fit(x_val, w_val)
 
     return mu0, mu1, rf, m
 
@@ -109,7 +110,7 @@ def calculate_if_pehe(
     plug_in = (t_plugin - prediction) ** 2
     l_de = (ident - b) * t_plugin ** 2 + b * y_test * (t_plugin - prediction) + (- a * (t_plugin - prediction) ** 2 + prediction ** 2)
 
-    return np.sum(l_de) + np.sum(plug_in)
+    return np.sum(plug_in) + np.sum(l_de)
 
 def calculate_pseudo_outcome_pehe_dr(
     w_test: np.ndarray,
@@ -119,10 +120,11 @@ def calculate_pseudo_outcome_pehe_dr(
     mu_1: np.ndarray,
     mu_0: np.ndarray
 )-> np.ndarray:
-    """
-    calculating pseudo outcome for DR
 
     """
+    calculating pseudo outcome for DR
+    """
+
     EPS = 1e-7
     w_1 = w_test / (p + EPS)
     w_0 = (1 - w_test) / (EPS + 1 - p)
@@ -137,14 +139,14 @@ def calculate_pseudo_outcome_pehe_r(
     y_test: np.ndarray,
     m: np.ndarray
 )-> np.ndarray:
+
     """
     calculating pseudo outcome for R
-
     """
 
-    y_pseudo = (y_test - m) - (prediction)*(w_test - p)
+    y_pseudo = (y_test - m) - (w_test - p)*prediction
 
-    return np.sqrt(np.mean(y_pseudo** 2))
+    return np.sqrt(np.mean(y_pseudo ** 2))
 
 def calculate_pehe(
     prediction: np.ndarray,
@@ -152,17 +154,21 @@ def calculate_pehe(
     selection_type: str
 ) -> np.ndarray:
 
-    x_train, w_train, y_train = data.get_validation_data()
+    x_val, w_val, y_val = data.get_validation_data()
     x_test, w_test, y_test = data.get_testing_data()
 
-    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_train, y_train, w_train)
+    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_val, y_val, w_val)
 
     mu_0 = xgb_plugin0.predict_proba(x_test)[:, 1]
     mu_1 = xgb_plugin1.predict_proba(x_test)[:, 1]
 
-    mu = m.predict_proba(np.column_stack([x_test, w_test]))[:, 1]
+    mu = m.predict_proba(x_test)[:, 1]
 
-    p = rf.predict_proba(x_test)[:, 1]
+    if data.get_cohort_name() == "ist3":
+        p = 0.5*np.ones(len(x_test))
+    else:
+        p = rf.predict_proba(x_test)[:, 1]
+
     t_plugin = mu_1 - mu_0
 
     ident = np.ones(len(p))
@@ -171,7 +177,6 @@ def calculate_pehe(
         "if_pehe": calculate_if_pehe,
         "pseudo_outcome_dr": calculate_pseudo_outcome_pehe_dr,
         "pseudo_outcome_r": calculate_pseudo_outcome_pehe_r
-
     }
 
     pehe_calculator = selection_types.get(selection_type)
@@ -186,180 +191,150 @@ def calculate_pehe(
 
     raise ValueError(f"Unknown selection_type: {selection_type}")
 
-
 class Dataset:
-    """
-    Dataset wrapper class for clinical data including massive transfucion, responder, and IST-3
-
-    """
-
-    def __init__(self, name, random_state ):
-
-        if name == "massive_trans":
-            data = pd.read_pickle("data/low_bp_survival.pkl")
-
-            filter_regex = [
-                'proc',
-                'ethnicity',
-                'residencestate',
-                'toxicologyresults',
-                "registryid",
-                "COV",
-                "TT",
-                "scenegcsmotor",
-                "scenegcseye",
-                "scenegcsverbal",
-                "edgcsmotor",
-                "edgcseye",
-                "edgcsverbal",
-                "sex_F",
-                "traumatype_P",
-                "traumatype_other"
-                ]
-            treatment_col = "treated"
-            outcome_col = "outcome"
-
-            for regex in filter_regex:
-                data = data[data.columns.drop(list(data.filter(regex=regex)))]
-
-
-        elif name == "responder":
-            data = pd.read_pickle("data/trauma_responder.pkl")
-            filter_regex = [
-                'proc',
-                'ethnicity',
-                'residencestate',
-                'toxicologyresults',
-                "registryid",
-                "COV",
-                "TT",
-                "scenegcsmotor",
-                "scenegcseye",
-                "scenegcsverbal",
-                "edgcsmotor",
-                "edgcseye",
-                "edgcsverbal",
-                "sex_F",
-                "traumatype_P",
-                "traumatype_other"
-                ]
-            treatment_col = "treated"
-            outcome_col = "outcome"
-
-            for regex in filter_regex:
-                data = data[data.columns.drop(list(data.filter(regex=regex)))]
-
-        elif name =="ist3":
-            data = pd.read_sas("data/datashare_aug2015.sas7bdat")
-
-            outcome_col = "aliveind6"
-            treatment_col = "itt_treat"
-
-            continuous_vars = [
-                "gender",
-                "age",
-                "weight",
-                "glucose",
-                "gcs_eye_rand",
-                "gcs_motor_rand",
-                "gcs_verbal_rand",
-                # "gcs_score_rand",
-                "nihss" ,
-                "sbprand",
-                "dbprand",
-            ]
-
-            cate_variables = [
-                # "livealone_rand",
-                # "indepinadl_rand",
-                "infarct",
-                "antiplat_rand",
-                # "atrialfib_rand",
-                #  "liftarms_rand",
-                # "ablewalk_rand",
-                # "weakface_rand",
-                # "weakarm_rand",
-                # "weakleg_rand",
-                # "dysphasia_rand",
-                # "hemianopia_rand",
-                # "visuospat_rand",
-                # "brainstemsigns_rand",
-                # "otherdeficit_rand",
-                "stroketype"
-            ]
-
-            data = data[continuous_vars + cate_variables + [treatment_col]+ [outcome_col]]
-            data = pd.get_dummies(data, columns=cate_variables)
-
-        self.data = data
+    def __init__(self, cohort_name, random_state=1):
+        
+        self.cohort_name = cohort_name
         self.random_state = random_state
-        self.n, self.feature_size = data.shape
-        self.names = data.drop([treatment_col, outcome_col], axis=1).columns
+        self.data, self.treatment_col, self.outcome_col = self._load_data(cohort_name)
 
-        treatment_index = data.columns.get_loc(treatment_col)
-        outcome_index = data.columns.get_loc(outcome_col)
+        self._process_data()
 
-        var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
+    def _load_data(self, cohort_name):
 
-        x_norm, features_min = normalize_data(data)
+        if cohort_name in ["massive_trans", "responder"]:
+            data = self._load_pickle_data(cohort_name)
+        elif cohort_name == "ist3":
+            data = self._load_sas_data()
+        else:
+            raise ValueError(f"Unsupported cohort: {cohort_name}")
 
+        return data, "treated", "outcome"
 
-        ## impute missing value
+    def _load_pickle_data(self, cohort_name):
+
+        if cohort_name == "responder":
+            data = pd.read_pickle(f"data/trauma_responder.pkl")
+        elif cohort_name == "massive_trans":
+            data = pd.read_pickle(f"data/low_bp_survival.pkl")
+        else:
+            raise ValueError(f"Unsupported cohort: {cohort_name}")
+
+        data = self._filter_data(data)
+
+        return data
+
+    def _filter_data(self, data):
+        filter_regex = [
+            'proc',
+            'ethnicity',
+            'residencestate',
+            'toxicologyresults',
+            "registryid",
+            "COV",
+            "TT",
+            "scenegcsmotor",
+            "scenegcseye",
+            "scenegcsverbal",
+            "edgcsmotor",
+            "edgcseye",
+            "edgcsverbal",
+            "sex_F",
+            "traumatype_P",
+            "traumatype_other"
+        ]
+        for regex in filter_regex:
+            data = data[data.columns.drop(list(data.filter(regex=regex)))]
+        return data
+
+    def _load_sas_data(self):
+        data = pd.read_sas("data/datashare_aug2015.sas7bdat")
+
+        outcome_col = "aliveind6"
+        treatment_col = "itt_treat"
+
+        continuous_vars = [
+            "gender",
+            "age",
+            "weight",
+            "glucose",
+            "gcs_eye_rand",
+            "gcs_motor_rand",
+            "gcs_verbal_rand",
+            "nihss" ,
+            "sbprand",
+            "dbprand",
+            "antiplat_rand"
+        ]
+
+        cate_variables = [
+            "infarct",
+            "stroketype"
+        ]
+
+        data = data[continuous_vars + cate_variables + [treatment_col]+ [outcome_col]]
+        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 2, 0, 1)
+        data = pd.get_dummies(data, columns=cate_variables)
+
+        return data
+
+    def _process_data(self):
+        self.n, self.feature_size = self.data.shape
+        self.names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
+        x_norm = self._normalize_data(self.data)
+        x_train_scaled = self._impute_missing_values(x_norm)
+        self._split_data(x_train_scaled)
+
+    def _normalize_data(self, x):
+        
+        x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
+
+        return x
+
+    def _impute_missing_values(self, x_norm):
 
         imp = SimpleImputer(missing_values=np.nan, strategy='mean')
         imp.fit(x_norm)
         x_train_scaled = imp.transform(x_norm)
 
-        x_train, x_test, y_train, y_test = model_selection.train_test_split(
-                                                    x_train_scaled,
-                                                    data[outcome_col],
-                                                    test_size=0.2,
-                                                    random_state=random_state,
-                                                    stratify=data[treatment_col]
-                                            )
+        return x_train_scaled
 
-        x_train, x_val, y_train, y_val = model_selection.train_test_split(
-                                                    x_train,
-                                                    y_train,
-                                                    test_size=0.2,
-                                                    random_state=random_state,
-                                                    stratify=x_train[:,treatment_index]
-                                            )
+    def _split_data(self, x_train_scaled):
 
-        if name == "ist3":
-            w_train = x_train[:, treatment_index] == 0
-            w_val = x_val[:, treatment_index] == 0
-            w_test =  x_test[:, treatment_index] == 0
+        treatment_index = self.data.columns.get_loc(self.treatment_col)
+        outcome_index = self.data.columns.get_loc(self.outcome_col)
+        var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
+        
+        self.x_train, self.x_test, self.y_train, self.y_test = model_selection.train_test_split(
+            x_train_scaled,
+            self.data[self.outcome_col],
+            test_size=0.2,
+            random_state=self.random_state,
+            stratify=self.data[self.treatment_col]
+        )
 
-            x_train = x_train[:,var_index]
-            x_val = x_val[:,var_index]
-            x_test = x_test[:, var_index]
+        self.x_train, self.x_val, self.y_train, self.y_val = model_selection.train_test_split(
+            self.x_train,
+            self.y_train,
+            test_size=0.2,
+            random_state=self.random_state,
+            stratify=self.x_train[:,treatment_index]
+        )
 
-            y_train = y_train ==0
-            y_val = y_val ==0
-            y_test = y_test ==0
+        if self.cohort_name == "ist3":
+            self.w_train = self.x_train[:, treatment_index] == 0
+            self.w_val = self.x_val[:, treatment_index] == 0
+            self.w_test =  self.x_test[:, treatment_index] == 0
+
+            self.y_train = self.y_train ==0
+            self.y_val = self.y_val ==0
+            self.y_test = self.y_test ==0
         else:
-            w_train = x_train[:, treatment_index]
-            w_val =  x_val[:, treatment_index]
-            w_test =  x_test[:, treatment_index]
+            self.w_train = self.x_train[:, treatment_index]
+            self.w_val =  self.x_val[:, treatment_index]
+            self.w_test =  self.x_test[:, treatment_index]
 
-            x_train = x_train[:,var_index]
-            x_val = x_val[:,var_index]
-            x_test = x_test[:, var_index]
 
-        self.features_min = features_min[var_index]
-
-        self.x_train = x_train
-        self.w_train = w_train
-        self.y_train = y_train
-
-        self.x_val = x_val
-        self.w_val = w_val
-        self.y_val = y_val
-
-        self.x_test = x_test
-        self.w_test = w_test
-        self.y_test = y_test
 
     def get_training_data(self):
         """
@@ -384,16 +359,18 @@ class Dataset:
         return feature names
         """
         return self.names
+    
+    def get_cohort_name(self):
+
+        return self.cohort_name
 
     def get_replacement_value(self):
         """
         return values for insertion & deletion
         """
         # x_replacement = np.zeros(self.x_train.shape[1])
-        x_replacement = np.mean(self.x_train, axis=0)
-
         # x_replacement = np.min(self.x_train, axis=0)
 
+        x_replacement = np.mean(self.x_train, axis=0)
+
         return x_replacement
-
-
