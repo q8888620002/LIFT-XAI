@@ -1,4 +1,4 @@
-import CATENets.catenets.logger as log
+import catenets.logger as log
 
 try:
     from . import jax
