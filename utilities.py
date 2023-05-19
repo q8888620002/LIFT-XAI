@@ -191,9 +191,13 @@ def calculate_pehe(
 
     raise ValueError(f"Unknown selection_type: {selection_type}")
 
+
 class Dataset:
+    """
+    Data wrapper for clinical data.
+    """
     def __init__(self, cohort_name, random_state=1):
-        
+
         self.cohort_name = cohort_name
         self.random_state = random_state
         self.data, self.treatment_col, self.outcome_col = self._load_data(cohort_name)
@@ -204,12 +208,16 @@ class Dataset:
 
         if cohort_name in ["massive_trans", "responder"]:
             data = self._load_pickle_data(cohort_name)
+            treatment = "treated"
+            outcome = "outcome"
         elif cohort_name == "ist3":
             data = self._load_sas_data()
+            treatment = "itt_treat"
+            outcome = "aliveind6"
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
 
-        return data, "treated", "outcome"
+        return data, treatment, outcome
 
     def _load_pickle_data(self, cohort_name):
 
@@ -280,13 +288,14 @@ class Dataset:
 
     def _process_data(self):
         self.n, self.feature_size = self.data.shape
-        self.names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
+        self.feature_names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
         x_norm = self._normalize_data(self.data)
+
         x_train_scaled = self._impute_missing_values(x_norm)
         self._split_data(x_train_scaled)
 
     def _normalize_data(self, x):
-        
+
         x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
 
         return x
@@ -304,8 +313,8 @@ class Dataset:
         treatment_index = self.data.columns.get_loc(self.treatment_col)
         outcome_index = self.data.columns.get_loc(self.outcome_col)
         var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
-        
-        self.x_train, self.x_test, self.y_train, self.y_test = model_selection.train_test_split(
+
+        x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
             self.data[self.outcome_col],
             test_size=0.2,
@@ -313,28 +322,30 @@ class Dataset:
             stratify=self.data[self.treatment_col]
         )
 
-        self.x_train, self.x_val, self.y_train, self.y_val = model_selection.train_test_split(
-            self.x_train,
-            self.y_train,
+        x_train, x_val, self.y_train, self.y_val = model_selection.train_test_split(
+            x_train,
+            y_train,
             test_size=0.2,
             random_state=self.random_state,
-            stratify=self.x_train[:,treatment_index]
+            stratify=x_train[:,treatment_index]
         )
 
         if self.cohort_name == "ist3":
-            self.w_train = self.x_train[:, treatment_index] == 0
-            self.w_val = self.x_val[:, treatment_index] == 0
-            self.w_test =  self.x_test[:, treatment_index] == 0
+            self.w_train = x_train[:, treatment_index] == 0
+            self.w_val = x_val[:, treatment_index] == 0
+            self.w_test =  x_test[:, treatment_index] == 0
 
             self.y_train = self.y_train ==0
             self.y_val = self.y_val ==0
             self.y_test = self.y_test ==0
         else:
-            self.w_train = self.x_train[:, treatment_index]
-            self.w_val =  self.x_val[:, treatment_index]
-            self.w_test =  self.x_test[:, treatment_index]
+            self.w_train = x_train[:, treatment_index]
+            self.w_val =  x_val[:, treatment_index]
+            self.w_test =  x_test[:, treatment_index]
 
-
+        self.x_train = x_train[:,var_index]
+        self.x_val = x_val[:,var_index]
+        self.x_test = x_test[:, var_index]
 
     def get_training_data(self):
         """
@@ -358,8 +369,8 @@ class Dataset:
         """
         return feature names
         """
-        return self.names
-    
+        return self.feature_names
+
     def get_cohort_name(self):
 
         return self.cohort_name
@@ -374,3 +385,5 @@ class Dataset:
         x_replacement = np.mean(self.x_train, axis=0)
 
         return x_replacement
+
+
