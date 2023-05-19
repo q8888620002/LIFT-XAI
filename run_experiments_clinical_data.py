@@ -41,7 +41,7 @@ if __name__ == "__main__":
     trials = int(args["num_trials"])
     top_n_features = int(args["top_n_features"])
     learner = args["learner"]
-    DEVICE = "cuda:1"
+    DEVICE = "cuda:3"
     selection_types = [
         "if_pehe",
         "pseudo_outcome_r",
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     explainers = [
         "integrated_gradients",
         "shapley_value_sampling",
-        # "naive_shap"
+        "naive_shap"
     ]
     top_n_results = {
         e:[] for e in explainers
