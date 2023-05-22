@@ -3,21 +3,27 @@ import sys
 from typing import Any
 
 import src.interpretability.logger as log
-from src.interpretability.experiments import (
-    PredictiveSensitivity,
-    PredictiveSensitivityHeldOutOne,
-    PredictiveSensitivityLoss,
-    PredictiveAssignment,
-    PredictiveSensitivityHeldOutOneMask,
+
+from src.interpretability.exp_propensity import (
     PropensitySensitivity,
+    PropensityAssignment,
+)
+
+from src.interpretability.exp_nonlinear import (
     NonLinearitySensitivity,
     NonlinearitySensitivityLoss,
     NonLinearityHeldOutOne,
     NonLinearityHeldOutOneMask,
-    NonLinearityAssignment,
-    PropensityAssignment
+    NonLinearityAssignment
 )
 
+from src.interpretability.exp_linear import (
+    PredictiveSensitivity,
+    PredictiveSensitivityHeldOutOne,
+    PredictiveSensitivityLoss,
+    PredictiveAssignment,
+    PredictiveSensitivityHeldOutOneMask
+)
 
 def init_arg() -> Any:
     parser = argparse.ArgumentParser()
@@ -97,8 +103,8 @@ def init_arg() -> Any:
         nargs="+",
         type=str,
         default=[
-            "feature_ablation",
-            "feature_permutation",
+            # "feature_ablation",
+            # "feature_permutation",
             "integrated_gradients",
             "shapley_value_sampling",
             "naive_shap",
