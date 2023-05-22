@@ -8,14 +8,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import torch
+import xgboost as xgb
 
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
 
 from catenets.models.torch import pseudo_outcome_nets
-
-
-
 
 
 abbrev_dict = {
@@ -52,14 +50,38 @@ learner_colors = {
     "Truth": cblind_palete[9],
 }
 
+class NuisanceFunctions:
+    def __init__(self):
+        self.mu0 = xgb.XGBRegressor()
+        self.mu1 = xgb.XGBRegressor()
+        self.m = xgb.XGBRegressor()
+        self.rf = xgb.XGBClassifier(
+            # reg_lambda=2,
+            # max_depth=3,
+            # colsample_bytree=0.2,
+            # min_split_loss=10
+        )
 
-class LogisticRegression(torch.nn.Module):
-     def __init__(self, input_dim, output_dim):
-         super(LogisticRegression, self).__init__()
-         self.linear = torch.nn.Linear(input_dim, output_dim)
-     def forward(self, x):
-         outputs = torch.sigmoid(self.linear(x))
-         return outputs
+    def fit(self, x_val, Y_val, W_val):
+        x0, x1 = x_val[W_val == 0], x_val[W_val == 1]
+        y0, y1 = Y_val[W_val == 0], Y_val[W_val == 1]
+
+        self.mu0.fit(x0, y0)
+        self.mu1.fit(x1, y1)
+        self.m.fit(x_val, Y_val)
+        self.rf.fit(x_val, W_val)
+
+    def predict_mu_0(self, x):
+        return self.mu0.predict(x)
+
+    def predict_mu_1(self, x):
+        return self.mu1.predict(x)
+
+    def predict_propensity(self, x):
+        return self.rf.predict_proba(x)[:, 1]
+
+    def predict_m(self, x):
+        return self.m.predict(x)
 
 def enable_reproducible_results(seed: int = 42) -> None:
     """
@@ -260,9 +282,6 @@ def attribution_insertion_deletion(
 
     return insertion_results, deletion_results
 
-
-
-
 def attribution_ranking(feature_attributions: np.ndarray) -> list:
     """"
     Compute the ranking of features according to atribution score
@@ -278,3 +297,151 @@ def attribution_ranking(feature_attributions: np.ndarray) -> list:
     rank_indices = list(map(list, zip(*rank_indices)))
 
     return rank_indices
+
+def insertion_deletion(
+    test_data: tuple,
+    x_replacement: np.ndarray,
+    rank_indices:list,
+    cate_model: torch.nn.Module,
+    selection_types: Optional[str],
+    nuisance_functions: NuisanceFunctions
+) -> tuple:
+    """
+    Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
+
+    Args:
+        x_test: testing set for explanation with insertion and deletion
+        feature_attributions: feature attribution outputted by a feature importance method
+        pate_model: masking models for PATE estimation.
+    Returns:
+        results of insertion and deletion of PATE.
+    """
+    ## training plugin estimator on
+
+    x_test,_ ,_ = test_data
+
+    n, d = x_test.shape
+    x_test_del = x_test.copy()
+    x_test_ins = np.tile(x_replacement, (n, 1))
+
+    deletion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
+    insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
+
+    for rank_index in range(len(rank_indices) + 1):
+        if rank_index > 0:  # Skip this on the first iteration
+            col_indices = rank_indices[rank_index - 1]
+            x_test_ins[:, col_indices] = x_test[:, col_indices]
+            x_test_del[:, col_indices] = x_replacement[col_indices]
+
+        for selection_type in selection_types:
+            # For the insertion process
+            cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+
+            insertion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_ins,
+                test_data,
+                selection_type,
+                nuisance_functions
+            )
+
+            # For the deletion process
+            cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+            deletion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_del,
+                test_data,
+                selection_type,
+                nuisance_functions
+            )
+
+    return insertion_results, deletion_results
+
+def calculate_if_pehe(
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    t_plugin: np.ndarray,
+    y_test: np.ndarray,
+    ident: np.ndarray
+)-> np.ndarray:
+
+    EPS = 1e-7
+    a = w_test - p
+    c = p * (ident - p)
+    b = 2 * np.ones(len(w_test)) * w_test * (w_test - p) / (c + EPS)
+
+    plug_in = (t_plugin - prediction) ** 2
+    l_de = (ident - b) * t_plugin ** 2 + b * y_test * (t_plugin - prediction) + (- a * (t_plugin - prediction) ** 2 + prediction ** 2)
+
+    return np.sum(plug_in) + np.sum(l_de)
+
+def calculate_pseudo_outcome_pehe_dr(
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    y_test: np.ndarray,
+    mu_1: np.ndarray,
+    mu_0: np.ndarray
+)-> np.ndarray:
+
+    """
+    calculating pseudo outcome for DR
+    """
+
+    EPS = 1e-7
+    w_1 = w_test / (p + EPS)
+    w_0 = (1 - w_test) / (EPS + 1 - p)
+    pseudo_outcome = (w_1 - w_0) * y_test + ((1 - w_1) * mu_1 - (1 - w_0) * mu_0)
+
+    return np.sqrt(np.mean((prediction - pseudo_outcome) ** 2))
+
+def calculate_pseudo_outcome_pehe_r(
+    w_test: np.ndarray,
+    p: np.ndarray,
+    prediction: np.ndarray,
+    y_test: np.ndarray,
+    m: np.ndarray
+)-> np.ndarray:
+
+    """
+    calculating pseudo outcome for R
+    """
+
+    y_pseudo = (y_test - m) - (w_test - p)*prediction
+
+    return np.sqrt(np.mean(y_pseudo ** 2))
+
+def calculate_pehe(
+    prediction: np.ndarray,
+    test_data: tuple,
+    selection_type: str,
+    nuisance_functions: NuisanceFunctions
+) -> np.ndarray:
+
+    x_test, w_test, y_test = test_data
+
+    mu_0 = nuisance_functions.predict_mu_0(x_test)
+    mu_1 = nuisance_functions.predict_mu_1(x_test)
+    mu = nuisance_functions.predict_m(x_test)
+    p = nuisance_functions.predict_propensity(x_test)
+
+    t_plugin = mu_1 - mu_0
+
+    ident = np.ones(len(p))
+    selection_types = {
+        "if_pehe": calculate_if_pehe,
+        "pseudo_outcome_dr": calculate_pseudo_outcome_pehe_dr,
+        "pseudo_outcome_r": calculate_pseudo_outcome_pehe_r
+    }
+
+    pehe_calculator = selection_types.get(selection_type)
+
+    if pehe_calculator == calculate_if_pehe:
+        return pehe_calculator(w_test, p, prediction, t_plugin, y_test, ident)
+    elif pehe_calculator == calculate_pseudo_outcome_pehe_dr:
+        return pehe_calculator(w_test, p, prediction, y_test, mu_1, mu_0)
+    elif pehe_calculator == calculate_pseudo_outcome_pehe_r:
+        return pehe_calculator(w_test, p, prediction, y_test, mu)
+
+
+    raise ValueError(f"Unknown selection_type: {selection_type}")
+

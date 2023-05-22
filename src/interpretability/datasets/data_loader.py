@@ -12,7 +12,11 @@ def normalize_data(X):
 
     return X_normalized
 
-def load(dataset_name: str, train_ratio: float = 1.0):
+def load(
+        dataset_name: str, 
+        train_ratio: float = 1.0,
+        val_set: bool=False
+    ):
     if "tcga" in dataset_name:
         try:
             tcga_dataset = pickle.load(
@@ -69,13 +73,23 @@ def load(dataset_name: str, train_ratio: float = 1.0):
     if train_ratio == 1.0:
         return X_raw
     else:
-        X_raw_train = X_raw[: int(train_ratio * X_raw.shape[0])]
-        X_raw_test = X_raw[int(train_ratio * X_raw.shape[0]) :]
+
+        n = X_raw.shape[0]
+
+        val_idx = int(train_ratio*n)
+        train_idx = int(train_ratio*train_ratio*n)
+
+        X_raw_train = X_raw[:train_idx]
+        X_raw_val = X_raw[train_idx:val_idx]
+        X_raw_test = X_raw[val_idx:]
 
         train_mean = np.mean(X_raw_train, axis=0)
-        train_std = np.std(X_raw_train, axis=0)
 
         X_raw_train -= train_mean
+        X_raw_val -= train_mean
         X_raw_test -= train_mean
 
-        return X_raw_train, X_raw_test
+        if val_set:
+            return X_raw_train, X_raw_val, X_raw_test
+        else:
+            return X_raw_train, X_raw_test
