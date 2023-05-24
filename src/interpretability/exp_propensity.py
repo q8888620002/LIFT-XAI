@@ -53,7 +53,7 @@ class PropensitySensitivity:
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
         propensity_type: str = "pred",
-        propensity_scales: list = [0, 0.5, 1, 2, 5, 10, 100],
+        propensity_scales: list = [0, 0.5, 1, 2, 5],
     ) -> None:
 
         self.n_units_hidden = n_units_hidden
@@ -205,8 +205,8 @@ class PropensitySensitivity:
                      n_layers_out=2,
                      n_units_out=100,
                      n_iter=self.n_iter,
-                    lr=1e-3,
-                    patience=10,
+                     lr=1e-3,
+                     patience=10,
                      batch_size=self.batch_size,
                      batch_norm=False,
                      nonlin="relu",
@@ -278,7 +278,7 @@ class PropensitySensitivity:
 
             ## Train nuisance functions
             nuisance_functions = NuisanceFunctions()
-            nuisance_functions.fit(x_val, Y_val,W_val)
+            nuisance_functions.fit(x_val, Y_val, W_val)
 
             for explainer_name in explainer_list:
                 for learner_name in learners:
