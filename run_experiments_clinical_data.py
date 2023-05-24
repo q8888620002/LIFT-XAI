@@ -14,7 +14,7 @@ import pandas as pd
 
 from scipy import stats
 
-from utilities import insertion_deletion, Dataset
+from utilities import insertion_deletion, subgroup_identification, Dataset
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
@@ -139,6 +139,13 @@ if __name__ == "__main__":
 
                 rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
 
+                ate, auroc = subgroup_identification(
+                    rank_indices,
+                    x_train,
+                    x_test,
+                    model
+                )
+
                 insertion_results, deletion_results = insertion_deletion(
                     data,
                     rank_indices,
@@ -152,7 +159,9 @@ if __name__ == "__main__":
                         model_name,
                         explainer_name,
                         insertion_results,
-                        deletion_results
+                        deletion_results,
+                        ate, 
+                        auroc
                     ]
                 )
 

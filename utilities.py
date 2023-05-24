@@ -8,12 +8,42 @@ import xgboost as xgb
 
 from sklearn.impute import SimpleImputer
 from sklearn import  model_selection
+from sklearn import metrics
 
 def normalize_data(x):
 
     x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
 
     return x
+
+def subgroup_identification(
+        rank_indices: np.ndarray,
+        x_train: np.ndarray,
+        x_test: np.ndarray,
+        cate_model: torch.nn.Module
+) -> tuple:
+    
+    train_pred = cate_model.predict(X=x_train)
+    test_pred = cate_model.predict(X=x_test)
+
+    threshold  = np.mean(train_pred)
+
+    y_true_train = (train_pred > threshold)
+    y_true_test = (test_pred > threshold)
+
+    xgb_model = xgb.XGBClassifier()
+    top_n_features = rank_indices[:5]
+    
+    xgb_model.fit(x_train[:, top_n_features], y_true_train)
+    
+    y_pred = xgb_model.predict(x_test[:, top_n_features])
+    
+    ate = np.sum(test_pred[y_pred == 1])/len(test_pred)
+
+    auroc = metrics.roc_auc_score(y_true_test, y_pred)
+    
+
+    return ate, auroc
 
 def insertion_deletion(
     data: Dataset,
