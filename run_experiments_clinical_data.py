@@ -14,14 +14,14 @@ import pandas as pd
 
 from scipy import stats
 
-from utilities import insertion_deletion, subgroup_identification, Dataset
+from utilities import *
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
 from catenets.models.torch import pseudo_outcome_nets
-
+from catenets.models.torch.base import BasicNet
 import src.interpretability.logger as log
 from src.interpretability.utils import attribution_ranking
 from src.interpretability.explain import Explainer
@@ -41,7 +41,9 @@ if __name__ == "__main__":
     trials = int(args["num_trials"])
     top_n_features = int(args["top_n_features"])
     learner = args["learner"]
-    DEVICE = "cuda:3"
+    DEVICE = "cuda:6"
+    explainer_limit = 1000
+
     selection_types = [
         "if_pehe",
         "pseudo_outcome_r",
@@ -74,8 +76,6 @@ if __name__ == "__main__":
     results_test = np.zeros((trials, len(x_test)))
 
     for i in range(trials):
-
-        np.random.seed(i)
 
         data = Dataset(cohort_name, i)
         x_train, w_train, y_train = data.get_training_data()
@@ -130,17 +130,23 @@ if __name__ == "__main__":
 
             log.info(f"Explaining {learner}")
             learner_explanations[learner] = learner_explainers[learner].explain(
-                x_test
+                x_test[:explainer_limit]
             )
 
             # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
             for explainer_name in explainers:
-
                 rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
 
+                top_5_indices = np.argpartition(
+                    np.abs(
+                        learner_explanations[learner][explainer_name]
+                    ).mean(0).round(2),
+                    -5
+                )[-5:]
+
                 ate, auroc = subgroup_identification(
-                    rank_indices,
+                    top_5_indices,
                     x_train,
                     x_test,
                     model
@@ -160,7 +166,7 @@ if __name__ == "__main__":
                         explainer_name,
                         insertion_results,
                         deletion_results,
-                        ate, 
+                        ate,
                         auroc
                     ]
                 )
@@ -188,6 +194,8 @@ if __name__ == "__main__":
                     x_test[:,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
 
+
+
     for explainer_name in explainers:
 
         results = collections.Counter(top_n_results[explainer_name])
@@ -202,7 +210,7 @@ if __name__ == "__main__":
             ascending=False
         )
 
-        summary["count (%)"] = np.round(summary["count (%)"]/(len(top_n_results[explainer_name])), 2)*100
+        summary["count (%)"] = np.round(summary["count (%)"]/(trials), 2)*100
 
         indices = [names.tolist().index(i) for i in summary.feature.tolist()]
         summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=0)[indices])

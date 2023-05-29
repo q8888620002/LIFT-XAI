@@ -178,7 +178,7 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         self._po_estimator = self._generate_po_estimator()
         if weighting_strategy is not None:
             self._propensity_estimator = self._generate_propensity_estimator()
-            
+
 
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
@@ -965,7 +965,7 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
             dropout_prob=self.dropout_prob,
             dropout=self.dropout,
         ).to(self.device)
-    
+
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
 
         if self._te_template is not None:
@@ -995,7 +995,7 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         ).to(self.device)
 
     def fit(
-        self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor
+        self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor, b:torch.tensor=None
     ) -> "PseudoOutcomeLearner":
         """
         Train treatment effects nets.
@@ -1014,6 +1014,9 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         X = self._check_tensor(X).float()
         y = self._check_tensor(y).squeeze().float()
         w = self._check_tensor(w).squeeze().float()
+
+        if b != None:
+            b = self._check_tensor(b).squeeze().float()
 
         n = len(y)
 
@@ -1178,12 +1181,12 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         '''
         n_new : integer variable counting the neurons you want to add
         '''
-        # take a copy of the current weights stored in self._fc which is an 
+        # take a copy of the current weights stored in self._fc which is an
         # ModuleList variable with only one layer
         current = pre_trained.model[0].weight.data.to(self.device)
         output_dim, input_dim = current.shape
-        
-        # randomly initialize a tensor with the size of the wanted layer 
+
+        # randomly initialize a tensor with the size of the wanted layer
         hl_input = torch.zeros([output_dim, input_dim ]).to(self.device)
         nn.init.xavier_normal_(hl_input, gain=nn.init.calculate_gain(self.nonlin))
 
@@ -1310,7 +1313,7 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
         mu_1_pred = predict_wrapper_mask(temp_model_1, X[pred_mask, :],M)
 
         return mu_0_pred, mu_1_pred
-        
+
     def _impute_propensity(
         self,
         X: torch.Tensor,
@@ -1674,7 +1677,7 @@ class DRLearnerMaskHalf(DRLearnerMask):
 
         X = self._check_tensor(X).float()
         M = self._check_tensor(M).float()
-        
+
         return predict_wrapper_mask(self._te_estimator, X, M)
 
 
@@ -1947,6 +1950,7 @@ class XLearner(PseudoOutcomeLearner):
         # import ipdb; ipdb.set_trace()
 
         return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
+
 
 class XLearnerMask(PseudoOutcomeLearnerMask):
     """

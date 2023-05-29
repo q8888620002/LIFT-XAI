@@ -173,6 +173,8 @@ class BasicNet(nn.Module):
         self.model.apply(weights_init)
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
+        X = self._check_tensor(X)
+
         return self.model(X)
 
     def fit(
@@ -200,9 +202,9 @@ class BasicNet(nn.Module):
         best_model = None
 
         scheduler = ReduceLROnPlateau(
-            self.optimizer, 
+            self.optimizer,
             patience=self.patience//2,
-            mode='min', 
+            mode='min',
             min_lr=1e-5,
             factor = 0.5
         )
@@ -219,7 +221,7 @@ class BasicNet(nn.Module):
                 ]
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-                
+
                 weight_next = None
                 if weight is not None:
                     weight_next = weight[idx_next].detach()
@@ -257,7 +259,7 @@ class BasicNet(nn.Module):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-                            
+
                     if i % self.n_iter_print == 0:
                         print(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
@@ -273,7 +275,7 @@ class BasicNet(nn.Module):
         if isinstance(X, torch.Tensor):
             return X.to(self.device)
         else:
-            return torch.from_numpy(np.asarray(X)).to(self.device)
+            return torch.from_numpy(np.asarray(X)).float().to(self.device)
 
 
 
@@ -441,9 +443,9 @@ class BasicNetMask(nn.Module):
         train_indices = np.arange(n)
 
         scheduler = ReduceLROnPlateau(
-            self.optimizer, 
+            self.optimizer,
             patience=self.patience//2,
-            mode='min', 
+            mode='min',
             min_lr=1e-5,
             factor = 0.5
         )
@@ -466,7 +468,7 @@ class BasicNetMask(nn.Module):
 
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-                
+
                 # generate masks
                 batch_loss = 0
 
@@ -497,7 +499,7 @@ class BasicNetMask(nn.Module):
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
-                    
+
                     val_loss = 0
                     ## generating random masking for validation.
 
@@ -506,7 +508,7 @@ class BasicNetMask(nn.Module):
 
                     preds = self.forward(X_val, masks).squeeze()
                     val_loss = loss(preds, y_val).item()
-                    
+
                     scheduler.step(val_loss)
 
                     if self.early_stopping:
@@ -519,7 +521,7 @@ class BasicNetMask(nn.Module):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-                    
+
                     if i % self.n_iter_print == 0:
                         print(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
@@ -559,9 +561,9 @@ class BasicNetMask0(BasicNetMask):
         train_indices = np.arange(n)
 
         scheduler = ReduceLROnPlateau(
-            self.optimizer, 
+            self.optimizer,
             patience=self.patience//2,
-            mode='min', 
+            mode='min',
             min_lr=1e-5,
             factor = 0.5
         )
@@ -584,7 +586,7 @@ class BasicNetMask0(BasicNetMask):
 
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-                
+
                 # generate masks
 
                 masks = generate_masks(X_next, self.mask_dis)
@@ -612,12 +614,12 @@ class BasicNetMask0(BasicNetMask):
             if self.early_stopping or i % self.n_iter_print == 0:
                 loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
                 with torch.no_grad():
-                    
+
                     ## generating random masking for validation.
 
                     masks = generate_masks(X_val, self.mask_dis)
                     masks = self._check_tensor(masks)
-                    
+
                     preds = self.forward(X_val, masks).squeeze()
                     val_loss = loss(preds, y_val)
                     scheduler.step(val_loss)
@@ -632,7 +634,7 @@ class BasicNetMask0(BasicNetMask):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-                    
+
                     if i % self.n_iter_print == 0:
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
@@ -659,7 +661,7 @@ class BasicNetMask1(BasicNetMask):
         out = torch.cat([X, M], dim=1)
 
         return self.model(out)
-    
+
 class BasicNetMaskHalf(BasicNetMask):
     def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
 
@@ -709,12 +711,12 @@ class MaskingModel(nn.Module):
         #     raise ValueError("Unknown nonlinearity")
 
         NL = NONLIN[nonlin]
-        
+
         if batch_norm:
             encoder_layers = [nn.Linear(n_unit_in, n_units), nn.BatchNorm1d(n_units), NL()]
         else:
             encoder_layers = [nn.Linear(n_unit_in, n_units)]
-        
+
         # add required number of layers
         for i in range(n_layers - 1):
             if batch_norm:
@@ -731,7 +733,7 @@ class MaskingModel(nn.Module):
             *[nn.Linear(n_units, n_unit_in),
             nn.Sigmoid()]
         ).to(self.device)
-        
+
         self.feature_predictor = nn.Sequential(
             *[nn.Linear(n_units, n_unit_in),
                NL()]
@@ -778,9 +780,9 @@ class MaskingModel(nn.Module):
         train_indices = np.arange(n)
 
         scheduler = ReduceLROnPlateau(
-            self.optimizer, 
+            self.optimizer,
             patience=self.patience//2,
-            mode='min', 
+            mode='min',
             min_lr=1e-5,
             factor = 0.5
         )
@@ -803,7 +805,7 @@ class MaskingModel(nn.Module):
 
                 X_next = X[idx_next]
                 y_next = y[idx_next]
-                
+
                 # generate masks
 
                 masks = generate_masks(X_next, self.mask_dis)
@@ -831,7 +833,7 @@ class MaskingModel(nn.Module):
                 mask_loss = nn.BCELoss()
 
                 with torch.no_grad():
-                    
+
                     ## generating random masking for validation.
 
                     masks = generate_masks(X_val, self.mask_dis)
@@ -841,7 +843,7 @@ class MaskingModel(nn.Module):
                     if i == 900:
 
                         import ipdb; ipdb.set_trace()
-                        
+
                     val_loss = self.alpha*feature_loss(pred_features, X_val) + mask_loss( pred_masks, mask_label)
 
                     scheduler.step(val_loss)
@@ -856,7 +858,7 @@ class MaskingModel(nn.Module):
 
                         if patience > self.patience and i > self.n_iter_min:
                             break
-                    
+
                     if i % self.n_iter_print == 0:
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
@@ -903,7 +905,7 @@ class RepresentationNet(nn.Module):
         if nonlin not in list(NONLIN.keys()):
             raise ValueError("Unknown nonlinearity")
 
-        self.device = device 
+        self.device = device
 
         NL = NONLIN[nonlin]
 
@@ -1155,7 +1157,7 @@ class PropensityNet(nn.Module):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
-                        
+
         restore_parameters(self.model, best_model)
         return self
 
@@ -1210,9 +1212,9 @@ class PropensityNetMask(PropensityNet):
         val_loss_best = LARGE_VAL
         patience = 0
         best_model = None
-        scheduler = ReduceLROnPlateau(self.optimizer, 
+        scheduler = ReduceLROnPlateau(self.optimizer,
                                         patience=self.patience//2,
-                                         mode='min', 
+                                         mode='min',
                                          min_lr=1e-5,
                                          factor = 0.5)
 

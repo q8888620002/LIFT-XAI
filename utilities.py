@@ -2,6 +2,9 @@ from __future__ import annotations
 from typing import List
 
 import torch
+from torch import nn
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+from copy import deepcopy
 import numpy as np
 import pandas as pd
 import xgboost as xgb
@@ -22,9 +25,10 @@ def subgroup_identification(
         x_test: np.ndarray,
         cate_model: torch.nn.Module
 ) -> tuple:
-    
-    train_pred = cate_model.predict(X=x_train)
-    test_pred = cate_model.predict(X=x_test)
+
+
+    train_pred = cate_model.predict(X=x_train).detach().cpu().numpy()
+    test_pred = cate_model.predict(X=x_test).detach().cpu().numpy()
 
     threshold  = np.mean(train_pred)
 
@@ -32,16 +36,16 @@ def subgroup_identification(
     y_true_test = (test_pred > threshold)
 
     xgb_model = xgb.XGBClassifier()
-    top_n_features = rank_indices[:5]
-    
-    xgb_model.fit(x_train[:, top_n_features], y_true_train)
-    
-    y_pred = xgb_model.predict(x_test[:, top_n_features])
-    
+
+
+    xgb_model.fit(x_train[:, rank_indices], y_true_train)
+
+    y_pred = xgb_model.predict(x_test[:, rank_indices])
+
     ate = np.sum(test_pred[y_pred == 1])/len(test_pred)
 
     auroc = metrics.roc_auc_score(y_true_test, y_pred)
-    
+
 
     return ate, auroc
 
@@ -50,7 +54,9 @@ def insertion_deletion(
     rank_indices:list,
     cate_model: torch.nn.Module,
     x_replacement: np.ndarray,
-    selection_types: List[str]
+    selection_types: List[str],
+    model_type: str ="CATENets",
+    device: str = "cuda:3"
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -66,8 +72,15 @@ def insertion_deletion(
     x_test, _, _ = data.get_testing_data()
 
     n, d = x_test.shape
-    x_test_del = x_test.copy()
+    x_test_del =x_test.copy()
     x_test_ins = np.tile(x_replacement, (n, 1))
+
+    original_cate_model = cate_model
+
+    if model_type == "CATENets":
+        cate_model = lambda x: original_cate_model.predict(X=x)
+    else:
+        cate_model = lambda x: original_cate_model.forward(X=x)
 
     deletion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
     insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
@@ -80,7 +93,7 @@ def insertion_deletion(
 
         for selection_type in selection_types:
             # For the insertion process
-            cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+            cate_pred_subset_ins = cate_model(x_test_ins).detach().cpu().numpy().flatten()
             insertion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_ins,
                 data,
@@ -88,7 +101,7 @@ def insertion_deletion(
             )
 
             # For the deletion process
-            cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+            cate_pred_subset_del = cate_model(x_test_del).detach().cpu().numpy().flatten()
             deletion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_del,
                 data,
@@ -221,7 +234,6 @@ def calculate_pehe(
 
     raise ValueError(f"Unknown selection_type: {selection_type}")
 
-
 class Dataset:
     """
     Data wrapper for clinical data.
@@ -244,6 +256,10 @@ class Dataset:
             data = self._load_sas_data()
             treatment = "itt_treat"
             outcome = "aliveind6"
+        elif cohort_name == "crash_2":
+            data = self._load_xlsx_data()
+            outcome = "outcome"
+            treatment = "treatment_code"
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
 
@@ -316,6 +332,40 @@ class Dataset:
 
         return data
 
+    def _load_xlsx_data(self):
+
+        outcome = "outcome"
+        treatment = "treatment_code"
+
+        data = pd.read_excel('data/crash_2.xlsx')
+        data[outcome] = np.where(data["icause"].isna(), 1, 0)
+
+        data = data.drop(data[(data[treatment] == "P")|(data[treatment] == "D")].index)
+
+        continuous_vars = [
+            "iage",
+            "isex",
+            'isbp',
+            'irr',
+            'icc',
+            'ihr',
+            'igcseye',
+            'igcsmotor',
+            'igcsverbal',
+        ]
+
+        cate_variables = [
+            "iinjurytype"
+        ]
+
+        data = data[continuous_vars + cate_variables + [treatment]+ [outcome]]
+        data["isex"] = np.where(data["isex"]== 2, 0, 1)
+        data[treatment] = np.where(data[treatment] == "Active", 1, 0)
+        data = pd.get_dummies(data, columns=cate_variables)
+
+        return data
+
+
     def _process_data(self):
         self.n, self.feature_size = self.data.shape
         self.feature_names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
@@ -348,7 +398,7 @@ class Dataset:
             x_train_scaled,
             self.data[self.outcome_col],
             test_size=0.2,
-            random_state=self.random_state,
+            random_state=42,
             stratify=self.data[self.treatment_col]
         )
 
@@ -356,7 +406,7 @@ class Dataset:
             x_train,
             y_train,
             test_size=0.2,
-            random_state=self.random_state,
+            random_state=42,
             stratify=x_train[:,treatment_index]
         )
 

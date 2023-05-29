@@ -65,7 +65,9 @@ class Explainer:
         integrated_gradients_model = IntegratedGradients(model)
 
         def integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return integrated_gradients_model.attribute(x_test, n_steps=n_steps)
+            return integrated_gradients_model.attribute(
+                x_test,
+                n_steps=n_steps)
 
         # DeepLift
         deeplift_model = DeepLift(model)
