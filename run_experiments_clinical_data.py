@@ -191,7 +191,7 @@ if __name__ == "__main__":
 
             for col in range(feature_size):
                 result_sign[explainer_name][i, col] = stats.pearsonr(
-                    x_test[:,col], learner_explanations[learner][explainer_name][:, col]
+                    x_test[:explainer_limit,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
 
 

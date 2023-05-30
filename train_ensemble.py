@@ -84,6 +84,7 @@ if __name__ == "__main__":
         n_iter=1500,
         nonlin="relu",
         device=DEVICE,
+        prob_diff=True
     )
 
     ensemble.fit(x_train, y_train)
@@ -100,7 +101,8 @@ if __name__ == "__main__":
         x_test
     )
     for explainer_name in explainers:
-        rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
+
+        rank_indices = attribution_ranking(learner_explanations[explainer_name])
 
         top_5_indices = np.argpartition(
             np.abs(
