@@ -207,7 +207,7 @@ def calculate_pehe(
 
     mu = m.predict_proba(x_test)[:, 1]
 
-    if data.get_cohort_name() == "ist3":
+    if data.get_cohort_name() == "ist3" or data.get_cohort_name() == "crash_2":
         p = 0.5*np.ones(len(x_test))
     else:
         p = rf.predict_proba(x_test)[:, 1]
@@ -349,6 +349,7 @@ class Dataset:
             'irr',
             'icc',
             'ihr',
+            'ninjurytime',
             'igcseye',
             'igcsmotor',
             'igcsverbal',
@@ -360,7 +361,10 @@ class Dataset:
 
         data = data[continuous_vars + cate_variables + [treatment]+ [outcome]]
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
+        data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
+        data["ninjurytime"] = np.where(data["ninjurytime"] == 0, np.nan, data["ninjurytime"])
         data[treatment] = np.where(data[treatment] == "Active", 1, 0)
+
         data = pd.get_dummies(data, columns=cate_variables)
 
         return data
@@ -462,7 +466,8 @@ class Dataset:
         # x_replacement = np.zeros(self.x_train.shape[1])
         # x_replacement = np.min(self.x_train, axis=0)
 
-        x_replacement = np.mean(self.x_train, axis=0)
+        control = self.x_train
+        x_replacement = np.mean(control, axis=0)
 
         return x_replacement
 

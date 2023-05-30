@@ -102,7 +102,8 @@ class BasicNet(nn.Module):
         batch_norm: bool = True,
         early_stopping: bool = True,
         dropout: bool = False,
-        dropout_prob: float = 0.2
+        dropout_prob: float = 0.2,
+        prob_diff:bool = False
     ) -> None:
         super(BasicNet, self).__init__()
 
@@ -150,6 +151,8 @@ class BasicNet(nn.Module):
 
         if binary_y:
             layers.append(nn.Sigmoid())
+        if prob_diff:
+            layers.append(nn.Tanh())
 
         # return final architecture
         self.device = device
