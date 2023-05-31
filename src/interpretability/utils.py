@@ -55,6 +55,7 @@ class NuisanceFunctions:
         self.mu0 = xgb.XGBRegressor()
         self.mu1 = xgb.XGBRegressor()
         self.m = xgb.XGBRegressor()
+        
         self.rf = xgb.XGBClassifier(
             # reg_lambda=2,
             # max_depth=3,
