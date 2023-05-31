@@ -366,7 +366,8 @@ class Dataset:
         data[treatment] = np.where(data[treatment] == "Active", 1, 0)
 
         data = pd.get_dummies(data, columns=cate_variables)
-
+        data = data.sample(5000)
+        
         return data
 
 
@@ -402,7 +403,7 @@ class Dataset:
             x_train_scaled,
             self.data[self.outcome_col],
             test_size=0.2,
-            random_state=42,
+            random_state=self.random_state,
             stratify=self.data[self.treatment_col]
         )
 
@@ -410,7 +411,7 @@ class Dataset:
             x_train,
             y_train,
             test_size=0.2,
-            random_state=42,
+            random_state=self.random_state,
             stratify=x_train[:,treatment_index]
         )
 

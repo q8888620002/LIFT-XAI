@@ -103,7 +103,7 @@ class BasicNet(nn.Module):
         early_stopping: bool = True,
         dropout: bool = False,
         dropout_prob: float = 0.2,
-        prob_diff:bool = False
+        prob_diff:bool = False,
     ) -> None:
         super(BasicNet, self).__init__()
 
@@ -158,7 +158,6 @@ class BasicNet(nn.Module):
         self.device = device
         self.model = nn.Sequential(*layers).to(self.device)
         self.binary_y = binary_y
-
         self.n_iter = n_iter
         self.batch_size = batch_size
         self.n_iter_print = n_iter_print
@@ -233,6 +232,7 @@ class BasicNet(nn.Module):
 
                 preds = self.forward(X_next).squeeze()
 
+                
                 batch_loss = loss(preds, y_next)
 
                 batch_loss.backward()
@@ -274,6 +274,113 @@ class BasicNet(nn.Module):
 
         return self
 
+    def fit_knowledge_distillation(
+        self, X: torch.Tensor, y: torch.Tensor, y_hat: torch.Tensor , weight: Optional[torch.Tensor] = None
+    ) -> "BasicNet":
+        self.train()
+
+        X = self._check_tensor(X)
+        y = self._check_tensor(y).squeeze()
+        y_hat = self._check_tensor(y_hat).squeeze()
+
+        # get validation split (can be none)
+        _, y , _, y_val, val_string = make_val_split(
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+        )
+
+        y_val = y_val.squeeze()
+
+        X, y_hat, X_val, y_hat_val, val_string = make_val_split(
+            X, y_hat, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+        )
+        y_hat_val = y_hat_val.squeeze()
+
+        n = X.shape[0]  # could be different from before due to split
+
+        # calculate number of batches per epoch
+        batch_size = self.batch_size if self.batch_size < n else n
+        n_batches = int(np.round(n / batch_size)) if batch_size < n else 1
+        train_indices = np.arange(n)
+
+        # do training
+        val_loss_best = LARGE_VAL
+        patience = 0
+        best_model = None
+
+        scheduler = ReduceLROnPlateau(
+            self.optimizer,
+            patience=self.patience//2,
+            mode='min',
+            min_lr=1e-5,
+            factor = 0.5
+        )
+        for i in range(self.n_iter):
+            # shuffle data for minibatches
+
+            np.random.shuffle(train_indices)
+            train_loss = []
+            for b in range(n_batches):
+                self.optimizer.zero_grad()
+
+                idx_next = train_indices[
+                    (b * batch_size) : min((b + 1) * batch_size, n - 1)
+                ]
+                X_next = X[idx_next]
+                y_next = y[idx_next]
+                y_hat_next = y_hat[idx_next]
+
+                weight_next = None
+                if weight is not None:
+                    weight_next = weight[idx_next].detach()
+
+                loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
+
+                preds = self.forward(X_next).squeeze()
+
+                # Combine losses.
+                batch_loss = loss(preds, y_next) + loss(preds, y_hat_next)
+
+                # Perform backward on combined loss.
+                batch_loss.backward()
+
+                torch.nn.utils.clip_grad_norm_(self.parameters(), self.clipping_value)
+
+                self.optimizer.step()
+                train_loss.append(batch_loss.detach())
+
+            train_loss = torch.Tensor(train_loss).to(self.device)
+
+            if self.early_stopping or i % self.n_iter_print == 0:
+                loss = nn.BCELoss() if self.binary_y else nn.MSELoss()
+
+                with torch.no_grad():
+                    preds = self.forward(X_val).squeeze()
+                    val_loss = loss(preds, y_val) + loss(preds, y_hat_val)
+
+                    scheduler.step(val_loss)
+
+                    if self.early_stopping:
+                        if val_loss_best > val_loss:
+                            val_loss_best = val_loss
+                            patience = 0
+                            # best_model  = deepcopy(self.model)
+                        else:
+                            patience += 1
+
+                        if patience > self.patience and i > self.n_iter_min:
+                            break
+
+                    if i % self.n_iter_print == 0:
+                        print(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+                        log.info(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
+                        )
+        # restore_parameters(self.model, best_model)
+
+        return self
+    
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
             return X.to(self.device)

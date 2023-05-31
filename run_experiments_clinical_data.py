@@ -93,7 +93,7 @@ if __name__ == "__main__":
                     n_layers_out=2,
                     n_units_out=100,
                     batch_size=128,
-                    n_iter=1500,
+                    n_iter=1000,
                     nonlin="relu",
                     device=DEVICE,
                 ),

@@ -57,7 +57,7 @@ if __name__ == "__main__":
     data = Dataset(cohort_name, 42)
     names = data.get_feature_names()
 
-    x_train, _, _ = data.get_training_data()
+    x_train, w_train, y_train = data.get_training_data()
     x_test, _, _ = data.get_testing_data()
     feature_size = x_train.shape[1]
 
@@ -72,7 +72,17 @@ if __name__ == "__main__":
     result_sign = {
         e:np.zeros((1, feature_size)) for e in explainers
     }
-    # training knowledge distilation
+
+    tau_star = pseudo_outcome_nets.DRLearner(
+        x_train.shape[1],
+        binary_y=(len(np.unique(y_train)) == 2),
+        n_layers_out=2,
+        n_units_out=100,
+        batch_size=128,
+        n_iter=1000,
+        nonlin="relu",
+        device=DEVICE,
+    )
 
     ensemble = BasicNet(
         "EnsembleNet",
@@ -87,8 +97,17 @@ if __name__ == "__main__":
         prob_diff=True
     )
 
-    ensemble.fit(x_train, y_train)
+    # pseudo-ground truth. 
+
+    tau_star.fit(x_train, y_train, w_train)
+    y_hat = tau_star.predict(x_train).detach().cpu().numpy()
+
+    # training student model with knowledge distilation
+
+    ensemble.fit_knowledge_distillation(x_train, y_train, y_hat)
+    
     # Explain CATE
+
     explainer = Explainer(
         ensemble,
         feature_names=list(range(x_train.shape[1])),
