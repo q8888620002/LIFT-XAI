@@ -127,8 +127,8 @@ if __name__ == "__main__":
             np.abs(
                 learner_explanations[explainer_name]
             ).mean(0).round(2),
-            -5
-        )[-5:]
+            -top_n_features
+        )[-top_n_features:]
 
 
         insertion_results, deletion_results = insertion_deletion(
