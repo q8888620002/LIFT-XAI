@@ -22,6 +22,8 @@ if module_path not in sys.path:
 
 from catenets.models.torch import pseudo_outcome_nets
 from catenets.models.torch.base import BasicNet
+import catenets.models as cate_models
+
 import src.interpretability.logger as log
 from src.interpretability.utils import attribution_ranking
 from src.interpretability.explain import Explainer
@@ -31,17 +33,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('-d','--dataset', help='Dataset', required=True)
-    parser.add_argument('-t','--num_trials', help='Dataset', required=True)
-    parser.add_argument('-n','--top_n_features', help='Dataset', required=True)
-    parser.add_argument('-l','--learner', help='Dataset', required=True)
+    parser.add_argument('-s','--shuffle', help='shuffle',  default=True, action='store_false')
+    parser.add_argument('-t','--num_trials', help='number of runs ', required=True, type=int)
+    parser.add_argument('-n','--top_n_features', help='how many features to extract', required=True, type=int)
+    parser.add_argument('-l','--learner', help='learner', required=True)
 
     args = vars(parser.parse_args())
 
     cohort_name = args["dataset"]
-    trials = int(args["num_trials"])
-    top_n_features = int(args["top_n_features"])
+    trials = args["num_trials"]
+    top_n_features = args["top_n_features"]
+    shuffle = args["shuffle"]
     learner = args["learner"]
-    DEVICE = "cuda:6"
+    DEVICE = "cuda:1"
+
     explainer_limit = 1000
 
     selection_types = [
@@ -97,83 +102,112 @@ if __name__ == "__main__":
                     nonlin="relu",
                     device=DEVICE,
                 ),
-            # "drlearner":
-            #     pseudo_outcome_nets.DRLearner(
-            #     x_train.shape[1],
-            #     binary_y=(len(np.unique(y_train)) == 2),
-            #     n_layers_out=2,
-            #     n_units_out=100,
-            #     batch_size=128,
-            #     n_iter=1500,
-            #     nonlin="relu",
-            #     device=device,
-            # )
+
+            "RALearner": pseudo_outcome_nets.RALearner(
+                      x_train.shape[1],
+                      binary_y=(len(np.unique(y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=100,
+                      n_iter=1500,
+                      lr=1e-3,
+                      patience=10,
+                      batch_size=128,
+                      batch_norm=False,
+                      nonlin="relu",
+                      device = DEVICE
+                  ),
+            "TARNet": cate_models.torch.TARNet(
+                    x_train.shape[1],
+                    binary_y=True,
+                    n_layers_r=1,
+                    n_layers_out=1,
+                    n_units_out=100,
+                    n_units_r=100,
+                    batch_size=128,
+                    n_iter=1500,
+                    batch_norm=False,
+                    early_stopping = True,
+                    nonlin="relu",
+                ),
+
+            "drlearner":
+                pseudo_outcome_nets.DRLearner(
+                x_train.shape[1],
+                binary_y=(len(np.unique(y_train)) == 2),
+                n_layers_out=2,
+                n_units_out=100,
+                batch_size=128,
+                n_iter=1500,
+                nonlin="relu",
+                device=DEVICE,
+            )
         }
 
         learner_explanations = {}
         learner_explainers = {}
         insertion_deletion_data = []
 
-        for model_name, model in models.items():
+        model = models[learner]
+        # for model_name, model in models.items():
 
-            model.fit(x_train, y_train, w_train)
+        model.fit(x_train, y_train, w_train)
 
-            results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
-            results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
+        results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
+        results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
 
-            # Explain CATE
-            learner_explainers[learner] = Explainer(
+        # Explain CATE
+        learner_explainers[learner] = Explainer(
+            model,
+            feature_names=list(range(x_train.shape[1])),
+            explainer_list=explainers,
+        )
+
+        log.info(f"Explaining {learner}")
+        learner_explanations[learner] = learner_explainers[learner].explain(
+            x_test[:explainer_limit]
+        )
+
+        # Calculate IF-PEHE for insertion and deletion for each explanation methods
+
+        for explainer_name in explainers:
+            rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
+
+            top_5_indices = np.argpartition(
+                np.abs(
+                    learner_explanations[learner][explainer_name]
+                ).mean(0).round(2),
+                -5
+            )[-5:]
+
+            ate, auroc = subgroup_identification(
+                top_5_indices,
+                x_train,
+                x_test,
+                model
+            )
+
+            insertion_results, deletion_results = insertion_deletion(
+                data,
+                rank_indices,
                 model,
-                feature_names=list(range(x_train.shape[1])),
-                explainer_list=explainers,
+                x_replacement,
+                selection_types
             )
 
-            log.info(f"Explaining {learner}")
-            learner_explanations[learner] = learner_explainers[learner].explain(
-                x_test[:explainer_limit]
+            insertion_deletion_data.append(
+                [
+                    learner,
+                    explainer_name,
+                    insertion_results,
+                    deletion_results,
+                    ate,
+                    auroc
+                ]
             )
-
-            # Calculate IF-PEHE for insertion and deletion for each explanation methods
-
-            for explainer_name in explainers:
-                rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
-
-                top_5_indices = np.argpartition(
-                    np.abs(
-                        learner_explanations[learner][explainer_name]
-                    ).mean(0).round(2),
-                    -5
-                )[-5:]
-
-                ate, auroc = subgroup_identification(
-                    top_5_indices,
-                    x_train,
-                    x_test,
-                    model
-                )
-
-                insertion_results, deletion_results = insertion_deletion(
-                    data,
-                    rank_indices,
-                    model,
-                    x_replacement,
-                    selection_types
-                )
-
-                insertion_deletion_data.append(
-                    [
-                        model_name,
-                        explainer_name,
-                        insertion_results,
-                        deletion_results,
-                        ate,
-                        auroc
-                    ]
-                )
 
         with open(
             f"results/{cohort_name}/"
-            f"insertion_deletion_{learner}_{i}.pkl", "wb") as output_file:
+            f"insertion_deletion_shuffle_{shuffle}_{learner}_seed_{i}.pkl", "wb") as output_file:
             pickle.dump(insertion_deletion_data, output_file)
 
         #### Getting top n features
@@ -217,11 +251,11 @@ if __name__ == "__main__":
 
         summary.to_csv(
             f"results/{cohort_name}/"
-            f"{explainer_name}_top_{top_n_features}_features_{learner}.csv"
+            f"{explainer_name}_top_{top_n_features}_features_shuffle_{shuffle}_{learner}.csv"
         )
 
-    with open( f"results/{cohort_name}/train_{learner}.pkl", "wb") as output_file:
+    with open( f"results/{cohort_name}/train_shuffle_{shuffle}_{learner}.pkl", "wb") as output_file:
         pickle.dump(results_train, output_file)
 
-    with open( f"results/{cohort_name}/test_{learner}.pkl", "wb") as output_file:
+    with open( f"results/{cohort_name}/test_shuffle_{shuffle}_{learner}.pkl", "wb") as output_file:
         pickle.dump(results_test, output_file)

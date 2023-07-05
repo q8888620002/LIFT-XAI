@@ -238,10 +238,12 @@ class Dataset:
     """
     Data wrapper for clinical data.
     """
-    def __init__(self, cohort_name, random_state=1):
+    def __init__(self, cohort_name, random_state=42, shuffle=False):
 
         self.cohort_name = cohort_name
-        self.random_state = random_state
+        self.shuffle = shuffle
+        self.random_state  = random_state
+
         self.data, self.treatment_col, self.outcome_col = self._load_data(cohort_name)
 
         self._process_data()
@@ -299,6 +301,9 @@ class Dataset:
         ]
         for regex in filter_regex:
             data = data[data.columns.drop(list(data.filter(regex=regex)))]
+
+        data = self._normalize_data(data)
+
         return data
 
     def _load_sas_data(self):
@@ -308,7 +313,6 @@ class Dataset:
         treatment_col = "itt_treat"
 
         continuous_vars = [
-            "gender",
             "age",
             "weight",
             "glucose",
@@ -317,8 +321,7 @@ class Dataset:
             "gcs_verbal_rand",
             "nihss" ,
             "sbprand",
-            "dbprand",
-            "antiplat_rand"
+            "dbprand"
         ]
 
         cate_variables = [
@@ -326,9 +329,20 @@ class Dataset:
             "stroketype"
         ]
 
-        data = data[continuous_vars + cate_variables + [treatment_col]+ [outcome_col]]
+        binary_vars = [
+            "gender",
+            "antiplat_rand"
+        ]
+
+        data = data[continuous_vars + cate_variables + binary_vars + [treatment_col]+ [outcome_col]]
         data["antiplat_rand"] = np.where(data["antiplat_rand"]== 2, 0, 1)
+        data["gender"] = np.where(data["gender"]== 2, 1, 0)
+
+        data[continuous_vars] = self._normalize_data(data[continuous_vars])
+
         data = pd.get_dummies(data, columns=cate_variables)
+        
+        data = data.sample(1500)
 
         return data
 
@@ -344,39 +358,61 @@ class Dataset:
 
         continuous_vars = [
             "iage",
-            "isex",
             'isbp',
             'irr',
             'icc',
             'ihr',
             'ninjurytime',
-            'igcseye',
-            'igcsmotor',
-            'igcsverbal',
+            # 'igcseye',
+            # 'igcsmotor',
+            # 'igcsverbal',
+            'igcs'
         ]
 
         cate_variables = [
             "iinjurytype"
         ]
 
-        data = data[continuous_vars + cate_variables + [treatment]+ [outcome]]
+        binary_vars = [
+            "isex"
+        ]
+
+        data = data[continuous_vars + cate_variables + binary_vars + [treatment]+ [outcome]]
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
+
+        # deal with missing data
+        data["irr"] = np.where(data["irr"]== 0, np.nan,data["irr"])
+        data["isbp"] = np.where(data["isbp"] == 999, np.nan, data["isbp"])
         data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
         data["ninjurytime"] = np.where(data["ninjurytime"] == 0, np.nan, data["ninjurytime"])
+
         data[treatment] = np.where(data[treatment] == "Active", 1, 0)
 
+        data = data[data.iinjurytype !=3 ]
+
+        data[continuous_vars] = self._normalize_data(data[continuous_vars])
+
         data = pd.get_dummies(data, columns=cate_variables)
+
+        data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
+        data.pop("iinjurytype_2")
+
+        # data["iinjurytype_1"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
+        # data["iinjurytype_2"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
+        # data.pop("iinjurytype_3")
+
         data = data.sample(5000)
-        
+
         return data
 
 
     def _process_data(self):
+
         self.n, self.feature_size = self.data.shape
         self.feature_names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
-        x_norm = self._normalize_data(self.data)
 
-        x_train_scaled = self._impute_missing_values(x_norm)
+        x_train_scaled = self._impute_missing_values(self.data)
+
         self._split_data(x_train_scaled)
 
     def _normalize_data(self, x):
@@ -399,11 +435,16 @@ class Dataset:
         outcome_index = self.data.columns.get_loc(self.outcome_col)
         var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
 
+        if self.shuffle:
+            random_state = self.random_state
+        else:
+            random_state = 42
+
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
             self.data[self.outcome_col],
             test_size=0.2,
-            random_state=self.random_state,
+            random_state=random_state,
             stratify=self.data[self.treatment_col]
         )
 
@@ -411,7 +452,7 @@ class Dataset:
             x_train,
             y_train,
             test_size=0.2,
-            random_state=self.random_state,
+            random_state=random_state,
             stratify=x_train[:,treatment_index]
         )
 
@@ -471,5 +512,3 @@ class Dataset:
         x_replacement = np.mean(control, axis=0)
 
         return x_replacement
-
-

@@ -73,7 +73,6 @@ def load(
     if train_ratio == 1.0:
         return X_raw
     else:
-
         n = X_raw.shape[0]
 
         val_idx = int(train_ratio*n)

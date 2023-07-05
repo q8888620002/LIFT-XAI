@@ -53,7 +53,7 @@ class PropensitySensitivity:
         num_interactions: int = 1,
         synthetic_simulator_type: str = "linear",
         propensity_type: str = "pred",
-        propensity_scales: list = [0, 0.5, 1, 2, 5],
+        propensity_scales: list = [0, 0.5, 1, 2, 5, 10],
     ) -> None:
 
         self.n_units_hidden = n_units_hidden
@@ -611,7 +611,7 @@ class PropensityAssignment:
                     learner_explaintion_lists[name] = [
                     "integrated_gradients",
                     "shapley_value_sampling",
-                    "naive_shap"
+                    "naive_shap",
                     ]
                 else:
                     learner_explaintion_lists[name] = [
@@ -638,7 +638,6 @@ class PropensityAssignment:
 
             for learner_name in learners:
                 for explainer_name in learner_explaintion_lists[learner_name]:
-
                     result_auroc = []
                     cate_policy = []
                     cate_random = []
@@ -672,7 +671,8 @@ class PropensityAssignment:
 
                     rank_indices = np.argsort(np.mean(attribution_est, axis=0))[::-1]
 
-                    num_feature = num_important_features
+                    num_feature = num_important_features//4
+                    
                     total_num = len(X_raw_test) + len(X_raw_train)
 
                     if  not "mask" in learner_name.lower():
@@ -700,7 +700,6 @@ class PropensityAssignment:
                     true_ites_oracle = np.sum(true_ites[np.where(true_ites > np.mean(true_ites))])/total_num
 
                     # ATEs with identified important features
-
                     xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
                     new_x_train = x_train[:,rank_indices[:num_feature]]
                     new_x_test = x_test[:,rank_indices[:num_feature]]
@@ -708,7 +707,7 @@ class PropensityAssignment:
                     xgb_model.fit(new_x_train, new_y_train)
 
                     y_pred = xgb_model.predict(new_x_test)
-                    s_hat = x_test[np.where(y_pred == 1), :]
+                    s_hat = x_test[np.where(y_pred == 1)]
 
                     result_auroc.append(metrics.roc_auc_score(new_y_test, y_pred))
 
@@ -731,7 +730,7 @@ class PropensityAssignment:
                     random_xgb_model.fit(new_x_train, new_y_train)
                     y_pred = random_xgb_model.predict(new_x_test)
 
-                    s_hat = x_test[np.where(y_pred == 1),:]
+                    s_hat = x_test[np.where(y_pred == 1)]
 
                     if len(s_hat) != 0:
                         if  not "mask" in learner_name.lower():
@@ -840,5 +839,6 @@ class PropensityAssignment:
             f"predscl_{predictive_scale}_"
             f"nonlinscl_{nonlinearity_scale}_"
             f"trainratio_{train_ratio}_"
-            f"binary_{binary_outcome}-seed{self.seed}.pkl", 'wb') as handle:
+            f"binary_{binary_outcome}"
+            f"feature_num_{num_feature}-seed{self.seed}.pkl", 'wb') as handle:
             pkl.dump(assignment_data , handle)
