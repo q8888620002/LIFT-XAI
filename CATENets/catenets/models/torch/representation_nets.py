@@ -184,7 +184,6 @@ class BasicDragonNet(BaseCATEEstimator):
             t_pred = t_pred + EPS
             return nn.CrossEntropyLoss()(t_pred, t_true)
 
-
         return (
             po_loss(po_pred, y_true, t_true)
             + self.prop_loss_multiplier * prop_loss(t_pred, t_true)

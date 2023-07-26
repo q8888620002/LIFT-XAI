@@ -24,6 +24,8 @@ from catenets.models.torch import pseudo_outcome_nets
 from catenets.models.torch.base import BasicNet
 import catenets.models as cate_models
 
+
+
 import src.interpretability.logger as log
 from src.interpretability.utils import attribution_ranking
 from src.interpretability.explain import Explainer
@@ -45,8 +47,8 @@ if __name__ == "__main__":
     top_n_features = args["top_n_features"]
     shuffle = args["shuffle"]
     learner = args["learner"]
-    DEVICE = "cuda:1"
-
+    DEVICE = "cuda:0"
+    print(shuffle)
     explainer_limit = 1000
 
     selection_types = [
@@ -66,8 +68,10 @@ if __name__ == "__main__":
 
     explainers = [
         "integrated_gradients",
-        "shapley_value_sampling",
-        "naive_shap"
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling"
+        # "kernel_shap"
+        # "marginal_shap"
     ]
     top_n_results = {
         e:[] for e in explainers
@@ -82,7 +86,10 @@ if __name__ == "__main__":
 
     for i in range(trials):
 
-        data = Dataset(cohort_name, i)
+        data = Dataset(cohort_name, i, shuffle)
+        
+        x, _, _  = data.get_data()
+
         x_train, w_train, y_train = data.get_training_data()
 
         x_replacement = data.get_replacement_value()
@@ -100,15 +107,37 @@ if __name__ == "__main__":
                     batch_size=128,
                     n_iter=1000,
                     nonlin="relu",
-                    device=DEVICE,
+                    device=DEVICE
                 ),
-
+            "SLearner": cate_models.torch.SLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE
+                ),
+            "RLearner": pseudo_outcome_nets.RLearner(
+                      x_train.shape[1],
+                      binary_y=(len(np.unique(y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=100,
+                      n_iter=1000,
+                      lr=1e-3,
+                      patience=10,
+                      batch_size=128,
+                      batch_norm=False,
+                      nonlin="relu",
+                      device = DEVICE
+            ),
             "RALearner": pseudo_outcome_nets.RALearner(
                       x_train.shape[1],
                       binary_y=(len(np.unique(y_train)) == 2),
                       n_layers_out=2,
                       n_units_out=100,
-                      n_iter=1500,
+                      n_iter=1000,
                       lr=1e-3,
                       patience=10,
                       batch_size=128,
@@ -116,6 +145,16 @@ if __name__ == "__main__":
                       nonlin="relu",
                       device = DEVICE
                   ),
+            "TLearner": cate_models.torch.TLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE
+                ),
             "TARNet": cate_models.torch.TARNet(
                     x_train.shape[1],
                     binary_y=True,
@@ -124,12 +163,25 @@ if __name__ == "__main__":
                     n_units_out=100,
                     n_units_r=100,
                     batch_size=128,
-                    n_iter=1500,
+                    n_iter=1000,
                     batch_norm=False,
                     early_stopping = True,
-                    nonlin="relu",
+                    nonlin="relu"
                 ),
-
+            "CFRNet_0.01": cate_models.torch.TARNet(
+                x_train.shape[1],
+                binary_y=(len(np.unique(y_train)) == 2),
+                n_layers_r=2,
+                n_layers_out=2,
+                n_units_out=100,
+                n_units_r=100,
+                batch_size=128,
+                n_iter=1000,
+                lr=1e-3,
+                batch_norm=False,
+                nonlin="relu",
+                penalty_disc=0.01,
+            ),
             "drlearner":
                 pseudo_outcome_nets.DRLearner(
                 x_train.shape[1],
@@ -137,7 +189,7 @@ if __name__ == "__main__":
                 n_layers_out=2,
                 n_units_out=100,
                 batch_size=128,
-                n_iter=1500,
+                n_iter=1000,
                 nonlin="relu",
                 device=DEVICE,
             )
@@ -154,17 +206,21 @@ if __name__ == "__main__":
 
         results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
         results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
+        explicand = x
 
         # Explain CATE
         learner_explainers[learner] = Explainer(
             model,
             feature_names=list(range(x_train.shape[1])),
             explainer_list=explainers,
+            perturbations_per_eval=1,
+            baseline = explicand
         )
 
-        log.info(f"Explaining {learner}")
+        log.info(f"Explaining dataset with: {learner}")
         learner_explanations[learner] = learner_explainers[learner].explain(
-            x_test[:explainer_limit]
+            explicand
+            # x_test[:explainer_limit]
         )
 
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
@@ -172,15 +228,15 @@ if __name__ == "__main__":
         for explainer_name in explainers:
             rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
 
-            top_5_indices = np.argpartition(
+            top_n_indices = np.argpartition(
                 np.abs(
                     learner_explanations[learner][explainer_name]
                 ).mean(0).round(2),
-                -5
-            )[-5:]
+                -top_n_features
+            )[-top_n_features:]
 
             ate, auroc = subgroup_identification(
-                top_5_indices,
+                top_n_indices,
                 x_train,
                 x_test,
                 model
@@ -225,10 +281,8 @@ if __name__ == "__main__":
 
             for col in range(feature_size):
                 result_sign[explainer_name][i, col] = stats.pearsonr(
-                    x_test[:explainer_limit,col], learner_explanations[learner][explainer_name][:, col]
+                    explicand[:,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
-
-
 
     for explainer_name in explainers:
 

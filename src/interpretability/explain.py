@@ -46,6 +46,7 @@ class Explainer:
         kernel_width: float = 1.0,
         baseline: Optional[torch.Tensor] = None,
     ) -> None:
+        
         self.device =  model.device
         self.baseline = baseline
         self.explainer_list = explainer_list
@@ -67,7 +68,8 @@ class Explainer:
         def integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return integrated_gradients_model.attribute(
                 x_test,
-                n_steps=n_steps)
+                n_steps=n_steps
+            )
 
         # DeepLift
         deeplift_model = DeepLift(model)
@@ -101,15 +103,29 @@ class Explainer:
                 perturbations_per_eval=perturbations_per_eval,
             )
 
-        # Shapley value sampling
-        shapley_value_sampling_model = ShapleyValueSampling(model)
+        # Baseline shapley value sampling
+        baseline_shapley_value_sampling_model = ShapleyValueSampling(model)
 
-        def shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return shapley_value_sampling_model.attribute(
+        def baseline_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return baseline_shapley_value_sampling_model.attribute(
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
+                show_progress=True
             )
+        
+        # Marginal shapley value sampling
+        marginal_shapley_value_sampling_model = ShapleyValueSampling(model)
+
+        def marginal_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return marginal_shapley_value_sampling_model.attribute(
+                x_test,
+                n_samples=n_samples,
+                perturbations_per_eval=perturbations_per_eval,
+                baselines = self.baseline,
+                show_progress=True
+            )
+        
 
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
@@ -140,17 +156,18 @@ class Explainer:
 
             return self._check_tensor(test_values)
 
-        def naive_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
+        def marginal_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
 
             test_values = np.zeros((x_test.size()))
             x_test  = x_test.detach().cpu().numpy()
+            baseline = self.baseline.detach().cpu().numpy()
 
-            marginal_extension = removal.MarginalExtension(x_test, model)
+            marginal_extension = removal.MarginalExtension(baseline, model)
 
             for test_ind in range(len(x_test)):
                 instance = x_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley_sampling.ShapleySampling(game, thresh = 0.005,batch_size=128)
+                explanation = shapley_sampling.ShapleySampling(game, thresh = 0.01,batch_size=128)
                 test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)
@@ -161,11 +178,13 @@ class Explainer:
             "deeplift": deeplift_cbk,
             "feature_permutation": feature_permutation_cbk,
             "lime": lime_cbk,
-            "shapley_value_sampling": shapley_value_sampling_cbk,
+            "baseline_shapley_value_sampling": baseline_shapley_value_sampling_cbk,
+            "marginal_shapley_value_sampling": marginal_shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
             "explain_with_missingness":explain_with_missingness_cbk,
-            "naive_shap":naive_shap_cbk
+            "marginal_shap": marginal_shap_cbk,
+
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
