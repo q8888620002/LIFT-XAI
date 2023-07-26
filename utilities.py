@@ -26,7 +26,6 @@ def subgroup_identification(
         cate_model: torch.nn.Module
 ) -> tuple:
 
-
     train_pred = cate_model.predict(X=x_train).detach().cpu().numpy()
     test_pred = cate_model.predict(X=x_test).detach().cpu().numpy()
 
@@ -72,7 +71,7 @@ def insertion_deletion(
     x_test, _, _ = data.get_testing_data()
 
     n, d = x_test.shape
-    x_test_del =x_test.copy()
+    x_test_del = x_test.copy()
     x_test_ins = np.tile(x_replacement, (n, 1))
 
     original_cate_model = cate_model
@@ -197,13 +196,13 @@ def calculate_pehe(
     selection_type: str
 ) -> np.ndarray:
 
-    x_val, w_val, y_val = data.get_validation_data()
+    x_val_eta, w_val_eta, y_val_eta = data.get_validation_data()
     x_test, w_test, y_test = data.get_testing_data()
 
-    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_val, y_val, w_val)
+    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_val_eta, y_val_eta, w_val_eta)
 
-    mu_0 = xgb_plugin0.predict_proba(x_test)[:, 1]
-    mu_1 = xgb_plugin1.predict_proba(x_test)[:, 1]
+    mu_0 = xgb_plugin0.predict(x_test)
+    mu_1 = xgb_plugin1.predict(x_test)
 
     mu = m.predict_proba(x_test)[:, 1]
 
@@ -316,9 +315,10 @@ class Dataset:
             "age",
             "weight",
             "glucose",
-            "gcs_eye_rand",
-            "gcs_motor_rand",
-            "gcs_verbal_rand",
+            # "gcs_eye_rand",
+            # "gcs_motor_rand",
+            # "gcs_verbal_rand",
+            "gcs_score_rand",
             "nihss" ,
             "sbprand",
             "dbprand"
@@ -331,18 +331,22 @@ class Dataset:
 
         binary_vars = [
             "gender",
-            "antiplat_rand"
+            "antiplat_rand",
+            "atrialfib_rand"
         ]
 
         data = data[continuous_vars + cate_variables + binary_vars + [treatment_col]+ [outcome_col]]
-        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 2, 0, 1)
+        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)
+        data["atrialfib_rand"] = np.where(data["atrialfib_rand"]== 1, 1, 0)
         data["gender"] = np.where(data["gender"]== 2, 1, 0)
-
+        
+        data[treatment_col] = np.where(data[treatment_col]== 0, 1, 0)
+        data[outcome_col] = np.where(data[outcome_col]== 1, 1, 0)
         data[continuous_vars] = self._normalize_data(data[continuous_vars])
 
         data = pd.get_dummies(data, columns=cate_variables)
         
-        data = data.sample(1500)
+        # data = data.sample(2500)
 
         return data
 
@@ -440,6 +444,10 @@ class Dataset:
         else:
             random_state = 42
 
+        self.x = x_train_scaled[:, var_index]
+        self.w = x_train_scaled[:, treatment_index]
+        self.y = self.data[self.outcome_col]
+
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
             self.data[self.outcome_col],
@@ -455,23 +463,29 @@ class Dataset:
             random_state=random_state,
             stratify=x_train[:,treatment_index]
         )
+        
+        # x_val_eta, x_val, self.y_val_eta, self.y_val = model_selection.train_test_split(
+        #     x_val,
+        #     self.y_val,
+        #     test_size=0.5,
+        #     random_state=random_state,
+        #     stratify=x_val[:,treatment_index]
+        # )
 
-        if self.cohort_name == "ist3":
-            self.w_train = x_train[:, treatment_index] == 0
-            self.w_val = x_val[:, treatment_index] == 0
-            self.w_test =  x_test[:, treatment_index] == 0
 
-            self.y_train = self.y_train ==0
-            self.y_val = self.y_val ==0
-            self.y_test = self.y_test ==0
-        else:
-            self.w_train = x_train[:, treatment_index]
-            self.w_val =  x_val[:, treatment_index]
-            self.w_test =  x_test[:, treatment_index]
+        self.w_train = x_train[:, treatment_index]
+        self.w_val =  x_val[:, treatment_index]
+        # self.w_val_eta =  x_val_eta[:, treatment_index]
+        self.w_test =  x_test[:, treatment_index]
 
         self.x_train = x_train[:,var_index]
         self.x_val = x_val[:,var_index]
+        # self.x_val_eta = x_val_eta[:, var_index]
         self.x_test = x_test[:, var_index]
+
+    def get_data(self):
+
+        return self.x, self.w, self.y
 
     def get_training_data(self):
         """
@@ -484,6 +498,12 @@ class Dataset:
         return training tuples (X,W,Y)
         """
         return self.x_val, self.w_val, self.y_val
+    
+    def get_validation_eta_data(self):
+        """
+        return training tuples (X,W,Y)
+        """
+        return self.x_val_eta, self.w_val_eta, self.y_val_eta
 
     def get_testing_data(self):
         """
