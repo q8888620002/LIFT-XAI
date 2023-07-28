@@ -52,7 +52,7 @@ def insertion_deletion(
     data: Dataset,
     rank_indices:list,
     cate_model: torch.nn.Module,
-    x_replacement: np.ndarray,
+    baseline: np.ndarray,
     selection_types: List[str],
     model_type: str ="CATENets",
     device: str = "cuda:3"
@@ -72,10 +72,12 @@ def insertion_deletion(
 
     n, d = x_test.shape
     x_test_del = x_test.copy()
-    x_test_ins = np.tile(x_replacement, (n, 1))
+    x_test_ins = np.tile(baseline, (n, 1))
+    baseline = np.tile(baseline, (n, 1))
 
     original_cate_model = cate_model
 
+    # import ipdb; ipdb.set_trace()
     if model_type == "CATENets":
         cate_model = lambda x: original_cate_model.predict(X=x)
     else:
@@ -85,14 +87,17 @@ def insertion_deletion(
     insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
 
     for rank_index in range(len(rank_indices) + 1):
-        if rank_index > 0:  # Skip this on the first iteration
+        # Skip this on the first iteration
+
+        if rank_index > 0:
             col_indices = rank_indices[rank_index - 1]
             x_test_ins[:, col_indices] = x_test[:, col_indices]
-            x_test_del[:, col_indices] = x_replacement[col_indices]
+            x_test_del[:, col_indices] = baseline[:, col_indices]
 
         for selection_type in selection_types:
             # For the insertion process
             cate_pred_subset_ins = cate_model(x_test_ins).detach().cpu().numpy().flatten()
+
             insertion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_ins,
                 data,
@@ -119,10 +124,10 @@ def train_nuisance_models(
     mu1 = xgb.XGBClassifier()
     m = xgb.XGBClassifier()
     rf = xgb.XGBClassifier(
-        reg_lambda=2,
-        max_depth=3,
-        colsample_bytree=0.2,
-        min_split_loss=10
+        # reg_lambda=2,
+        # max_depth=3,
+        # colsample_bytree=0.2,
+        # min_split_loss=10
     )
 
     x0, x1 = x_val[w_val == 0], x_val[w_val == 1]
@@ -196,10 +201,15 @@ def calculate_pehe(
     selection_type: str
 ) -> np.ndarray:
 
-    x_val_eta, w_val_eta, y_val_eta = data.get_validation_data()
+    x_train, w_train, y_train = data.get_training_data()
+    x_val, w_val, y_val = data.get_validation_data()
     x_test, w_test, y_test = data.get_testing_data()
-
-    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(x_val_eta, y_val_eta, w_val_eta)
+    
+    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(
+        np.concatenate((x_train, x_val), axis=0),
+        np.concatenate((y_train, y_val), axis=0),
+        np.concatenate((w_train, w_val), axis=0)
+    )
 
     mu_0 = xgb_plugin0.predict(x_test)
     mu_1 = xgb_plugin1.predict(x_test)
@@ -345,7 +355,16 @@ class Dataset:
         data[continuous_vars] = self._normalize_data(data[continuous_vars])
 
         data = pd.get_dummies(data, columns=cate_variables)
-        
+
+        self.categorical_indices = self.get_one_hot_column_indices(
+            data.drop(
+            [
+                treatment_col, 
+                outcome_col
+            ],  axis=1
+            ), cate_variables
+            )
+
         # data = data.sample(2500)
 
         return data
@@ -397,6 +416,7 @@ class Dataset:
         data[continuous_vars] = self._normalize_data(data[continuous_vars])
 
         data = pd.get_dummies(data, columns=cate_variables)
+
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
         data.pop("iinjurytype_2")
@@ -520,15 +540,29 @@ class Dataset:
     def get_cohort_name(self):
 
         return self.cohort_name
-
-    def get_replacement_value(self):
+    
+    def get_one_hot_column_indices(self, df, prefixes):
         """
-        return values for insertion & deletion
+        Get the indices for one-hot encoded columns for each specified prefix. 
+        This function assumes that the DataFrame has been one-hot encoded using 
+        pandas' get_dummies method.
+        
+        Parameters:
+        df: pandas DataFrame
+        prefixes: list of strings, the prefixes used in the one-hot encoded columns
+        
+        Returns:
+        indices_dict: dictionary where keys are the prefixes and values are lists of 
+                    indices representing the position of each category column for that prefix
         """
-        # x_replacement = np.zeros(self.x_train.shape[1])
-        # x_replacement = np.min(self.x_train, axis=0)
+        indices_dict = {}
+        
+        for prefix in prefixes:
+            # Filter for one-hot encoded columns with the given prefix
+            one_hot_cols = [col for col in df.columns if col.startswith(prefix)]
+            
+            # Get the indices for these columns
+            indices_dict[prefix] = [df.columns.get_loc(col) for col in one_hot_cols]
+        
+        return indices_dict
 
-        control = self.x_train
-        x_replacement = np.mean(control, axis=0)
-
-        return x_replacement

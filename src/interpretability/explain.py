@@ -15,6 +15,7 @@ from captum.attr import (
     Lime,
     ShapleyValueSampling,
     GradientShap,
+    Saliency
 )
 
 from captum.attr._core.lime import get_exp_kernel_similarity_function
@@ -143,6 +144,11 @@ class Explainer:
         def gradient_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return gradient_shap_model.attribute(x_test, baselines=self.baseline)
 
+        saliency_model = Saliency(model)
+
+        def saliency_cpk(x_test: torch.tensor) -> torch.Tensor:
+            return saliency_model.attribute(x_test)
+        
         # Explain with missingness
         def explain_with_missingness_cbk(x_test:torch.Tensor) -> torch.Tensor:
 
@@ -184,7 +190,7 @@ class Explainer:
             "gradient_shap": gradient_shap_cbk,
             "explain_with_missingness":explain_with_missingness_cbk,
             "marginal_shap": marginal_shap_cbk,
-
+            "saliency": saliency_cpk
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:

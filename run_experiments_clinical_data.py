@@ -47,8 +47,10 @@ if __name__ == "__main__":
     top_n_features = args["top_n_features"]
     shuffle = args["shuffle"]
     learner = args["learner"]
-    DEVICE = "cuda:0"
-    print(shuffle)
+    DEVICE = "cuda:1"
+    
+    print("shuffle dataset: ", shuffle)
+
     explainer_limit = 1000
 
     selection_types = [
@@ -67,6 +69,7 @@ if __name__ == "__main__":
     feature_size = x_train.shape[1]
 
     explainers = [
+        "saliency",
         "integrated_gradients",
         "baseline_shapley_value_sampling",
         "marginal_shapley_value_sampling"
@@ -92,13 +95,11 @@ if __name__ == "__main__":
 
         x_train, w_train, y_train = data.get_training_data()
 
-        x_replacement = data.get_replacement_value()
-
         x_val, w_val, y_val = data.get_validation_data()
         x_test, w_test, y_test = data.get_testing_data()
 
         models = {
-            "xlearner":
+            "XLearner":
                 pseudo_outcome_nets.XLearner(
                     x_train.shape[1],
                     binary_y=(len(np.unique(y_train)) == 2),
@@ -107,7 +108,8 @@ if __name__ == "__main__":
                     batch_size=128,
                     n_iter=1000,
                     nonlin="relu",
-                    device=DEVICE
+                    device=DEVICE,
+                    seed=i
                 ),
             "SLearner": cate_models.torch.SLearner(
                         x_train.shape[1],
@@ -117,7 +119,8 @@ if __name__ == "__main__":
                         batch_size=128,
                         n_iter=1000,
                         nonlin="relu",
-                        device=DEVICE
+                        device=DEVICE,
+                        seed=i
                 ),
             "RLearner": pseudo_outcome_nets.RLearner(
                       x_train.shape[1],
@@ -130,7 +133,8 @@ if __name__ == "__main__":
                       batch_size=128,
                       batch_norm=False,
                       nonlin="relu",
-                      device = DEVICE
+                      device = DEVICE,
+                      seed=i
             ),
             "RALearner": pseudo_outcome_nets.RALearner(
                       x_train.shape[1],
@@ -143,7 +147,8 @@ if __name__ == "__main__":
                       batch_size=128,
                       batch_norm=False,
                       nonlin="relu",
-                      device = DEVICE
+                      device = DEVICE,
+                      seed=i
                   ),
             "TLearner": cate_models.torch.TLearner(
                         x_train.shape[1],
@@ -182,7 +187,7 @@ if __name__ == "__main__":
                 nonlin="relu",
                 penalty_disc=0.01,
             ),
-            "drlearner":
+            "DRLearner":
                 pseudo_outcome_nets.DRLearner(
                 x_train.shape[1],
                 binary_y=(len(np.unique(y_train)) == 2),
@@ -206,7 +211,13 @@ if __name__ == "__main__":
 
         results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
         results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
-        explicand = x
+
+        baseline = np.mean(x_train, axis=0)
+
+        ## Setting the one-hot variables within the same group with the same baseline/replacement value.
+
+        for k, v in data.categorical_indices.items():
+            baseline[v] = 1/len(v)
 
         # Explain CATE
         learner_explainers[learner] = Explainer(
@@ -214,19 +225,27 @@ if __name__ == "__main__":
             feature_names=list(range(x_train.shape[1])),
             explainer_list=explainers,
             perturbations_per_eval=1,
-            baseline = explicand
+            baseline = baseline.reshape(1, -1)
         )
 
         log.info(f"Explaining dataset with: {learner}")
         learner_explanations[learner] = learner_explainers[learner].explain(
-            explicand
-            # x_test[:explainer_limit]
+            x_test
         )
 
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
         for explainer_name in explainers:
-            rank_indices = attribution_ranking(learner_explanations[learner][explainer_name])
+
+            rank_indices = attribution_ranking(np.abs(learner_explanations[learner][explainer_name]))
+
+            insertion_results, deletion_results = insertion_deletion(
+                data,
+                rank_indices,
+                model,
+                baseline,
+                selection_types
+            )
 
             top_n_indices = np.argpartition(
                 np.abs(
@@ -240,14 +259,6 @@ if __name__ == "__main__":
                 x_train,
                 x_test,
                 model
-            )
-
-            insertion_results, deletion_results = insertion_deletion(
-                data,
-                rank_indices,
-                model,
-                x_replacement,
-                selection_types
             )
 
             insertion_deletion_data.append(
@@ -281,7 +292,7 @@ if __name__ == "__main__":
 
             for col in range(feature_size):
                 result_sign[explainer_name][i, col] = stats.pearsonr(
-                    explicand[:,col], learner_explanations[learner][explainer_name][:, col]
+                    x_test[:,col], learner_explanations[learner][explainer_name][:, col]
                 )[0]
 
     for explainer_name in explainers:

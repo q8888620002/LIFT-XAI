@@ -301,13 +301,14 @@ class PropensitySensitivity:
 
                     log.info(f"Calculating Pehe for {explainer_name}. {learner_name}")
 
-                    insertion_results , deletion_results = insertion_deletion(
+                    insertion_results , deletion_results, insertion_results_truth, deletion_results_truth  = insertion_deletion(
                         (x_test, W_test, Y_test),
                         np.mean(x_train, axis=0),
                         rank_indices,
                         learners[learner_name],
                         selection_types,
-                        nuisance_functions
+                        nuisance_functions,
+                        cate_test
                      )
 
                     insertion_deletion_results.append(
@@ -316,7 +317,9 @@ class PropensitySensitivity:
                             learner_name,
                             explainer_name,
                             insertion_results,
-                            deletion_results
+                            deletion_results,
+                            insertion_results_truth, 
+                            deletion_results_truth
                         ]
                     )
 

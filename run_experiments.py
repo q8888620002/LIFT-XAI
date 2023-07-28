@@ -105,9 +105,10 @@ def init_arg() -> Any:
         default=[
             # "feature_ablation",
             # "feature_permutation",
+            "saliency",
             "integrated_gradients",
-            "shapley_value_sampling",
-            "naive_shap",
+            "marginal_shapley_value_sampling",
+            "baseline_shapley_value_sampling",
             # "explain_with_missingness"
         ],
     )
