@@ -158,7 +158,11 @@ def compute_pehe(
     cate_true: np.ndarray,
     cate_pred: torch.Tensor,
 ) -> tuple:
-    pehe = np.sqrt(mean_squared_error(cate_true, cate_pred.detach().cpu().numpy()))
+    
+    if torch.is_tensor(cate_pred):
+        cate_pred = cate_pred.detach().cpu().numpy()
+
+    pehe = np.sqrt(mean_squared_error(cate_true, cate_pred))
     return pehe
 
 
@@ -293,19 +297,19 @@ def attribution_ranking(feature_attributions: np.ndarray) -> list:
         a d x n list of indices starting from the highest attribution score
     """
 
-    rank_indices = np.argsort(feature_attributions, axis=1)
-    rank_indices = [list(reversed(i)) for i in rank_indices]
+    rank_indices = np.argsort(feature_attributions, axis=1)[:, ::-1]
     rank_indices = list(map(list, zip(*rank_indices)))
 
     return rank_indices
 
 def insertion_deletion(
     test_data: tuple,
-    x_replacement: np.ndarray,
+    baseline: np.ndarray,
     rank_indices:list,
     cate_model: torch.nn.Module,
     selection_types: Optional[str],
-    nuisance_functions: NuisanceFunctions
+    nuisance_functions: NuisanceFunctions,
+    cate_test: np.ndarray
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -323,20 +327,26 @@ def insertion_deletion(
 
     n, d = x_test.shape
     x_test_del = x_test.copy()
-    x_test_ins = np.tile(x_replacement, (n, 1))
+    x_test_ins = np.tile(baseline, (n, 1))
+    baseline = np.tile(baseline, (n, 1))
 
     deletion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
     insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
+    
+    deletion_results_truth = np.zeros(d+1)
+    insertion_results_truth = np.zeros(d+1)
 
     for rank_index in range(len(rank_indices) + 1):
         if rank_index > 0:  # Skip this on the first iteration
             col_indices = rank_indices[rank_index - 1]
             x_test_ins[:, col_indices] = x_test[:, col_indices]
-            x_test_del[:, col_indices] = x_replacement[col_indices]
+            x_test_del[:, col_indices] = baseline[:, col_indices]
+
+        cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+        cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
 
         for selection_type in selection_types:
             # For the insertion process
-            cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
 
             insertion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_ins,
@@ -346,7 +356,6 @@ def insertion_deletion(
             )
 
             # For the deletion process
-            cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
             deletion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_del,
                 test_data,
@@ -354,7 +363,10 @@ def insertion_deletion(
                 nuisance_functions
             )
 
-    return insertion_results, deletion_results
+        insertion_results_truth[rank_index] = compute_pehe(cate_true=cate_test, cate_pred=cate_pred_subset_ins)
+        deletion_results_truth[rank_index] = compute_pehe(cate_true=cate_test, cate_pred=cate_pred_subset_del)
+
+    return insertion_results, deletion_results, insertion_results_truth, deletion_results_truth
 
 def calculate_if_pehe(
     w_test: np.ndarray,
