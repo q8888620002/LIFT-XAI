@@ -8,6 +8,7 @@ import os
 import sys
 import collections
 import pickle
+import random
 
 import numpy as np
 import pandas as pd
@@ -24,10 +25,7 @@ from catenets.models.torch import pseudo_outcome_nets
 from catenets.models.torch.base import BasicNet
 import catenets.models as cate_models
 
-
-
 import src.interpretability.logger as log
-from src.interpretability.utils import attribution_ranking
 from src.interpretability.explain import Explainer
 
 
@@ -94,7 +92,6 @@ if __name__ == "__main__":
         x, _, _  = data.get_data()
 
         x_train, w_train, y_train = data.get_training_data()
-
         x_val, w_val, y_val = data.get_validation_data()
         x_test, w_test, y_test = data.get_testing_data()
 
@@ -204,8 +201,17 @@ if __name__ == "__main__":
         learner_explainers = {}
         insertion_deletion_data = []
 
+        ## Training nuisance function for pehe. 
+
+        if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
+            nuisance_functions = NuisanceFunctions(rct=False)
+        else:
+            nuisance_functions = NuisanceFunctions(rct=False)
+
+        nuisance_functions.fit(x_val, y_val, w_val)
+
+
         model = models[learner]
-        # for model_name, model in models.items():
 
         model.fit(x_train, y_train, w_train)
 
@@ -240,26 +246,58 @@ if __name__ == "__main__":
             rank_indices = attribution_ranking(np.abs(learner_explanations[learner][explainer_name]))
 
             insertion_results, deletion_results = insertion_deletion(
-                data,
+                data.get_testing_data(),
                 rank_indices,
                 model,
                 baseline,
-                selection_types
+                selection_types,
+                nuisance_functions
             )
 
-            top_n_indices = np.argpartition(
-                np.abs(
-                    learner_explanations[learner][explainer_name]
-                ).mean(0).round(2),
-                -top_n_features
-            )[-top_n_features:]
+            ate_results = []
+            auroc_results = []
+            rand_ate = []
+            rand_auroc = []
 
-            ate, auroc = subgroup_identification(
-                top_n_indices,
+            for sub_feature_num in range(1, feature_size+1):
+
+                print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,sub_feature_num))
+
+                top_i_indices = np.argpartition(
+                    np.abs(
+                        learner_explanations[learner][explainer_name]
+                    ).mean(0).round(2),
+                    -sub_feature_num
+                )[-sub_feature_num:]
+
+                ate, auroc = subgroup_identification(
+                    top_i_indices,
+                    x_train,
+                    x_test,
+                    model
+                )
+                auroc_results.append(auroc)
+                ate_results.append(ate)
+
+                random_ate, random_auroc = subgroup_identification(
+                    random.sample(range(0, x_train.shape[1]), sub_feature_num),
+                    x_train,
+                    x_test,
+                    model
+                )
+
+                rand_auroc.append(random_auroc)
+                rand_ate.append(random_ate)
+
+            ## results with all features. 
+
+            full_ate, full_auroc = subgroup_identification(
+                [i for i in range(x_train.shape[1])],
                 x_train,
                 x_test,
                 model
             )
+            ## results with randon features
 
             insertion_deletion_data.append(
                 [
@@ -267,8 +305,12 @@ if __name__ == "__main__":
                     explainer_name,
                     insertion_results,
                     deletion_results,
-                    ate,
-                    auroc
+                    ate_results,
+                    auroc_results,
+                    full_ate, 
+                    full_auroc,
+                    random_ate,
+                    rand_auroc
                 ]
             )
 

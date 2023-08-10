@@ -5,7 +5,7 @@ import sys
 import pickle
 import numpy as np
 
-from utilities import calculate_pehe, Dataset
+from utilities import * 
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
@@ -64,6 +64,7 @@ if __name__ == "__main__":
         data = Dataset(cohort_name, i, shuffle)
 
         x_train, w_train, y_train = data.get_training_data()
+        x_val, w_val, y_val = data.get_validation_data()
         x_test, w_test, y_test = data.get_testing_data()
 
         learners = {
@@ -196,20 +197,27 @@ if __name__ == "__main__":
                 ),
         }
 
+        if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
+            nuisance_functions = NuisanceFunctions(rct=False)
+        else:
+            nuisance_functions = NuisanceFunctions(rct=False)
+
+        nuisance_functions.fit(x_val, y_val, w_val)
+
         for learner_name, cate_model in learners.items():
 
             cate_model.fit(x_train, y_train, w_train)
 
-            prediction = cate_model.predict(x_test).detach().cpu().numpy()
-            prediction = prediction.flatten()
+            prediction = cate_model.predict(x_test).detach().cpu().numpy().flatten()
 
             results[learner_name]["prediction"][i] = prediction
 
             for sec in selection_types:
                 results[learner_name][sec][i] = calculate_pehe(
                     prediction,
-                    data,
-                    sec
+                    data.get_testing_data(),
+                    sec,
+                    nuisance_functions
                 )
 
     with open(f"results/{cohort_name}/model_selection_shuffle_{shuffle}.pkl", "wb") as output_file:
