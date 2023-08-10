@@ -12,7 +12,7 @@ import xgboost as xgb
 
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
-
+from sklearn.linear_model import LogisticRegressionCV
 from catenets.models.torch import pseudo_outcome_nets
 
 
@@ -52,18 +52,21 @@ learner_colors = {
 
 class NuisanceFunctions:
     def __init__(self):
+        
         self.mu0 = xgb.XGBRegressor()
         self.mu1 = xgb.XGBRegressor()
         self.m = xgb.XGBRegressor()
         
-        self.rf = xgb.XGBClassifier(
-            # reg_lambda=2,
-            # max_depth=3,
-            # colsample_bytree=0.2,
-            # min_split_loss=10
-        )
+        # self.rf = xgb.XGBClassifier(
+        #     # reg_lambda=2,
+        #     # max_depth=3,
+        #     # colsample_bytree=0.2,
+        #     # min_split_loss=10
+        # )
+        self.rf = LogisticRegressionCV(Cs=[0.00001, 0.001, 0.01, 0.1, 1])
 
     def fit(self, x_val, Y_val, W_val):
+        
         x0, x1 = x_val[W_val == 0], x_val[W_val == 1]
         y0, y1 = Y_val[W_val == 0], Y_val[W_val == 1]
 
@@ -197,7 +200,6 @@ def compute_cate_metrics(
         )
     )
     return pehe, factual_rmse
-
 
 
 def attribution_accuracy(

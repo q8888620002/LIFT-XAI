@@ -9,9 +9,54 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 
+from sklearn.linear_model import LogisticRegressionCV
 from sklearn.impute import SimpleImputer
 from sklearn import  model_selection
 from sklearn import metrics
+
+
+class NuisanceFunctions:
+    def __init__(self, rct: bool):
+
+        self.rct = rct
+        self.mu0 = xgb.XGBClassifier()
+        self.mu1 = xgb.XGBClassifier()
+        
+        self.m = xgb.XGBClassifier()
+
+        self.rf = xgb.XGBClassifier(
+            # reg_lambda=2,
+            # max_depth=3,
+            # colsample_bytree=0.2,
+            # min_split_loss=10
+        )
+        # self.rf = LogisticRegressionCV(Cs=[0.00001, 0.001, 0.01, 0.1, 1])
+
+    def fit(self, x_val, y_val, w_val):
+        
+        x0, x1 = x_val[w_val == 0], x_val[w_val == 1]
+        y0, y1 = y_val[w_val == 0], y_val[w_val == 1]
+
+        self.mu0.fit(x0, y0)
+        self.mu1.fit(x1, y1)
+        self.m.fit(x_val, y_val)
+        self.rf.fit(x_val, w_val)
+
+    def predict_mu_0(self, x):
+        return self.mu0.predict(x)
+
+    def predict_mu_1(self, x):
+        return self.mu1.predict(x)
+
+    def predict_propensity(self, x):
+        if self.rct:
+            p = 0.5*np.ones(x.shape[0])
+        else:
+            p = self.rf.predict_proba(x)[:, 1]
+        return p
+
+    def predict_m(self, x):
+        return self.m.predict(x)
 
 def normalize_data(x):
 
@@ -25,50 +70,76 @@ def subgroup_identification(
         x_test: np.ndarray,
         cate_model: torch.nn.Module
 ) -> tuple:
+    """
+    Function for calculating evaluationg metrics for treatment assignment in testing set.
 
-    train_pred = cate_model.predict(X=x_train).detach().cpu().numpy()
-    test_pred = cate_model.predict(X=x_test).detach().cpu().numpy()
+    args: 
+        rank_indices: global ranking of features 
+        x_train: training data
+        x_test: testing data
+        cate_model: trained CATE model. 
+    return:
+        ate: average treatment effect according to the xgb classifier
+        auroc: corresponding AUROC for xgb classifier in testing set.
 
-    threshold  = np.mean(train_pred)
+    """
+    train_effects = cate_model.predict(X=x_train).detach().cpu().numpy()
+    test_effects = cate_model.predict(X=x_test).detach().cpu().numpy()
 
-    y_true_train = (train_pred > threshold)
-    y_true_test = (test_pred > threshold)
+    threshold  = np.mean(train_effects)
+    train_treatment_assignments = (train_effects > threshold)
+    test_treatment_assignments = (test_effects > threshold)
 
     xgb_model = xgb.XGBClassifier()
-
-
-    xgb_model.fit(x_train[:, rank_indices], y_true_train)
-
+    xgb_model.fit(x_train[:, rank_indices], train_treatment_assignments)
     y_pred = xgb_model.predict(x_test[:, rank_indices])
 
-    ate = np.sum(test_pred[y_pred == 1])/len(test_pred)
-
-    auroc = metrics.roc_auc_score(y_true_test, y_pred)
-
+    ate = np.sum(test_treatment_assignments[y_pred == 1])/len(test_treatment_assignments)
+    auroc = metrics.roc_auc_score(test_treatment_assignments, y_pred)
 
     return ate, auroc
 
+def attribution_ranking(feature_attributions: np.ndarray) -> list:
+    """"
+    Compute the ranking of features according to atribution score
+
+    Args:
+        feature_attributions: an n x d array of feature attribution scores
+    Return:
+        a d x n list of indices starting from the highest attribution score
+    """
+
+    rank_indices = np.argsort(feature_attributions, axis=1)[:, ::-1]
+    rank_indices = list(map(list, zip(*rank_indices)))
+
+    return rank_indices
+
 def insertion_deletion(
-    data: Dataset,
+    test_data: tuple,
     rank_indices:list,
     cate_model: torch.nn.Module,
     baseline: np.ndarray,
     selection_types: List[str],
-    model_type: str ="CATENets",
-    device: str = "cuda:3"
+    nuisance_functions: NuisanceFunctions,
+    model_type: str ="CATENets"
 ) -> tuple:
     """
-    Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
+    Compute partial average treatment effect (PATE) with with proxy pehe and feature subsets by insertion and deletion
 
     Args:
-        x_test: testing set for explanation with insertion and deletion
-        feature_attributions: feature attribution outputted by a feature importance method
-        pate_model: masking models for PATE estimation.
+        test_data: testing data to calculate pehe 
+        rank_indices: local ranking from a given explanation method
+        cate_model: trained cate model
+        baseline: replacement values for insertion & deletion
+        selection_types: approximation methods for estimating ground truth pehe
+        nuisance function: Nuisance functions to estimate proxy pehe. 
+        model_type: model types for cate package
     Returns:
         results of insertion and deletion of PATE.
     """
     ## training plugin estimator on
-    x_test, _, _ = data.get_testing_data()
+    
+    x_test,_ ,_ = test_data
 
     n, d = x_test.shape
     x_test_del = x_test.copy()
@@ -77,7 +148,6 @@ def insertion_deletion(
 
     original_cate_model = cate_model
 
-    # import ipdb; ipdb.set_trace()
     if model_type == "CATENets":
         cate_model = lambda x: original_cate_model.predict(X=x)
     else:
@@ -100,45 +170,21 @@ def insertion_deletion(
 
             insertion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_ins,
-                data,
-                selection_type
+                test_data,
+                selection_type,
+                nuisance_functions
             )
 
             # For the deletion process
             cate_pred_subset_del = cate_model(x_test_del).detach().cpu().numpy().flatten()
             deletion_results[selection_type][rank_index] = calculate_pehe(
                 cate_pred_subset_del,
-                data,
-                selection_type
+                test_data,
+                selection_type,
+                nuisance_functions
             )
 
     return insertion_results, deletion_results
-
-def train_nuisance_models(
-    x_val: np.ndarray,
-    y_val: np.ndarray,
-    w_val: np.ndarray
-)-> tuple:
-
-    mu0 = xgb.XGBClassifier()
-    mu1 = xgb.XGBClassifier()
-    m = xgb.XGBClassifier()
-    rf = xgb.XGBClassifier(
-        # reg_lambda=2,
-        # max_depth=3,
-        # colsample_bytree=0.2,
-        # min_split_loss=10
-    )
-
-    x0, x1 = x_val[w_val == 0], x_val[w_val == 1]
-    y0, y1 = y_val[w_val == 0], y_val[w_val == 1]
-
-    mu0.fit(x0, y0)
-    mu1.fit(x1, y1)
-    m.fit(x_val, y_val)
-    rf.fit(x_val, w_val)
-
-    return mu0, mu1, rf, m
 
 def calculate_if_pehe(
     w_test: np.ndarray,
@@ -190,41 +236,27 @@ def calculate_pseudo_outcome_pehe_r(
     """
     calculating pseudo outcome for R
     """
-
     y_pseudo = (y_test - m) - (w_test - p)*prediction
 
     return np.sqrt(np.mean(y_pseudo ** 2))
 
 def calculate_pehe(
     prediction: np.ndarray,
-    data: Dataset,
-    selection_type: str
+    test_data: tuple,
+    selection_type: str,
+    nuisance_functions: NuisanceFunctions
 ) -> np.ndarray:
 
-    x_train, w_train, y_train = data.get_training_data()
-    x_val, w_val, y_val = data.get_validation_data()
-    x_test, w_test, y_test = data.get_testing_data()
-    
-    xgb_plugin0, xgb_plugin1, rf, m = train_nuisance_models(
-        np.concatenate((x_train, x_val), axis=0),
-        np.concatenate((y_train, y_val), axis=0),
-        np.concatenate((w_train, w_val), axis=0)
-    )
+    x_test, w_test, y_test = test_data
 
-    mu_0 = xgb_plugin0.predict(x_test)
-    mu_1 = xgb_plugin1.predict(x_test)
-
-    mu = m.predict_proba(x_test)[:, 1]
-
-    if data.get_cohort_name() == "ist3" or data.get_cohort_name() == "crash_2":
-        p = 0.5*np.ones(len(x_test))
-    else:
-        p = rf.predict_proba(x_test)[:, 1]
+    mu_0 = nuisance_functions.predict_mu_0(x_test)
+    mu_1 = nuisance_functions.predict_mu_1(x_test)
+    mu = nuisance_functions.predict_m(x_test)
+    p = nuisance_functions.predict_propensity(x_test)
 
     t_plugin = mu_1 - mu_0
 
     ident = np.ones(len(p))
-
     selection_types = {
         "if_pehe": calculate_if_pehe,
         "pseudo_outcome_dr": calculate_pseudo_outcome_pehe_dr,
@@ -239,7 +271,6 @@ def calculate_pehe(
         return pehe_calculator(w_test, p, prediction, y_test, mu_1, mu_0)
     elif pehe_calculator == calculate_pseudo_outcome_pehe_r:
         return pehe_calculator(w_test, p, prediction, y_test, mu)
-
 
     raise ValueError(f"Unknown selection_type: {selection_type}")
 
@@ -290,6 +321,7 @@ class Dataset:
         return data
 
     def _filter_data(self, data):
+
         filter_regex = [
             'proc',
             'ethnicity',
@@ -306,12 +338,43 @@ class Dataset:
             "edgcsverbal",
             "sex_F",
             "traumatype_P",
-            "traumatype_other"
+            "traumatype_Other"
         ]
+
+        treatment_col = "treated"
+        outcome_col = "outcome"
+
         for regex in filter_regex:
             data = data[data.columns.drop(list(data.filter(regex=regex)))]
 
-        data = self._normalize_data(data)
+        binary_vars = [
+            "sex_F",
+            "traumatype_B",
+        ]
+
+        continuous_vars = [
+            'age',
+            'scenegcs', 'scenefirstbloodpressure', 'scenefirstpulse','scenefirstrespirationrate', 
+            'edfirstbp', 'edfirstpulse', 'edfirstrespirationrate', 'edgcs',
+            'temps2',  'BD', 'CFSS', 'COHB', 'CREAT', 'FIB', 'FIO2', 'HCT',
+            'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
+        ]
+
+        cate_variables = [
+            "causecode"
+        ]
+
+        self.categorical_indices = self.get_one_hot_column_indices(
+            data.drop(
+                [
+                    treatment_col,
+                    outcome_col
+                ],  axis=1
+            ), cate_variables
+            )
+        # import ipdb;ipdb.set_trace()
+
+        data[continuous_vars] = self._normalize_data(data[continuous_vars])
 
         return data
 
@@ -414,9 +477,17 @@ class Dataset:
         data = data[data.iinjurytype !=3 ]
 
         data[continuous_vars] = self._normalize_data(data[continuous_vars])
-
+        
+        self.categorical_indices = self.get_one_hot_column_indices(
+            data.drop(
+            [
+                treatment, 
+                outcome
+            ],  axis=1
+            ), cate_variables
+            )
+        
         data = pd.get_dummies(data, columns=cate_variables)
-
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
         data.pop("iinjurytype_2")
@@ -425,7 +496,7 @@ class Dataset:
         # data["iinjurytype_2"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
         # data.pop("iinjurytype_3")
 
-        data = data.sample(5000)
+        # data = data.sample(5000)
 
         return data
 

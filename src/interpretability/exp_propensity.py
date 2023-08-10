@@ -278,6 +278,8 @@ class PropensitySensitivity:
 
             ## Train nuisance functions
             nuisance_functions = NuisanceFunctions()
+
+            nuisance_functions.fit(x_train, Y_train, W_train)
             nuisance_functions.fit(x_val, Y_val, W_val)
 
             for explainer_name in explainer_list:
