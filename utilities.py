@@ -65,10 +65,11 @@ def normalize_data(x):
     return x
 
 def subgroup_identification(
-        rank_indices: np.ndarray,
+        col_indices: np.ndarray,
         x_train: np.ndarray,
         x_test: np.ndarray,
-        cate_model: torch.nn.Module
+        cate_model: torch.nn.Module,
+        local: bool = False
 ) -> tuple:
     """
     Function for calculating evaluationg metrics for treatment assignment in testing set.
@@ -83,19 +84,37 @@ def subgroup_identification(
         auroc: corresponding AUROC for xgb classifier in testing set.
 
     """
+
     train_effects = cate_model.predict(X=x_train).detach().cpu().numpy()
     test_effects = cate_model.predict(X=x_test).detach().cpu().numpy()
 
     threshold  = np.mean(train_effects)
-    train_treatment_assignments = (train_effects > threshold)
-    test_treatment_assignments = (test_effects > threshold)
+
+    train_tx_assignments = (train_effects > threshold)
+    test_tx_assignments = (test_effects > threshold)
 
     xgb_model = xgb.XGBClassifier()
-    xgb_model.fit(x_train[:, rank_indices], train_treatment_assignments)
-    y_pred = xgb_model.predict(x_test[:, rank_indices])
 
-    ate = np.sum(test_treatment_assignments[y_pred == 1])/len(test_treatment_assignments)
-    auroc = metrics.roc_auc_score(test_treatment_assignments, y_pred)
+    if local:
+        ## Subgroup identification with local feature ranking. 
+        xgb_model.fit(x_train, train_tx_assignments)
+        
+        x_test_copy = np.full(x_test.shape, np.nan)
+
+        for i in range(len(x_test)):
+            x_test_copy[i, col_indices[:, i]] = x_test[i, col_indices[:, i]]
+
+        pred_tx_assignment = xgb_model.predict(x_test_copy)
+
+    else:
+        ## Subgroup identification with global feature ranking 
+
+        xgb_model.fit(x_train[:, col_indices], train_tx_assignments)
+        pred_tx_assignment = xgb_model.predict(x_test[:, col_indices])
+
+    ate = np.sum(test_effects[pred_tx_assignment == 1])/len(test_effects)
+
+    auroc = metrics.roc_auc_score(test_tx_assignments, pred_tx_assignment)
 
     return ate, auroc
 
@@ -161,8 +180,10 @@ def insertion_deletion(
 
         if rank_index > 0:
             col_indices = rank_indices[rank_index - 1]
-            x_test_ins[:, col_indices] = x_test[:, col_indices]
-            x_test_del[:, col_indices] = baseline[:, col_indices]
+
+            for i in range(n):
+                x_test_ins[i, col_indices[i]] = x_test[i, col_indices[i]]
+                x_test_del[i, col_indices[i]] = baseline[i, col_indices[i]]
 
         for selection_type in selection_types:
             # For the insertion process
