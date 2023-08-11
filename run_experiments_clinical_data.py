@@ -204,12 +204,11 @@ if __name__ == "__main__":
         ## Training nuisance function for pehe. 
 
         if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
-            nuisance_functions = NuisanceFunctions(rct=False)
+            nuisance_functions = NuisanceFunctions(rct=True)
         else:
             nuisance_functions = NuisanceFunctions(rct=False)
 
         nuisance_functions.fit(x_val, y_val, w_val)
-
 
         model = models[learner]
 
@@ -242,18 +241,25 @@ if __name__ == "__main__":
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
         for explainer_name in explainers:
+            
+            ## Obtaining local ranking 
 
-            rank_indices = attribution_ranking(np.abs(learner_explanations[learner][explainer_name]))
+            abs_explanation = np.abs(learner_explanations[learner][explainer_name])
+            local_rank = attribution_ranking(abs_explanation)
+
+            ## obtaining global ranking
+            
+            global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
             insertion_results, deletion_results = insertion_deletion(
                 data.get_testing_data(),
-                rank_indices,
+                local_rank,
                 model,
                 baseline,
                 selection_types,
                 nuisance_functions
             )
-
+            
             ate_results = []
             auroc_results = []
             rand_ate = []
@@ -263,22 +269,16 @@ if __name__ == "__main__":
 
                 print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,sub_feature_num))
 
-                top_i_indices = np.argpartition(
-                    np.abs(
-                        learner_explanations[learner][explainer_name]
-                    ).mean(0).round(2),
-                    -sub_feature_num
-                )[-sub_feature_num:]
-
                 ate, auroc = subgroup_identification(
-                    top_i_indices,
+                    global_rank[:sub_feature_num],
                     x_train,
                     x_test,
-                    model
+                    model,
+                    # True
                 )
                 auroc_results.append(auroc)
                 ate_results.append(ate)
-
+                
                 random_ate, random_auroc = subgroup_identification(
                     random.sample(range(0, x_train.shape[1]), sub_feature_num),
                     x_train,
