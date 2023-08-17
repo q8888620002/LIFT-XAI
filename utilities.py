@@ -5,13 +5,13 @@ import torch
 from torch import nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from copy import deepcopy
+
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 
+from dataset import Dataset
 from sklearn.linear_model import LogisticRegressionCV
-from sklearn.impute import SimpleImputer
-from sklearn import  model_selection
 from sklearn import metrics
 
 
@@ -58,11 +58,16 @@ class NuisanceFunctions:
     def predict_m(self, x):
         return self.m.predict(x)
 
-def normalize_data(x):
+def normalize(values: np.ndarray) -> np.ndarray:
+    """ 
+    Used to normalize the outputs of interpretability methods.
 
-    x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
+    """
 
-    return x
+    min_val = np.min(values, axis=1, keepdims=True)
+    max_val = np.max(values, axis=1, keepdims=True)
+
+    return 2*(values - min_val) / np.maximum(max_val-min_val, 1e-10) - 1
 
 def subgroup_identification(
         col_indices: np.ndarray,
@@ -97,6 +102,7 @@ def subgroup_identification(
 
     if local:
         ## Subgroup identification with local feature ranking. 
+        
         xgb_model.fit(x_train, train_tx_assignments)
         
         x_test_copy = np.full(x_test.shape, np.nan)
@@ -207,6 +213,146 @@ def insertion_deletion(
 
     return insertion_results, deletion_results
 
+def generate_perturbations(
+    data: Dataset,
+    examples: np.ndarray,
+    feature: int,
+    n_steps: int
+)-> np.ndarray:
+    """
+    Generating perturbed sample 
+
+    Args:
+
+        data: background dataset of perturbed samples
+        example: sample to be perturbed
+        feature: feature index 
+
+    Return:
+
+        Perturbed samples
+    """
+    percent_perturb = 0.1    
+    value_range = data.get_feature_range(feature)
+
+    perturbations = np.linspace(
+        start = -percent_perturb*value_range, 
+        stop = percent_perturb*value_range, 
+        num = n_steps
+    )
+
+    all_perturbed_examples = []
+
+    # Create perturbed samples
+
+    for example in examples:    
+
+        example = example.reshape(1, -1)
+        perturbed_example = np.tile(data.get_unnorm_value(example), (n_steps, 1))
+        perturbed_example[:, feature] += perturbations
+        
+        # Normalize continuous date and concatenate categorical data
+
+        perturbed_example = data.get_norm(perturbed_example)
+        perturbed_example = np.concatenate(
+            [
+                perturbed_example, 
+                np.tile(example[:, perturbed_example.shape[1]:], [n_steps, 1])
+            ],axis=1)
+        
+        all_perturbed_examples.append(perturbed_example)
+    
+    return np.vstack(all_perturbed_examples)
+
+def generate_perturbed_var(
+        data: Dataset, 
+        x_test: np.ndarray, 
+        feature_size: int, 
+        categorical_indices: List, 
+        n_steps: int, 
+        model: nn.module
+    )-> np.ndarray:
+
+    perturbated_var = []
+
+    for i in range(feature_size - len(categorical_indices)):
+        print(feature_size, i,len(categorical_indices) )
+        perturbated_samples = generate_perturbations(
+            data, 
+            x_test, 
+            i,
+            n_steps
+        )
+
+        perturbed_output = model.predict(X=perturbated_samples).detach().cpu().numpy()
+        perturbed_output = perturbed_output.reshape(len(x_test), -1)                       
+        perturbated_var.append(np.var(perturbed_output, axis=1))
+
+    return perturbated_var
+
+
+def perturbation(
+        perturbed_output: np.ndarray,
+        norm_explanation: np.ndarray,
+        threshold_vals: np.ndarray,
+        n_steps: int,
+        exp: str,
+        spurious_quantile: np.ndarray=None
+)-> tuple(int):
+    """
+    function that conducts perturbation experiments and calculate true postive, true negative, 
+    false positive and false negative.
+
+    args:
+        perturbed_output
+        norma_explanation
+        threshold_vals
+        n_steps
+    return 
+
+        Tuple containing counts of TP, TN, FP, and FN. 
+    """
+    
+    sample_size = len(norm_explanation)
+    threshold__size = len(threshold_vals)
+
+    perturbed_results = np.zeros((threshold__size, 4))
+
+    oracle_values = np.zeros(sample_size)
+    explained_values = np.zeros(( threshold__size ,sample_size))
+
+    for k in range(0, len(perturbed_output), n_steps):
+
+        if exp == "resource":
+        
+                ## Calculating oracle values with 1st half and 2nd half of perturbed sample.
+
+                pred_first = np.mean(perturbed_output[k:k+int(n_steps/2)])
+                pred_snd = np.mean(perturbed_output[k+int(n_steps/2):k+ n_steps])
+
+                oracle_values[int(k/n_steps)] = 1. * (pred_snd > pred_first)
+
+        elif exp =="spurious":
+                
+                ## Calculating oracle variance with perturbed samples.
+
+                pred_var = np.var(perturbed_output[k:k+n_steps])
+
+                oracle_values[int(k/n_steps)] = 1. * (pred_var > spurious_quantile)
+        else:
+            raise NameError("Experiment doesn't exist. ")
+        
+    for threshold_idx, threshold in enumerate(threshold_vals):
+
+        explained_values[threshold_idx, :] = 1. * (norm_explanation > threshold)
+
+        perturbed_results[threshold_idx, 0] = np.sum((explained_values[threshold_idx]==1) & (oracle_values==1))
+        perturbed_results[threshold_idx, 1] = np.sum((explained_values[threshold_idx]==0) & (oracle_values==0))
+        perturbed_results[threshold_idx, 2] = np.sum((explained_values[threshold_idx]==1) & (oracle_values==0))
+        perturbed_results[threshold_idx, 3] = np.sum((explained_values[threshold_idx]==0) & (oracle_values==1))
+
+    return perturbed_results
+
 def calculate_if_pehe(
     w_test: np.ndarray,
     p: np.ndarray,
@@ -294,367 +440,3 @@ def calculate_pehe(
         return pehe_calculator(w_test, p, prediction, y_test, mu)
 
     raise ValueError(f"Unknown selection_type: {selection_type}")
-
-class Dataset:
-    """
-    Data wrapper for clinical data.
-    """
-    def __init__(self, cohort_name, random_state=42, shuffle=False):
-
-        self.cohort_name = cohort_name
-        self.shuffle = shuffle
-        self.random_state  = random_state
-
-        self.data, self.treatment_col, self.outcome_col = self._load_data(cohort_name)
-
-        self._process_data()
-
-    def _load_data(self, cohort_name):
-
-        if cohort_name in ["massive_trans", "responder"]:
-            data = self._load_pickle_data(cohort_name)
-            treatment = "treated"
-            outcome = "outcome"
-        elif cohort_name == "ist3":
-            data = self._load_sas_data()
-            treatment = "itt_treat"
-            outcome = "aliveind6"
-        elif cohort_name == "crash_2":
-            data = self._load_xlsx_data()
-            outcome = "outcome"
-            treatment = "treatment_code"
-        else:
-            raise ValueError(f"Unsupported cohort: {cohort_name}")
-
-        return data, treatment, outcome
-
-    def _load_pickle_data(self, cohort_name):
-
-        if cohort_name == "responder":
-            data = pd.read_pickle(f"data/trauma_responder.pkl")
-        elif cohort_name == "massive_trans":
-            data = pd.read_pickle(f"data/low_bp_survival.pkl")
-        else:
-            raise ValueError(f"Unsupported cohort: {cohort_name}")
-
-        data = self._filter_data(data)
-
-        return data
-
-    def _filter_data(self, data):
-
-        filter_regex = [
-            'proc',
-            'ethnicity',
-            'residencestate',
-            'toxicologyresults',
-            "registryid",
-            "COV",
-            "TT",
-            "scenegcsmotor",
-            "scenegcseye",
-            "scenegcsverbal",
-            "edgcsmotor",
-            "edgcseye",
-            "edgcsverbal",
-            "sex_F",
-            "traumatype_P",
-            "traumatype_Other"
-        ]
-
-        treatment_col = "treated"
-        outcome_col = "outcome"
-
-        for regex in filter_regex:
-            data = data[data.columns.drop(list(data.filter(regex=regex)))]
-
-        binary_vars = [
-            "sex_F",
-            "traumatype_B",
-        ]
-
-        continuous_vars = [
-            'age',
-            'scenegcs', 'scenefirstbloodpressure', 'scenefirstpulse','scenefirstrespirationrate', 
-            'edfirstbp', 'edfirstpulse', 'edfirstrespirationrate', 'edgcs',
-            'temps2',  'BD', 'CFSS', 'COHB', 'CREAT', 'FIB', 'FIO2', 'HCT',
-            'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
-        ]
-
-        cate_variables = [
-            "causecode"
-        ]
-
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-                [
-                    treatment_col,
-                    outcome_col
-                ],  axis=1
-            ), cate_variables
-            )
-        # import ipdb;ipdb.set_trace()
-
-        data[continuous_vars] = self._normalize_data(data[continuous_vars])
-
-        return data
-
-    def _load_sas_data(self):
-        data = pd.read_sas("data/datashare_aug2015.sas7bdat")
-
-        outcome_col = "aliveind6"
-        treatment_col = "itt_treat"
-
-        continuous_vars = [
-            "age",
-            "weight",
-            "glucose",
-            # "gcs_eye_rand",
-            # "gcs_motor_rand",
-            # "gcs_verbal_rand",
-            "gcs_score_rand",
-            "nihss" ,
-            "sbprand",
-            "dbprand"
-        ]
-
-        cate_variables = [
-            "infarct",
-            "stroketype"
-        ]
-
-        binary_vars = [
-            "gender",
-            "antiplat_rand",
-            "atrialfib_rand"
-        ]
-
-        data = data[continuous_vars + cate_variables + binary_vars + [treatment_col]+ [outcome_col]]
-        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)
-        data["atrialfib_rand"] = np.where(data["atrialfib_rand"]== 1, 1, 0)
-        data["gender"] = np.where(data["gender"]== 2, 1, 0)
-        
-        data[treatment_col] = np.where(data[treatment_col]== 0, 1, 0)
-        data[outcome_col] = np.where(data[outcome_col]== 1, 1, 0)
-        data[continuous_vars] = self._normalize_data(data[continuous_vars])
-
-        data = pd.get_dummies(data, columns=cate_variables)
-
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-            [
-                treatment_col, 
-                outcome_col
-            ],  axis=1
-            ), cate_variables
-            )
-
-        # data = data.sample(2500)
-
-        return data
-
-    def _load_xlsx_data(self):
-
-        outcome = "outcome"
-        treatment = "treatment_code"
-
-        data = pd.read_excel('data/crash_2.xlsx')
-        data[outcome] = np.where(data["icause"].isna(), 1, 0)
-
-        data = data.drop(data[(data[treatment] == "P")|(data[treatment] == "D")].index)
-
-        continuous_vars = [
-            "iage",
-            'isbp',
-            'irr',
-            'icc',
-            'ihr',
-            'ninjurytime',
-            # 'igcseye',
-            # 'igcsmotor',
-            # 'igcsverbal',
-            'igcs'
-        ]
-
-        cate_variables = [
-            "iinjurytype"
-        ]
-
-        binary_vars = [
-            "isex"
-        ]
-
-        data = data[continuous_vars + cate_variables + binary_vars + [treatment]+ [outcome]]
-        data["isex"] = np.where(data["isex"]== 2, 0, 1)
-
-        # deal with missing data
-        data["irr"] = np.where(data["irr"]== 0, np.nan,data["irr"])
-        data["isbp"] = np.where(data["isbp"] == 999, np.nan, data["isbp"])
-        data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
-        data["ninjurytime"] = np.where(data["ninjurytime"] == 0, np.nan, data["ninjurytime"])
-
-        data[treatment] = np.where(data[treatment] == "Active", 1, 0)
-
-        data = data[data.iinjurytype !=3 ]
-
-        data[continuous_vars] = self._normalize_data(data[continuous_vars])
-        
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-            [
-                treatment, 
-                outcome
-            ],  axis=1
-            ), cate_variables
-            )
-        
-        data = pd.get_dummies(data, columns=cate_variables)
-
-        data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
-        data.pop("iinjurytype_2")
-
-        # data["iinjurytype_1"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
-        # data["iinjurytype_2"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
-        # data.pop("iinjurytype_3")
-
-        # data = data.sample(5000)
-
-        return data
-
-
-    def _process_data(self):
-
-        self.n, self.feature_size = self.data.shape
-        self.feature_names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
-
-        x_train_scaled = self._impute_missing_values(self.data)
-
-        self._split_data(x_train_scaled)
-
-    def _normalize_data(self, x):
-
-        x = (x - np.min(x, axis=0)) / (np.max(x, axis=0) - np.min(x, axis=0))
-
-        return x
-
-    def _impute_missing_values(self, x_norm):
-
-        imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-        imp.fit(x_norm)
-        x_train_scaled = imp.transform(x_norm)
-
-        return x_train_scaled
-
-    def _split_data(self, x_train_scaled):
-
-        treatment_index = self.data.columns.get_loc(self.treatment_col)
-        outcome_index = self.data.columns.get_loc(self.outcome_col)
-        var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
-
-        if self.shuffle:
-            random_state = self.random_state
-        else:
-            random_state = 42
-
-        self.x = x_train_scaled[:, var_index]
-        self.w = x_train_scaled[:, treatment_index]
-        self.y = self.data[self.outcome_col]
-
-        x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
-            x_train_scaled,
-            self.data[self.outcome_col],
-            test_size=0.2,
-            random_state=random_state,
-            stratify=self.data[self.treatment_col]
-        )
-
-        x_train, x_val, self.y_train, self.y_val = model_selection.train_test_split(
-            x_train,
-            y_train,
-            test_size=0.2,
-            random_state=random_state,
-            stratify=x_train[:,treatment_index]
-        )
-        
-        # x_val_eta, x_val, self.y_val_eta, self.y_val = model_selection.train_test_split(
-        #     x_val,
-        #     self.y_val,
-        #     test_size=0.5,
-        #     random_state=random_state,
-        #     stratify=x_val[:,treatment_index]
-        # )
-
-
-        self.w_train = x_train[:, treatment_index]
-        self.w_val =  x_val[:, treatment_index]
-        # self.w_val_eta =  x_val_eta[:, treatment_index]
-        self.w_test =  x_test[:, treatment_index]
-
-        self.x_train = x_train[:,var_index]
-        self.x_val = x_val[:,var_index]
-        # self.x_val_eta = x_val_eta[:, var_index]
-        self.x_test = x_test[:, var_index]
-
-    def get_data(self):
-
-        return self.x, self.w, self.y
-
-    def get_training_data(self):
-        """
-        return training tuples (X,W,Y)
-        """
-        return self.x_train, self.w_train, self.y_train
-
-    def get_validation_data(self):
-        """
-        return training tuples (X,W,Y)
-        """
-        return self.x_val, self.w_val, self.y_val
-    
-    def get_validation_eta_data(self):
-        """
-        return training tuples (X,W,Y)
-        """
-        return self.x_val_eta, self.w_val_eta, self.y_val_eta
-
-    def get_testing_data(self):
-        """
-        return testing tuples (X,W,Y)
-        """
-        return self.x_test, self.w_test, self.y_test
-
-    def get_feature_names(self):
-        """
-        return feature names
-        """
-        return self.feature_names
-
-    def get_cohort_name(self):
-
-        return self.cohort_name
-    
-    def get_one_hot_column_indices(self, df, prefixes):
-        """
-        Get the indices for one-hot encoded columns for each specified prefix. 
-        This function assumes that the DataFrame has been one-hot encoded using 
-        pandas' get_dummies method.
-        
-        Parameters:
-        df: pandas DataFrame
-        prefixes: list of strings, the prefixes used in the one-hot encoded columns
-        
-        Returns:
-        indices_dict: dictionary where keys are the prefixes and values are lists of 
-                    indices representing the position of each category column for that prefix
-        """
-        indices_dict = {}
-        
-        for prefix in prefixes:
-            # Filter for one-hot encoded columns with the given prefix
-            one_hot_cols = [col for col in df.columns if col.startswith(prefix)]
-            
-            # Get the indices for these columns
-            indices_dict[prefix] = [df.columns.get_loc(col) for col in one_hot_cols]
-        
-        return indices_dict
-

@@ -16,6 +16,7 @@ import pandas as pd
 from scipy import stats
 
 from utilities import *
+from dataset import Dataset
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
@@ -60,8 +61,8 @@ if __name__ == "__main__":
     data = Dataset(cohort_name, 10)
     names = data.get_feature_names()
 
-    x_train, _, _ = data.get_training_data()
-    x_test, _, _ = data.get_testing_data()
+    x_train, _, _ = data.get_data("train")
+    x_test, _, _ = data.get_data("test")
 
 
     feature_size = x_train.shape[1]
@@ -69,8 +70,8 @@ if __name__ == "__main__":
     explainers = [
         "saliency",
         "integrated_gradients",
-        "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling"
+        # "baseline_shapley_value_sampling",
+        # "marginal_shapley_value_sampling"
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -91,9 +92,9 @@ if __name__ == "__main__":
         
         x, _, _  = data.get_data()
 
-        x_train, w_train, y_train = data.get_training_data()
-        x_val, w_val, y_val = data.get_validation_data()
-        x_test, w_test, y_test = data.get_testing_data()
+        x_train, w_train, y_train = data.get_data("train")
+        x_val, w_val, y_val = data.get_data("val")
+        x_test, w_test, y_test = data.get_data("test")
 
         models = {
             "XLearner":
@@ -103,7 +104,7 @@ if __name__ == "__main__":
                     n_layers_out=2,
                     n_units_out=100,
                     batch_size=128,
-                    n_iter=1000,
+                    n_iter=50,
                     nonlin="relu",
                     device=DEVICE,
                     seed=i
@@ -208,9 +209,23 @@ if __name__ == "__main__":
         else:
             nuisance_functions = NuisanceFunctions(rct=False)
 
+
         nuisance_functions.fit(x_val, y_val, w_val)
 
         model = models[learner]
+
+        # Create a matrix of zeros with the same shape as x_train
+        noise_matrix = np.zeros(x_train.shape)
+
+        # Fill in only the continuous columns with Gaussian noise
+
+        for _, idx_lst in data.categorical_indices.items():
+
+            mask = np.zeros(feature_size, dtype=bool)
+            mask[idx_lst] = True
+            noise_matrix[:, mask] = np.random.normal(0, 0.1, (x_train.shape[0], len(idx_lst)))
+
+        # x_train_noise = x_train + noise_matrix
 
         model.fit(x_train, y_train, w_train)
 
@@ -241,36 +256,53 @@ if __name__ == "__main__":
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
         for explainer_name in explainers:
-            
-            ## Obtaining local ranking 
+                        
+            ate_results = []
+            auroc_results = []
+            rand_ate = []
+            rand_auroc = []
 
             abs_explanation = np.abs(learner_explanations[learner][explainer_name])
-            local_rank = attribution_ranking(abs_explanation)
+            norm_explanation = normalize(learner_explanations[learner][explainer_name])
 
-            ## obtaining global ranking
-            
+            ## obtaining global & local ranking for insertion & deletion
+
+            local_rank = attribution_ranking(abs_explanation)            
             global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
             insertion_results, deletion_results = insertion_deletion(
-                data.get_testing_data(),
+                data.get_data("test"),
                 local_rank,
                 model,
                 baseline,
                 selection_types,
                 nuisance_functions
             )
+
+            perturb_resource_results = np.zeros((40, 4))
+            perturb_spurious_results = np.zeros((40, 4))
+            n_steps = 20
+            categorical_indices = [index for _, v in data.categorical_indices.items() for index in v]
             
-            ate_results = []
-            auroc_results = []
-            rand_ate = []
-            rand_auroc = []
+            ## obtain oracle for supurious experiment.
 
-            for sub_feature_num in range(1, feature_size+1):
+            print(categorical_indices, x_test.shape, feature_size)
+            
+            perturbated_var = generate_perturbed_var(
+                data, 
+                x_test, 
+                feature_size, 
+                categorical_indices, 
+                n_steps, 
+                model
+            )
+            
+            for sub_feature_num in range(feature_size):
 
-                print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,sub_feature_num))
+                print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,sub_feature_num+1),end='\r')
 
                 ate, auroc = subgroup_identification(
-                    global_rank[:sub_feature_num],
+                    global_rank[:sub_feature_num+1],
                     x_train,
                     x_test,
                     model,
@@ -280,7 +312,7 @@ if __name__ == "__main__":
                 ate_results.append(ate)
                 
                 random_ate, random_auroc = subgroup_identification(
-                    random.sample(range(0, x_train.shape[1]), sub_feature_num),
+                    random.sample(range(0, x_train.shape[1]), sub_feature_num+1),
                     x_train,
                     x_test,
                     model
@@ -288,6 +320,47 @@ if __name__ == "__main__":
 
                 rand_auroc.append(random_auroc)
                 rand_ate.append(random_ate)
+
+                ## Perturbation experiment with only using continuous variables 
+                
+
+                if sub_feature_num < np.min(categorical_indices):
+
+                    threshold_vals = np.linspace(start=-1.0,stop=1.0,num=40)
+                    
+                    # Generating perturbed samples with (n*n_steps, d)
+
+                    perturbated_samples = generate_perturbations(
+                        data, 
+                        x_test, 
+                        sub_feature_num,
+                        n_steps
+                    )
+
+                    perturbed_output = model.predict(X=perturbated_samples).detach().cpu().numpy()
+                    
+                    resource_results  = perturbation(
+                        perturbed_output,
+                        norm_explanation[:, sub_feature_num],
+                        threshold_vals,
+                        n_steps,
+                        "resource"
+                    )
+                    
+                    perturb_resource_results += resource_results
+
+                    sprious_qualtile = np.quantile(perturbated_var, 0.8)
+
+                    spurious_results  = perturbation(
+                        perturbed_output,
+                        np.abs(norm_explanation[:, sub_feature_num]),
+                        threshold_vals,
+                        n_steps,
+                        "spurious",
+                        sprious_qualtile
+                    )
+
+                    perturb_spurious_results += spurious_results
 
             ## results with all features. 
 
@@ -297,7 +370,6 @@ if __name__ == "__main__":
                 x_test,
                 model
             )
-            ## results with randon features
 
             insertion_deletion_data.append(
                 [
@@ -310,7 +382,9 @@ if __name__ == "__main__":
                     full_ate, 
                     full_auroc,
                     random_ate,
-                    rand_auroc
+                    rand_auroc,
+                    perturb_resource_results,
+                    perturb_spurious_results
                 ]
             )
 
@@ -326,7 +400,7 @@ if __name__ == "__main__":
             ind = np.argpartition(
                 np.abs(
                     learner_explanations[learner][explainer_name]
-                ).mean(0).round(2),
+                ).mean(0),
                 -top_n_features
             )[-top_n_features:]
 

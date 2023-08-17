@@ -304,14 +304,14 @@ def attribution_ranking(feature_attributions: np.ndarray) -> list:
 
     return rank_indices
 
-def insertion_deletion(
-    test_data: tuple,
-    baseline: np.ndarray,
-    rank_indices:list,
-    cate_model: torch.nn.Module,
-    selection_types: Optional[str],
-    nuisance_functions: NuisanceFunctions,
-    cate_test: np.ndarray
+def insertion_deletion(   
+        test_data: tuple,
+        baseline: np.ndarray,
+        rank_indices:list,
+        cate_model: torch.nn.Module,
+        selection_types: Optional[str],
+        nuisance_functions: NuisanceFunctions,
+        cate_test: np.ndarray
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -341,8 +341,10 @@ def insertion_deletion(
     for rank_index in range(len(rank_indices) + 1):
         if rank_index > 0:  # Skip this on the first iteration
             col_indices = rank_indices[rank_index - 1]
-            x_test_ins[:, col_indices] = x_test[:, col_indices]
-            x_test_del[:, col_indices] = baseline[:, col_indices]
+
+            for i in range(n):
+                x_test_ins[i, col_indices[i]] = x_test[i, col_indices[i]]
+                x_test_del[i, col_indices[i]] = baseline[i, col_indices[i]]
 
         cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
         cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()

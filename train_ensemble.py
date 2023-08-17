@@ -36,10 +36,14 @@ if __name__ == "__main__":
     DEVICE = "cuda:3"
 
     explainers = [
+        "saliency",
         "integrated_gradients",
-        "shapley_value_sampling",
-        "naive_shap"
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling"
+        # "kernel_shap"
+        # "marginal_shap"
     ]
+
     top_n_results = {
         e:[] for e in explainers
     }
@@ -57,8 +61,10 @@ if __name__ == "__main__":
     data = Dataset(cohort_name, 42)
     names = data.get_feature_names()
 
-    x_train, w_train, y_train = data.get_training_data()
-    x_test, _, _ = data.get_testing_data()
+    x_train, w_train, y_train = data.get_data("train")
+    x_val, w_val, y_val = data.get_data("val")
+    x_test, w_test, y_test = data.get_data("test")
+    
     feature_size = x_train.shape[1]
 
     x_replacement = data.get_replacement_value()
@@ -73,7 +79,7 @@ if __name__ == "__main__":
         e:np.zeros((1, feature_size)) for e in explainers
     }
 
-    tau_star = pseudo_outcome_nets.DRLearner(
+    tau_star = pseudo_outcome_nets.XLearner(
         x_train.shape[1],
         binary_y=(len(np.unique(y_train)) == 2),
         n_layers_out=2,
@@ -98,8 +104,15 @@ if __name__ == "__main__":
     )
 
     # pseudo-ground truth. 
+    if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
+        nuisance_functions = NuisanceFunctions(rct=True)
+    else:
+        nuisance_functions = NuisanceFunctions(rct=False)
 
+    nuisance_functions.fit(x_val, y_val, w_val)
+    
     tau_star.fit(x_train, y_train, w_train)
+
     y_hat = tau_star.predict(x_train).detach().cpu().numpy()
 
     # training student model with knowledge distilation
@@ -108,10 +121,18 @@ if __name__ == "__main__":
     
     # Explain CATE
 
+    baseline = np.mean(x_train, axis=0)
+
+    ## Setting the one-hot variables within the same group with the same baseline/replacement value.
+
+    for k, v in data.categorical_indices.items():
+        baseline[v] = 1/len(v)
+        
     explainer = Explainer(
         ensemble,
         feature_names=list(range(x_train.shape[1])),
         explainer_list=explainers,
+        baseline = baseline.reshape(1, -1)
     )
 
     log.info(f"Explaining EnsembleNet")
@@ -119,26 +140,26 @@ if __name__ == "__main__":
     learner_explanations = explainer.explain(
         x_test
     )
+
+
     for explainer_name in explainers:
 
-        rank_indices = attribution_ranking(learner_explanations[explainer_name])
+        local_rank = attribution_ranking(learner_explanations[explainer_name])
 
-        top_5_indices = np.argpartition(
+        top_n_indices = np.argpartition(
             np.abs(
                 learner_explanations[explainer_name]
-            ).mean(0).round(2),
+            ).mean(0),
             -top_n_features
         )[-top_n_features:]
 
-
         insertion_results, deletion_results = insertion_deletion(
-            data,
-            rank_indices,
+            data.get_data("test"),
+            local_rank,
             ensemble,
-            x_replacement,
+            np.zeros(baseline).reshape(1,-1),
             selection_types,
-            "BasicNet",
-            DEVICE
+            nuisance_functions
         )
 
         insertion_deletion_data.append(
@@ -149,7 +170,7 @@ if __name__ == "__main__":
                 deletion_results,
             ]
         )
-        top_n_results[explainer_name].extend(names[top_5_indices].tolist())
+        top_n_results[explainer_name].extend(names[top_n_indices].tolist())
 
         for col in range(feature_size):
             result_sign[explainer_name][0, col] = stats.pearsonr(
