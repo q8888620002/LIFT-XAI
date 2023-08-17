@@ -279,7 +279,7 @@ class PropensitySensitivity:
             ## Train nuisance functions
             nuisance_functions = NuisanceFunctions()
 
-            nuisance_functions.fit(x_train, Y_train, W_train)
+            # nuisance_functions.fit(x_train, Y_train, W_train)
             nuisance_functions.fit(x_val, Y_val, W_val)
 
             for explainer_name in explainer_list:
@@ -299,7 +299,7 @@ class PropensitySensitivity:
                     cate_pred = learners[learner_name].predict(X=x_test)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
-                    rank_indices = attribution_ranking(learner_explanations[learner_name][explainer_name])
+                    rank_indices = attribution_ranking(attribution_est)
 
                     log.info(f"Calculating Pehe for {explainer_name}. {learner_name}")
 
