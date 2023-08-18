@@ -216,12 +216,12 @@ if __name__ == "__main__":
         noise_matrix = np.zeros(x_train.shape)
         baseline = np.mean(x_train, axis=0)
 
-        for _, idx_lst in data.discrete_indices.items():
+        for _, idx_lst in data.categorical_indices.items():
 
             # Setting the one-hot variables within the same group with the same baseline/replacement value.
-
-            baseline[idx_lst] = 1/len(idx_lst)
-
+            category_counts = data[:, idx_lst].sum(axis=0)
+            baseline[idx_lst] = category_counts / category_counts.sum()
+            
             # Fill in only the continuous columns with Gaussian noise
             # mask = np.zeros(feature_size, dtype=bool)
             # mask[idx_lst] = True
