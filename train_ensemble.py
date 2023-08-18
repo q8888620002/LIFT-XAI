@@ -57,7 +57,6 @@ if __name__ == "__main__":
     results_train = pkl.load(open(f"results/{cohort_name}/train_xlearner.pkl", "rb"))
     results_test = pkl.load(open(f"results/{cohort_name}/test_xlearner.pkl", "rb"))
 
-
     data = Dataset(cohort_name, 42)
     names = data.get_feature_names()
 
@@ -127,7 +126,7 @@ if __name__ == "__main__":
 
     for k, v in data.categorical_indices.items():
         baseline[v] = 1/len(v)
-        
+
     explainer = Explainer(
         ensemble,
         feature_names=list(range(x_train.shape[1])),

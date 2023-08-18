@@ -70,8 +70,8 @@ if __name__ == "__main__":
     explainers = [
         "saliency",
         "integrated_gradients",
-        # "baseline_shapley_value_sampling",
-        # "marginal_shapley_value_sampling"
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling"
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -90,8 +90,6 @@ if __name__ == "__main__":
 
         data = Dataset(cohort_name, i, shuffle)
         
-        x, _, _  = data.get_data()
-
         x_train, w_train, y_train = data.get_data("train")
         x_val, w_val, y_val = data.get_data("val")
         x_test, w_test, y_test = data.get_data("test")
@@ -104,7 +102,7 @@ if __name__ == "__main__":
                     n_layers_out=2,
                     n_units_out=100,
                     batch_size=128,
-                    n_iter=50,
+                    n_iter=1000,
                     nonlin="relu",
                     device=DEVICE,
                     seed=i
@@ -209,21 +207,25 @@ if __name__ == "__main__":
         else:
             nuisance_functions = NuisanceFunctions(rct=False)
 
-
         nuisance_functions.fit(x_val, y_val, w_val)
 
         model = models[learner]
 
-        # Create a matrix of zeros with the same shape as x_train
+        # Create a matrix of zeros with the same shape as x_train        
+
         noise_matrix = np.zeros(x_train.shape)
+        baseline = np.mean(x_train, axis=0)
 
-        # Fill in only the continuous columns with Gaussian noise
+        for _, idx_lst in data.discrete_indices.items():
 
-        for _, idx_lst in data.categorical_indices.items():
+            # Setting the one-hot variables within the same group with the same baseline/replacement value.
 
-            mask = np.zeros(feature_size, dtype=bool)
-            mask[idx_lst] = True
-            noise_matrix[:, mask] = np.random.normal(0, 0.1, (x_train.shape[0], len(idx_lst)))
+            baseline[idx_lst] = 1/len(idx_lst)
+
+            # Fill in only the continuous columns with Gaussian noise
+            # mask = np.zeros(feature_size, dtype=bool)
+            # mask[idx_lst] = True
+            # noise_matrix[:, mask] = np.random.normal(0, 0.1, (x_train.shape[0], len(idx_lst)))
 
         # x_train_noise = x_train + noise_matrix
 
@@ -231,13 +233,6 @@ if __name__ == "__main__":
 
         results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
         results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
-
-        baseline = np.mean(x_train, axis=0)
-
-        ## Setting the one-hot variables within the same group with the same baseline/replacement value.
-
-        for k, v in data.categorical_indices.items():
-            baseline[v] = 1/len(v)
 
         # Explain CATE
         learner_explainers[learner] = Explainer(
@@ -249,6 +244,7 @@ if __name__ == "__main__":
         )
 
         log.info(f"Explaining dataset with: {learner}")
+
         learner_explanations[learner] = learner_explainers[learner].explain(
             x_test
         )
@@ -263,6 +259,9 @@ if __name__ == "__main__":
             rand_auroc = []
 
             abs_explanation = np.abs(learner_explanations[learner][explainer_name])
+
+            # Normalize explanation on row basis.
+
             norm_explanation = normalize(learner_explanations[learner][explainer_name])
 
             ## obtaining global & local ranking for insertion & deletion
@@ -279,30 +278,32 @@ if __name__ == "__main__":
                 nuisance_functions
             )
 
-            perturb_resource_results = np.zeros((40, 4))
-            perturb_spurious_results = np.zeros((40, 4))
+            perturb_resource_results, perturb_spurious_results = np.zeros((40, 4)), np.zeros((40, 4))
             n_steps = 20
-            categorical_indices = [index for _, v in data.categorical_indices.items() for index in v]
-            
-            ## obtain oracle for supurious experiment.
 
-            print(categorical_indices, x_test.shape, feature_size)
+            discrete_indices = [index for _, v in data.discrete_indices.items() for index in v]
+
+            ## obtain oracle & threshold for supurious/resource experiment.
             
             perturbated_var = generate_perturbed_var(
                 data, 
                 x_test, 
                 feature_size, 
-                categorical_indices, 
+                discrete_indices, 
                 n_steps, 
                 model
             )
-            
-            for sub_feature_num in range(feature_size):
 
-                print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,sub_feature_num+1),end='\r')
+            sprious_qualtile = np.quantile(perturbated_var, 0.8)
+            threshold_vals = np.linspace(start=-1.0,stop=1.0,num=40)
 
+            for feature_idx in range(feature_size):
+
+                print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,feature_idx+1),end='\r')
+                
+                ## Starting from 1 features 
                 ate, auroc = subgroup_identification(
-                    global_rank[:sub_feature_num+1],
+                    global_rank[:feature_idx+1],
                     x_train,
                     x_test,
                     model,
@@ -312,7 +313,7 @@ if __name__ == "__main__":
                 ate_results.append(ate)
                 
                 random_ate, random_auroc = subgroup_identification(
-                    random.sample(range(0, x_train.shape[1]), sub_feature_num+1),
+                    random.sample(range(0, x_train.shape[1]), feature_idx+1),
                     x_train,
                     x_test,
                     model
@@ -323,43 +324,29 @@ if __name__ == "__main__":
 
                 ## Perturbation experiment with only using continuous variables 
                 
+                if feature_idx < np.min(discrete_indices):   
 
-                if sub_feature_num < np.min(categorical_indices):
-
-                    threshold_vals = np.linspace(start=-1.0,stop=1.0,num=40)
-                    
                     # Generating perturbed samples with (n*n_steps, d)
+                    print("generating resource/spurious results for %s, feature: %s."%(explainer_name , feature_idx),end='\r')
 
                     perturbated_samples = generate_perturbations(
                         data, 
                         x_test, 
-                        sub_feature_num,
+                        feature_idx,
                         n_steps
                     )
 
                     perturbed_output = model.predict(X=perturbated_samples).detach().cpu().numpy()
                     
-                    resource_results  = perturbation(
+                    resource_results, spurious_results  = perturbation(
                         perturbed_output,
-                        norm_explanation[:, sub_feature_num],
+                        norm_explanation[:, feature_idx],
                         threshold_vals,
                         n_steps,
-                        "resource"
+                        sprious_qualtile                    
                     )
                     
                     perturb_resource_results += resource_results
-
-                    sprious_qualtile = np.quantile(perturbated_var, 0.8)
-
-                    spurious_results  = perturbation(
-                        perturbed_output,
-                        np.abs(norm_explanation[:, sub_feature_num]),
-                        threshold_vals,
-                        n_steps,
-                        "spurious",
-                        sprious_qualtile
-                    )
-
                     perturb_spurious_results += spurious_results
 
             ## results with all features. 
