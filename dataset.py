@@ -237,10 +237,6 @@ class Dataset:
             random_state = self.random_state
         else:
             random_state = 42
-
-        self.x = x_train_scaled[:, var_index]
-        self.w = x_train_scaled[:, treatment_index]
-        self.y = self.data[self.outcome]
         
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
@@ -257,7 +253,11 @@ class Dataset:
             random_state=random_state,
             stratify=x_train[:,treatment_index]
         )
-    
+
+        self.x = x_train_scaled[:, var_index]
+        self.w = x_train_scaled[:, treatment_index]
+        self.y = self.data[self.outcome]
+
         self.w_train = x_train[:, treatment_index]
         self.w_val =  x_val[:, treatment_index]
         self.w_test =  x_test[:, treatment_index]
