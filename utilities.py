@@ -102,9 +102,9 @@ def subgroup_identification(
 
     if local:
         ## Subgroup identification with local feature ranking. 
-        
+        assert col_indices.shape == x_test.shape, " local rank indices don't match with testing dimension"
+
         xgb_model.fit(x_train, train_tx_assignments)
-        
         x_test_copy = np.full(x_test.shape, np.nan)
 
         for i in range(len(x_test)):
@@ -114,6 +114,7 @@ def subgroup_identification(
 
     else:
         ## Subgroup identification with global feature ranking 
+        assert len(col_indices) <= x_test.shape[1], " global rank indices don't match with testing dimension"
 
         xgb_model.fit(x_train[:, col_indices], train_tx_assignments)
         pred_tx_assignment = xgb_model.predict(x_test[:, col_indices])
@@ -276,7 +277,6 @@ def generate_perturbed_var(
     perturbated_var = []
 
     for i in range(feature_size - len(categorical_indices)):
-        print(feature_size, i,len(categorical_indices) )
         perturbated_samples = generate_perturbations(
             data, 
             x_test, 
@@ -291,67 +291,67 @@ def generate_perturbed_var(
     return perturbated_var
 
 
+from typing import List, Tuple
+
 def perturbation(
         perturbed_output: np.ndarray,
         norm_explanation: np.ndarray,
         threshold_vals: np.ndarray,
         n_steps: int,
-        exp: str,
-        spurious_quantile: np.ndarray=None
-)-> tuple(int):
+        spurious_quantile: np.ndarray
+) -> Tuple[List[float], List[float]]:
     """
-    function that conducts perturbation experiments and calculate true postive, true negative, 
-    false positive and false negative.
+    Function that conducts perturbation experiments for both "resource" and "spurious" 
+    and calculates true positive, true negative, false positive and false negative for each.
 
-    args:
-        perturbed_output
-        norma_explanation
-        threshold_vals
-        n_steps
-    return 
+    Args:
+        perturbed_output: Perturbed model outputs.
+        norm_explanation: Normalized explanations.
+        threshold_vals: Threshold values for explanations.
+        n_steps: Number of steps in perturbation.
+        spurious_quantile: Quantile threshold for spurious explanations.
 
-        Tuple containing counts of TP, TN, FP, and FN. 
+    Returns:
+        Two tuples containing counts of TP, TN, FP, and FN for "resource" and "spurious" respectively. 
     """
     
     sample_size = len(norm_explanation)
-    threshold__size = len(threshold_vals)
+    threshold_size = len(threshold_vals)
 
-    perturbed_results = np.zeros((threshold__size, 4))
+    perturbed_results_resource = np.zeros((threshold_size, 4))
+    perturbed_results_spurious = np.zeros((threshold_size, 4))
 
-    oracle_values = np.zeros(sample_size)
-    explained_values = np.zeros(( threshold__size ,sample_size))
+    oracle_values_resource = np.zeros(sample_size)
+    oracle_values_spurious = np.zeros(sample_size)
+    explained_values = np.zeros((threshold_size, sample_size))
 
     for k in range(0, len(perturbed_output), n_steps):
+        # Calculating oracle values for "resource"
+        pred_first = np.mean(perturbed_output[k:k+int(n_steps/2)])
+        pred_snd = np.mean(perturbed_output[k+int(n_steps/2):k+ n_steps])
+        oracle_values_resource[int(k/n_steps)] = 1. * (pred_snd > pred_first)
 
-        if exp == "resource":
-        
-                ## Calculating oracle values with 1st half and 2nd half of perturbed sample.
+        # Calculating oracle variance for "spurious"
+        pred_var = np.var(perturbed_output[k:k+n_steps])
+        oracle_values_spurious[int(k/n_steps)] = 1. * (pred_var > spurious_quantile)
 
-                pred_first = np.mean(perturbed_output[k:k+int(n_steps/2)])
-                pred_snd = np.mean(perturbed_output[k+int(n_steps/2):k+ n_steps])
-
-                oracle_values[int(k/n_steps)] = 1. * (pred_snd > pred_first)
-
-        elif exp =="spurious":
-                
-                ## Calculating oracle variance with perturbed samples.
-
-                pred_var = np.var(perturbed_output[k:k+n_steps])
-
-                oracle_values[int(k/n_steps)] = 1. * (pred_var > spurious_quantile)
-        else:
-            raise NameError("Experiment doesn't exist. ")
-        
     for threshold_idx, threshold in enumerate(threshold_vals):
-
         explained_values[threshold_idx, :] = 1. * (norm_explanation > threshold)
 
-        perturbed_results[threshold_idx, 0] = np.sum((explained_values[threshold_idx]==1) & (oracle_values==1))
-        perturbed_results[threshold_idx, 1] = np.sum((explained_values[threshold_idx]==0) & (oracle_values==0))
-        perturbed_results[threshold_idx, 2] = np.sum((explained_values[threshold_idx]==1) & (oracle_values==0))
-        perturbed_results[threshold_idx, 3] = np.sum((explained_values[threshold_idx]==0) & (oracle_values==1))
+        perturbed_results_resource[threshold_idx, 0] = np.sum((explained_values[threshold_idx]==1) & (oracle_values_resource==1))
+        perturbed_results_resource[threshold_idx, 1] = np.sum((explained_values[threshold_idx]==0) & (oracle_values_resource==0))
+        perturbed_results_resource[threshold_idx, 2] = np.sum((explained_values[threshold_idx]==1) & (oracle_values_resource==0))
+        perturbed_results_resource[threshold_idx, 3] = np.sum((explained_values[threshold_idx]==0) & (oracle_values_resource==1))
 
-    return perturbed_results
+        explained_values[threshold_idx, :] = 1. * (np.abs(norm_explanation) > threshold)
+
+        perturbed_results_spurious[threshold_idx, 0] = np.sum((explained_values[threshold_idx]==1) & (oracle_values_spurious==1))
+        perturbed_results_spurious[threshold_idx, 1] = np.sum((explained_values[threshold_idx]==0) & (oracle_values_spurious==0))
+        perturbed_results_spurious[threshold_idx, 2] = np.sum((explained_values[threshold_idx]==1) & (oracle_values_spurious==0))
+        perturbed_results_spurious[threshold_idx, 3] = np.sum((explained_values[threshold_idx]==0) & (oracle_values_spurious==1))
+
+    return perturbed_results_resource, perturbed_results_spurious
+
 
 def calculate_if_pehe(
     w_test: np.ndarray,

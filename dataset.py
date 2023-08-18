@@ -17,28 +17,39 @@ class Dataset:
         self.shuffle = shuffle
         self.random_state  = random_state
 
-        self.data, self.treatment_col, self.outcome_col = self._load_data(cohort_name)
-
+        self._load_data(cohort_name)
         self._process_data()
 
     def _load_data(self, cohort_name):
 
         if cohort_name in ["massive_trans", "responder"]:
-            data = self._load_pickle_data(cohort_name)
-            treatment = "treated"
-            outcome = "outcome"
+            self.data = self._load_pickle_data(cohort_name)
         elif cohort_name == "ist3":
-            data = self._load_sas_data()
-            treatment = "itt_treat"
-            outcome = "aliveind6"
+            self.data = self._load_ist3_data()
         elif cohort_name == "crash_2":
-            data = self._load_xlsx_data()
-            outcome = "outcome"
-            treatment = "treatment_code"
+            self.data = self._load_crash2_data()
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
+        
+        self.continuous_indices = [self.data.columns.get_loc(col) for col in self.continuous_vars]
 
-        return data, treatment, outcome
+        self.categorical_indices = self.get_one_hot_column_indices(
+            self.data.drop(
+                [
+                    self.treatment,
+                    self.outcome
+                ],  axis=1
+            ),  self.cate_variables
+        )
+
+        self.discrete_indices = self.get_one_hot_column_indices(
+            self.data.drop(
+                [
+                    self.treatment,
+                    self.outcome
+                ],  axis=1
+            ),  self.cate_variables + self.binary_vars
+        )
 
     def _load_pickle_data(self, cohort_name):
 
@@ -48,12 +59,6 @@ class Dataset:
             data = pd.read_pickle(f"data/low_bp_survival.pkl")
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
-
-        data = self._filter_data(data)
-
-        return data
-
-    def _filter_data(self, data):
 
         filter_regex = [
             'proc',
@@ -74,50 +79,39 @@ class Dataset:
             "traumatype_Other"
         ]
 
-        treatment_col = "treated"
-        outcome_col = "outcome"
+        self.treatment = "treated"
+        self.outcome = "outcome"
 
         for regex in filter_regex:
             data = data[data.columns.drop(list(data.filter(regex=regex)))]
 
-        binary_vars = [
-            "sex_F",
+        self.binary_vars = [
+            "sex_M",
             "traumatype_B",
         ]
 
-        continuous_vars = [
+        self.continuous_vars = [
             'age',
             'scenegcs', 'scenefirstbloodpressure', 'scenefirstpulse','scenefirstrespirationrate', 
             'edfirstbp', 'edfirstpulse', 'edfirstrespirationrate', 'edgcs',
             'temps2',  'BD', 'CFSS', 'COHB', 'CREAT', 'FIB', 'FIO2', 'HCT',
             'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
         ]
+        
+        self.cate_variables = [col for col in data.columns if 'causecode' in col]
 
-        cate_variables = [
-            "causecode"
-        ]
+        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
 
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-                [
-                    treatment_col,
-                    outcome_col
-                ],  axis=1
-            ), cate_variables
-            )
-        # import ipdb;ipdb.set_trace()
-
-        data[continuous_vars] = self._normalize_data(data[continuous_vars], "minmax")
 
         return data
 
-    def _load_sas_data(self):
+    def _load_ist3_data(self):
         data = pd.read_sas("data/datashare_aug2015.sas7bdat")
 
-        outcome_col = "aliveind6"
-        treatment_col = "itt_treat"
+        self.outcome = "aliveind6"
+        self.treatment = "itt_treat"
 
-        continuous_vars = [
+        self.continuous_vars = [
             "age",
             "weight",
             "glucose",
@@ -130,55 +124,41 @@ class Dataset:
             "dbprand"
         ]
 
-        cate_variables = [
+        self.cate_variables = [
             "infarct",
             "stroketype"
         ]
 
-        binary_vars = [
+        self.binary_vars = [
             "gender",
             "antiplat_rand",
             "atrialfib_rand"
         ]
 
-        data = data[continuous_vars + cate_variables + binary_vars + [treatment_col]+ [outcome_col]]
         data = data[data.stroketype!=5]
-        
         data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)
         data["atrialfib_rand"] = np.where(data["atrialfib_rand"]== 1, 1, 0)
         data["gender"] = np.where(data["gender"]== 2, 1, 0)
         
-        data[treatment_col] = np.where(data[treatment_col]== 0, 1, 0)
-        data[outcome_col] = np.where(data[outcome_col]== 1, 1, 0)
-        data[continuous_vars] = self._normalize_data(data[continuous_vars], "minmax")
+        data[self.treatment] = np.where(data[self.treatment]== 0, 1, 0)
+        data[self.outcome] = np.where(data[self.outcome]== 1, 1, 0)
 
-        data = pd.get_dummies(data, columns=cate_variables)
+        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
 
-        self.continuous_indices = [data.columns.get_loc(col) for col in continuous_vars]
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-            [
-                treatment_col, 
-                outcome_col
-            ],  axis=1
-            ), cate_variables
-            )
+        data = pd.get_dummies(data, columns=self.cate_variables)
 
         # data = data.sample(2500)
 
         return data
 
-    def _load_xlsx_data(self):
+    def _load_crash2_data(self):
 
-        outcome = "outcome"
-        treatment = "treatment_code"
+        self.outcome = "outcome"
+        self.treatment = "treatment_code"
 
         data = pd.read_excel('data/crash_2.xlsx')
-        data[outcome] = np.where(data["icause"].isna(), 1, 0)
 
-        data = data.drop(data[(data[treatment] == "P")|(data[treatment] == "D")].index)
-
-        continuous_vars = [
+        self.continuous_vars = [
             "iage",
             'isbp',
             'irr',
@@ -191,15 +171,17 @@ class Dataset:
             'igcs'
         ]
 
-        cate_variables = [
+        self.cate_variables = [
             "iinjurytype"
         ]
 
-        binary_vars = [
+        self.binary_vars = [
             "isex"
         ]
 
-        data = data[continuous_vars + cate_variables + binary_vars + [treatment]+ [outcome]]
+        data = data.drop(data[(data[self.treatment] == "P")|(data[self.treatment] == "D")].index)
+        data = data[data.iinjurytype !=3 ]
+
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
 
         # deal with missing data
@@ -208,30 +190,15 @@ class Dataset:
         data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
         data["ninjurytime"] = np.where(data["ninjurytime"] == 0, np.nan, data["ninjurytime"])
 
-        data[treatment] = np.where(data[treatment] == "Active", 1, 0)
+        data[self.treatment] = np.where(data[self.treatment] == "Active", 1, 0)
+        data[self.outcome] = np.where(data["icause"].isna(), 1, 0)
 
-        data = data[data.iinjurytype !=3 ]
+        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
 
-        data[continuous_vars] = self._normalize_data(data[continuous_vars], "minmax")
-
-        self.continuous_indices = [data.columns.get_loc(col) for col in continuous_vars]
-        self.categorical_indices = self.get_one_hot_column_indices(
-            data.drop(
-            [
-                treatment, 
-                outcome
-            ],  axis=1
-            ), cate_variables
-            )
-        
-        data = pd.get_dummies(data, columns=cate_variables)
+        data = pd.get_dummies(data, columns=self.cate_variables)
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
         data.pop("iinjurytype_2")
-
-        # data["iinjurytype_1"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
-        # data["iinjurytype_2"] = np.where(data["iinjurytype_3"]== 1, 1, 0)
-        # data.pop("iinjurytype_3")
 
         # data = data.sample(5000)
 
@@ -239,13 +206,12 @@ class Dataset:
 
 
     def _process_data(self):
+        
+        self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "minmax")
 
-        self.n, self.feature_size = self.data.shape
-        self.feature_names = self.data.drop([self.treatment_col, self.outcome_col], axis=1).columns
-
-        x_train_scaled = self._impute_missing_values(self.data)
-
-        self._split_data(x_train_scaled)
+        imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+        imp.fit(self.data)
+        self._split_data(imp.transform(self.data))
 
     def _normalize_data(self, x: np.ndarray, type:str):
 
@@ -260,19 +226,12 @@ class Dataset:
 
         return x
 
-    def _impute_missing_values(self, x_norm):
-
-        imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-        imp.fit(x_norm)
-        x_train_scaled = imp.transform(x_norm)
-
-        return x_train_scaled
-
     def _split_data(self, x_train_scaled):
 
-        treatment_index = self.data.columns.get_loc(self.treatment_col)
-        outcome_index = self.data.columns.get_loc(self.outcome_col)
-        var_index = [i for i in range(self.feature_size) if i not in [treatment_index, outcome_index]]
+        treatment_index = self.data.columns.get_loc(self.treatment)
+        outcome_index = self.data.columns.get_loc(self.outcome)
+
+        var_index = [i for i in range(x_train_scaled.shape[1]) if i not in [treatment_index, outcome_index]]
 
         if self.shuffle:
             random_state = self.random_state
@@ -281,14 +240,14 @@ class Dataset:
 
         self.x = x_train_scaled[:, var_index]
         self.w = x_train_scaled[:, treatment_index]
-        self.y = self.data[self.outcome_col]
-
+        self.y = self.data[self.outcome]
+        
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
-            self.data[self.outcome_col],
+            self.data[self.outcome],
             test_size=0.2,
             random_state=random_state,
-            stratify=self.data[self.treatment_col]
+            stratify=self.data[self.treatment]
         )
 
         x_train, x_val, self.y_train, self.y_val = model_selection.train_test_split(
@@ -298,24 +257,13 @@ class Dataset:
             random_state=random_state,
             stratify=x_train[:,treatment_index]
         )
-        
-        # x_val_eta, x_val, self.y_val_eta, self.y_val = model_selection.train_test_split(
-        #     x_val,
-        #     self.y_val,
-        #     test_size=0.5,
-        #     random_state=random_state,
-        #     stratify=x_val[:,treatment_index]
-        # )
-
-
+    
         self.w_train = x_train[:, treatment_index]
         self.w_val =  x_val[:, treatment_index]
-        # self.w_val_eta =  x_val_eta[:, treatment_index]
         self.w_test =  x_test[:, treatment_index]
 
         self.x_train = x_train[:,var_index]
         self.x_val = x_val[:,var_index]
-        # self.x_val_eta = x_val_eta[:, var_index]
         self.x_test = x_test[:, var_index]
 
     def get_data(self, set:str=None):
@@ -331,7 +279,7 @@ class Dataset:
 
     def get_feature_range(
             self, 
-            feature:int
+            feature: int
         ) -> np.ndarray:
         """
         return value range for a feature
@@ -362,8 +310,8 @@ class Dataset:
         """
         return feature names
         """
-        return self.feature_names
-
+        return self.data.drop([self.treatment, self.outcome], axis=1).columns
+    
     def get_cohort_name(self):
 
         return self.cohort_name
