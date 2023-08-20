@@ -173,7 +173,7 @@ class Explainer:
             for test_ind in range(len(x_test)):
                 instance = x_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley_sampling.ShapleySampling(game, thresh = 0.01,batch_size=128)
+                explanation = shapley_sampling.ShapleySampling(game, thresh = 0.01, batch_size=128)
                 test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)

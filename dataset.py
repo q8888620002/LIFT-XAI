@@ -28,6 +28,10 @@ class Dataset:
             self.data = self._load_ist3_data()
         elif cohort_name == "crash_2":
             self.data = self._load_crash2_data()
+        elif cohort_name == "sprint":
+            self.data = self._load_sprint_data()
+        elif cohort_name == "accord":
+            self.data = self._load_accord_data()
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
         
@@ -39,7 +43,7 @@ class Dataset:
                     self.treatment,
                     self.outcome
                 ],  axis=1
-            ),  self.cate_variables
+            ),  self.categorical_vars
         )
 
         self.discrete_indices = self.get_one_hot_column_indices(
@@ -48,7 +52,7 @@ class Dataset:
                     self.treatment,
                     self.outcome
                 ],  axis=1
-            ),  self.cate_variables + self.binary_vars
+            ),  self.categorical_vars + self.binary_vars
         )
 
     def _load_pickle_data(self, cohort_name):
@@ -98,9 +102,9 @@ class Dataset:
             'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
         ]
         
-        self.cate_variables = [col for col in data.columns if 'causecode' in col]
+        self.categorical_vars = [col for col in data.columns if 'causecode' in col]
 
-        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
 
         return data
@@ -124,7 +128,7 @@ class Dataset:
             "dbprand"
         ]
 
-        self.cate_variables = [
+        self.categorical_vars = [
             "infarct",
             "stroketype"
         ]
@@ -143,9 +147,9 @@ class Dataset:
         data[self.treatment] = np.where(data[self.treatment]== 0, 1, 0)
         data[self.outcome] = np.where(data[self.outcome]== 1, 1, 0)
 
-        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
-        data = pd.get_dummies(data, columns=self.cate_variables)
+        data = pd.get_dummies(data, columns=self.categorical_vars)
 
         # data = data.sample(2500)
 
@@ -171,7 +175,7 @@ class Dataset:
             'igcs'
         ]
 
-        self.cate_variables = [
+        self.categorical_vars = [
             "iinjurytype"
         ]
 
@@ -180,7 +184,8 @@ class Dataset:
         ]
 
         data = data.drop(data[(data[self.treatment] == "P")|(data[self.treatment] == "D")].index)
-        data = data[data.iinjurytype !=3 ]
+        
+        # data = data[data.iinjurytype != 3 ]
 
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
 
@@ -193,22 +198,121 @@ class Dataset:
         data[self.treatment] = np.where(data[self.treatment] == "Active", 1, 0)
         data[self.outcome] = np.where(data["icause"].isna(), 1, 0)
 
-        data = data[self.continuous_vars + self.cate_variables + self.binary_vars + [self.treatment]+ [self.outcome]]
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
-        data = pd.get_dummies(data, columns=self.cate_variables)
+        data = pd.get_dummies(data, columns=self.categorical_vars)
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
-        data.pop("iinjurytype_2")
+        data.pop("iinjurytype_3")
+        
+        # data.pop("iinjurytype_2")
 
-        # data = data.sample(5000)
+        data = data.sample(int(len(data)*0.95))
 
         return data
 
+    def _load_sprint_data(self):
+
+        self.outcome = "event_primary"
+        self.treatment = "intensive"
+
+        outcome = pd.read_csv("data/sprint/outcomes.csv")
+        baseline = pd.read_csv("data/sprint/baseline.csv")
+
+        baseline.columns = [x.lower() for x in baseline.columns]
+        outcome.columns = [x.lower() for x in outcome.columns]
+
+        data = baseline.merge(outcome, on="maskid", how="inner")
+
+        self.continuous_vars = [
+            "age", 
+            "sbp",
+            "dbp",
+            "n_agents",
+            "egfr", 
+            "screat",
+            "chr",
+            "glur",
+            "hdl",
+            "trr",
+            "umalcr",
+            "bmi",
+            "risk10yrs"
+        ]
+
+        self.binary_vars = [
+            "female" ,
+            # "noagents",
+            "aspirin",
+            "statin",
+            "sub_ckd",
+            "sub_cvd",
+            "sub_clinicalcvd",
+            "sub_subclinicalcvd",
+            # "inclusionfrs"
+        ]
+
+        self.categorical_vars = [
+            "smoke_3cat",
+            "race4"
+        ]
+
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
+
+        data[self.outcome] = np.where(data[self.outcome] == 1, 0, 1)
+        data = pd.get_dummies(data, columns=self.categorical_vars)
+
+        return data
+
+    def _load_accord_data(self):
+
+        data = pd.read_csv("data/accord/accord.csv")
+
+        self.outcome = "censor_po"
+        self.treatment = "treatment"
+
+        self.continuous_vars = [
+            'baseline_age', 
+            'bmi',
+            'sbp', 'dbp','hr',
+            'fpg', 'alt', 'cpk',
+            'potassium', 'screat', 'gfr',
+            'ualb', 'ucreat', 'uacr',
+            'chol', 'trig','vldl', 'ldl','hdl'
+
+        ]
+
+        self.binary_vars = [
+            'female',
+            'cvd_hx_baseline',
+            'statin',
+            'aspirin',
+            'antiarrhythmic',
+            'anti_coag',
+            'dm_med',
+            'bp_med',
+            'cv_med',
+            'lipid_med',
+            'x4smoke'
+        ]
+
+        self.categorical_vars = [
+            'raceclass'
+        ]
+
+        data["treatment"] = np.where(data["treatment"].str.contains("Intensive BP"), 1, 0)
+
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
+
+        data = pd.get_dummies(data, columns=self.categorical_vars)
+
+        return data
 
     def _process_data(self):
-        
-        self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "minmax")
 
+        # self.data[self.continuous_vars] = self.data[self.continuous_vars].apply(pd.to_numeric, errors='coerce')
+        self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "minmax")
+        
         imp = SimpleImputer(missing_values=np.nan, strategy='mean')
         imp.fit(self.data)
         self._split_data(imp.transform(self.data))

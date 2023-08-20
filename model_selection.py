@@ -30,7 +30,7 @@ if __name__ == "__main__":
     DEVICE = "cuda:1"
 
     data = Dataset(cohort_name)
-    x_test, _, _ = data.get_testing_data()
+    x_test, _, _ = data.get_data("test")
 
     learners = [
         "XLearner",
@@ -63,9 +63,9 @@ if __name__ == "__main__":
         np.random.seed(i)
         data = Dataset(cohort_name, i, shuffle)
 
-        x_train, w_train, y_train = data.get_training_data()
-        x_val, w_val, y_val = data.get_validation_data()
-        x_test, w_test, y_test = data.get_testing_data()
+        x_train, w_train, y_train = data.get_data("train")
+        x_val, w_val, y_val = data.get_data("val")
+        x_test, w_test, y_test = data.get_data("test")
 
         learners = {
             "XLearner":pseudo_outcome_nets.XLearner(
@@ -197,8 +197,8 @@ if __name__ == "__main__":
                 ),
         }
 
-        if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
-            nuisance_functions = NuisanceFunctions(rct=False)
+        if data.cohort_name in ["crash_2","ist3","sprint","accord"]:
+            nuisance_functions = NuisanceFunctions(rct=True)
         else:
             nuisance_functions = NuisanceFunctions(rct=False)
 
@@ -215,7 +215,7 @@ if __name__ == "__main__":
             for sec in selection_types:
                 results[learner_name][sec][i] = calculate_pehe(
                     prediction,
-                    data.get_testing_data(),
+                    data.get_data("test"),
                     sec,
                     nuisance_functions
                 )
