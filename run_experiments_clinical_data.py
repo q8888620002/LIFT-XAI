@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
         ## Training nuisance function for pehe. 
 
-        if data.cohort_name == "crash_2" or data.cohort_name =="ist3":
+        if data.cohort_name in ["crash_2","ist3","sprint","accord"]:
             nuisance_functions = NuisanceFunctions(rct=True)
         else:
             nuisance_functions = NuisanceFunctions(rct=False)
@@ -216,12 +216,19 @@ if __name__ == "__main__":
         noise_matrix = np.zeros(x_train.shape)
         baseline = np.mean(x_train, axis=0)
 
-        for _, idx_lst in data.categorical_indices.items():
+        for _, idx_lst in data.discrete_indices.items():
+            if len(idx_lst) == 1:
 
-            # Setting the one-hot variables within the same group with the same baseline/replacement value.
-            category_counts = data[:, idx_lst].sum(axis=0)
-            baseline[idx_lst] = category_counts / category_counts.sum()
-            
+                # setting binary vars to 0.5
+
+                baseline[idx_lst] = 0.5
+            else:
+                # setting categorical baseline to 1/n 
+                # category_counts = data[:, idx_lst].sum(axis=0)
+                # baseline[idx_lst] = category_counts / category_counts.sum()
+
+                baseline[idx_lst] = 1/len(idx_lst)
+
             # Fill in only the continuous columns with Gaussian noise
             # mask = np.zeros(feature_size, dtype=bool)
             # mask[idx_lst] = True
