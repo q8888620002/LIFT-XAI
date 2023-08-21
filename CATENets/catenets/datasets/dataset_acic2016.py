@@ -65,8 +65,8 @@ def get_acic_covariates(
 
                 enc.fit(np.array(X[[cols_]]).reshape((-1, 1)))
 
-                for k in range(len(list(enc.get_feature_names()))):
-                    X[cols_ + list(enc.get_feature_names())[k]] = enc.transform(
+                for k in range(len(list(enc.get_feature_names_out()))):
+                    X[cols_ + list(enc.get_feature_names_out())[k]] = enc.transform(
                         np.array(X[[cols_]]).reshape((-1, 1))
                     ).toarray()[:, k]
 
@@ -213,6 +213,7 @@ def get_acic_orig_outcomes(data_path: Path,
     w = out['z']
     y = w * out['y1'] + (1 - w) * out['y0']
     mu_0, mu_1 = out['mu0'], out['mu1']
+    
     return y.values, w.values, mu_0.values, mu_1.values
 
 
@@ -243,7 +244,7 @@ def preprocess_acic_orig(fn_csv: Path,
         mu_0_train, mu_0_test, mu_1_train, mu_1_test = train_test_split(X, y, w, mu_0, mu_1,
                                                                         test_size=1 - train_size,
                                                                         random_state=i_exp)
-
+    
     return (
         x_train,
         w_train,

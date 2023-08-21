@@ -223,12 +223,15 @@ class Dataset:
         outcome.columns = [x.lower() for x in outcome.columns]
 
         data = baseline.merge(outcome, on="maskid", how="inner")
+        
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,data["smoke_3cat"] )
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 3, 1, 0 )        
 
         self.continuous_vars = [
             "age", 
             "sbp",
             "dbp",
-            "n_agents",
+            # "n_agents",
             "egfr", 
             "screat",
             "chr",
@@ -237,25 +240,22 @@ class Dataset:
             "trr",
             "umalcr",
             "bmi",
-            "risk10yrs"
+            # "risk10yrs"
         ]
 
         self.binary_vars = [
             "female" ,
-            # "noagents",
+            "race_black",
+            "smoke_3cat",
             "aspirin",
             "statin",
-            "sub_ckd",
             "sub_cvd",
-            "sub_clinicalcvd",
-            "sub_subclinicalcvd",
+            "sub_ckd"
             # "inclusionfrs"
+            # "noagents"
         ]
 
-        self.categorical_vars = [
-            "smoke_3cat",
-            "race4"
-        ]
+        self.categorical_vars = []
 
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
 
@@ -279,11 +279,11 @@ class Dataset:
             'potassium', 'screat', 'gfr',
             'ualb', 'ucreat', 'uacr',
             'chol', 'trig','vldl', 'ldl','hdl'
-
         ]
 
         self.binary_vars = [
             'female',
+            'raceclass',
             'cvd_hx_baseline',
             'statin',
             'aspirin',
@@ -296,11 +296,10 @@ class Dataset:
             'x4smoke'
         ]
 
-        self.categorical_vars = [
-            'raceclass'
-        ]
+        self.categorical_vars = []
 
         data["treatment"] = np.where(data["treatment"].str.contains("Intensive BP"), 1, 0)
+        data["raceclass"] = np.where(data["raceclass"]== "Black", 1, 0)
 
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
 
@@ -310,7 +309,6 @@ class Dataset:
 
     def _process_data(self):
 
-        # self.data[self.continuous_vars] = self.data[self.continuous_vars].apply(pd.to_numeric, errors='coerce')
         self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "minmax")
         
         imp = SimpleImputer(missing_values=np.nan, strategy='mean')
