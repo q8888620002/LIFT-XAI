@@ -235,7 +235,6 @@ if __name__ == "__main__":
             # noise_matrix[:, mask] = np.random.normal(0, 0.1, (x_train.shape[0], len(idx_lst)))
 
         # x_train_noise = x_train + noise_matrix
-
         model.fit(x_train, y_train, w_train)
 
         results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
@@ -249,6 +248,7 @@ if __name__ == "__main__":
             perturbations_per_eval=1,
             baseline = baseline.reshape(1, -1)
         )
+
 
         log.info(f"Explaining dataset with: {learner}")
 
@@ -273,7 +273,7 @@ if __name__ == "__main__":
 
             ## obtaining global & local ranking for insertion & deletion
 
-            local_rank = attribution_ranking(abs_explanation)            
+            local_rank = attribution_ranking(learner_explanations[learner][explainer_name])            
             global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
             insertion_results, deletion_results = insertion_deletion(
@@ -282,6 +282,23 @@ if __name__ == "__main__":
                 model,
                 baseline,
                 selection_types,
+                nuisance_functions
+            )
+
+            ablation_pos_results = ablate(
+                data.get_data("test"),
+                learner_explanations[learner][explainer_name], 
+                model,
+                baseline,
+                "pos",
+                nuisance_functions
+            )
+            ablation_neg_results = ablate(
+                data.get_data("test"),
+                learner_explanations[learner][explainer_name], 
+                model,
+                baseline,
+                "neg",
                 nuisance_functions
             )
 
@@ -378,7 +395,9 @@ if __name__ == "__main__":
                     random_ate,
                     rand_auroc,
                     perturb_resource_results,
-                    perturb_spurious_results
+                    perturb_spurious_results,
+                    ablation_pos_results,
+                    ablation_neg_results
                 ]
             )
 

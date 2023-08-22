@@ -140,6 +140,75 @@ def attribution_ranking(feature_attributions: np.ndarray) -> list:
 
     return rank_indices
 
+def ablate(
+        test_data: tuple,
+        attr: np.ndarray, 
+        model: nn.module, 
+        refer: np.ndarray=None, 
+        impute: str="pos", 
+        nuisancefunction: NuisanceFunctions=None,
+        y_explic=None, 
+        is_loss=False
+    ):
+    """
+    Arguments:
+    pred_fn  - prediction function for model being explained
+    attr     - attribution corresponding to model and explicand
+    x_explic - sample being explained
+    impute   - the order in which we impute features
+               "pos" imputes positive attributions by refer
+               "neg" imputes negative attributions by refer
+    refer    - reference to impute with (same shape as x_explic)
+    y_explic - labels - only necessary for loss explanation
+    is_loss  - if true, the prediction function should accept
+               parameters x_explic and y_explic
+    
+    Returns:
+    ablated_preds - predictions based on ablating
+    """
+
+    x_explic,_ ,_ = test_data
+
+
+    # Set reference if None
+    if refer is None:
+        refer = np.zeros(x_explic.shape)
+    
+    if len(refer) != len(x_explic):
+        refer = np.tile(refer, (len(x_explic), 1))
+
+    # Get feature rank
+    if "pos" in impute: 
+        feat_rank = np.argsort(-attr)
+        condition = lambda x : x > 0
+        
+    if "neg" in impute: 
+        feat_rank = np.argsort(attr)
+        condition = lambda x : x < 0
+
+    # Explicand to modify
+    explicand = np.copy(x_explic)
+    
+    # # Initialize ablated predictions
+    ablated_preds = [model.predict(explicand).detach().cpu().numpy().mean()]
+        
+    # Ablate features one by one
+    for i in range(explicand.shape[1]):
+        samples   = np.arange(x_explic.shape[0])                 # Sample indices
+        top_feat  = feat_rank[:,i]                               # Get top i features
+        expl_val  = explicand[samples,top_feat]                  # Get values of top features
+        mask_val  = expl_val                                     # Initialize mask to explicand
+        cond_true = condition(attr[samples,top_feat])            # Ensure attributions satisfy positive/negative
+        mask_val[cond_true] = refer[samples,top_feat][cond_true] # Update mask based on condition
+        explicand[samples,top_feat] = mask_val                   # Mask top features
+        
+
+        avg_pred = model.predict(explicand).detach().cpu().numpy().mean()
+        ablated_preds.append(avg_pred)          # Get prediction on ablated explicand
+        
+    # Return ablated predictions
+    return(ablated_preds)
+
 def insertion_deletion(
     test_data: tuple,
     rank_indices:list,
