@@ -305,7 +305,7 @@ class PropensitySensitivity:
 
                     insertion_results , deletion_results, insertion_results_truth, deletion_results_truth  = insertion_deletion(
                         (x_test, W_test, Y_test),
-                        np.mean(x_train, axis=0),
+                        x_train.mean(0).reshape(1,-1),
                         rank_indices,
                         learners[learner_name],
                         selection_types,

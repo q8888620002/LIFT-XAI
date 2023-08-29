@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+# import shap
 
 from shapreg import shapley, games, removal, shapley_sampling
 from captum._utils.models.linear_model import SkLearnLinearRegression
@@ -178,6 +179,15 @@ class Explainer:
 
             return self._check_tensor(test_values)
 
+        # def tree_shap_cpk(x_test: torch.tensor)-> torch.Tensor:
+
+        #     explainer = shap.TreeExplainer(
+        #         model,
+        #         model_output="raw",
+        #         feature_perturbation="tree_path_dependent"
+        #     )
+
+
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
             "integrated_gradients": integrated_gradients_cbk,
@@ -190,6 +200,7 @@ class Explainer:
             "gradient_shap": gradient_shap_cbk,
             "explain_with_missingness":explain_with_missingness_cbk,
             "marginal_shap": marginal_shap_cbk,
+            # "conditional_shap": tree_shap_cpk,
             "saliency": saliency_cpk
         }
 
