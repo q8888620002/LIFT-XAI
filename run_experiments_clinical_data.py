@@ -10,6 +10,7 @@ import collections
 import pickle
 import random
 
+
 import numpy as np
 import pandas as pd
 
@@ -71,7 +72,8 @@ if __name__ == "__main__":
         "saliency",
         "integrated_gradients",
         "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling"
+        "marginal_shapley_value_sampling",
+        "conditional_shap"
         # "kernel_shap"
         # "marginal_shap"
     ]

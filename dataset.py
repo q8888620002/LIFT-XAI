@@ -6,7 +6,6 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 
-
 class Dataset:
     """
     Data wrapper for clinical data.
@@ -129,21 +128,26 @@ class Dataset:
         ]
 
         self.categorical_vars = [
-            "infarct",
-            "stroketype"
+            "stroketype",
         ]
 
         self.binary_vars = [
             "gender",
             "antiplat_rand",
-            "atrialfib_rand"
+            "atrialfib_rand",
+            "infarct"
+
         ]
 
         data = data[data.stroketype!=5]
-        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)
+
+        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)        
         data["atrialfib_rand"] = np.where(data["atrialfib_rand"]== 1, 1, 0)
-        data["gender"] = np.where(data["gender"]== 2, 1, 0)
         
+        data["gender"] = np.where(data["gender"]== 2, 1, 0)
+
+        data["infarct"] =  np.where(data["infarct"] == 0, 0, 1)
+
         data[self.treatment] = np.where(data[self.treatment]== 0, 1, 0)
         data[self.outcome] = np.where(data[self.outcome]== 1, 1, 0)
 
@@ -185,11 +189,12 @@ class Dataset:
 
         data = data.drop(data[(data[self.treatment] == "P")|(data[self.treatment] == "D")].index)
         
-        # data = data[data.iinjurytype != 3 ]
+        data = data[data.iinjurytype != 3 ]
 
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
 
         # deal with missing data
+
         data["irr"] = np.where(data["irr"]== 0, np.nan,data["irr"])
         data["isbp"] = np.where(data["isbp"] == 999, np.nan, data["isbp"])
         data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
@@ -203,11 +208,11 @@ class Dataset:
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
-        data.pop("iinjurytype_3")
+        # data.pop("iinjurytype_3")
         
         # data.pop("iinjurytype_2")
 
-        data = data.sample(int(len(data)*0.95))
+        # data = data.sample(int(len(data)*0.95))
 
         return data
 
@@ -231,7 +236,7 @@ class Dataset:
             "age", 
             "sbp",
             "dbp",
-            # "n_agents",
+            "n_agents",
             "egfr", 
             "screat",
             "chr",
@@ -274,11 +279,23 @@ class Dataset:
         self.continuous_vars = [
             'baseline_age', 
             'bmi',
-            'sbp', 'dbp','hr',
-            'fpg', 'alt', 'cpk',
-            'potassium', 'screat', 'gfr',
-            'ualb', 'ucreat', 'uacr',
-            'chol', 'trig','vldl', 'ldl','hdl'
+            'sbp', 
+            'dbp',
+            'hr',
+            'fpg', 
+            'alt', 
+            'cpk',
+            'potassium',
+            'screat', 
+            'gfr',
+            # 'ualb', 
+            # 'ucreat', 
+            # 'uacr',
+            'chol', 
+            'trig',
+            'vldl',
+            'ldl',
+            'hdl'
         ]
 
         self.binary_vars = [
@@ -289,10 +306,10 @@ class Dataset:
             'aspirin',
             'antiarrhythmic',
             'anti_coag',
-            'dm_med',
+            # 'dm_med',
             'bp_med',
-            'cv_med',
-            'lipid_med',
+            # 'cv_med',
+            # 'lipid_med',
             'x4smoke'
         ]
 
@@ -342,7 +359,7 @@ class Dataset:
         
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
-            self.data[self.outcome],
+            self.data[self.outcome].values,
             test_size=0.2,
             random_state=random_state,
             stratify=self.data[self.treatment]
@@ -358,7 +375,7 @@ class Dataset:
 
         self.x = x_train_scaled[:, var_index]
         self.w = x_train_scaled[:, treatment_index]
-        self.y = self.data[self.outcome]
+        self.y = self.data[self.outcome].values
 
         self.w_train = x_train[:, treatment_index]
         self.w_val =  x_val[:, treatment_index]
@@ -443,3 +460,149 @@ class Dataset:
         
         return indices_dict
 
+
+def obtain_baselines()-> np.ndarray:
+    """
+    Return normalized baseline of dataset1 with dataset2 value range. 
+    Args:
+
+        dataset1: 
+        dataset2: 
+
+    Return:
+
+        Normalized baselines
+
+    """
+
+    data = pd.read_csv("data/accord/accord.csv")
+
+    continuous_vars = [
+        'baseline_age', 
+        'bmi',
+        'sbp', 
+        'dbp',
+        'hr',
+        'fpg', 
+        'alt', 
+        'cpk',
+        'potassium',
+        'screat', 
+        'gfr',
+        'ualb', 
+        'ucreat', 'uacr',
+        'chol', 'trig','vldl', 'ldl','hdl'
+    ]
+
+    binary_vars = [
+        'female',
+        'raceclass',
+        'cvd_hx_baseline',
+        'statin',
+        'aspirin',
+        'antiarrhythmic',
+        'anti_coag',
+        'dm_med',
+        'bp_med',
+        'cv_med',
+        'lipid_med',
+        'x4smoke'
+    ]
+    data["raceclass"] = np.where(data["raceclass"]== "Black", 1, 0)
+
+    data2 = data[continuous_vars+ binary_vars]
+
+    outcome = pd.read_csv("data/sprint/outcomes.csv")
+    baseline = pd.read_csv("data/sprint/baseline.csv")
+
+    baseline.columns = [x.lower() for x in baseline.columns]
+    outcome.columns = [x.lower() for x in outcome.columns]
+
+    data = baseline.merge(outcome, on="maskid", how="inner")
+
+    data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,data["smoke_3cat"] )
+    data["smoke_3cat"] = np.where(data["smoke_3cat"] == 3, 1, 0 )        
+
+    continuous_vars = [
+        "age", 
+        "sbp",
+        "dbp",
+        "n_agents",
+        "egfr", 
+        "screat",
+        "chr",
+        "glur",
+        "hdl",
+        "trr",
+        "umalcr",
+        "bmi",
+        # "risk10yrs"
+    ]
+
+    binary_vars = [
+        "female" ,
+        "race_black",
+        "smoke_3cat",
+        "aspirin",
+        "statin",
+        "sub_cvd",
+        "sub_ckd"
+        # "inclusionfrs"
+        # "noagents"
+    ]
+
+
+    data1 = data[continuous_vars+binary_vars]
+
+
+    def normalize_means_to_df2_scale(df2, df1):
+        
+        # Mapping of the second dataset columns to the first dataset columns
+        
+        mapping = {
+            'baseline_age': 'age',
+            'sbp': 'sbp',
+            'dbp': 'dbp',
+            'gfr': 'egfr',
+            'screat': 'screat',
+            'hdl': 'hdl',
+            'bmi': 'bmi',
+            'female': 'female',
+            'raceclass': 'race_black',
+            'x4smoke': 'smoke_3cat',
+            'aspirin': 'aspirin',
+            'statin': 'statin',
+            'bp_med': 'n_agents'
+        }
+
+        # Columns that we won't normalize but will use their original mean
+        columns_no_normalize = ['female', 'race_black', 'smoke_3cat', 'aspirin', 'statin']
+
+        # Calculate means of df2's mapped columns
+        
+        df2_sampled = df2.sample(n=len(df2), replace=True)
+
+        df2_means = df2_sampled[list(mapping.keys())].mean()
+
+        normalized_means = []
+
+        for key, value in mapping.items():
+            mean_val = df2_means[key]
+            if value not in columns_no_normalize:
+                # Scale the mean value of df2's column using df1's column scale
+                scaler = MinMaxScaler()
+                # Fit the scaler to df1's column
+                scaler.fit(df1[value].values.reshape(-1, 1))
+                # Transform df2's mean value
+                normalized_mean = scaler.transform([[mean_val]])[0][0]
+            else:
+                # If column is in columns_no_normalize list, just use the raw mean
+                normalized_mean = mean_val
+
+            normalized_means.append(normalized_mean)
+
+        # Convert to numpy array
+        result_array = pd.Series(normalized_means, index=list(mapping.values())).reindex(df1.columns, fill_value=np.nan).to_numpy()
+        return result_array
+
+    return normalize_means_to_df2_scale(data2, data1)
