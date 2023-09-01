@@ -229,8 +229,9 @@ class Dataset:
 
         data = baseline.merge(outcome, on="maskid", how="inner")
         
-        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,data["smoke_3cat"] )
-        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 3, 1, 0 )        
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan, 
+                                    np.where(data["smoke_3cat"] == 3, 1, 0))
+
 
         self.continuous_vars = [
             "age", 
@@ -290,7 +291,7 @@ class Dataset:
             'gfr',
             # 'ualb', 
             # 'ucreat', 
-            # 'uacr',
+            'uacr',
             'chol', 
             'trig',
             'vldl',
@@ -317,6 +318,7 @@ class Dataset:
 
         data["treatment"] = np.where(data["treatment"].str.contains("Intensive BP"), 1, 0)
         data["raceclass"] = np.where(data["raceclass"]== "Black", 1, 0)
+        data["x4smoke"] = np.where(data["x4smoke"] == 1, 1, 0)
 
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
 
@@ -461,7 +463,7 @@ class Dataset:
         return indices_dict
 
 
-def obtain_baselines()-> np.ndarray:
+def obtain_accord_baselines()-> np.ndarray:
     """
     Return normalized baseline of dataset1 with dataset2 value range. 
     Args:
@@ -475,7 +477,7 @@ def obtain_baselines()-> np.ndarray:
 
     """
 
-    data = pd.read_csv("data/accord/accord.csv")
+    accord = pd.read_csv("data/accord/accord.csv")
 
     continuous_vars = [
         'baseline_age', 
@@ -489,9 +491,14 @@ def obtain_baselines()-> np.ndarray:
         'potassium',
         'screat', 
         'gfr',
-        'ualb', 
-        'ucreat', 'uacr',
-        'chol', 'trig','vldl', 'ldl','hdl'
+        # 'ualb', 
+        # 'ucreat', 
+        'uacr',
+        'chol', 
+        'trig',
+        'vldl', 
+        'ldl',
+        'hdl'
     ]
 
     binary_vars = [
@@ -502,15 +509,16 @@ def obtain_baselines()-> np.ndarray:
         'aspirin',
         'antiarrhythmic',
         'anti_coag',
-        'dm_med',
+        # 'dm_med',
         'bp_med',
-        'cv_med',
-        'lipid_med',
+        # 'cv_med',
+        # 'lipid_med',
         'x4smoke'
     ]
-    data["raceclass"] = np.where(data["raceclass"]== "Black", 1, 0)
+    accord["raceclass"] = np.where(accord["raceclass"]== "Black", 1, 0)
+    accord["x4smoke"] = np.where(accord["x4smoke"] == 1, 1, 0)
 
-    data2 = data[continuous_vars+ binary_vars]
+    accord = accord[continuous_vars+ binary_vars]
 
     outcome = pd.read_csv("data/sprint/outcomes.csv")
     baseline = pd.read_csv("data/sprint/baseline.csv")
@@ -518,10 +526,10 @@ def obtain_baselines()-> np.ndarray:
     baseline.columns = [x.lower() for x in baseline.columns]
     outcome.columns = [x.lower() for x in outcome.columns]
 
-    data = baseline.merge(outcome, on="maskid", how="inner")
+    sprint = baseline.merge(outcome, on="maskid", how="inner")
 
-    data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,data["smoke_3cat"] )
-    data["smoke_3cat"] = np.where(data["smoke_3cat"] == 3, 1, 0 )        
+    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan, 
+                                np.where(sprint["smoke_3cat"] == 3, 1, 0))
 
     continuous_vars = [
         "age", 
@@ -552,7 +560,7 @@ def obtain_baselines()-> np.ndarray:
     ]
 
 
-    data1 = data[continuous_vars+binary_vars]
+    sprint = sprint[continuous_vars+binary_vars]
 
 
     def normalize_means_to_df2_scale(df2, df1):
@@ -564,10 +572,15 @@ def obtain_baselines()-> np.ndarray:
             'sbp': 'sbp',
             'dbp': 'dbp',
             'gfr': 'egfr',
+            'fpg': 'glur',
             'screat': 'screat',
+            'uacr':'umalcr',
+            'chol':'chr',
             'hdl': 'hdl',
+            'trig':'trr',
             'bmi': 'bmi',
             'female': 'female',
+            'cvd_hx_baseline': 'sub_cvd' , 
             'raceclass': 'race_black',
             'x4smoke': 'smoke_3cat',
             'aspirin': 'aspirin',
@@ -576,7 +589,7 @@ def obtain_baselines()-> np.ndarray:
         }
 
         # Columns that we won't normalize but will use their original mean
-        columns_no_normalize = ['female', 'race_black', 'smoke_3cat', 'aspirin', 'statin']
+        columns_no_normalize = ['female', 'race_black', 'smoke_3cat', 'aspirin', 'statin', 'sub_cvd']
 
         # Calculate means of df2's mapped columns
         
@@ -605,4 +618,4 @@ def obtain_baselines()-> np.ndarray:
         result_array = pd.Series(normalized_means, index=list(mapping.values())).reindex(df1.columns, fill_value=np.nan).to_numpy()
         return result_array
 
-    return normalize_means_to_df2_scale(data2, data1)
+    return normalize_means_to_df2_scale(accord, sprint)
