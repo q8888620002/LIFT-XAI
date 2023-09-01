@@ -2,18 +2,55 @@ from __future__ import annotations
 from typing import List
 
 import torch
-from torch import nn
-from torch.optim.lr_scheduler import ReduceLROnPlateau
-from copy import deepcopy
-
+import torch.optim as optim
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 
+from torch import nn
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.utils.data import DataLoader, TensorDataset
+from copy import deepcopy
 from dataset import Dataset
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn import metrics
 
+class TwoLayerMLP(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(TwoLayerMLP, self).__init__()
+        
+        self.layer1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.layer2 = nn.Linear(hidden_size, output_size)
+        
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.relu(x)
+        x = self.layer2(x)
+        return x
+    
+    def train_model(self, x, y, epochs=100, lr=1e-4, batch_size=32):
+        # Convert data into DataLoader for mini-batch processing
+        dataset = TensorDataset(torch.from_numpy(x).float(), torch.from_numpy(y).float())
+        data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+        # Loss and optimizer
+        criterion = nn.MSELoss()
+        optimizer = optim.Adam(self.parameters(), lr=lr)
+
+        for epoch in range(epochs):
+            for batch_x, batch_y in data_loader:
+                # Forward pass
+                outputs = self(batch_x)
+                loss = criterion(outputs, batch_y)
+                
+                # Backward pass and optimization
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+            if (epoch+1) % 10 ==0:
+                print(f"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}")
 
 class NuisanceFunctions:
     def __init__(self, rct: bool):
@@ -87,6 +124,7 @@ def subgroup_identification(
     return:
         ate: average treatment effect according to the xgb classifier
         auroc: corresponding AUROC for xgb classifier in testing set.
+        mse: mean squared error for student model vs teacher model
 
     """
 
@@ -99,6 +137,7 @@ def subgroup_identification(
     test_tx_assignments = (test_effects > threshold)
 
     xgb_model = xgb.XGBClassifier()
+    mlp = TwoLayerMLP(len(col_indices), 32 , 1)
 
     if local:
         ## Subgroup identification with local feature ranking. 
@@ -116,6 +155,11 @@ def subgroup_identification(
         ## Subgroup identification with global feature ranking 
         assert len(col_indices) <= x_test.shape[1], " global rank indices don't match with testing dimension"
 
+        mlp.train_model(x_train[:, col_indices], train_effects, epochs=30, batch_size=32)
+
+        pred_cate  = mlp(torch.from_numpy(x_test[:, col_indices]).float()).detach().cpu().numpy() 
+        mse = np.mean((pred_cate - test_effects)**2)
+
         xgb_model.fit(x_train[:, col_indices], train_tx_assignments)
         pred_tx_assignment = xgb_model.predict(x_test[:, col_indices])
 
@@ -123,7 +167,7 @@ def subgroup_identification(
 
     auroc = metrics.roc_auc_score(test_tx_assignments, pred_tx_assignment)
 
-    return ate, auroc
+    return ate, auroc, mse
 
 def attribution_ranking(feature_attributions: np.ndarray) -> list:
     """"

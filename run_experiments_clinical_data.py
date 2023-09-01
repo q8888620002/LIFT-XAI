@@ -71,9 +71,8 @@ if __name__ == "__main__":
     explainers = [
         "saliency",
         "integrated_gradients",
-        "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling",
-        "conditional_shap"
+        # "baseline_shapley_value_sampling",
+        # "marginal_shapley_value_sampling",
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -104,7 +103,7 @@ if __name__ == "__main__":
                     n_layers_out=2,
                     n_units_out=100,
                     batch_size=128,
-                    n_iter=1000,
+                    n_iter=10,
                     nonlin="relu",
                     device=DEVICE,
                     seed=i
@@ -328,7 +327,7 @@ if __name__ == "__main__":
                 print("obtaining subgroup results for %s, feature_num: %s."%(explainer_name ,feature_idx+1),end='\r')
                 
                 ## Starting from 1 features 
-                ate, auroc = subgroup_identification(
+                ate, auroc, mse = subgroup_identification(
                     global_rank[:feature_idx+1],
                     x_train,
                     x_test,
@@ -338,7 +337,7 @@ if __name__ == "__main__":
                 auroc_results.append(auroc)
                 ate_results.append(ate)
                 
-                random_ate, random_auroc = subgroup_identification(
+                random_ate, random_auroc, rand_mse = subgroup_identification(
                     random.sample(range(0, x_train.shape[1]), feature_idx+1),
                     x_train,
                     x_test,
@@ -377,7 +376,7 @@ if __name__ == "__main__":
 
             ## results with all features. 
 
-            full_ate, full_auroc = subgroup_identification(
+            full_ate, full_auroc, full_mse = subgroup_identification(
                 [i for i in range(x_train.shape[1])],
                 x_train,
                 x_test,
@@ -399,7 +398,8 @@ if __name__ == "__main__":
                     perturb_resource_results,
                     perturb_spurious_results,
                     ablation_pos_results,
-                    ablation_neg_results
+                    ablation_neg_results,
+                    mse
                 ]
             )
 

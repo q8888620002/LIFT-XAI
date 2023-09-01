@@ -35,7 +35,9 @@ def main(args):
     cohort_name = args["dataset"]
     trials = args["num_trials"]
     subgroup_col = args["subgroup_column"]
+    bshap = args["baseline"]
 
+    print("Baselines shapley:", bshap)
     data = Dataset(cohort_name, 0)
     x, y, w = data.get_data()
 
@@ -51,8 +53,8 @@ def main(args):
     for i in range(trials):
         x, w, y = data.get_data()
 
-
         sampled_indices = np.random.choice(len(x), size=len(x), replace=True)
+
         x_sampled = x[sampled_indices]
         y_sampled = y[sampled_indices]
         w_sampled = w[sampled_indices]
@@ -76,10 +78,32 @@ def main(args):
 
         predict_results[i] = model.predict(X=x_sampled).detach().cpu().numpy().flatten()
 
-        mean_baseline = x.mean(0)
+        if bshap == True:
 
-        mean_baseline = obtain_baselines()
-        average_shap[i] = compute_shap_values(model, x, mean_baseline)
+            baseline = x.mean(0)
+
+            for _, idx_lst in data.discrete_indices.items():
+                if len(idx_lst) == 1:
+
+                    # setting binary vars to 0.5
+
+                    baseline[idx_lst] = 0.5
+                else:
+                    # setting categorical baseline to 1/n 
+                    # category_counts = data[:, idx_lst].sum(axis=0)
+                    # baseline[idx_lst] = category_counts / category_counts.sum()
+
+                    baseline[idx_lst] = 1/len(idx_lst)
+        else:
+            baseline_index = np.random.choice(len(x_sampled) ,1)
+            baseline = x_sampled[baseline_index]
+            # mean_baseline_accord = obtain_accord_baselines()
+            
+            # nan_indices = np.isnan(mean_baseline_accord)
+
+            # mean_baseline_accord[nan_indices] = mean_baseline[nan_indices]
+
+        average_shap[i] = compute_shap_values(model, x, baseline)
 
         for unique_value in unique_subgroup_values:
             subgroup_sample = x[x[:, subgroup_index] == unique_value]
@@ -91,14 +115,15 @@ def main(args):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    with open(os.path.join(save_path, "predict_results_accord_baseline.pkl"), "wb") as output_file:
+
+    with open(os.path.join(save_path, f"predict_results_{bshap}.pkl"), "wb") as output_file:
         pickle.dump(predict_results, output_file)
 
-    with open(os.path.join(save_path, "shap_bootstrapped_accord_baseline.pkl"), "wb") as output_file:
+    with open(os.path.join(save_path, f"shap_bootstrapped_{bshap}.pkl"), "wb") as output_file:
         pickle.dump(average_shap, output_file)
 
     for subgroup, shap_values in subgroup_shap_values.items():
-        file_name = f"{subgroup}_shap_accord_baseline.pkl"
+        file_name = f"{subgroup}_shap_{bshap}.pkl"
         with open(os.path.join(save_path, file_name), "wb") as output_file:
             pickle.dump(shap_values, output_file)
 
@@ -107,6 +132,8 @@ if __name__ == "__main__":
     parser.add_argument('-d', '--dataset', help='Dataset', required=True, type=str)
     parser.add_argument('-t', '--num_trials', help='number of runs ', required=True, type=int)
     parser.add_argument('-g', '--subgroup_column', help='Dataset', required=True, type=str)
+    parser.add_argument('-b', '--baseline', help='whether using baseline', default=True, action='store_false')
+
     args = vars(parser.parse_args())
 
     main(args)
