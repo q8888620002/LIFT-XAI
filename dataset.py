@@ -27,10 +27,16 @@ class Dataset:
             self.data = self._load_ist3_data()
         elif cohort_name == "crash_2":
             self.data = self._load_crash2_data()
+        elif cohort_name == "txa":
+            self.data = self._load_txa_data()
         elif cohort_name == "sprint":
             self.data = self._load_sprint_data()
         elif cohort_name == "accord":
             self.data = self._load_accord_data()
+        elif cohort_name == "sprint_filter":
+            self.data = self._load_sprint_filter_data()
+        elif cohort_name =="accord_filter":
+            self.data = self._load_accord_filter_data()
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
         
@@ -79,7 +85,8 @@ class Dataset:
             "edgcsverbal",
             "sex_F",
             "traumatype_P",
-            "traumatype_Other"
+            "traumatype_OTHER",
+            "causecode"
         ]
 
         self.treatment = "treated"
@@ -101,12 +108,64 @@ class Dataset:
             'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
         ]
         
-        self.categorical_vars = [col for col in data.columns if 'causecode' in col]
-
+        # self.categorical_vars = [col for col in data.columns if 'causecode' in col]
+        self.categorical_vars = []
+        
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
 
         return data
+
+    def _load_txa_data(self):
+
+        data = pd.read_pickle(f"data/txa_cohort.pkl")
+
+        filter_regex = [
+            'proc',
+            'ethnicity',
+            'residencestate',
+            'toxicologyresults',
+            "registryid",
+            "COV",
+            "TT",
+            "scenegcsmotor",
+            "scenegcseye",
+            "scenegcsverbal",
+            "edgcsmotor",
+            "edgcseye",
+            "edgcsverbal",
+            "sex_F",
+            "traumatype_P",
+            "traumatype_OTHER",
+            "causecode"
+        ]
+
+        self.treatment = "treated"
+        self.outcome = "outcome"
+
+        for regex in filter_regex:
+            data = data[data.columns.drop(list(data.filter(regex=regex)))]
+
+        self.binary_vars = [
+            "sex_M",
+            "traumatype_B",
+        ]
+
+        self.continuous_vars = [
+            'age',
+            'scenefirstbloodpressure', 
+            'scenefirstpulse',
+            'scenefirstrespirationrate', 
+            'scenegcs'
+        ]
+        
+        self.categorical_vars = []
+        
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
+
+
+        return data
+
 
     def _load_ist3_data(self):
         data = pd.read_sas("data/datashare_aug2015.sas7bdat")
@@ -270,6 +329,62 @@ class Dataset:
 
         return data
 
+    def _load_sprint_filter_data(self):
+
+        self.outcome = "event_primary"
+        self.treatment = "intensive"
+
+        outcome = pd.read_csv("data/sprint/outcomes.csv")
+        baseline = pd.read_csv("data/sprint/baseline.csv")
+
+        baseline.columns = [x.lower() for x in baseline.columns]
+        outcome.columns = [x.lower() for x in outcome.columns]
+
+        data = baseline.merge(outcome, on="maskid", how="inner")
+        
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan, 
+                                    np.where(data["smoke_3cat"] == 3, 1, 0))
+
+        self.continuous_vars = [
+            "age", 
+            "sbp",
+            "dbp",
+            "n_agents",
+            "egfr", 
+            "screat",
+            "chr",
+            "glur",
+            "hdl",
+            "trr",
+            "umalcr",
+            "bmi",
+            # "risk10yrs"
+        ]
+
+        self.binary_vars = [
+            "female" ,
+            "race_black",
+            "smoke_3cat",
+            "aspirin",
+            "statin",
+            "sub_cvd",
+            # "sub_ckd"
+            # "inclusionfrs"
+            # "noagents"
+        ]
+        
+
+        self.categorical_vars = []
+
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
+
+        data[self.outcome] = np.where(data[self.outcome] == 1, 0, 1)
+
+        
+        data = pd.get_dummies(data, columns=self.categorical_vars)
+
+        return data
+    
     def _load_accord_data(self):
 
         data = pd.read_csv("data/accord/accord.csv")
@@ -296,7 +411,8 @@ class Dataset:
             'trig',
             'vldl',
             'ldl',
-            'hdl'
+            'hdl',
+            'bp_med'
         ]
 
         self.binary_vars = [
@@ -308,10 +424,66 @@ class Dataset:
             'antiarrhythmic',
             'anti_coag',
             # 'dm_med',
-            'bp_med',
             # 'cv_med',
             # 'lipid_med',
             'x4smoke'
+        ]
+
+        self.categorical_vars = []
+
+        data["treatment"] = np.where(data["treatment"].str.contains("Intensive BP"), 1, 0)
+        data["raceclass"] = np.where(data["raceclass"]== "Black", 1, 0)
+        data["x4smoke"] = np.where(data["x4smoke"] == 1, 1, 0)
+
+        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment] + [self.outcome]]
+
+        data = pd.get_dummies(data, columns=self.categorical_vars)
+
+        return data
+    
+    def _load_accord_filter_data(self):
+
+        data = pd.read_csv("data/accord/accord.csv")
+
+        self.outcome = "censor_po"
+        self.treatment = "treatment"
+
+        self.continuous_vars = [
+            'baseline_age', 
+            'sbp', 
+            'dbp',
+            'bp_med',
+            'gfr',
+            'screat', 
+            'chol', 
+            'fpg', 
+            'hdl',
+            'trig',
+            'uacr',
+            'bmi',
+            # 'hr',
+            # 'alt', 
+            # 'cpk',
+            # 'potassium',
+            # 'ualb', 
+            # 'ucreat', 
+            # 'vldl',
+            # 'ldl',
+
+        ]
+
+        self.binary_vars = [
+            'female',
+            'raceclass',
+            'x4smoke',
+            'aspirin',
+            'statin',
+            'cvd_hx_baseline'
+            # 'antiarrhythmic',
+            # 'anti_coag',
+            # 'dm_med',
+            # 'cv_med',
+            # 'lipid_med',
         ]
 
         self.categorical_vars = []
@@ -463,62 +635,38 @@ class Dataset:
         return indices_dict
 
 
-def obtain_accord_baselines()-> np.ndarray:
+def obtain_accord_baselines() -> np.ndarray:
     """
-    Return normalized baseline of dataset1 with dataset2 value range. 
-    Args:
-
-        dataset1: 
-        dataset2: 
+    Return normalized baseline of ACCORD dataset with SPRINT value range. 
 
     Return:
-
-        Normalized baselines
-
+        Tuple containing:
+        - Normalized baselines for SPRINT
+        - Treatment for SPRINT
+        - Outcome for SPRINT
+        - Normalized baselines for ACCORD
     """
 
     accord = pd.read_csv("data/accord/accord.csv")
 
-    continuous_vars = [
-        'baseline_age', 
-        'bmi',
-        'sbp', 
-        'dbp',
-        'hr',
-        'fpg', 
-        'alt', 
-        'cpk',
-        'potassium',
-        'screat', 
-        'gfr',
-        # 'ualb', 
-        # 'ucreat', 
-        'uacr',
-        'chol', 
-        'trig',
-        'vldl', 
-        'ldl',
-        'hdl'
+    continuous_vars_accord = [
+        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat', 
+        'chol', 'fpg', 'hdl', 'trig', 'uacr', 'bmi'
     ]
 
-    binary_vars = [
-        'female',
-        'raceclass',
-        'cvd_hx_baseline',
-        'statin',
-        'aspirin',
-        'antiarrhythmic',
-        'anti_coag',
-        # 'dm_med',
-        'bp_med',
-        # 'cv_med',
-        # 'lipid_med',
-        'x4smoke'
+    binary_vars_accord = [
+        'female', 'raceclass', 'x4smoke', 'aspirin', 
+        'statin', 'cvd_hx_baseline'
     ]
+
     accord["raceclass"] = np.where(accord["raceclass"]== "Black", 1, 0)
     accord["x4smoke"] = np.where(accord["x4smoke"] == 1, 1, 0)
 
-    accord = accord[continuous_vars+ binary_vars]
+    outcome = "censor_po"
+    treatment = "treatment"
+    
+    accord = accord[continuous_vars_accord + binary_vars_accord +[treatment] + [outcome]]
+    accord["treatment"] = np.where(accord["treatment"].str.contains("Intensive BP"), 1, 0)
 
     outcome = pd.read_csv("data/sprint/outcomes.csv")
     baseline = pd.read_csv("data/sprint/baseline.csv")
@@ -531,91 +679,41 @@ def obtain_accord_baselines()-> np.ndarray:
     sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan, 
                                 np.where(sprint["smoke_3cat"] == 3, 1, 0))
 
-    continuous_vars = [
-        "age", 
-        "sbp",
-        "dbp",
-        "n_agents",
-        "egfr", 
-        "screat",
-        "chr",
-        "glur",
-        "hdl",
-        "trr",
-        "umalcr",
-        "bmi",
-        # "risk10yrs"
+    continuous_vars_sprint = [
+        "age", "sbp", "dbp", "n_agents", "egfr", "screat",
+        "chr", "glur", "hdl", "trr", "umalcr", "bmi"
     ]
 
-    binary_vars = [
-        "female" ,
-        "race_black",
-        "smoke_3cat",
-        "aspirin",
-        "statin",
-        "sub_cvd",
-        "sub_ckd"
-        # "inclusionfrs"
-        # "noagents"
+    binary_vars_sprint = [
+        "female", "race_black", "smoke_3cat", 
+        "aspirin", "statin", "sub_cvd"
     ]
 
+    treatment = "intensive"
+    outcome_col = "event_primary"
 
-    sprint = sprint[continuous_vars+binary_vars]
+    sprint = sprint[continuous_vars_sprint + binary_vars_sprint + [treatment] + [outcome_col]]
+    sprint[outcome_col] = np.where(sprint[outcome_col] == 1, 0, 1)
 
+    scaler = MinMaxScaler()
 
-    def normalize_means_to_df2_scale(df2, df1):
-        
-        # Mapping of the second dataset columns to the first dataset columns
-        
-        mapping = {
-            'baseline_age': 'age',
-            'sbp': 'sbp',
-            'dbp': 'dbp',
-            'gfr': 'egfr',
-            'fpg': 'glur',
-            'screat': 'screat',
-            'uacr':'umalcr',
-            'chol':'chr',
-            'hdl': 'hdl',
-            'trig':'trr',
-            'bmi': 'bmi',
-            'female': 'female',
-            'cvd_hx_baseline': 'sub_cvd' , 
-            'raceclass': 'race_black',
-            'x4smoke': 'smoke_3cat',
-            'aspirin': 'aspirin',
-            'statin': 'statin',
-            'bp_med': 'n_agents'
-        }
+    scaler.fit(
+        np.concatenate(
+            (
+              sprint[continuous_vars_sprint].values,
+              accord[continuous_vars_accord].values
+            ), axis=0
+        )
+    )
 
-        # Columns that we won't normalize but will use their original mean
-        columns_no_normalize = ['female', 'race_black', 'smoke_3cat', 'aspirin', 'statin', 'sub_cvd']
+    sprint[continuous_vars_sprint] = scaler.transform(sprint[continuous_vars_sprint].values)
+    accord[continuous_vars_accord] = scaler.transform(accord[continuous_vars_accord].values)
 
-        # Calculate means of df2's mapped columns
-        
-        df2_sampled = df2.sample(n=len(df2), replace=True)
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    imp.fit(sprint)
+    sprint = imp.transform(sprint)
 
-        df2_means = df2_sampled[list(mapping.keys())].mean()
-
-        normalized_means = []
-
-        for key, value in mapping.items():
-            mean_val = df2_means[key]
-            if value not in columns_no_normalize:
-                # Scale the mean value of df2's column using df1's column scale
-                scaler = MinMaxScaler()
-                # Fit the scaler to df1's column
-                scaler.fit(df1[value].values.reshape(-1, 1))
-                # Transform df2's mean value
-                normalized_mean = scaler.transform([[mean_val]])[0][0]
-            else:
-                # If column is in columns_no_normalize list, just use the raw mean
-                normalized_mean = mean_val
-
-            normalized_means.append(normalized_mean)
-
-        # Convert to numpy array
-        result_array = pd.Series(normalized_means, index=list(mapping.values())).reindex(df1.columns, fill_value=np.nan).to_numpy()
-        return result_array
-
-    return normalize_means_to_df2_scale(accord, sprint)
+    imp.fit(accord)
+    accord = imp.transform(accord)
+    
+    return sprint[:, :-2], sprint[:, -2], sprint[:, -1], accord[:, :-2], accord[:, -2], accord[:, -1]

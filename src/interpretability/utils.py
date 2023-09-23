@@ -343,6 +343,7 @@ def insertion_deletion(
             col_indices = rank_indices[rank_index - 1]
 
             for i in range(n):
+
                 x_test_ins[i, col_indices[i]] = x_test[i, col_indices[i]]
                 x_test_del[i, col_indices[i]] = baseline[i, col_indices[i]]
 

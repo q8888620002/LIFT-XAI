@@ -8,6 +8,7 @@ import xgboost as xgb
 
 from sklearn import metrics
 from pathlib import Path
+from utilities import subgroup_identification
 
 module_path = os.path.abspath(os.path.join('./CATENets/'))
 
@@ -300,18 +301,36 @@ class PropensitySensitivity:
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
                     rank_indices = attribution_ranking(attribution_est)
+                    global_rank = np.flip(np.argsort(attribution_est.mean(0)))
 
                     log.info(f"Calculating Pehe for {explainer_name}. {learner_name}")
 
                     insertion_results , deletion_results, insertion_results_truth, deletion_results_truth  = insertion_deletion(
-                        (x_test, W_test, Y_test),
+                        (x_test[: self.explainer_limit], W_test[: self.explainer_limit], Y_test[: self.explainer_limit]),
                         x_train.mean(0).reshape(1,-1),
                         rank_indices,
                         learners[learner_name],
                         selection_types,
                         nuisance_functions,
-                        cate_test
+                        cate_test[: self.explainer_limit]
                      )
+                    
+                    auroc_results = []
+                    ate_results = []
+                    mse_results = []
+
+                    for feature_idx in range(x_train.shape[1]):
+
+                        auroc, ate, mse = subgroup_identification(
+                            global_rank[:feature_idx+1],
+                            x_train,
+                            x_test,
+                            learners[learner_name],
+                        )
+
+                        auroc_results.append(auroc)
+                        ate_results.append(ate)
+                        mse_results.append(mse)
 
                     insertion_deletion_results.append(
                         [
@@ -321,7 +340,10 @@ class PropensitySensitivity:
                             insertion_results,
                             deletion_results,
                             insertion_results_truth, 
-                            deletion_results_truth
+                            deletion_results_truth,
+                            auroc_results,
+                            ate_results,
+                            mse_results
                         ]
                     )
 

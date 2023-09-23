@@ -15,42 +15,68 @@ from dataset import Dataset
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn import metrics
 
+import torch
+from torch import nn, optim
+from torch.utils.data import DataLoader, TensorDataset, random_split
+
 class TwoLayerMLP(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(TwoLayerMLP, self).__init__()
-        
+
         self.layer1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
         self.layer2 = nn.Linear(hidden_size, output_size)
-        
+
     def forward(self, x):
         x = self.layer1(x)
         x = self.relu(x)
         x = self.layer2(x)
         return x
-    
-    def train_model(self, x, y, epochs=100, lr=1e-4, batch_size=32):
+
+    def train_model(self, x, y, epochs=100, lr=1e-4, batch_size=32, validation_split=0.1, patience=10):
         # Convert data into DataLoader for mini-batch processing
         dataset = TensorDataset(torch.from_numpy(x).float(), torch.from_numpy(y).float())
-        data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        
+        # Splitting data into training and validation sets
+        train_len = int((1 - validation_split) * len(dataset))
+        valid_len = len(dataset) - train_len
+        train_dataset, valid_dataset = random_split(dataset, [train_len, valid_len])
+        
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False)
 
         # Loss and optimizer
         criterion = nn.MSELoss()
         optimizer = optim.Adam(self.parameters(), lr=lr)
 
+        best_valid_loss = float('inf')
+        counter = 0
+
         for epoch in range(epochs):
-            for batch_x, batch_y in data_loader:
-                # Forward pass
+            # Training loop
+            for batch_x, batch_y in train_loader:
                 outputs = self(batch_x)
                 loss = criterion(outputs, batch_y)
-                
-                # Backward pass and optimization
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+            
+            # Validation loop
+            with torch.no_grad():
+                valid_loss = sum(criterion(self(batch_x), batch_y) for batch_x, batch_y in valid_loader)
+            
+            if valid_loss < best_valid_loss:
+                best_valid_loss = valid_loss
+                counter = 0  # Reset counter when new best model is found
+            else:
+                counter += 1  # Increment counter when no improvement in validation loss
+                
+                if counter >= patience:
+                    print("Early stopping!")
+                    return
 
-            if (epoch+1) % 10 ==0:
-                print(f"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}")
+            if (epoch+1) % 10 == 0:
+                print(f"Epoch [{epoch + 1}/{epochs}], Training Loss: {loss.item():.4f}, Validation Loss: {valid_loss:.4f}")
 
 class NuisanceFunctions:
     def __init__(self, rct: bool):
@@ -155,7 +181,7 @@ def subgroup_identification(
         ## Subgroup identification with global feature ranking 
         assert len(col_indices) <= x_test.shape[1], " global rank indices don't match with testing dimension"
 
-        mlp.train_model(x_train[:, col_indices], train_effects, epochs=30, batch_size=32)
+        mlp.train_model(x_train[:, col_indices], train_effects, epochs=100, batch_size=32)
 
         pred_cate  = mlp(torch.from_numpy(x_test[:, col_indices]).float()).detach().cpu().numpy() 
         mse = np.mean((pred_cate - test_effects)**2)

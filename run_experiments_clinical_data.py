@@ -47,7 +47,7 @@ if __name__ == "__main__":
     top_n_features = args["top_n_features"]
     shuffle = args["shuffle"]
     learner = args["learner"]
-    DEVICE = "cuda:1"
+    DEVICE = "cuda:0"
     
     print("shuffle dataset: ", shuffle)
 
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     explainers = [
         "saliency",
         "integrated_gradients",
-        # "baseline_shapley_value_sampling",
-        # "marginal_shapley_value_sampling",
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling",
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                     n_layers_out=2,
                     n_units_out=100,
                     batch_size=128,
-                    n_iter=10,
+                    n_iter=1000,
                     nonlin="relu",
                     device=DEVICE,
                     seed=i
@@ -265,16 +265,19 @@ if __name__ == "__main__":
             auroc_results = []
             rand_ate = []
             rand_auroc = []
-
-            abs_explanation = np.abs(learner_explanations[learner][explainer_name])
+            mse_results = []
 
             # Normalize explanation on row basis.
 
-            norm_explanation = normalize(learner_explanations[learner][explainer_name])
+            # norm_explanation = normalize(learner_explanations[learner][explainer_name])
 
             ## obtaining global & local ranking for insertion & deletion
 
-            local_rank = attribution_ranking(learner_explanations[learner][explainer_name])            
+            # local_rank = attribution_ranking(learner_explanations[learner][explainer_name]) 
+
+            abs_explanation = np.abs(learner_explanations[learner][explainer_name])
+
+            local_rank  = attribution_ranking(learner_explanations[learner][explainer_name])
             global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
             insertion_results, deletion_results = insertion_deletion(
@@ -294,6 +297,7 @@ if __name__ == "__main__":
                 "pos",
                 nuisance_functions
             )
+
             ablation_neg_results = ablate(
                 data.get_data("test"),
                 learner_explanations[learner][explainer_name], 
@@ -310,17 +314,17 @@ if __name__ == "__main__":
 
             ## obtain oracle & threshold for supurious/resource experiment.
             
-            perturbated_var = generate_perturbed_var(
-                data, 
-                x_test, 
-                feature_size, 
-                discrete_indices, 
-                n_steps, 
-                model
-            )
+            # perturbated_var = generate_perturbed_var(
+            #     data, 
+            #     x_test, 
+            #     feature_size, 
+            #     discrete_indices, 
+            #     n_steps, 
+            #     model
+            # )
 
-            sprious_qualtile = np.quantile(perturbated_var, 0.8)
-            threshold_vals = np.linspace(start=-1.0,stop=1.0,num=40)
+            # sprious_qualtile = np.quantile(perturbated_var, 0.8)
+            # threshold_vals = np.linspace(start=-1.0,stop=1.0,num=40)
 
             for feature_idx in range(feature_size):
 
@@ -334,54 +338,57 @@ if __name__ == "__main__":
                     model,
                     # True
                 )
+
                 auroc_results.append(auroc)
                 ate_results.append(ate)
-                
-                random_ate, random_auroc, rand_mse = subgroup_identification(
-                    random.sample(range(0, x_train.shape[1]), feature_idx+1),
-                    x_train,
-                    x_test,
-                    model
-                )
+                mse_results.append(mse)
 
-                rand_auroc.append(random_auroc)
-                rand_ate.append(random_ate)
+                # random_ate, random_auroc, _ = subgroup_identification(
+                #     random.sample(range(0, x_train.shape[1]), feature_idx+1),
+                #     x_train,
+                #     x_test,
+                #     model
+                # )
+
+                # rand_auroc.append(random_auroc)
+                # rand_ate.append(random_ate)
 
                 ## Perturbation experiment with only using continuous variables 
                 
-                if feature_idx < np.min(discrete_indices):   
 
-                    # Generating perturbed samples with (n*n_steps, d)
-                    print("generating resource/spurious results for %s, feature: %s."%(explainer_name , feature_idx),end='\r')
+                # if feature_idx < np.min(discrete_indices):   
 
-                    perturbated_samples = generate_perturbations(
-                        data, 
-                        x_test, 
-                        feature_idx,
-                        n_steps
-                    )
+                #     # Generating perturbed samples with (n*n_steps, d)
+                #     print("generating resource/spurious results for %s, feature: %s."%(explainer_name , feature_idx),end='\r')
 
-                    perturbed_output = model.predict(X=perturbated_samples).detach().cpu().numpy()
+                #     perturbated_samples = generate_perturbations(
+                #         data, 
+                #         x_test, 
+                #         feature_idx,
+                #         n_steps
+                #     )
+
+                #     perturbed_output = model.predict(X=perturbated_samples).detach().cpu().numpy()
                     
-                    resource_results, spurious_results  = perturbation(
-                        perturbed_output,
-                        norm_explanation[:, feature_idx],
-                        threshold_vals,
-                        n_steps,
-                        sprious_qualtile                    
-                    )
+                #     resource_results, spurious_results  = perturbation(
+                #         perturbed_output,
+                #         norm_explanation[:, feature_idx],
+                #         threshold_vals,
+                #         n_steps,
+                #         sprious_qualtile                    
+                #     )
                     
-                    perturb_resource_results += resource_results
-                    perturb_spurious_results += spurious_results
+                #     perturb_resource_results += resource_results
+                #     perturb_spurious_results += spurious_results
 
             ## results with all features. 
 
-            full_ate, full_auroc, full_mse = subgroup_identification(
-                [i for i in range(x_train.shape[1])],
-                x_train,
-                x_test,
-                model
-            )
+            # full_ate, full_auroc, _ = subgroup_identification(
+            #     [i for i in range(x_train.shape[1])],
+            #     x_train,
+            #     x_test,
+            #     model
+            # )
 
             insertion_deletion_data.append(
                 [
@@ -391,15 +398,15 @@ if __name__ == "__main__":
                     deletion_results,
                     ate_results,
                     auroc_results,
-                    full_ate, 
-                    full_auroc,
-                    random_ate,
+                    [], 
+                    [],
+                    rand_ate,
                     rand_auroc,
                     perturb_resource_results,
                     perturb_spurious_results,
                     ablation_pos_results,
                     ablation_neg_results,
-                    mse
+                    mse_results
                 ]
             )
 

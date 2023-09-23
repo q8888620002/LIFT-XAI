@@ -16,15 +16,17 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 
 import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
+from catenets.models.torch.base import BasicNet
 
+DEVICE = "cuda:0"
 
 def compute_shap_values(model, data_sample, data_baseline):
-    device = "cuda:1"
     shapley_model = ShapleyValueSampling(model)
+
     shap_values = shapley_model.attribute(
-                        torch.tensor(data_sample).to(device),
+                        torch.from_numpy(data_sample).to(DEVICE).float(),
                         n_samples=1000,
-                        baselines=torch.tensor(data_baseline.reshape(1, -1)).to(device),
+                        baselines=torch.from_numpy(data_baseline.reshape(1, -1)).to(DEVICE).float(),
                         perturbations_per_eval=10,
                         show_progress=True
                     ).detach().cpu().numpy()
@@ -41,15 +43,45 @@ def main(args):
     data = Dataset(cohort_name, 0)
     x, y, w = data.get_data()
 
+    if bshap == True:
+        baseline = x.mean(0)
+
+        for _, idx_lst in data.discrete_indices.items():
+            if len(idx_lst) == 1:
+
+                # setting binary vars to 0.5
+
+                baseline[idx_lst] = 0.5
+            else:
+                # setting categorical baseline to 1/n 
+                # category_counts = data[:, idx_lst].sum(axis=0)
+                # baseline[idx_lst] = category_counts / category_counts.sum()
+
+                baseline[idx_lst] = 1/len(idx_lst)
+    
     subgroup_index = data.get_feature_names().tolist().index(subgroup_col)
 
     predict_results = np.zeros((trials, len(x)))
     average_shap = np.zeros((trials, x.shape[0], x.shape[1]))
+    ensemble_shap = np.zeros(x.shape)
 
     unique_subgroup_values = np.unique(x[:, subgroup_index])
     subgroup_shap_values = {f"{subgroup_col}={value}": np.zeros((trials, x[x[:, subgroup_index] == value].shape[0], x.shape[1])) 
                             for value in unique_subgroup_values}
 
+    ensemble = BasicNet(
+        "EnsembleNet",
+        n_unit_in = x.shape[1],
+        binary_y=False,
+        n_layers_out=2,
+        n_units_out=100,
+        batch_size=128,
+        n_iter=1000,
+        nonlin="relu",
+        device=DEVICE,
+        # prob_diff=True
+    )
+    
     for i in range(trials):
         x, w, y = data.get_data()
 
@@ -58,9 +90,8 @@ def main(args):
         x_sampled = x[sampled_indices]
         y_sampled = y[sampled_indices]
         w_sampled = w[sampled_indices]
-
+        
         # Model training
-        device = "cuda:1"
 
         model = pseudo_outcome_nets.XLearner(
                 x_sampled.shape[1],
@@ -70,38 +101,21 @@ def main(args):
                 batch_size=128,
                 n_iter=1000,
                 nonlin="relu",
-                device=device,
+                device=DEVICE,
                 seed=i
         )
 
         model.fit(x_sampled, y_sampled, w_sampled)
 
-        predict_results[i] = model.predict(X=x_sampled).detach().cpu().numpy().flatten()
+        y_hat = model.predict(X=x_sampled).detach().cpu().numpy().flatten()
+        predict_results[i] = y_hat
 
-        if bshap == True:
+        ensemble.fit(x_sampled, y_hat)
 
-            baseline = x.mean(0)
-
-            for _, idx_lst in data.discrete_indices.items():
-                if len(idx_lst) == 1:
-
-                    # setting binary vars to 0.5
-
-                    baseline[idx_lst] = 0.5
-                else:
-                    # setting categorical baseline to 1/n 
-                    # category_counts = data[:, idx_lst].sum(axis=0)
-                    # baseline[idx_lst] = category_counts / category_counts.sum()
-
-                    baseline[idx_lst] = 1/len(idx_lst)
-        else:
+        if not bshap:
             baseline_index = np.random.choice(len(x_sampled) ,1)
             baseline = x_sampled[baseline_index]
-            # mean_baseline_accord = obtain_accord_baselines()
-            
-            # nan_indices = np.isnan(mean_baseline_accord)
 
-            # mean_baseline_accord[nan_indices] = mean_baseline[nan_indices]
 
         average_shap[i] = compute_shap_values(model, x, baseline)
 
@@ -111,19 +125,24 @@ def main(args):
             shap_value = compute_shap_values(model, subgroup_sample, subgroup_baseline)
             subgroup_shap_values[f"{subgroup_col}={unique_value}"][i] = shap_value
 
+    ensemble_shap = compute_shap_values(ensemble, x, baseline)
+
     save_path = os.path.join("results", cohort_name)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
 
-    with open(os.path.join(save_path, f"predict_results_{bshap}.pkl"), "wb") as output_file:
+    with open(os.path.join(save_path, f"predict_results_ensemble_{bshap}.pkl"), "wb") as output_file:
         pickle.dump(predict_results, output_file)
 
-    with open(os.path.join(save_path, f"shap_bootstrapped_{bshap}.pkl"), "wb") as output_file:
+    with open(os.path.join(save_path, f"shap_bootstrapped_ensemble_{bshap}.pkl"), "wb") as output_file:
         pickle.dump(average_shap, output_file)
 
+    with open(os.path.join(save_path, f"shap_ensemble_{bshap}.pkl"), "wb") as output_file:
+        pickle.dump(ensemble_shap, output_file)
+
     for subgroup, shap_values in subgroup_shap_values.items():
-        file_name = f"{subgroup}_shap_{bshap}.pkl"
+        file_name = f"{subgroup}_shap_ensemble_{bshap}.pkl"
         with open(os.path.join(save_path, file_name), "wb") as output_file:
             pickle.dump(shap_values, output_file)
 
