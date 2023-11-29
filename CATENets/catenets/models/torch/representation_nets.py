@@ -165,6 +165,7 @@ class BasicDragonNet(BaseCATEEstimator):
     ) -> torch.Tensor:
         def head_loss(y_pred: torch.Tensor, y_true: torch.Tensor) -> torch.Tensor:
             if self.binary_y:
+
                 return nn.BCELoss()(y_pred, y_true)
             else:
                 return (y_pred - y_true) ** 2
@@ -273,7 +274,7 @@ class BasicDragonNet(BaseCATEEstimator):
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss} train_loss: {torch.mean(train_loss)}"
                         )
-                    
+
                     if self.early_stopping:
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
@@ -658,7 +659,7 @@ class TARNet(BasicDragonNet):
         self,
         n_unit_in: int,
         binary_y: bool = False,
-        device: str = None, 
+        device: str = None,
         n_units_out_prop: int = DEFAULT_UNITS_OUT,
         n_layers_out_prop: int = 0,
         nonlin: str = DEFAULT_NONLIN,
@@ -721,7 +722,7 @@ class DragonNet(BasicDragonNet):
         self,
         n_unit_in: int,
         binary_y: bool = False,
-        device: str = None, 
+        device: str = None,
         n_units_out_prop: int = DEFAULT_UNITS_OUT,
         n_layers_out_prop: int = 0,
         nonlin: str = DEFAULT_NONLIN,

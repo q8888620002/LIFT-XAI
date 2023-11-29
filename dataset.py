@@ -4,6 +4,9 @@ import pandas as pd
 from sklearn import  model_selection
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import NearestNeighbors
+
 
 
 class Dataset:
@@ -160,11 +163,39 @@ class Dataset:
         ]
         
         self.categorical_vars = []
-        
+        # For continuous variables
+
+
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
+        imp_mean = SimpleImputer(strategy='mean')
+        data[self.continuous_vars] = imp_mean.fit_transform(data[self.continuous_vars])
+        # Instantiate the Matcher class
 
+        X = data.drop(columns=[self.treatment, self.outcome])
+        y = data[self.treatment]
 
-        return data
+        model = LogisticRegression(max_iter=2000)
+        model.fit(X, y)
+
+        data["propensity_score"] = model.predict_proba(X)[:, 1]
+
+        treated = data[data[self.treatment] == 1].copy()
+        control = data[data[self.treatment] == 0].copy()
+
+        # Fit the nearest neighbors model for 1 neighbors
+        nbrs = NearestNeighbors(n_neighbors=1).fit(control[["propensity_score"]])
+
+        # Find the nearest neighbor indices for the treated group
+        _, indices = nbrs.kneighbors(treated[["propensity_score"]])
+
+        # Flatten indices for 1:2 matching & Extract matched controls
+        
+        matched_control = control.iloc[indices.flatten()]
+        matched_data = pd.concat([treated, matched_control]).sort_index()
+        matched_data = matched_data.sort_index()
+        matched_data.drop(columns=["propensity_score"], inplace=True)
+
+        return matched_data
 
 
     def _load_ist3_data(self):
@@ -215,7 +246,7 @@ class Dataset:
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         # data = data.sample(2500)
-
+        
         return data
 
     def _load_crash2_data(self):
@@ -267,6 +298,7 @@ class Dataset:
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
+
         # data.pop("iinjurytype_3")
         
         # data.pop("iinjurytype_2")
@@ -708,6 +740,89 @@ def obtain_accord_baselines() -> np.ndarray:
 
     sprint[continuous_vars_sprint] = scaler.transform(sprint[continuous_vars_sprint].values)
     accord[continuous_vars_accord] = scaler.transform(accord[continuous_vars_accord].values)
+
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    imp.fit(sprint)
+    sprint = imp.transform(sprint)
+
+    imp.fit(accord)
+    accord = imp.transform(accord)
+    
+    return sprint[:, :-2], sprint[:, -2], sprint[:, -1], accord[:, :-2], accord[:, -2], accord[:, -1]
+
+def obtain_unnorm_accord_baselines() -> np.ndarray:
+    """
+    Return normalized baseline of ACCORD dataset with SPRINT value range. 
+
+    Return:
+        Tuple containing:
+        - Normalized baselines for SPRINT
+        - Treatment for SPRINT
+        - Outcome for SPRINT
+        - Normalized baselines for ACCORD
+    """
+
+    accord = pd.read_csv("data/accord/accord.csv")
+
+    continuous_vars_accord = [
+        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat', 
+        'chol', 'fpg', 'hdl', 'trig', 'uacr', 'bmi'
+    ]
+
+    binary_vars_accord = [
+        'female', 'raceclass', 'x4smoke', 'aspirin', 
+        'statin', 'cvd_hx_baseline'
+    ]
+
+    accord["raceclass"] = np.where(accord["raceclass"]== "Black", 1, 0)
+    accord["x4smoke"] = np.where(accord["x4smoke"] == 1, 1, 0)
+
+    outcome = "censor_po"
+    treatment = "treatment"
+    
+    accord = accord[continuous_vars_accord + binary_vars_accord +[treatment] + [outcome]]
+    accord["treatment"] = np.where(accord["treatment"].str.contains("Intensive BP"), 1, 0)
+
+    outcome = pd.read_csv("data/sprint/outcomes.csv")
+    baseline = pd.read_csv("data/sprint/baseline.csv")
+
+    baseline.columns = [x.lower() for x in baseline.columns]
+    outcome.columns = [x.lower() for x in outcome.columns]
+
+    sprint = baseline.merge(outcome, on="maskid", how="inner")
+
+    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan, 
+                                np.where(sprint["smoke_3cat"] == 3, 1, 0))
+
+    continuous_vars_sprint = [
+        "age", "sbp", "dbp", "n_agents", "egfr", "screat",
+        "chr", "glur", "hdl", "trr", "umalcr", "bmi"
+    ]
+
+    binary_vars_sprint = [
+        "female", "race_black", "smoke_3cat", 
+        "aspirin", "statin", "sub_cvd"
+    ]
+
+    treatment = "intensive"
+    outcome_col = "event_primary"
+
+    sprint = sprint[continuous_vars_sprint + binary_vars_sprint + [treatment] + [outcome_col]]
+    sprint[outcome_col] = np.where(sprint[outcome_col] == 1, 0, 1)
+
+    # scaler = MinMaxScaler()
+
+    # scaler.fit(
+    #     np.concatenate(
+    #         (
+    #           sprint[continuous_vars_sprint].values,
+    #           accord[continuous_vars_accord].values
+    #         ), axis=0
+    #     )
+    # )
+
+    # sprint[continuous_vars_sprint] = scaler.transform(sprint[continuous_vars_sprint].values)
+    # accord[continuous_vars_accord] = scaler.transform(accord[continuous_vars_accord].values)
 
     imp = SimpleImputer(missing_values=np.nan, strategy='mean')
     imp.fit(sprint)

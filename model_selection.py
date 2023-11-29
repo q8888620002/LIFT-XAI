@@ -5,7 +5,7 @@ import sys
 import pickle
 import numpy as np
 
-from utilities import * 
+from utilities import *
 
 module_path = os.path.abspath(os.path.join('CATENets/'))
 if module_path not in sys.path:
@@ -35,11 +35,11 @@ if __name__ == "__main__":
     learners = [
         "XLearner",
         "XLearner_ensemble",
-        # "DRLearner",
-        # "SLearner",
-        # "TLearner",
-        # "RLearner",
-        # "RALearner",
+        "DRLearner",
+        "SLearner",
+        "TLearner",
+        "RLearner",
+        "RALearner",
         # "TARNet",
         # "DragonNet",
         # "CFRNet_0.01",
@@ -54,9 +54,9 @@ if __name__ == "__main__":
 
     results = {
          learner: {
-             **{sec: np.zeros((trials)) for sec in selection_types}, 
+             **{sec: np.zeros((trials)) for sec in selection_types},
              "prediction": np.zeros((trials, x_test.shape[0]))
-            } for learner in learners         
+            } for learner in learners
     }
 
     for i in range(trials):
@@ -91,67 +91,67 @@ if __name__ == "__main__":
                         device=DEVICE,
                         seed=i
                     ),
-            # "DRLearner": pseudo_outcome_nets.DRLearner(
-            #             x_train.shape[1],
-            #             binary_y=(len(np.unique(y_train)) == 2),
-            #             n_layers_out=2,
-            #             n_units_out=100,
-            #             batch_size=128,
-            #             n_iter=1000,
-            #             nonlin="relu",
-            #             device=DEVICE,
-            #             seed=i
-            #     ),
-            # "SLearner": cate_models.torch.SLearner(
-            #             x_train.shape[1],
-            #             binary_y=(len(np.unique(y_train)) == 2),
-            #             n_layers_out=2,
-            #             n_units_out=100,
-            #             batch_size=128,
-            #             n_iter=1000,
-            #             nonlin="relu",
-            #             device=DEVICE,
-            #             seed=i
-            #     ),
-            # "TLearner": cate_models.torch.TLearner(
-            #             x_train.shape[1],
-            #             binary_y=(len(np.unique(y_train)) == 2),
-            #             n_layers_out=2,
-            #             n_units_out=100,
-            #             batch_size=128,
-            #             n_iter=1000,
-            #             nonlin="relu",
-            #             device=DEVICE,
-            #             seed=i
-            #     ),
-            # "RALearner": pseudo_outcome_nets.RALearner(
-            #           x_train.shape[1],
-            #           binary_y=(len(np.unique(y_train)) == 2),
-            #           n_layers_out=2,
-            #           n_units_out=100,
-            #           n_iter=1000,
-            #           lr=1e-3,
-            #           patience=10,
-            #           batch_size=128,
-            #           batch_norm=False,
-            #           nonlin="relu",
-            #           device = DEVICE,
-            #         seed=i
-            #       ),
-            # "RLearner": pseudo_outcome_nets.RLearner(
-            #           x_train.shape[1],
-            #           binary_y=(len(np.unique(y_train)) == 2),
-            #           n_layers_out=2,
-            #           n_units_out=100,
-            #           n_iter=1000,
-            #           lr=1e-3,
-            #           patience=10,
-            #           batch_size=128,
-            #           batch_norm=False,
-            #           nonlin="relu",
-            #           device = DEVICE,
-            #           seed=i
-            # ),
+            "DRLearner": pseudo_outcome_nets.DRLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE,
+                        seed=i
+                ),
+            "SLearner": cate_models.torch.SLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE,
+                        seed=i
+                ),
+            "TLearner": cate_models.torch.TLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE,
+                        seed=i
+                ),
+            "RALearner": pseudo_outcome_nets.RALearner(
+                      x_train.shape[1],
+                      binary_y=(len(np.unique(y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=100,
+                      n_iter=1000,
+                      lr=1e-3,
+                      patience=10,
+                      batch_size=128,
+                      batch_norm=False,
+                      nonlin="relu",
+                      device = DEVICE,
+                    seed=i
+                  ),
+            "RLearner": pseudo_outcome_nets.RLearner(
+                      x_train.shape[1],
+                      binary_y=(len(np.unique(y_train)) == 2),
+                      n_layers_out=2,
+                      n_units_out=100,
+                      n_iter=1000,
+                      lr=1e-3,
+                      patience=10,
+                      batch_size=128,
+                      batch_norm=False,
+                      nonlin="relu",
+                      device = DEVICE,
+                      seed=i
+            ),
             # "DragonNet": cate_models.torch.DragonNet(
             #         x_train.shape[1],
             #         binary_y=(len(np.unique(y_train)) == 2),
@@ -235,7 +235,7 @@ if __name__ == "__main__":
                             device=DEVICE,
                             seed=i
                         )
-                
+
                     sampled_indices = np.random.choice(len(x_train), size=len(x_train), replace=True)
 
                     x_sampled = x_train[sampled_indices]
@@ -250,8 +250,7 @@ if __name__ == "__main__":
 
                 prediction = results[learner_name]["prediction"][i]
             else:
-                    
-                
+
                 cate_model.fit(x_train, y_train, w_train)
 
                 prediction = cate_model.predict(x_test).detach().cpu().numpy().flatten()
