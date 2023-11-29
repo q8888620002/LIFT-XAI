@@ -12,6 +12,7 @@ from captum.attr import (
     FeatureAblation,
     FeaturePermutation,
     IntegratedGradients,
+    # NoiseTunnel,
     KernelShap,
     Lime,
     ShapleyValueSampling,
@@ -48,7 +49,7 @@ class Explainer:
         kernel_width: float = 1.0,
         baseline: Optional[torch.Tensor] = None,
     ) -> None:
-        
+
         self.device =  model.device
         self.baseline = baseline
         self.explainer_list = explainer_list
@@ -70,8 +71,25 @@ class Explainer:
         def integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
             return integrated_gradients_model.attribute(
                 x_test,
-                n_steps=n_steps
+                n_steps=n_steps,
             )
+
+        def baseline_integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            return integrated_gradients_model.attribute(
+                x_test,
+                n_steps=n_steps,
+                baselines = self.baseline
+            )
+
+        def smooth_grad_cpk(x_test: torch.Tensor) -> torch.Tensor:
+
+            noise_tunnel = NoiseTunnel(integrated_gradients_model)
+
+            return noise_tunnel.attribute(
+                x_test,
+                nt_type='smoothgrad_sq'
+            )
+
 
         # DeepLift
         deeplift_model = DeepLift(model)
@@ -99,35 +117,61 @@ class Explainer:
         )
 
         def lime_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return lime_model.attribute(
-                x_test,
-                n_samples=n_samples,
-                perturbations_per_eval=perturbations_per_eval,
-            )
+
+            test_values = torch.zeros((x_test.size()))
+
+            for test_ind in range(len(x_test)):
+
+                lime_value = lime_model.attribute(
+                    x_test[test_ind].view(1, -1),
+                    n_samples=n_samples,
+                    perturbations_per_eval=perturbations_per_eval,
+                )
+
+                test_values[test_ind] = lime_value.detach().cpu()
+
+            return self._check_tensor(test_values)
+
+        def baseline_lime_cbk(x_test: torch.Tensor) -> torch.Tensor:
+
+            test_values = torch.zeros((x_test.size()))
+
+            for test_ind in range(len(x_test)):
+
+                lime_value = lime_model.attribute(
+                    x_test[test_ind].view(1, -1),
+                    n_samples=n_samples,
+                    perturbations_per_eval=perturbations_per_eval,
+                    baselines=self.baseline
+                )
+
+                test_values[test_ind] = lime_value.detach().cpu()
+
+            return self._check_tensor(test_values)
 
         # Baseline shapley value sampling
-        baseline_shapley_value_sampling_model = ShapleyValueSampling(model)
+        shapley_value_sampling_model = ShapleyValueSampling(model)
 
         def baseline_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return baseline_shapley_value_sampling_model.attribute(
+
+            return shapley_value_sampling_model.attribute(
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
                 show_progress=True
             )
-        
+
         # Marginal shapley value sampling
-        marginal_shapley_value_sampling_model = ShapleyValueSampling(model)
 
         def marginal_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return marginal_shapley_value_sampling_model.attribute(
+            return shapley_value_sampling_model.attribute(
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
                 baselines = self.baseline,
                 show_progress=True
             )
-        
+
 
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
@@ -149,7 +193,7 @@ class Explainer:
 
         def saliency_cpk(x_test: torch.tensor) -> torch.Tensor:
             return saliency_model.attribute(x_test)
-        
+
         # Explain with missingness
         def explain_with_missingness_cbk(x_test:torch.Tensor) -> torch.Tensor:
 
@@ -179,28 +223,22 @@ class Explainer:
 
             return self._check_tensor(test_values)
 
-        # def tree_shap_cpk(x_test: torch.tensor)-> torch.Tensor:
-
-        #     explainer = shap.TreeExplainer(
-        #         model,
-        #         model_output="raw",
-        #         feature_perturbation="tree_path_dependent"
-        #     )
-
 
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
             "integrated_gradients": integrated_gradients_cbk,
+            "baseline_integrated_gradients": baseline_integrated_gradients_cbk,
+            "smooth_grad": smooth_grad_cpk,
             "deeplift": deeplift_cbk,
             "feature_permutation": feature_permutation_cbk,
             "lime": lime_cbk,
+            "baseline_lime": baseline_lime_cbk,
             "baseline_shapley_value_sampling": baseline_shapley_value_sampling_cbk,
             "marginal_shapley_value_sampling": marginal_shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
             "explain_with_missingness":explain_with_missingness_cbk,
             "marginal_shap": marginal_shap_cbk,
-            # "conditional_shap": tree_shap_cpk,
             "saliency": saliency_cpk
         }
 
