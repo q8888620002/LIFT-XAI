@@ -17,13 +17,16 @@ from dataset import Dataset
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
+from src.cate_utils import (
+    qini_score,
+    qini_score_cal
+)
 from src.utils import (
     ablate,
     attribution_ranking,
     insertion_deletion,
-    qini_score,
-    qini_score_cal,
 )
+
 
 if __name__ == "__main__":
 
