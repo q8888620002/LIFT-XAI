@@ -226,7 +226,6 @@ class Dataset:
             "antiplat_rand",
             "atrialfib_rand",
             "infarct"
-
         ]
 
         data = data[data.stroketype!=5]

@@ -12,7 +12,7 @@ from captum.attr import (
     FeatureAblation,
     FeaturePermutation,
     IntegratedGradients,
-    # NoiseTunnel,
+    NoiseTunnel,
     KernelShap,
     Lime,
     ShapleyValueSampling,
