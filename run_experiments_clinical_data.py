@@ -14,19 +14,11 @@ from scipy import stats
 
 import src.CATENets.catenets.models as cate_models
 from dataset import Dataset
+from src.cate_utils import qini_score, qini_score_cal
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
-from src.cate_utils import (
-    qini_score,
-    qini_score_cal
-)
-from src.utils import (
-    ablate,
-    attribution_ranking,
-    insertion_deletion,
-)
-
+from src.utils import ablate, attribution_ranking, insertion_deletion
 
 if __name__ == "__main__":
 
@@ -244,18 +236,18 @@ if __name__ == "__main__":
         noise_matrix = np.zeros(x_train.shape)
         baseline = np.mean(x_train, axis=0)
 
-        for _, idx_lst in data.discrete_indices.items():
-            if len(idx_lst) == 1:
+        # for _, idx_lst in data.discrete_indices.items():
+        #     if len(idx_lst) == 1:
 
-                # setting binary vars to 0.5
+        #         # setting binary vars to 0.5
 
-                baseline[idx_lst] = 0.5
-            else:
-                # setting categorical baseline to 1/n
-                # category_counts = data[:, idx_lst].sum(axis=0)
-                # baseline[idx_lst] = category_counts / category_counts.sum()
+        #         baseline[idx_lst] = 0.5
+        #     else:
+        #         # setting categorical baseline to 1/n
+        #         # category_counts = data[:, idx_lst].sum(axis=0)
+        #         # baseline[idx_lst] = category_counts / category_counts.sum()
 
-                baseline[idx_lst] = 1 / len(idx_lst)
+        #         baseline[idx_lst] = 1 / len(idx_lst)
 
         model.fit(x_train, y_train, w_train)
 
@@ -326,13 +318,6 @@ if __name__ == "__main__":
                 "neg",
                 nuisance_functions,
             )
-
-            perturb_resource_results, perturb_spurious_results = np.zeros(
-                (40, 4)
-            ), np.zeros((40, 4))
-            discrete_indices = [
-                index for _, v in data.discrete_indices.items() for index in v
-            ]
 
             for feature_idx in range(1, feature_size + 1):
 
