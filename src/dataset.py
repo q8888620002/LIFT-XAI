@@ -6,7 +6,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import NearestNeighbors
-
+from sklearn.compose import ColumnTransformer
+from src.utils import InvertableColumnTransformer
 
 
 class Dataset:
@@ -42,7 +43,7 @@ class Dataset:
             self.data = self._load_accord_filter_data()
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
-        
+
         self.continuous_indices = [self.data.columns.get_loc(col) for col in self.continuous_vars]
 
         self.categorical_indices = self.get_one_hot_column_indices(
@@ -105,15 +106,15 @@ class Dataset:
 
         self.continuous_vars = [
             'age',
-            'scenegcs', 'scenefirstbloodpressure', 'scenefirstpulse','scenefirstrespirationrate', 
+            'scenegcs', 'scenefirstbloodpressure', 'scenefirstpulse','scenefirstrespirationrate',
             'edfirstbp', 'edfirstpulse', 'edfirstrespirationrate', 'edgcs',
             'temps2',  'BD', 'CFSS', 'COHB', 'CREAT', 'FIB', 'FIO2', 'HCT',
             'HGB', 'INR', 'LAC', 'NA', 'PAO2', 'PH', 'PLTS'
         ]
-        
+
         # self.categorical_vars = [col for col in data.columns if 'causecode' in col]
         self.categorical_vars = []
-        
+
         data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
 
@@ -156,12 +157,12 @@ class Dataset:
 
         self.continuous_vars = [
             'age',
-            'scenefirstbloodpressure', 
+            'scenefirstbloodpressure',
             'scenefirstpulse',
-            'scenefirstrespirationrate', 
+            'scenefirstrespirationrate',
             'scenegcs'
         ]
-        
+
         self.categorical_vars = []
         # For continuous variables
 
@@ -189,7 +190,7 @@ class Dataset:
         _, indices = nbrs.kneighbors(treated[["propensity_score"]])
 
         # Flatten indices for 1:2 matching & Extract matched controls
-        
+
         matched_control = control.iloc[indices.flatten()]
         matched_data = pd.concat([treated, matched_control]).sort_index()
         matched_data = matched_data.sort_index()
@@ -230,9 +231,9 @@ class Dataset:
 
         data = data[data.stroketype!=5]
 
-        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)        
+        data["antiplat_rand"] = np.where(data["antiplat_rand"]== 1, 1, 0)
         data["atrialfib_rand"] = np.where(data["atrialfib_rand"]== 1, 1, 0)
-        
+
         data["gender"] = np.where(data["gender"]== 2, 1, 0)
 
         data["infarct"] =  np.where(data["infarct"] == 0, 0, 1)
@@ -245,7 +246,7 @@ class Dataset:
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         # data = data.sample(2500)
-        
+
         return data
 
     def _load_crash2_data(self):
@@ -262,45 +263,47 @@ class Dataset:
             'icc',
             'ihr',
             'ninjurytime',
-            # 'igcseye',
-            # 'igcsmotor',
-            # 'igcsverbal',
             'igcs'
         ]
-
         self.categorical_vars = [
             "iinjurytype"
         ]
-
         self.binary_vars = [
-            "isex"
+            "isex",
         ]
 
         data = data.drop(data[(data[self.treatment] == "P")|(data[self.treatment] == "D")].index)
-        
+
         data = data[data.iinjurytype != 3 ]
+        # data["iinjurytype"] = np.where(data["iinjurytype"]== 1, 0, 1)
+        # Set blunt to 0
 
         data["isex"] = np.where(data["isex"]== 2, 0, 1)
 
         # deal with missing data
 
         data["irr"] = np.where(data["irr"]== 0, np.nan,data["irr"])
+        data["icc"] = np.where(data["icc"] >= 20 , np.nan, data["icc"])
+
         data["isbp"] = np.where(data["isbp"] == 999, np.nan, data["isbp"])
-        data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
+        data["isbp"] = np.where(data["isbp"] == 0, np.nan, data["isbp"])
+
+        data["ninjurytime"] = np.where(data["ninjurytime"] >= 20, np.nan, data["ninjurytime"])
         data["ninjurytime"] = np.where(data["ninjurytime"] == 0, np.nan, data["ninjurytime"])
+        # data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
 
         data[self.treatment] = np.where(data[self.treatment] == "Active", 1, 0)
         data[self.outcome] = np.where(data["icause"].isna(), 1, 0)
 
-        data = data[self.continuous_vars + self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
+        data = data[self.continuous_vars +  self.categorical_vars + self.binary_vars + [self.treatment]+ [self.outcome]]
 
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
-        data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
+        # data["iinjurytype_1"] = np.where(data["iinjurytype_2"]== 1, 0, 1)
+        # data.pop("iinjurytype_2")
 
         # data.pop("iinjurytype_3")
-        
-        # data.pop("iinjurytype_2")
+
 
         # data = data.sample(int(len(data)*0.95))
 
@@ -318,17 +321,17 @@ class Dataset:
         outcome.columns = [x.lower() for x in outcome.columns]
 
         data = baseline.merge(outcome, on="maskid", how="inner")
-        
-        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan, 
+
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,
                                     np.where(data["smoke_3cat"] == 3, 1, 0))
 
 
         self.continuous_vars = [
-            "age", 
+            "age",
             "sbp",
             "dbp",
             "n_agents",
-            "egfr", 
+            "egfr",
             "screat",
             "chr",
             "glur",
@@ -372,16 +375,16 @@ class Dataset:
         outcome.columns = [x.lower() for x in outcome.columns]
 
         data = baseline.merge(outcome, on="maskid", how="inner")
-        
-        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan, 
+
+        data["smoke_3cat"] = np.where(data["smoke_3cat"] == 4, np.nan,
                                     np.where(data["smoke_3cat"] == 3, 1, 0))
 
         self.continuous_vars = [
-            "age", 
+            "age",
             "sbp",
             "dbp",
             "n_agents",
-            "egfr", 
+            "egfr",
             "screat",
             "chr",
             "glur",
@@ -403,7 +406,7 @@ class Dataset:
             # "inclusionfrs"
             # "noagents"
         ]
-        
+
 
         self.categorical_vars = []
 
@@ -411,11 +414,11 @@ class Dataset:
 
         data[self.outcome] = np.where(data[self.outcome] == 1, 0, 1)
 
-        
+
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         return data
-    
+
     def _load_accord_data(self):
 
         data = pd.read_csv("data/accord/accord.csv")
@@ -424,21 +427,21 @@ class Dataset:
         self.treatment = "treatment"
 
         self.continuous_vars = [
-            'baseline_age', 
+            'baseline_age',
             'bmi',
-            'sbp', 
+            'sbp',
             'dbp',
             'hr',
-            'fpg', 
-            'alt', 
+            'fpg',
+            'alt',
             'cpk',
             'potassium',
-            'screat', 
+            'screat',
             'gfr',
-            # 'ualb', 
-            # 'ucreat', 
+            # 'ualb',
+            # 'ucreat',
             'uacr',
-            'chol', 
+            'chol',
             'trig',
             'vldl',
             'ldl',
@@ -471,7 +474,7 @@ class Dataset:
         data = pd.get_dummies(data, columns=self.categorical_vars)
 
         return data
-    
+
     def _load_accord_filter_data(self):
 
         data = pd.read_csv("data/accord/accord.csv")
@@ -480,24 +483,24 @@ class Dataset:
         self.treatment = "treatment"
 
         self.continuous_vars = [
-            'baseline_age', 
-            'sbp', 
+            'baseline_age',
+            'sbp',
             'dbp',
             'bp_med',
             'gfr',
-            'screat', 
-            'chol', 
-            'fpg', 
+            'screat',
+            'chol',
+            'fpg',
             'hdl',
             'trig',
             'uacr',
             'bmi',
             # 'hr',
-            # 'alt', 
+            # 'alt',
             # 'cpk',
             # 'potassium',
-            # 'ualb', 
-            # 'ucreat', 
+            # 'ualb',
+            # 'ucreat',
             # 'vldl',
             # 'ldl',
 
@@ -531,8 +534,8 @@ class Dataset:
 
     def _process_data(self):
 
-        self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "minmax")
-        
+        self.data[self.continuous_vars] = self._normalize_data(self.data[self.continuous_vars], "standard")
+
         imp = SimpleImputer(missing_values=np.nan, strategy='mean')
         imp.fit(self.data)
         self._split_data(imp.transform(self.data))
@@ -561,7 +564,7 @@ class Dataset:
             random_state = self.random_state
         else:
             random_state = 42
-        
+
         x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
             x_train_scaled,
             self.data[self.outcome].values,
@@ -602,7 +605,7 @@ class Dataset:
             return self.x, self.w, self.y
 
     def get_feature_range(
-            self, 
+            self,
             feature: int
         ) -> np.ndarray:
         """
@@ -615,7 +618,7 @@ class Dataset:
         max = np.max(x_original[:, feature])
 
         return max - min
-    
+
     def get_unnorm_value(
             self,
             x: np.ndarray
@@ -624,51 +627,372 @@ class Dataset:
         return self.scaler.inverse_transform(x[:, self.continuous_indices])
 
     def get_norm(
-            self, 
+            self,
             x: np.ndarray,
     ) -> np.ndarray:
-        
+
         return self.scaler.transform(x[:, self.continuous_indices])
-    
+
     def get_feature_names(self):
         """
         return feature names
         """
         return self.data.drop([self.treatment, self.outcome], axis=1).columns
-    
+
     def get_cohort_name(self):
 
         return self.cohort_name
-    
+
     def get_one_hot_column_indices(self, df, prefixes):
         """
-        Get the indices for one-hot encoded columns for each specified prefix. 
-        This function assumes that the DataFrame has been one-hot encoded using 
+        Get the indices for one-hot encoded columns for each specified prefix.
+        This function assumes that the DataFrame has been one-hot encoded using
         pandas' get_dummies method.
-        
+
         Parameters:
         df: pandas DataFrame
         prefixes: list of strings, the prefixes used in the one-hot encoded columns
-        
+
         Returns:
-        indices_dict: dictionary where keys are the prefixes and values are lists of 
+        indices_dict: dictionary where keys are the prefixes and values are lists of
                     indices representing the position of each category column for that prefix
         """
         indices_dict = {}
-        
+
         for prefix in prefixes:
             # Filter for one-hot encoded columns with the given prefix
             one_hot_cols = [col for col in df.columns if col.startswith(prefix)]
-            
+
             # Get the indices for these columns
             indices_dict[prefix] = [df.columns.get_loc(col) for col in one_hot_cols]
-        
+
         return indices_dict
 
+def obtain_txa_baselines(unnorm=False) -> np.ndarray:
+
+    crash2 = pd.read_excel('data/crash_2.xlsx')
+
+    outcome = "outcome"
+    treatment = "treatment_code"
+
+    crash2_continuous_vars = [
+        "iage",
+        'isbp',
+        'irr',
+        'ihr',
+        'igcs',
+        'ninjurytime'
+    ]
+
+    crash2_binary_vars = [
+        "iinjurytype_1",
+        "iinjurytype_2",
+        "isex"
+    ]
+
+    crash2 = crash2.drop(crash2[(crash2[treatment] == "P")|(crash2[treatment] == "D")].index)
+
+    # Set blunt to 1 and drop Blunt and penetrating.
+    crash2 = crash2[crash2.iinjurytype != 3 ]
+    # crash2["iinjurytype"] = np.where(crash2["iinjurytype"] == 1, 1, 0)
+
+    crash2["iinjurytype_1"] = np.where(crash2["iinjurytype"] == 1, 1, 0)
+    crash2["iinjurytype_2"] = np.where(crash2["iinjurytype_1"] == 0, 1, 0)
+
+    crash2["isex"] = np.where(crash2["isex"]== 1, 1, 0)
+
+    # deal with missing data
+
+    crash2 = crash2[(crash2.isbp.notnull()) & (crash2.isbp > 10)] # 21
+    crash2 = crash2[(crash2.irr.notnull()) & (crash2.irr > 5)] # 149
+    crash2 = crash2[(crash2["ninjurytime"] < 20) & (crash2["ninjurytime"] > 0)] # only 16 pts with ninjurytime > 20.
+
+    crash2[treatment] = np.where(crash2[treatment] == "Active", 1, 0)
+    crash2[outcome] = np.where(crash2["icause"].isna(), 1, 0)
+
+    crash2 = crash2[crash2_continuous_vars + crash2_binary_vars + [treatment]+ [outcome]]
+
+    # Load txa
+    txa = pd.read_pickle(f"data/txa_cohort.pkl")
+    all_year = pd.read_csv("data/all_year.csv", index_col=0)
+
+    txa["medatetime"] = pd.to_datetime(txa['medstartdate'].astype(str) + ' ' + \
+                                                    txa['medstarttime'].astype(str),\
+                                                    infer_datetime_format=True,\
+                                                    errors='coerce')
+    all_year["injurydatetime"] = pd.to_datetime(all_year['injurydate'].astype(str) + ' ' + \
+                                                    all_year['injurytime'].astype(str),\
+                                                    infer_datetime_format=True,\
+                                                    errors='coerce')
+
+    txa = pd.merge(txa,all_year[['registryid','iss']],on='registryid', how='left')
+
+    txa["time_to_injury"] = (txa["medatetime"] - txa["injurydatetime"]).dt.total_seconds() / 3600
+
+    txa["time_to_injury"] = np.where(
+        txa["time_to_injury"].isnull(),
+        (txa["scenedatetime"] - txa["injurydatetime"]).dt.total_seconds() / 3600,
+        txa["time_to_injury"]
+    )
+
+    # raw_data["iss"] = pd.to_numeric(raw_data["iss"], errors='coerce')
+
+    filter_regex = [
+        'proc',
+        'ethnicity',
+        'residencestate',
+        'toxicologyresults',
+        "registryid",
+        "COV",
+        "TT",
+        "scenegcsmotor",
+        "scenegcseye",
+        "scenegcsverbal",
+        "edgcsmotor",
+        "edgcseye",
+        "edgcsverbal",
+        "sex_F",
+        "traumatype_P",
+        "traumatype_OTHER",
+        "causecode"
+    ]
+
+    treatment = "treated"
+    outcome = "outcome"
+
+    for regex in filter_regex:
+        txa = txa[txa.columns.drop(list(txa.filter(regex=regex)))]
+
+    txa_continuous_vars = [
+        'age',
+        'scenefirstbloodpressure',
+        'scenefirstrespirationrate',
+        'scenefirstpulse',
+        'scenegcs',
+        'time_to_injury'
+    ]
+
+    txa_binary_vars = [
+        "traumatype_B",
+        "traumatype_P",
+        "sex_M",
+    ]
+    txa["traumatype_P"] = np.where(txa["traumatype_B"] == 1, 0, 1)
+    txa = txa[txa_continuous_vars + txa_binary_vars + [treatment]+ [outcome]]
+    txa = txa.rename(
+        columns={
+            'age': 'iage',
+            "scenefirstbloodpressure": 'isbp',
+            'scenefirstrespirationrate':'irr',
+            'scenefirstpulse':'ihr',
+            'scenegcs':'igcs',
+            'time_to_injury': 'ninjurytime',
+            'traumatype_B':'iinjurytype_1',
+            'traumatype_P':'iinjurytype_2',
+            'sex_M': 'isex',
+            "treated":'treatment_code'
+            }
+        )
+
+    txa = txa[txa.irr > 5]
+    txa = txa[(txa.ninjurytime.notnull()) & (txa.ninjurytime > 0) & (txa.ninjurytime < 20)]
+
+    scaler = InvertableColumnTransformer(
+        transformers=[
+            # ('std', StandardScaler(),[
+            # ]),
+            ('minmax', MinMaxScaler(),[
+                "iage",
+                'isbp',
+                'irr',
+                'ihr',
+                "igcs",
+                "ninjurytime"
+            ]),
+            ('passthrough', 'passthrough', [
+                'iinjurytype_1',
+                'iinjurytype_2',
+                'isex',
+                "treatment_code",
+                "outcome"
+            ])
+        ])
+
+    # Combine and scale
+    all_data = pd.concat([txa, crash2])
+    all_data_scaled = scaler.fit_transform(all_data)
+
+    # Impute
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    imp.fit(all_data_scaled)
+    all_data_imputed = imp.transform(all_data_scaled)
+
+    # Split back data
+    txa = all_data_imputed[:len(txa)]
+    crash2 = all_data_imputed[len(txa):]
+
+    # Propensity matching for TXA.
+    X = txa[:, :-2]
+    y = txa[:, -2]
+
+    # Propensity model using Logistic Regression
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X, y)
+
+    propensity_score_logit = np.log((model.predict_proba(X)[:, 1])/(1 - model.predict_proba(X)[:, 1]))
+
+    # Separate treated and control groups based on treatment column (-2 index)
+    treated_indices = np.where(txa[:, -2] == 1)[0]
+    control_indices = np.where(txa[:, -2] == 0)[0]
+    txa = np.hstack([txa, propensity_score_logit[:, np.newaxis]])
+
+    treated = txa[treated_indices, :]
+    control = txa[control_indices, :]
+    caliper = np.std(propensity_score_logit) * 0.25
+
+    nbrs = NearestNeighbors(n_neighbors=1, radius = caliper)
+    nbrs.fit(control[:, -1].reshape(-1, 1))  # Propensity score is the last column
+
+    # Find nearest neighbors for treated group
+    _, indices = nbrs.kneighbors(treated[:, -1].reshape(-1, 1))
+
+    # Extract matched controls using the indices found
+    matched_control = control[indices.flatten()]
+
+    matched_txa = np.vstack([treated, matched_control])
+    matched_txa = np.delete(matched_txa, -1, axis=1)
+
+    if unnorm:
+        crash2 = scaler.inverse_transform(crash2)
+        matched_txa  = scaler.inverse_transform(matched_txa)
+
+    return crash2[:, :-2], crash2[:, -2], crash2[:, -1], matched_txa[:, :-2], matched_txa[:, -2], matched_txa[:, -1]
+
+def obtain_unnorm_txa_baselines() -> np.ndarray:
+
+    crash2 = pd.read_excel('data/crash_2.xlsx')
+
+    outcome = "outcome"
+    treatment = "treatment_code"
+
+    crash2_continuous_vars = [
+        "iage",
+        'isbp',
+        'irr',
+        'ihr',
+        'igcs',
+    ]
+
+    crash2_categorical_vars = [
+        "iinjurytype"
+    ]
+
+    crash2_binary_vars = [
+        "isex"
+    ]
+
+    crash2 = crash2.drop(crash2[(crash2[treatment] == "P")|(crash2[treatment] == "D")].index)
+
+    crash2 = crash2[crash2.iinjurytype != 3 ]
+
+    crash2["isex"] = np.where(crash2["isex"]== 2, 0, 1)
+
+    # deal with missing data
+
+    crash2["irr"] = np.where(crash2["irr"]== 0, np.nan,crash2["irr"])
+    crash2["isbp"] = np.where(crash2["isbp"] == 999, np.nan, crash2["isbp"])
+
+    crash2[treatment] = np.where(crash2[treatment] == "Active", 1, 0)
+    crash2[outcome] = np.where(crash2["icause"].isna(), 1, 0)
+
+    crash2 = crash2[crash2_continuous_vars + crash2_categorical_vars + crash2_binary_vars + [treatment]+ [outcome]]
+
+    # Load txa
+    txa = pd.read_pickle(f"data/txa_cohort.pkl")
+
+    filter_regex = [
+        'proc',
+        'ethnicity',
+        'residencestate',
+        'toxicologyresults',
+        "registryid",
+        "COV",
+        "TT",
+        "scenegcsmotor",
+        "scenegcseye",
+        "scenegcsverbal",
+        "edgcsmotor",
+        "edgcseye",
+        "edgcsverbal",
+        "sex_F",
+        "traumatype_P",
+        "traumatype_OTHER",
+        "causecode"
+    ]
+
+    treatment = "treated"
+    outcome = "outcome"
+
+    for regex in filter_regex:
+        txa = txa[txa.columns.drop(list(txa.filter(regex=regex)))]
+
+
+    txa_continuous_vars = [
+        'age',
+        'scenefirstbloodpressure',
+        'scenefirstrespirationrate',
+        'scenefirstpulse',
+        'scenegcs',
+    ]
+
+    txa_binary_vars = [
+        "traumatype_B",
+        "sex_M",
+    ]
+
+    txa = txa[txa_continuous_vars + txa_binary_vars + [treatment]+ [outcome]]
+
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    imp.fit(crash2)
+    crash2 = imp.transform(crash2)
+
+    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    imp.fit(crash2)
+    txa = imp.transform(txa)
+    # Propensity matching for TXA.
+    X = txa[:, :-2]
+    y = txa[:, -2]
+
+    # Propensity model using Logistic Regression
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X, y)
+    propensity_score = model.predict_proba(X)[:, 1]
+
+    # Separate treated and control groups based on treatment column (-2 index)
+    treated_indices = np.where(txa[:, -2] == 1)[0]
+    control_indices = np.where(txa[:, -2] == 0)[0]
+    txa = np.hstack([txa, propensity_score[:, np.newaxis]])
+
+    treated = txa[treated_indices, :]
+    control = txa[control_indices, :]
+
+    nbrs = NearestNeighbors(n_neighbors=1)
+    nbrs.fit(control[:, -1].reshape(-1, 1))  # Propensity score is the last column
+
+    # Find nearest neighbors for treated group
+    _, indices = nbrs.kneighbors(treated[:, -1].reshape(-1, 1))
+
+    # Extract matched controls using the indices found
+    matched_control = control[indices.flatten()]
+
+    matched_txa = np.vstack([treated, matched_control])
+    matched_txa = np.delete(matched_txa, -1, axis=1)
+
+    return crash2[:, :-2], crash2[:, -2], crash2[:, -1], matched_txa[:, :-2], matched_txa[:, -2], matched_txa[:, -1]
 
 def obtain_accord_baselines() -> np.ndarray:
     """
-    Return normalized baseline of ACCORD dataset with SPRINT value range. 
+    Return normalized baseline of ACCORD dataset with SPRINT value range.
 
     Return:
         Tuple containing:
@@ -681,12 +1005,12 @@ def obtain_accord_baselines() -> np.ndarray:
     accord = pd.read_csv("data/accord/accord.csv")
 
     continuous_vars_accord = [
-        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat', 
+        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat',
         'chol', 'fpg', 'hdl', 'trig', 'uacr', 'bmi'
     ]
 
     binary_vars_accord = [
-        'female', 'raceclass', 'x4smoke', 'aspirin', 
+        'female', 'raceclass', 'x4smoke', 'aspirin',
         'statin', 'cvd_hx_baseline'
     ]
 
@@ -695,7 +1019,7 @@ def obtain_accord_baselines() -> np.ndarray:
 
     outcome = "censor_po"
     treatment = "treatment"
-    
+
     accord = accord[continuous_vars_accord + binary_vars_accord +[treatment] + [outcome]]
     accord["treatment"] = np.where(accord["treatment"].str.contains("Intensive BP"), 1, 0)
 
@@ -707,7 +1031,7 @@ def obtain_accord_baselines() -> np.ndarray:
 
     sprint = baseline.merge(outcome, on="maskid", how="inner")
 
-    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan, 
+    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan,
                                 np.where(sprint["smoke_3cat"] == 3, 1, 0))
 
     continuous_vars_sprint = [
@@ -716,7 +1040,7 @@ def obtain_accord_baselines() -> np.ndarray:
     ]
 
     binary_vars_sprint = [
-        "female", "race_black", "smoke_3cat", 
+        "female", "race_black", "smoke_3cat",
         "aspirin", "statin", "sub_cvd"
     ]
 
@@ -746,12 +1070,12 @@ def obtain_accord_baselines() -> np.ndarray:
 
     imp.fit(accord)
     accord = imp.transform(accord)
-    
+
     return sprint[:, :-2], sprint[:, -2], sprint[:, -1], accord[:, :-2], accord[:, -2], accord[:, -1]
 
 def obtain_unnorm_accord_baselines() -> np.ndarray:
     """
-    Return normalized baseline of ACCORD dataset with SPRINT value range. 
+    Return normalized baseline of ACCORD dataset with SPRINT value range.
 
     Return:
         Tuple containing:
@@ -764,12 +1088,12 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
     accord = pd.read_csv("data/accord/accord.csv")
 
     continuous_vars_accord = [
-        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat', 
+        'baseline_age', 'sbp', 'dbp', 'bp_med', 'gfr', 'screat',
         'chol', 'fpg', 'hdl', 'trig', 'uacr', 'bmi'
     ]
 
     binary_vars_accord = [
-        'female', 'raceclass', 'x4smoke', 'aspirin', 
+        'female', 'raceclass', 'x4smoke', 'aspirin',
         'statin', 'cvd_hx_baseline'
     ]
 
@@ -778,7 +1102,7 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
 
     outcome = "censor_po"
     treatment = "treatment"
-    
+
     accord = accord[continuous_vars_accord + binary_vars_accord +[treatment] + [outcome]]
     accord["treatment"] = np.where(accord["treatment"].str.contains("Intensive BP"), 1, 0)
 
@@ -790,7 +1114,7 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
 
     sprint = baseline.merge(outcome, on="maskid", how="inner")
 
-    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan, 
+    sprint["smoke_3cat"] = np.where(sprint["smoke_3cat"] == 4, np.nan,
                                 np.where(sprint["smoke_3cat"] == 3, 1, 0))
 
     continuous_vars_sprint = [
@@ -799,7 +1123,7 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
     ]
 
     binary_vars_sprint = [
-        "female", "race_black", "smoke_3cat", 
+        "female", "race_black", "smoke_3cat",
         "aspirin", "statin", "sub_cvd"
     ]
 
@@ -829,5 +1153,5 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
 
     imp.fit(accord)
     accord = imp.transform(accord)
-    
+
     return sprint[:, :-2], sprint[:, -2], sprint[:, -1], accord[:, :-2], accord[:, -2], accord[:, -1]
