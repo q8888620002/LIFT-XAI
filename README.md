@@ -1,10 +1,19 @@
 # Explaining Conditional Average Treatment Effect 
 
-Main script that generates synthetic dataset and test spearman correlation between Kernel SHAP and shapley-regression with masks.
+This is a repository for CODE-XAI, explaining CATE models with attribution techniques. 
 
-- experiment_missingness.py
+```run_experiment_clinical_data```contains experiments for examining ensemble explanations with knowledge distillation. An example command is as follow
+```
+run_experiment_clinical_data.py 
+--shuffle          # whether to shuffle data, only active for training set
+--num_trials       # number of ensemble models
+--learner          # types of CATE learner
+--top_n_features   # whether to report top n features across runs.
 
-```python  experiment_missingness.py ```
+``` 
+
+
+
 
 [CATENets](https://github.com/AliciaCurth/CATENets) is a repo contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth. 
 
