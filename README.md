@@ -4,7 +4,7 @@ Main script that generates synthetic dataset and test spearman correlation betwe
 
 - experiment_missingness.py
 
-```python  experiment_missingness.py -n number_of_samples -d feature_dimension -r random_seed```
+```python  experiment_missingness.py ```
 
 [CATENets](https://github.com/AliciaCurth/CATENets) is a repo contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth. 
 
