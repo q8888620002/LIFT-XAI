@@ -7,6 +7,9 @@ import xgboost as xgb
 from sklearn import metrics
 
 from src.model_utils import NuisanceFunctions, TwoLayerMLP, init_model
+from sklift.metrics import (
+    uplift_at_k, uplift_auc_score, qini_auc_score, weighted_average_uplift
+)
 
 
 def subgroup_identification(
@@ -107,6 +110,7 @@ def qini_score(
     x_test, w_test, y_test = test_data
 
     test_effects = pre_trained_cate.predict(X=x_test).detach().cpu().numpy()
+    train_effects = pre_trained_cate.predict(X=x_train).detach().cpu().numpy()
 
     # init a student model
     model = init_model(
@@ -123,13 +127,23 @@ def qini_score(
     pred_train_cate = model.predict(X=x_train[:, col_indices]).detach().cpu().numpy()
     pred_test_cate = model.predict(X=x_test[:, col_indices]).detach().cpu().numpy()
 
-    mse = np.mean((pred_test_cate - test_effects) ** 2)
+    train_mse = np.mean((pred_train_cate - train_effects) ** 2)
+    test_mse = np.mean((pred_test_cate - test_effects) ** 2)
 
-    # Calculate qini score for test set.
-    train_score = qini_score_cal(w_train, y_train, pred_train_cate)
-    test_score = qini_score_cal(w_test, y_test, pred_test_cate)
-
-    return train_score, test_score, mse
+    # Calculate qini score
+       
+    train_score = qini_auc_score(
+        y_true=y_train, 
+        uplift=pred_train_cate.flatten(),
+        treatment=w_train
+    )
+    test_score = qini_auc_score(
+        y_true=y_test, 
+        uplift=pred_test_cate.flatten(),
+        treatment=w_test
+    )
+    
+    return train_score, test_score, train_mse, test_mse
 
 
 def qini_score_cal(treatment, outcome, pred_outcome):
@@ -171,6 +185,8 @@ def qini_score_cal(treatment, outcome, pred_outcome):
         -1
     ] = max_qini  # Ensure the last point reflects the maximum theoretical benefit
 
+    if torch.is_tensor(qini_values):
+        qini_values = qini_values.detach().cpu().numpy()
     qini_score = np.trapz(qini_values, np.linspace(0, 1, len(qini_values)))
 
     return qini_score

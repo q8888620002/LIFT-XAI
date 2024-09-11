@@ -4,13 +4,45 @@ from __future__ import annotations
 from typing import List
 
 import numpy as np
+import pandas as pd
 import torch
 from torch import nn
 
-from dataset import Dataset
 from src.cate_utils import calculate_pehe
 from src.model_utils import NuisanceFunctions
+from sklearn.compose import ColumnTransformer
 
+
+class InvertableColumnTransformer(ColumnTransformer):
+    """
+    Adds an inverse transform method to the standard sklearn.compose.ColumnTransformer.
+
+    Warning this is flaky and use at your own risk.  Validation checks that the column count in
+    `transformers` are in your object `X` to be inverted.  Reordering of columns will break things!
+    """
+    def inverse_transform(self, X):
+        if isinstance(X,pd.DataFrame):
+            X = X.to_numpy()
+
+        arrays = []
+        for name, indices in self.output_indices_.items():
+            transformer = self.named_transformers_.get(name, None)
+            arr = X[:, indices.start: indices.stop]
+
+            if transformer in (None, "passthrough", "drop"):
+                pass
+
+            else:
+                arr = transformer.inverse_transform(arr)
+
+            arrays.append(arr)
+
+        retarr = np.concatenate(arrays, axis=1)
+
+        if retarr.shape[1] != X.shape[1]:
+            raise ValueError(f"Received {X.shape[1]} columns but transformer expected {retarr.shape[1]}")
+
+        return retarr
 
 def normalize(values: np.ndarray) -> np.ndarray:
     """Used to normalize the outputs of interpretability methods."""
@@ -108,6 +140,74 @@ def ablate(
     # Return ablated predictions
     return ablated_preds
 
+def insertion_deletion_qini(
+    test_data: tuple,
+    rank_indices: list,
+    cate_model: torch.nn.Module,
+    baseline: np.ndarray,
+    selection_types: List[str],
+    nuisance_functions: NuisanceFunctions,
+    model_type: str = "CATENets",
+) -> tuple:
+    """
+    Compute partial average treatment effect (PATE) with with proxy pehe and feature subsets by insertion and deletion
+
+    Args:
+        test_data: testing data to calculate pehe
+        rank_indices: local ranking from a given explanation method
+        cate_model: trained cate model
+        baseline: replacement values for insertion & deletion
+        selection_types: approximation methods for estimating ground truth pehe
+        nuisance function: Nuisance functions to estimate proxy pehe.
+        model_type: model types for cate package
+    Returns:
+        results of insertion and deletion of PATE.
+    """
+    ## training plugin estimator on
+
+    x_test, _, _ = test_data
+
+    n, d = x_test.shape
+    x_test_del = x_test.copy()
+    x_test_ins = np.tile(baseline, (n, 1))
+    baseline = np.tile(baseline, (n, 1))
+
+    original_cate_model = cate_model
+
+    if model_type == "CATENets":
+        cate_model = lambda x: original_cate_model.predict(X=x)
+    else:
+        cate_model = lambda x: original_cate_model.forward(X=x)
+
+    for rank_index in range(len(rank_indices) + 1):
+        # Skip this on the first iteration
+
+        if rank_index > 0:
+            col_indices = rank_indices[rank_index - 1]
+
+            for i in range(n):
+                x_test_ins[i, col_indices[i]] = x_test[i, col_indices[i]]
+                x_test_del[i, col_indices[i]] = baseline[i, col_indices[i]]
+
+        for selection_type in selection_types:
+            # For the insertion process
+            cate_pred_subset_ins = (
+                cate_model(x_test_ins).detach().cpu().numpy().flatten()
+            )
+
+            insertion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_ins, test_data, selection_type, nuisance_functions
+            )
+
+            # For the deletion process
+            cate_pred_subset_del = (
+                cate_model(x_test_del).detach().cpu().numpy().flatten()
+            )
+            deletion_results[selection_type][rank_index] = calculate_pehe(
+                cate_pred_subset_del, test_data, selection_type, nuisance_functions
+            )
+
+    return insertion_results, deletion_results
 
 def insertion_deletion(
     test_data: tuple,

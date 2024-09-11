@@ -6,6 +6,7 @@ import torch
 # import shap
 
 from shapreg import shapley, games, removal, shapley_sampling
+from src.cate_utils import qini_score_cal
 from captum._utils.models.linear_model import SkLearnLinearRegression
 from captum.attr import (
     DeepLift,
@@ -19,7 +20,9 @@ from captum.attr import (
     GradientShap,
     Saliency
 )
-
+from sklift.metrics import (
+    uplift_at_k, uplift_auc_score, qini_auc_score, weighted_average_uplift
+)
 from captum.attr._core.lime import get_exp_kernel_similarity_function
 from torch import nn
 
@@ -44,7 +47,7 @@ class Explainer:
             "lime",
         ],
         n_steps: int = 500,
-        perturbations_per_eval: int = 10,
+        perturbations_per_eval: int = 1,
         n_samples: int = 1000,
         kernel_width: float = 1.0,
         baseline: Optional[torch.Tensor] = None,
@@ -69,26 +72,42 @@ class Explainer:
         integrated_gradients_model = IntegratedGradients(model)
 
         def integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return integrated_gradients_model.attribute(
-                x_test,
+            test_values = torch.zeros_like(x_test)
+            batch_size = 32
+            for i in range(0, len(x_test), batch_size):
+                end_idx = min(i + batch_size, len(x_test))
+                test_values[i:end_idx] = integrated_gradients_model.attribute(
+                x_test[i:end_idx],
                 n_steps=n_steps,
             )
 
+            return test_values
+
         def baseline_integrated_gradients_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return integrated_gradients_model.attribute(
-                x_test,
+
+            test_values = torch.zeros_like(x_test)
+            batch_size = 32
+            for i in range(0, len(x_test), batch_size):
+                end_idx = min(i + batch_size, len(x_test))
+                test_values[i:end_idx] = integrated_gradients_model.attribute(
+                x_test[i:end_idx],
                 n_steps=n_steps,
                 baselines = self.baseline
             )
+            return test_values
 
         def smooth_grad_cpk(x_test: torch.Tensor) -> torch.Tensor:
 
             noise_tunnel = NoiseTunnel(integrated_gradients_model)
-
-            return noise_tunnel.attribute(
-                x_test,
+            test_values = torch.zeros_like(x_test)
+            batch_size = 32
+            for i in range(0, len(x_test), batch_size):
+                end_idx = min(i + batch_size, len(x_test))
+                test_values[i:end_idx] = noise_tunnel.attribute(
+                (x_test[i:end_idx]),
                 nt_type='smoothgrad_sq'
             )
+            return test_values
 
 
         # DeepLift
@@ -150,9 +169,22 @@ class Explainer:
             return self._check_tensor(test_values)
 
         # Baseline shapley value sampling
+        def qini_score_wrapper(x_test):
+            with torch.no_grad():
+                x_hat = model.predict(x_test).flatten().detach().cpu().numpy()
+                score = qini_auc_score(self.y_test, x_hat, self.w_test)
+                import ipdb;ipdb.set_trace()
+                score = self._check_tensor(score)
+                return score
+
+        # Initialize Shapley Value Sampling model
+        # shapley_value_sampling_model = ShapleyValueSampling(qini_score_wrapper)
+
         shapley_value_sampling_model = ShapleyValueSampling(model)
 
-        def baseline_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
+        def baseline_shapley_value_sampling_cbk(
+                x_test: torch.Tensor,
+            ) -> torch.Tensor:
 
             return shapley_value_sampling_model.attribute(
                 x_test,
@@ -181,6 +213,8 @@ class Explainer:
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
+                baselines=self.baseline,
+                show_progress=True
             )
 
         # Gradient SHAP
@@ -192,7 +226,14 @@ class Explainer:
         saliency_model = Saliency(model)
 
         def saliency_cpk(x_test: torch.tensor) -> torch.Tensor:
-            return saliency_model.attribute(x_test)
+            test_values = torch.zeros_like(x_test)
+
+            batch_size = 32
+            for i in range(0, len(x_test), batch_size):
+                end_idx = min(i + batch_size, len(x_test))
+                test_values[i:end_idx] = saliency_model.attribute(x_test[i:end_idx])
+
+            return self._check_tensor(test_values)
 
         # Explain with missingness
         def explain_with_missingness_cbk(x_test:torch.Tensor) -> torch.Tensor:
@@ -248,16 +289,24 @@ class Explainer:
         else:
             return torch.from_numpy(np.asarray(X)).float().to(self.device)
 
-    def explain(self, X: torch.Tensor) -> Dict:
+    def explain(self, X: torch.Tensor, W:torch.Tensor, Y:torch.Tensor) -> Dict:
         output = {}
+
         if self.baseline is None:
             self.baseline = torch.zeros(
                 X.shape
             )  # Zero tensor as baseline if no baseline specified
-        for name in self.explainer_list:
-            x_test = self._check_tensor(X)
+        else:
             self.baseline = self._check_tensor(self.baseline)
-            x_test.requires_grad_()
+
+        x_test = self._check_tensor(X)
+        x_test.requires_grad_()
+
+        self.w_test = W
+        self.y_test = Y
+
+        for name in self.explainer_list:
+
             explainer = self.explainers[name]
             output[name] = explainer(x_test).detach().cpu().numpy()
         return output

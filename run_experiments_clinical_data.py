@@ -13,7 +13,7 @@ import pandas as pd
 from scipy import stats
 
 import src.CATENets.catenets.models as cate_models
-from dataset import Dataset
+from src.dataset import Dataset
 from src.cate_utils import qini_score, qini_score_cal
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.interpretability.explain import Explainer
@@ -73,8 +73,8 @@ if __name__ == "__main__":
     feature_size = x_train.shape[1]
 
     explainers = [
-        "saliency",
-        "smooth_grad",
+        # "saliency",
+        # "smooth_grad",
         # "gradient_shap",
         # "lime",
         # "baseline_lime",
@@ -93,13 +93,29 @@ if __name__ == "__main__":
     results_train = np.zeros((trials, len(x_train)))
     results_test = np.zeros((trials, len(x_test)))
 
+    data = Dataset(cohort_name, 0, True)
+
     for i in range(trials):
 
-        data = Dataset(cohort_name, i, shuffle)
-
+        data = Dataset(cohort_name, i)
         x_train, w_train, y_train = data.get_data("train")
         x_val, w_val, y_val = data.get_data("val")
         x_test, w_test, y_test = data.get_data("test")
+
+        # np.random.seed(i)
+        # train_indices = np.random.choice(
+        #     len(x_train), size=len(x_train), replace=True
+        # )
+        # val_indices = np.random.choice(
+        #     len(x_val), size=len(x_val), replace=True
+        # )
+        # test_indices = np.random.choice(
+        #     len(x_test), size=len(x_test), replace=True
+        # )
+
+        # x_train, y_train, w_train = x_train[train_indices], y_train[train_indices], w_train[train_indices]
+        # x_val, y_val, w_val = x_val[val_indices], y_val[val_indices], w_val[val_indices]
+        # x_test, y_test, w_test = x_test[test_indices], y_test[test_indices], w_test[test_indices]
 
         models = {
             "XLearner": pseudo_outcome_nets.XLearner(
@@ -230,24 +246,19 @@ if __name__ == "__main__":
         nuisance_functions.fit(x_val, y_val, w_val)
 
         model = models[learner]
-
-        # Create a matrix of zeros with the same shape as x_train
-
-        noise_matrix = np.zeros(x_train.shape)
         baseline = np.mean(x_train, axis=0)
 
-        # for _, idx_lst in data.discrete_indices.items():
-        #     if len(idx_lst) == 1:
+        for _, idx_lst in data.discrete_indices.items():
+            if len(idx_lst) == 1:
 
-        #         # setting binary vars to 0.5
+                # setting binary vars to 0.5
+                baseline[idx_lst] = 0.5
+            else:
+                # setting categorical baseline to 1/n
+                # category_counts = data[:, idx_lst].sum(axis=0)
+                # baseline[idx_lst] = category_counts / category_counts.sum()
 
-        #         baseline[idx_lst] = 0.5
-        #     else:
-        #         # setting categorical baseline to 1/n
-        #         # category_counts = data[:, idx_lst].sum(axis=0)
-        #         # baseline[idx_lst] = category_counts / category_counts.sum()
-
-        #         baseline[idx_lst] = 1 / len(idx_lst)
+                baseline[idx_lst] = 1 / len(idx_lst)
 
         model.fit(x_train, y_train, w_train)
 
@@ -264,20 +275,21 @@ if __name__ == "__main__":
             perturbations_per_eval=1,
             baseline=baseline.reshape(1, -1),
         )
-
-        learner_explanations[learner] = learner_explainers[learner].explain(x_test)
+        learner_explanations[learner] = learner_explainers[learner].explain(x_test, w_test, y_test)
 
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
         for explainer_name in explainers:
 
             train_score_results = []
+            train_mse_results = []
             test_score_results = []
-            mse_results = []
+            test_mse_results = []
 
             rand_test_results = []
             rand_train_results = []
-            rand_mse_results = []
+            rand_train_mse_results = []
+            rand_test_mse_results = []
 
             # obtaining global & local ranking for insertion & deletion
 
@@ -328,21 +340,21 @@ if __name__ == "__main__":
                 )
 
                 # Starting from 1 features
-                train_score, test_score, mse = qini_score(
+                train_score, test_score, train_mse, test_mse = qini_score(
                     global_rank[:feature_idx],
                     (x_train, w_train, y_train),
                     (x_test, w_test, y_test),
                     model,
                     learner,
                 )
+
                 train_score_results.append(train_score)
                 test_score_results.append(test_score)
-                mse_results.append(mse)
+                test_mse_results.append(test_mse)
+                train_mse_results.append(train_mse)
 
-                random.seed(i)
-
-                rand_train_score, rand_test_score, rand_mse = qini_score(
-                    random.sample(range(0, x_train.shape[1]), feature_idx),
+                rand_train_score, rand_test_score, rand_train_mse, rand_test_mse = qini_score(
+                    np.random.choice(x_train.shape[1], feature_idx, replace=False),
                     (x_train, w_train, y_train),
                     (x_test, w_test, y_test),
                     model,
@@ -351,7 +363,8 @@ if __name__ == "__main__":
 
                 rand_train_results.append(rand_train_score)
                 rand_test_results.append(rand_test_score)
-                rand_mse_results.append(rand_mse)
+                rand_train_mse_results.append(rand_train_mse)
+                rand_test_mse_results.append(rand_test_mse)
 
             insertion_deletion_data.append(
                 [
@@ -360,11 +373,12 @@ if __name__ == "__main__":
                     insertion_results,
                     deletion_results,
                     train_score_results,
+                    train_mse_results,
                     test_score_results,
-                    mse_results,
+                    test_mse_results,
                     rand_test_score,
-                    rand_train_results,
-                    rand_mse_results,
+                    rand_train_mse_results,
+                    rand_test_mse_results,
                     [qini_score_cal(w_train, y_train, results_train[i])],
                     [qini_score_cal(w_test, y_test, results_test[i])],
                     ablation_pos_results,
@@ -427,7 +441,7 @@ if __name__ == "__main__":
     with open(
         os.path.join(
             f"results/{cohort_name}",
-            f"/test_shuffle_{shuffle}_{learner}_zero_baseline_{zero_baseline}.pkl",
+            f"test_shuffle_{shuffle}_{learner}_zero_baseline_{zero_baseline}.pkl",
         ),
         "wb",
     ) as output_file:

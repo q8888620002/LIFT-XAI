@@ -1,25 +1,23 @@
 
 import argparse
-import os
-import sys
 import pickle
 import numpy as np
 
-from utilities import *
+from src.utils import *
+from src.dataset import Dataset
+from src.cate_utils import NuisanceFunctions, calculate_pehe
 
-module_path = os.path.abspath(os.path.join('CATENets/'))
-if module_path not in sys.path:
-    sys.path.append(module_path)
-
-from catenets.models.torch import pseudo_outcome_nets
-import catenets.models as cate_models
-import catenets.models.torch.tlearner as tlearner
+import src.CATENets.catenets.models as cate_models
+from src.CATENets.catenets.models.torch import pseudo_outcome_nets
+from sklift.metrics import (
+    uplift_at_k, uplift_auc_score, qini_auc_score, weighted_average_uplift
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('-d','--dataset', help='Dataset', required=True, type =str)
     parser.add_argument('-t','--num_trials', help='Dataset', required=True, type =int)
-    parser.add_argument('-s','--shuffle', help='shuffle',  default=True, action='store_false')
+    parser.add_argument('-s','--shuffle', help='shuffle', action='store_true')
 
     args = vars(parser.parse_args())
 
@@ -28,14 +26,15 @@ if __name__ == "__main__":
     shuffle = args["shuffle"]
     print(shuffle)
     DEVICE = "cuda:3"
-    ensemble_num = 20
+    ensemble_num = 40
     data = Dataset(cohort_name)
-    x_test, _, _ = data.get_data("test")
+    x_train, _, _ = data.get_data("train")
 
     learners = [
         "XLearner",
-        # "XLearner_ensemble",
+        "XLearner_ensemble",
         "DRLearner",
+        "DRLearner_ensemble",
         "SLearner",
         "TLearner",
         "RLearner",
@@ -55,8 +54,9 @@ if __name__ == "__main__":
     results = {
          learner: {
              **{sec: np.zeros((trials)) for sec in selection_types},
-             "prediction": np.zeros((trials, x_test.shape[0])),
-             "qini_score" : np.zeros((trials))
+             "prediction": np.zeros((trials, x_train.shape[0])),
+             "qini_score" : np.zeros((trials)),
+             "uplift_score" : np.zeros((trials))
             } for learner in learners
     }
 
@@ -79,20 +79,8 @@ if __name__ == "__main__":
                         n_iter=1000,
                         nonlin="relu",
                         device=DEVICE,
-                        seed=i
                     ),
-            # "XLearner_ensemble": pseudo_outcome_nets.XLearner(
-            #             x_train.shape[1],
-            #             binary_y=(len(np.unique(y_train)) == 2),
-            #             n_layers_out=2,
-            #             n_units_out=100,
-            #             batch_size=128,
-            #             n_iter=1000,
-            #             nonlin="relu",
-            #             device=DEVICE,
-            #             seed=i
-            #         ),
-            "DRLearner": pseudo_outcome_nets.DRLearner(
+            "XLearner_ensemble": pseudo_outcome_nets.XLearner(
                         x_train.shape[1],
                         binary_y=(len(np.unique(y_train)) == 2),
                         n_layers_out=2,
@@ -102,6 +90,26 @@ if __name__ == "__main__":
                         nonlin="relu",
                         device=DEVICE,
                         seed=i
+                    ),
+            "DRLearner": pseudo_outcome_nets.DRLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE,
+                ),
+            "DRLearner_ensemble": pseudo_outcome_nets.DRLearner(
+                        x_train.shape[1],
+                        binary_y=(len(np.unique(y_train)) == 2),
+                        n_layers_out=2,
+                        n_units_out=100,
+                        batch_size=128,
+                        n_iter=1000,
+                        nonlin="relu",
+                        device=DEVICE,
                 ),
             "SLearner": cate_models.torch.SLearner(
                         x_train.shape[1],
@@ -112,7 +120,6 @@ if __name__ == "__main__":
                         n_iter=1000,
                         nonlin="relu",
                         device=DEVICE,
-                        seed=i
                 ),
             "TLearner": cate_models.torch.TLearner(
                         x_train.shape[1],
@@ -123,7 +130,6 @@ if __name__ == "__main__":
                         n_iter=1000,
                         nonlin="relu",
                         device=DEVICE,
-                        seed=i
                 ),
             "RALearner": pseudo_outcome_nets.RALearner(
                       x_train.shape[1],
@@ -137,7 +143,6 @@ if __name__ == "__main__":
                       batch_norm=False,
                       nonlin="relu",
                       device = DEVICE,
-                    seed=i
                   ),
             "RLearner": pseudo_outcome_nets.RLearner(
                       x_train.shape[1],
@@ -151,7 +156,6 @@ if __name__ == "__main__":
                       batch_norm=False,
                       nonlin="relu",
                       device = DEVICE,
-                      seed=i
             ),
             "DragonNet": cate_models.torch.DragonNet(
                     x_train.shape[1],
@@ -161,7 +165,6 @@ if __name__ == "__main__":
                     lr=1e-5,
                     batch_norm=False,
                     nonlin="relu",
-                    seed=i
                 ),
             "TARNet": cate_models.torch.TARNet(
                     x_train.shape[1],
@@ -176,7 +179,6 @@ if __name__ == "__main__":
                     batch_norm=False,
                     early_stopping = True,
                     nonlin="relu",
-                    seed=i
                 ),
             "CFRNet_0.01": cate_models.torch.TARNet(
                 x_train.shape[1],
@@ -191,7 +193,6 @@ if __name__ == "__main__":
                 batch_norm=False,
                 nonlin="relu",
                 penalty_disc=0.01,
-                seed=i
             ),
             "CFRNet_0.001": cate_models.torch.TARNet(
                     x_train.shape[1],
@@ -206,7 +207,6 @@ if __name__ == "__main__":
                     batch_norm=False,
                     nonlin="relu",
                     penalty_disc=0.001,
-                    seed=i
                 ),
         }
 
@@ -234,39 +234,59 @@ if __name__ == "__main__":
                             n_iter=1000,
                             nonlin="relu",
                             device=DEVICE,
-                            seed=i
+                            seed=index
                         )
 
-                    sampled_indices = np.random.choice(len(x_train), size=len(x_train), replace=True)
+                    cate_model.fit(x_train, y_train, w_train)
 
-                    x_sampled = x_train[sampled_indices]
-                    y_sampled = y_train[sampled_indices]
-                    w_sampled = w_train[sampled_indices]
-
-                    cate_model.fit(x_sampled, y_sampled, w_sampled)
-
-                    prediction = cate_model.predict(x_test).detach().cpu().numpy().flatten()
-
+                    prediction = cate_model.predict(x_train).detach().cpu().numpy().flatten()
                     results[learner_name]["prediction"][i] += prediction/ensemble_num
 
-                prediction = results[learner_name]["prediction"][i]
+            elif learner_name == "DRLearner_ensemble":
+                print("training ensemble")
+                results[learner_name]["prediction"][i] = 0
+
+                for index in range(ensemble_num):
+
+                    cate_model = pseudo_outcome_nets.DRLearner(
+                            x_train.shape[1],
+                            binary_y=(len(np.unique(y_train)) == 2),
+                            n_layers_out=2,
+                            n_units_out=100,
+                            batch_size=128,
+                            n_iter=1000,
+                            nonlin="relu",
+                            device=DEVICE,
+                            seed=index
+                        )
+
+                    cate_model.fit(x_train, y_train, w_train)
+
+                    prediction = cate_model.predict(x_train).detach().cpu().numpy().flatten()
+
+                    results[learner_name]["prediction"][i] += prediction/ensemble_num
             else:
 
                 cate_model.fit(x_train, y_train, w_train)
 
-                prediction = cate_model.predict(x_test).detach().cpu().numpy().flatten()
+                prediction = cate_model.predict(x_train).detach().cpu().numpy().flatten()
 
                 results[learner_name]["prediction"][i] = prediction
 
-                results[learner_name]['qini_score'][i] = qini_score_cal(
-                    w_test,
-                    y_test,
-                    prediction
-                )
+            results[learner_name]['qini_score'][i] = qini_auc_score(
+                y_train,
+                results[learner_name]["prediction"][i],
+                w_train
+            )
+            results[learner_name]['uplift_score'][i] = uplift_auc_score(
+                y_train,
+                results[learner_name]["prediction"][i],
+                w_train
+            )
             for sec in selection_types:
                 results[learner_name][sec][i] = calculate_pehe(
                     prediction,
-                    data.get_data("test"),
+                    data.get_data("train"),
                     sec,
                     nuisance_functions
                 )
