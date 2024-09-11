@@ -2,26 +2,21 @@
 
 This is a repository for CODE-XAI, explaining CATE models with attribution techniques. 
 
-```run_experiment_clinical_data```contains experiments for examining ensemble explanations with knowledge distillation. An example command is as follow
+Prerequisites
+
+CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth. 
+
+```run_experiments.py``` contains an experiment pipeline for synthetics data analysis, the script is modified based on 
+
+```run_experiment_clinical_data.py```contains experiments for examining ensemble explanations with knowledge distillation. An example command is as follows
 ```
-run_experiment_clinical_data.py 
+run_experiment_clinical_data.py
+--dataset          # dataset name
 --shuffle          # whether to shuffle data, only active for training set
 --num_trials       # number of ensemble models
---learner          # types of CATE learner
+--learner          # types of CATE learner, e.g. X-Learner, DR-Learner
 --top_n_features   # whether to report top n features across runs.
-
 ``` 
 
 
 
-
-[CATENets](https://github.com/AliciaCurth/CATENets) is a repo contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth. 
-
-Model modifications for explanation with mask are in ```CATENets/catenets/models/torch``` 
-
-- ```pseudo_outcome_nets.py``` It contains abstract class for PseudoOutcomeLearner e.g. RA, DR, and PW-learner and Learner with Masks e.g. DRLearnerMask.
-- ```base.py``` This script contains the prediction model e.g. propensity score model (PropensityNet), treatment effect (BasicNet) and their masks version. 
-- ```utils/model_utlis.py```
-
-Shapley Value Calculation is in ```shapley-regression/shapreg```
-- ```CateGame() in games.py```
