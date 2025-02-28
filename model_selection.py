@@ -291,6 +291,6 @@ if __name__ == "__main__":
                     nuisance_functions
                 )
 
-    with open(f"results/{cohort_name}/model_selection_shuffle_{shuffle}.pkl", "wb") as output_file:
+    with open(f"results/{cohort_name}/model_selection/model_selection_shuffle_{shuffle}.pkl", "wb") as output_file:
         pickle.dump(results, output_file)
 

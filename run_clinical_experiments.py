@@ -6,16 +6,15 @@ import argparse
 import collections
 import os
 import pickle
-import random
 
 import numpy as np
 import pandas as pd
 from scipy import stats
 
 import src.CATENets.catenets.models as cate_models
-from src.dataset import Dataset
 from src.cate_utils import qini_score, qini_score_cal
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
+from src.dataset import Dataset
 from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
 from src.utils import ablate, attribution_ranking, insertion_deletion
@@ -275,7 +274,9 @@ if __name__ == "__main__":
             perturbations_per_eval=1,
             baseline=baseline.reshape(1, -1),
         )
-        learner_explanations[learner] = learner_explainers[learner].explain(x_test, w_test, y_test)
+        learner_explanations[learner] = learner_explainers[learner].explain(
+            x_test, w_test, y_test
+        )
 
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
@@ -353,7 +354,12 @@ if __name__ == "__main__":
                 test_mse_results.append(test_mse)
                 train_mse_results.append(train_mse)
 
-                rand_train_score, rand_test_score, rand_train_mse, rand_test_mse = qini_score(
+                (
+                    rand_train_score,
+                    rand_test_score,
+                    rand_train_mse,
+                    rand_test_mse,
+                ) = qini_score(
                     np.random.choice(x_train.shape[1], feature_idx, replace=False),
                     (x_train, w_train, y_train),
                     (x_test, w_test, y_test),
