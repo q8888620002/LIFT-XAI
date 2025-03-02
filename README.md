@@ -1,6 +1,6 @@
 # Explaining Conditional Average Treatment Effect 
 
-This is a repository for CODE-XAI, explaining CATE models with attribution techniques. 
+This is a repository for [CODE-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2), explaining CATE models with attribution techniques. 
 
 Prerequisites
 
