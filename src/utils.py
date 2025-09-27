@@ -82,6 +82,7 @@ def ablate(
     nuisancefunction: NuisanceFunctions = None,
     y_explic=None,
     is_loss=False,
+    model_type: str = "CATENets",
 ):
     """
     Arguments:
@@ -122,7 +123,14 @@ def ablate(
     explicand = np.copy(x_explic)
 
     # # Initialize ablated predictions
-    ablated_preds = [model.predict(explicand).detach().cpu().numpy().mean()]
+    if model_type == "CATENets":
+        model = lambda x: model.predict(X=x)
+    elif model_type == "CausalForest":
+        model = lambda x: model.effect(X=x)
+    else:
+        model = lambda x: model.forward(X=x)
+
+    ablated_preds = [model(explicand).detach().cpu().numpy().mean()]
 
     # Ablate features one by one
     for i in range(explicand.shape[1]):
@@ -138,7 +146,7 @@ def ablate(
         ]  # Update mask based on condition
         explicand[samples, top_feat] = mask_val  # Mask top features
 
-        avg_pred = model.predict(explicand).detach().cpu().numpy().mean()
+        avg_pred = model(explicand).detach().cpu().numpy().mean()
         ablated_preds.append(avg_pred)  # Get prediction on ablated explicand
 
     # Return ablated predictions
@@ -181,6 +189,8 @@ def insertion_deletion_qini(
 
     if model_type == "CATENets":
         cate_model = lambda x: original_cate_model.predict(X=x)
+    elif model_type == "CausalForest":
+        cate_model = lambda x: original_cate_model.effect(X=x)
     else:
         cate_model = lambda x: original_cate_model.forward(X=x)
 
@@ -251,6 +261,8 @@ def insertion_deletion(
 
     if model_type == "CATENets":
         cate_model = lambda x: original_cate_model.predict(X=x)
+    elif model_type == "CausalForest":
+        cate_model = lambda x: original_cate_model.effect(X=x)
     else:
         cate_model = lambda x: original_cate_model.forward(X=x)
 
