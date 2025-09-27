@@ -14,6 +14,7 @@ from src.dataset import Dataset
 DEVICE = "cuda:1"
 os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
 
+
 def compute_shap_values(model, data_sample, data_baseline):
     """Function for shapley value sampling"""
     shapley_model = ShapleyValueSampling(model)
@@ -31,6 +32,7 @@ def compute_shap_values(model, data_sample, data_baseline):
     )
     return shap_values
 
+
 def compute_shap_similarity(shap_values_1, shap_values_2):
     """Compute multiple similarity metrics for SHAP values."""
 
@@ -38,9 +40,12 @@ def compute_shap_similarity(shap_values_1, shap_values_2):
     shap_values_2 = shap_values_2.flatten()
 
     # Cosine Similarity
-    cosine_sim = np.dot(shap_values_1, shap_values_2) / (np.linalg.norm(shap_values_1) * np.linalg.norm(shap_values_2) + 1e-8)
+    cosine_sim = np.dot(shap_values_1, shap_values_2) / (
+        np.linalg.norm(shap_values_1) * np.linalg.norm(shap_values_2) + 1e-8
+    )
 
     return cosine_sim
+
 
 def parse_args():
     """Parser for arguments"""
@@ -173,10 +178,18 @@ def main(args):
             )
             avg_relative_change = np.mean(relative_change)
 
-            cosine_sim = compute_shap_similarity(mean_shap_values, prev_mean_shap_values)
+            cosine_sim = compute_shap_similarity(
+                mean_shap_values, prev_mean_shap_values
+            )
 
             if args.wandb:
-                wandb.log({"Trials": i + 1, "Relative Change": avg_relative_change, "cosine sim": cosine_sim})
+                wandb.log(
+                    {
+                        "Trials": i + 1,
+                        "Relative Change": avg_relative_change,
+                        "cosine sim": cosine_sim,
+                    }
+                )
 
             print(
                 f"Trial {i+1}: Average Relative Change in Mean Local SHAP Explanations"

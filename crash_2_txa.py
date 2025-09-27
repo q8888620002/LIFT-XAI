@@ -44,7 +44,7 @@ def compute_shap_values(model, data_sample, data_baseline=None):
             .numpy()
         )
 
-    return shap_values.reshape(len(data_sample), -1 )
+    return shap_values.reshape(len(data_sample), -1)
 
 
 def main(args):
@@ -155,7 +155,6 @@ def main(args):
     #             "XLearner",
     #         )
     #         crash2_qini_score[index].append([crash2_score, rand_crash2])
-
 
     save_path = os.path.join("results", "txa_crash2")
     os.makedirs(save_path, exist_ok=True)

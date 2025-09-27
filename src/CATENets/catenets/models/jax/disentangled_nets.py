@@ -5,12 +5,9 @@ Hassanpour and Greiner (2020) and Wu et al (2020).
 # Author: Alicia Curth
 from typing import Any, Callable, List, Tuple
 
+import catenets.logger as log
 import jax.numpy as jnp
 import numpy as onp
-from jax import grad, jit, random
-from jax.example_libraries import optimizers
-
-import catenets.logger as log
 from catenets.models.constants import (
     DEFAULT_AVG_OBJECTIVE,
     DEFAULT_BATCH_SIZE,
@@ -39,6 +36,8 @@ from catenets.models.jax.model_utils import (
     make_val_split,
 )
 from catenets.models.jax.representation_nets import mmd2_lin
+from jax import grad, jit, random
+from jax.example_libraries import optimizers
 
 
 # helper functions to avoid abstract tracer values in jit

@@ -5,12 +5,10 @@ RA-learner.
 # Author: Alicia Curth
 from typing import Callable, Optional, Tuple
 
+import catenets.logger as log
 import jax.numpy as jnp
 import numpy as onp
 import pandas as pd
-from sklearn.model_selection import StratifiedKFold
-
-import catenets.logger as log
 from catenets.models.constants import (
     DEFAULT_AVG_OBJECTIVE,
     DEFAULT_BATCH_SIZE,
@@ -53,6 +51,7 @@ from catenets.models.jax.transformation_utils import (
     RA_TRANSFORMATION,
     _get_transformation_function,
 )
+from sklearn.model_selection import StratifiedKFold
 
 T_STRATEGY = "T"
 S1_STRATEGY = "Tar"

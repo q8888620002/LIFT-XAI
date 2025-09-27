@@ -15,8 +15,17 @@ from src.CATENets.catenets.models.constants import (
     DEFAULT_UNITS_OUT,
     DEFAULT_VAL_SPLIT,
 )
-from src.CATENets.catenets.models.torch.base import DEVICE, BaseCATEEstimator, BasicNet, BasicNetMask
-from src.CATENets.catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper, predict_wrapper_mask
+from src.CATENets.catenets.models.torch.base import (
+    DEVICE,
+    BaseCATEEstimator,
+    BasicNet,
+    BasicNetMask,
+)
+from src.CATENets.catenets.models.torch.utils.model_utils import (
+    predict_wrapper,
+    predict_wrapper_mask,
+    train_wrapper,
+)
 
 
 class TLearner(BaseCATEEstimator):
@@ -89,7 +98,7 @@ class TLearner(BaseCATEEstimator):
                         plugin,
                         n_unit_in,
                         binary_y=binary_y,
-                        device = device,
+                        device=device,
                         n_layers_out=n_layers_out,
                         n_units_out=n_units_out,
                         weight_decay=weight_decay,
@@ -168,6 +177,7 @@ class TLearner(BaseCATEEstimator):
 
         return self
 
+
 class TLearnerMask(BaseCATEEstimator):
     """
     TLearner class -- two separate functions learned for each Potential Outcome function
@@ -236,9 +246,9 @@ class TLearnerMask(BaseCATEEstimator):
                 self._plug_in.append(
                     BasicNetMask(
                         plugin,
-                        2*n_unit_in,
+                        2 * n_unit_in,
                         binary_y=binary_y,
-                        device = device,
+                        device=device,
                         n_layers_out=n_layers_out,
                         n_units_out=n_units_out,
                         weight_decay=weight_decay,
@@ -257,7 +267,11 @@ class TLearnerMask(BaseCATEEstimator):
                 )
 
     def predict(
-        self, X: torch.Tensor, M: torch.Tensor, return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        M: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects and potential outcomes

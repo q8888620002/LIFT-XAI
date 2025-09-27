@@ -9,12 +9,10 @@ import pandas as pd
 import seaborn as sns
 import torch
 import xgboost as xgb
-
-from matplotlib.lines import Line2D
-from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import LogisticRegressionCV
 from catenets.models.torch import pseudo_outcome_nets
-
+from matplotlib.lines import Line2D
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.metrics import mean_squared_error
 
 abbrev_dict = {
     "shapley_value_sampling": "SVS",
@@ -50,13 +48,14 @@ learner_colors = {
     "Truth": cblind_palete[9],
 }
 
+
 class NuisanceFunctions:
     def __init__(self):
-        
+
         self.mu0 = xgb.XGBRegressor()
         self.mu1 = xgb.XGBRegressor()
         self.m = xgb.XGBRegressor()
-        
+
         # self.rf = xgb.XGBClassifier(
         #     # reg_lambda=2,
         #     # max_depth=3,
@@ -66,7 +65,7 @@ class NuisanceFunctions:
         self.rf = LogisticRegressionCV(Cs=[0.00001, 0.001, 0.01, 0.1, 1])
 
     def fit(self, x_val, Y_val, W_val):
-        
+
         x0, x1 = x_val[W_val == 0], x_val[W_val == 1]
         y0, y1 = Y_val[W_val == 0], Y_val[W_val == 1]
 
@@ -86,6 +85,7 @@ class NuisanceFunctions:
 
     def predict_m(self, x):
         return self.m.predict(x)
+
 
 def enable_reproducible_results(seed: int = 42) -> None:
     """
@@ -161,7 +161,7 @@ def compute_pehe(
     cate_true: np.ndarray,
     cate_pred: torch.Tensor,
 ) -> tuple:
-    
+
     if torch.is_tensor(cate_pred):
         cate_pred = cate_pred.detach().cpu().numpy()
 
@@ -222,23 +222,25 @@ def attribution_accuracy(
         1
     ]  # Features with largest attribution
     accuracy = 0  # Attribution accuracy
-    accuracy_proportion_abs = 0 # Attribution score accuracy
+    accuracy_proportion_abs = 0  # Attribution score accuracy
 
     for k in range(len(largest_attribution_idx)):
         accuracy += len(np.intersect1d(largest_attribution_idx[k], target_features))
 
     for k in target_features:
-        accuracy_proportion_abs += np.sum(np.abs(feature_attributions[:,k]))
+        accuracy_proportion_abs += np.sum(np.abs(feature_attributions[:, k]))
 
     overlapped_features = accuracy / (len(feature_attributions) * n_important)
-    overlapped_features_score =  accuracy_proportion_abs/np.sum(np.abs(feature_attributions))
+    overlapped_features_score = accuracy_proportion_abs / np.sum(
+        np.abs(feature_attributions)
+    )
 
     return overlapped_features, overlapped_features_score
 
 
 def attribution_insertion_deletion(
     x_test: np.ndarray,
-    rank_indices:list,
+    rank_indices: list,
     pate_model: pseudo_outcome_nets.PseudoOutcomeLearnerMask,
 ) -> tuple:
     """
@@ -253,15 +255,15 @@ def attribution_insertion_deletion(
     """
 
     n_samples, n_features = x_test.shape
-    deletion_results = np.zeros((n_samples, n_features+1))
-    insertion_results = np.zeros((n_samples, n_features+1))
+    deletion_results = np.zeros((n_samples, n_features + 1))
+    insertion_results = np.zeros((n_samples, n_features + 1))
     row_indices = [i for i in range(n_samples)]
 
     removal_mask = torch.ones((n_samples, n_features))
 
     for rank_index, col_indices in enumerate(rank_indices):
 
-        removal_mask[row_indices, col_indices] = 0.
+        removal_mask[row_indices, col_indices] = 0.0
 
         cate_pred_subset = pate_model.predict(X=x_test, M=removal_mask)
         cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
@@ -269,7 +271,7 @@ def attribution_insertion_deletion(
         cate_pred = cate_pred.detach().cpu().numpy()
 
         deletion_results[:, 0] = cate_pred.flatten()
-        deletion_results[:, rank_index+1] = cate_pred_subset.flatten()
+        deletion_results[:, rank_index + 1] = cate_pred_subset.flatten()
 
     # Inserting feature & make prediction with masked model
 
@@ -277,7 +279,7 @@ def attribution_insertion_deletion(
 
     for rank_index, col_indices in enumerate(rank_indices):
 
-        insertion_mask[row_indices, col_indices] = 1.
+        insertion_mask[row_indices, col_indices] = 1.0
 
         cate_pred_subset = pate_model.predict(X=x_test, M=insertion_mask)
         cate_pred_subset = cate_pred_subset.detach().cpu().numpy()
@@ -285,12 +287,13 @@ def attribution_insertion_deletion(
         cate_pred = cate_pred.detach().cpu().numpy()
 
         insertion_results[:, 0] = cate_pred.flatten()
-        insertion_results[:, rank_index+1] = cate_pred_subset.flatten()
+        insertion_results[:, rank_index + 1] = cate_pred_subset.flatten()
 
     return insertion_results, deletion_results
 
+
 def attribution_ranking(feature_attributions: np.ndarray) -> list:
-    """"
+    """ "
     Compute the ranking of features according to atribution score
 
     Args:
@@ -304,14 +307,15 @@ def attribution_ranking(feature_attributions: np.ndarray) -> list:
 
     return rank_indices
 
-def insertion_deletion(   
-        test_data: tuple,
-        baseline: np.ndarray,
-        rank_indices:list,
-        cate_model: torch.nn.Module,
-        selection_types: Optional[str],
-        nuisance_functions: NuisanceFunctions,
-        cate_test: np.ndarray
+
+def insertion_deletion(
+    test_data: tuple,
+    baseline: np.ndarray,
+    rank_indices: list,
+    cate_model: torch.nn.Module,
+    selection_types: Optional[str],
+    nuisance_functions: NuisanceFunctions,
+    cate_test: np.ndarray,
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion
@@ -325,18 +329,22 @@ def insertion_deletion(
     """
     ## training plugin estimator on
 
-    x_test,_ ,_ = test_data
+    x_test, _, _ = test_data
 
     n, d = x_test.shape
     x_test_del = x_test.copy()
     x_test_ins = np.tile(baseline, (n, 1))
     baseline = np.tile(baseline, (n, 1))
 
-    deletion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
-    insertion_results = {selection_type: np.zeros(d+1) for selection_type in selection_types}
-    
-    deletion_results_truth = np.zeros(d+1)
-    insertion_results_truth = np.zeros(d+1)
+    deletion_results = {
+        selection_type: np.zeros(d + 1) for selection_type in selection_types
+    }
+    insertion_results = {
+        selection_type: np.zeros(d + 1) for selection_type in selection_types
+    }
+
+    deletion_results_truth = np.zeros(d + 1)
+    insertion_results_truth = np.zeros(d + 1)
 
     for rank_index in range(len(rank_indices) + 1):
         if rank_index > 0:  # Skip this on the first iteration
@@ -347,31 +355,39 @@ def insertion_deletion(
                 x_test_ins[i, col_indices[i]] = x_test[i, col_indices[i]]
                 x_test_del[i, col_indices[i]] = baseline[i, col_indices[i]]
 
-        cate_pred_subset_ins = cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
-        cate_pred_subset_del = cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+        cate_pred_subset_ins = (
+            cate_model.predict(X=x_test_ins).detach().cpu().numpy().flatten()
+        )
+        cate_pred_subset_del = (
+            cate_model.predict(X=x_test_del).detach().cpu().numpy().flatten()
+        )
 
         for selection_type in selection_types:
             # For the insertion process
 
             insertion_results[selection_type][rank_index] = calculate_pehe(
-                cate_pred_subset_ins,
-                test_data,
-                selection_type,
-                nuisance_functions
+                cate_pred_subset_ins, test_data, selection_type, nuisance_functions
             )
 
             # For the deletion process
             deletion_results[selection_type][rank_index] = calculate_pehe(
-                cate_pred_subset_del,
-                test_data,
-                selection_type,
-                nuisance_functions
+                cate_pred_subset_del, test_data, selection_type, nuisance_functions
             )
 
-        insertion_results_truth[rank_index] = compute_pehe(cate_true=cate_test, cate_pred=cate_pred_subset_ins)
-        deletion_results_truth[rank_index] = compute_pehe(cate_true=cate_test, cate_pred=cate_pred_subset_del)
+        insertion_results_truth[rank_index] = compute_pehe(
+            cate_true=cate_test, cate_pred=cate_pred_subset_ins
+        )
+        deletion_results_truth[rank_index] = compute_pehe(
+            cate_true=cate_test, cate_pred=cate_pred_subset_del
+        )
 
-    return insertion_results, deletion_results, insertion_results_truth, deletion_results_truth
+    return (
+        insertion_results,
+        deletion_results,
+        insertion_results_truth,
+        deletion_results_truth,
+    )
+
 
 def calculate_if_pehe(
     w_test: np.ndarray,
@@ -379,8 +395,8 @@ def calculate_if_pehe(
     prediction: np.ndarray,
     t_plugin: np.ndarray,
     y_test: np.ndarray,
-    ident: np.ndarray
-)-> np.ndarray:
+    ident: np.ndarray,
+) -> np.ndarray:
 
     EPS = 1e-7
     a = w_test - p
@@ -388,9 +404,14 @@ def calculate_if_pehe(
     b = 2 * np.ones(len(w_test)) * w_test * (w_test - p) / (c + EPS)
 
     plug_in = (t_plugin - prediction) ** 2
-    l_de = (ident - b) * t_plugin ** 2 + b * y_test * (t_plugin - prediction) + (- a * (t_plugin - prediction) ** 2 + prediction ** 2)
+    l_de = (
+        (ident - b) * t_plugin ** 2
+        + b * y_test * (t_plugin - prediction)
+        + (-a * (t_plugin - prediction) ** 2 + prediction ** 2)
+    )
 
     return np.sum(plug_in) + np.sum(l_de)
+
 
 def calculate_pseudo_outcome_pehe_dr(
     w_test: np.ndarray,
@@ -398,8 +419,8 @@ def calculate_pseudo_outcome_pehe_dr(
     prediction: np.ndarray,
     y_test: np.ndarray,
     mu_1: np.ndarray,
-    mu_0: np.ndarray
-)-> np.ndarray:
+    mu_0: np.ndarray,
+) -> np.ndarray:
 
     """
     calculating pseudo outcome for DR
@@ -412,27 +433,29 @@ def calculate_pseudo_outcome_pehe_dr(
 
     return np.sqrt(np.mean((prediction - pseudo_outcome) ** 2))
 
+
 def calculate_pseudo_outcome_pehe_r(
     w_test: np.ndarray,
     p: np.ndarray,
     prediction: np.ndarray,
     y_test: np.ndarray,
-    m: np.ndarray
-)-> np.ndarray:
+    m: np.ndarray,
+) -> np.ndarray:
 
     """
     calculating pseudo outcome for R
     """
 
-    y_pseudo = (y_test - m) - (w_test - p)*prediction
+    y_pseudo = (y_test - m) - (w_test - p) * prediction
 
     return np.sqrt(np.mean(y_pseudo ** 2))
+
 
 def calculate_pehe(
     prediction: np.ndarray,
     test_data: tuple,
     selection_type: str,
-    nuisance_functions: NuisanceFunctions
+    nuisance_functions: NuisanceFunctions,
 ) -> np.ndarray:
 
     x_test, w_test, y_test = test_data
@@ -448,7 +471,7 @@ def calculate_pehe(
     selection_types = {
         "if_pehe": calculate_if_pehe,
         "pseudo_outcome_dr": calculate_pseudo_outcome_pehe_dr,
-        "pseudo_outcome_r": calculate_pseudo_outcome_pehe_r
+        "pseudo_outcome_r": calculate_pseudo_outcome_pehe_r,
     }
 
     pehe_calculator = selection_types.get(selection_type)
@@ -460,6 +483,4 @@ def calculate_pehe(
     elif pehe_calculator == calculate_pseudo_outcome_pehe_r:
         return pehe_calculator(w_test, p, prediction, y_test, mu)
 
-
     raise ValueError(f"Unknown selection_type: {selection_type}")
-

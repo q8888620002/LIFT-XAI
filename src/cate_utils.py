@@ -5,11 +5,14 @@ import numpy as np
 import torch
 import xgboost as xgb
 from sklearn import metrics
+from sklift.metrics import (
+    qini_auc_score,
+    uplift_at_k,
+    uplift_auc_score,
+    weighted_average_uplift,
+)
 
 from src.model_utils import NuisanceFunctions, TwoLayerMLP, init_model
-from sklift.metrics import (
-    uplift_at_k, uplift_auc_score, qini_auc_score, weighted_average_uplift
-)
 
 
 def subgroup_identification(
@@ -131,18 +134,14 @@ def qini_score(
     test_mse = np.mean((pred_test_cate - test_effects) ** 2)
 
     # Calculate qini score
-       
+
     train_score = qini_auc_score(
-        y_true=y_train, 
-        uplift=pred_train_cate.flatten(),
-        treatment=w_train
+        y_true=y_train, uplift=pred_train_cate.flatten(), treatment=w_train
     )
     test_score = qini_auc_score(
-        y_true=y_test, 
-        uplift=pred_test_cate.flatten(),
-        treatment=w_test
+        y_true=y_test, uplift=pred_test_cate.flatten(), treatment=w_test
     )
-    
+
     return train_score, test_score, train_mse, test_mse
 
 

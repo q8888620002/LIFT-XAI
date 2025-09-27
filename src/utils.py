@@ -6,11 +6,11 @@ from typing import List
 import numpy as np
 import pandas as pd
 import torch
+from sklearn.compose import ColumnTransformer
 from torch import nn
 
 from src.cate_utils import calculate_pehe
 from src.model_utils import NuisanceFunctions
-from sklearn.compose import ColumnTransformer
 
 
 class InvertableColumnTransformer(ColumnTransformer):
@@ -20,14 +20,15 @@ class InvertableColumnTransformer(ColumnTransformer):
     Warning this is flaky and use at your own risk.  Validation checks that the column count in
     `transformers` are in your object `X` to be inverted.  Reordering of columns will break things!
     """
+
     def inverse_transform(self, X):
-        if isinstance(X,pd.DataFrame):
+        if isinstance(X, pd.DataFrame):
             X = X.to_numpy()
 
         arrays = []
         for name, indices in self.output_indices_.items():
             transformer = self.named_transformers_.get(name, None)
-            arr = X[:, indices.start: indices.stop]
+            arr = X[:, indices.start : indices.stop]
 
             if transformer in (None, "passthrough", "drop"):
                 pass
@@ -40,9 +41,12 @@ class InvertableColumnTransformer(ColumnTransformer):
         retarr = np.concatenate(arrays, axis=1)
 
         if retarr.shape[1] != X.shape[1]:
-            raise ValueError(f"Received {X.shape[1]} columns but transformer expected {retarr.shape[1]}")
+            raise ValueError(
+                f"Received {X.shape[1]} columns but transformer expected {retarr.shape[1]}"
+            )
 
         return retarr
+
 
 def normalize(values: np.ndarray) -> np.ndarray:
     """Used to normalize the outputs of interpretability methods."""
@@ -140,6 +144,7 @@ def ablate(
     # Return ablated predictions
     return ablated_preds
 
+
 def insertion_deletion_qini(
     test_data: tuple,
     rank_indices: list,
@@ -208,6 +213,7 @@ def insertion_deletion_qini(
             )
 
     return insertion_results, deletion_results
+
 
 def insertion_deletion(
     test_data: tuple,

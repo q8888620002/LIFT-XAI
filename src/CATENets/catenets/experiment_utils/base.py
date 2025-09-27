@@ -5,7 +5,6 @@ Some utils for experiments
 from typing import Callable, Dict, Optional, Union
 
 import jax.numpy as jnp
-
 from catenets.models.jax import (
     DRNET_NAME,
     PSEUDOOUT_NAME,

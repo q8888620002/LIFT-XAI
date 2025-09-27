@@ -1,20 +1,20 @@
 import numpy as np
-from shapreg import utils, games, stochastic_games
+from shapreg import games, stochastic_games, utils
 from tqdm.auto import tqdm
 
 
 def default_min_variance_samples(game):
-    '''Determine min_variance_samples.'''
+    """Determine min_variance_samples."""
     return 5
 
 
 def default_variance_batches(game, batch_size):
-    '''
+    """
     Determine variance_batches.
 
     This value tries to ensure that enough samples are included to make A
     approximation non-singular.
-    '''
+    """
     if isinstance(game, games.CooperativeGame):
         return int(np.ceil(10 * game.players / batch_size))
     else:
@@ -23,7 +23,7 @@ def default_variance_batches(game, batch_size):
 
 
 def calculate_result(A, b, total):
-    '''Calculate the regression coefficients.'''
+    """Calculate the regression coefficients."""
     num_players = A.shape[1]
     try:
         if len(b.shape) == 2:
@@ -31,36 +31,37 @@ def calculate_result(A, b, total):
         else:
             A_inv_one = np.linalg.solve(A, np.ones(num_players))
         A_inv_vec = np.linalg.solve(A, b)
-        values = (
-            A_inv_vec -
-            A_inv_one * (np.sum(A_inv_vec, axis=0, keepdims=True) - total)
-            / np.sum(A_inv_one))
+        values = A_inv_vec - A_inv_one * (
+            np.sum(A_inv_vec, axis=0, keepdims=True) - total
+        ) / np.sum(A_inv_one)
     except np.linalg.LinAlgError:
-        raise ValueError('singular matrix inversion. Consider using larger '
-                         'variance_batches')
+        raise ValueError(
+            "singular matrix inversion. Consider using larger " "variance_batches"
+        )
 
     return values
 
 
-def ShapleyRegression(game,
-                      batch_size=512,
-                      detect_convergence=True,
-                      thresh=0.01,
-                      n_samples=None,
-                      paired_sampling=True,
-                      return_all=False,
-                      min_variance_samples=None,
-                      variance_batches=None,
-                      bar=True,
-                      verbose=False):
+def ShapleyRegression(
+    game,
+    batch_size=512,
+    detect_convergence=True,
+    thresh=0.01,
+    n_samples=None,
+    paired_sampling=True,
+    return_all=False,
+    min_variance_samples=None,
+    variance_batches=None,
+    bar=True,
+    verbose=False,
+):
     # Verify arguments.
     if isinstance(game, games.CooperativeGame):
         stochastic = False
     elif isinstance(game, stochastic_games.StochasticCooperativeGame):
         stochastic = True
     else:
-        raise ValueError('game must be CooperativeGame or '
-                         'StochasticCooperativeGame')
+        raise ValueError("game must be CooperativeGame or " "StochasticCooperativeGame")
 
     if min_variance_samples is None:
         min_variance_samples = default_min_variance_samples(game)
@@ -80,7 +81,7 @@ def ShapleyRegression(game,
         if not detect_convergence:
             detect_convergence = True
             if verbose:
-                print('Turning convergence detection on')
+                print("Turning convergence detection on")
 
     if detect_convergence:
         assert 0 < thresh < 1
@@ -131,8 +132,7 @@ def ShapleyRegression(game,
     for it in range(n_loops):
         # Sample subsets.
         S = np.zeros((batch_size, num_players), dtype=bool)
-        num_included = np.random.choice(num_players - 1, size=batch_size,
-                                        p=weights) + 1
+        num_included = np.random.choice(num_players - 1, size=batch_size, p=weights) + 1
         for row, num in zip(S, num_included):
             inds = np.random.choice(num_players, size=num, replace=False)
             row[inds] = 1
@@ -145,34 +145,45 @@ def ShapleyRegression(game,
         if paired_sampling:
             # Paired samples.
             A_sample = 0.5 * (
-                np.matmul(S[:, :, np.newaxis].astype(float),
-                          S[:, np.newaxis, :].astype(float))
-                + np.matmul(np.logical_not(S)[:, :, np.newaxis].astype(float),
-                            np.logical_not(S)[:, np.newaxis, :].astype(float)))
+                np.matmul(
+                    S[:, :, np.newaxis].astype(float), S[:, np.newaxis, :].astype(float)
+                )
+                + np.matmul(
+                    np.logical_not(S)[:, :, np.newaxis].astype(float),
+                    np.logical_not(S)[:, np.newaxis, :].astype(float),
+                )
+            )
             if stochastic:
                 game_eval = game(S, U) - null
                 S_comp = np.logical_not(S)
                 comp_eval = game(S_comp, U) - null
-                b_sample = 0.5 * (
-                    S.astype(float).T * game_eval[:, np.newaxis].T
-                    + S_comp.astype(float).T * comp_eval[:, np.newaxis].T).T
+                b_sample = (
+                    0.5
+                    * (
+                        S.astype(float).T * game_eval[:, np.newaxis].T
+                        + S_comp.astype(float).T * comp_eval[:, np.newaxis].T
+                    ).T
+                )
             else:
                 game_eval = game(S) - null
                 S_comp = np.logical_not(S)
                 comp_eval = game(S_comp) - null
-                b_sample = 0.5 * (
-                    S.astype(float).T * game_eval[:, np.newaxis].T +
-                    S_comp.astype(float).T * comp_eval[:, np.newaxis].T).T
+                b_sample = (
+                    0.5
+                    * (
+                        S.astype(float).T * game_eval[:, np.newaxis].T
+                        + S_comp.astype(float).T * comp_eval[:, np.newaxis].T
+                    ).T
+                )
         else:
             # Single sample.
-            A_sample = np.matmul(S[:, :, np.newaxis].astype(float),
-                                 S[:, np.newaxis, :].astype(float))
+            A_sample = np.matmul(
+                S[:, :, np.newaxis].astype(float), S[:, np.newaxis, :].astype(float)
+            )
             if stochastic:
-                b_sample = (S.astype(float).T
-                            * (game(S, U) - null)[:, np.newaxis].T).T
+                b_sample = (S.astype(float).T * (game(S, U) - null)[:, np.newaxis].T).T
             else:
-                b_sample = (S.astype(float).T
-                            * (game(S) - null)[:, np.newaxis].T).T
+                b_sample = (S.astype(float).T * (game(S) - null)[:, np.newaxis].T).T
 
         # Welford's algorithm.
         n += batch_size
@@ -199,21 +210,20 @@ def ShapleyRegression(game,
 
         # Convergence ratio.
         std = np.sqrt(var * variance_batches / (it + 1))
-        ratio = np.max(
-            np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
+        ratio = np.max(np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
 
         # Print progress message.
         if verbose:
             if detect_convergence:
-                print(f'StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})')
+                print(f"StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})")
             else:
-                print(f'StdDev Ratio = {ratio:.4f}')
+                print(f"StdDev Ratio = {ratio:.4f}")
 
         # Check for convergence.
         if detect_convergence:
             if ratio < thresh:
                 if verbose:
-                    print('Detected convergence')
+                    print("Detected convergence")
 
                 # Skip bar ahead.
                 if bar:
@@ -240,15 +250,10 @@ def ShapleyRegression(game,
     # Return results.
     if return_all:
         # Dictionary for progress tracking.
-        iters = (
-            (np.arange(it + 1) + 1) * batch_size *
-            (1 + int(paired_sampling)))
-        tracking_dict = {
-            'values': val_list,
-            'std': std_list,
-            'iters': iters}
+        iters = (np.arange(it + 1) + 1) * batch_size * (1 + int(paired_sampling))
+        tracking_dict = {"values": val_list, "std": std_list, "iters": iters}
         if detect_convergence:
-            tracking_dict['N_est'] = N_list
+            tracking_dict["N_est"] = N_list
 
         return utils.ShapleyValues(values, std), tracking_dict
     else:

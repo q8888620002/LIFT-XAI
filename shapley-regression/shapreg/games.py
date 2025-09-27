@@ -4,48 +4,48 @@ from shapreg import utils
 
 
 class CooperativeGame:
-    '''Base class for cooperative games.'''
+    """Base class for cooperative games."""
 
     def __init__(self):
         raise NotImplementedError
 
     def __call__(self, S):
-        '''Evaluate cooperative game.'''
+        """Evaluate cooperative game."""
         raise NotImplementedError
 
     def grand(self):
-        '''Get grand coalition value.'''
+        """Get grand coalition value."""
         return self.__call__(np.ones((1, self.players), dtype=bool))[0]
 
     def null(self):
-        '''Get null coalition value.'''
+        """Get null coalition value."""
         return self.__call__(np.zeros((1, self.players), dtype=bool))[0]
 
 
 class CateGame(CooperativeGame):
-    '''
-    Cooperative game for CATE mdoels 
-    '''
+    """
+    Cooperative game for CATE mdoels
+    """
 
     def __init__(self, sample, cate_model):
-        '''
+        """
         Cooperative game for an individual example's prediction.
 
         Args:
         sample: numpy array representing a single model input.
-        cate_morel: treatment effect model that takes masking. 
-        '''
+        cate_morel: treatment effect model that takes masking.
+        """
         self.sample = sample
         self.model = cate_model
         self.players = self.sample.size()[1]
 
     def __call__(self, S):
-        '''
+        """
         Evaluate cooperative game.
 
         Args:
           S: array of player coalitions with size (batch, players).
-        '''
+        """
         device = self.model.device
         S = torch.from_numpy(S).to(device)
         if len(S.shape) == 1:
@@ -61,22 +61,21 @@ class CateGame(CooperativeGame):
         return values[:, 0]
 
 
-
 class PredictionGame(CooperativeGame):
-    '''
+    """
     Cooperative game for an individual example's prediction.
 
     Args:
       extension: model extension (see removal.py).
       sample: numpy array representing a single model input.
-    '''
+    """
 
     def __init__(self, extension, sample, groups=None):
         # Add batch dimension to sample.
         if sample.ndim == 1:
             sample = sample[np.newaxis]
         elif sample.shape[0] != 1:
-            raise ValueError('sample must have shape (ndim,) or (1,ndim)')
+            raise ValueError("sample must have shape (ndim,) or (1,ndim)")
 
         self.extension = extension
         self.sample = sample
@@ -95,8 +94,7 @@ class PredictionGame(CooperativeGame):
 
             # Map groups to features.
             self.players = len(groups)
-            self.groups_matrix = np.zeros(
-                (len(groups), num_features), dtype=bool)
+            self.groups_matrix = np.zeros((len(groups), num_features), dtype=bool)
             for i, group in enumerate(groups):
                 self.groups_matrix[i, group] = True
 
@@ -104,12 +102,12 @@ class PredictionGame(CooperativeGame):
         self.sample_repeat = sample
 
     def __call__(self, S):
-        '''
+        """
         Evaluate cooperative game.
 
         Args:
           S: array of player coalitions with size (batch, players).
-        '''
+        """
         # Try to use caching for repeated data.
         if len(S) != len(self.sample_repeat):
             self.sample_repeat = self.sample.repeat(len(S), 0)
@@ -124,7 +122,7 @@ class PredictionGame(CooperativeGame):
 
 
 class PredictionLossGame(CooperativeGame):
-    '''
+    """
     Cooperative game for an individual example's loss value.
 
     Args:
@@ -132,7 +130,7 @@ class PredictionLossGame(CooperativeGame):
       sample: numpy array representing a single model input.
       label: the input's true label.
       loss: loss function (see utils.py).
-    '''
+    """
 
     def __init__(self, extension, sample, label, loss, groups=None):
         # Add batch dimension to sample.
@@ -170,8 +168,7 @@ class PredictionLossGame(CooperativeGame):
 
             # Map groups to features.
             self.players = len(groups)
-            self.groups_matrix = np.zeros(
-                (len(groups), num_features), dtype=bool)
+            self.groups_matrix = np.zeros((len(groups), num_features), dtype=bool)
             for i, group in enumerate(groups):
                 self.groups_matrix[i, group] = True
 
@@ -180,12 +177,12 @@ class PredictionLossGame(CooperativeGame):
         self.label_repeat = label
 
     def __call__(self, S):
-        '''
+        """
         Evaluate cooperative game.
 
         Args:
           S: array of player coalitions with size (batch, players).
-        '''
+        """
         # Try to use caching for repeated data.
         if len(S) != len(self.sample_repeat):
             self.sample_repeat = self.sample.repeat(len(S), 0)
@@ -198,7 +195,7 @@ class PredictionLossGame(CooperativeGame):
             S = np.matmul(S, self.groups_matrix)
 
         # Evaluate.
-        return - self.loss(self.extension(input_data, S), output_label)
+        return -self.loss(self.extension(input_data, S), output_label)
 
 
 # class DatasetLossGame(CooperativeGame):

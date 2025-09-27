@@ -1,14 +1,16 @@
 import numpy as np
 import torch
 
+
 class DefaultExtension:
-    '''Extend a model by replacing removed features with default values.'''
+    """Extend a model by replacing removed features with default values."""
+
     def __init__(self, values, model):
         self.model = model
         if values.ndim == 1:
             values = values[np.newaxis]
         elif values[0] != 1:
-            raise ValueError('values shape must be (dim,) or (1, dim)')
+            raise ValueError("values shape must be (dim,) or (1, dim)")
         self.values = values
         self.values_repeat = values
 
@@ -26,8 +28,9 @@ class DefaultExtension:
 
 
 class MarginalExtensionTorch:
-    '''Extend a model by marginalizing out removed features using their
-    marginal distribution.'''
+    """Extend a model by marginalizing out removed features using their
+    marginal distribution."""
+
     def __init__(self, data, model):
         self.model = model
         self.data = data
@@ -51,7 +54,6 @@ class MarginalExtensionTorch:
         #     self.x_repeat = x.repeat(self.samples, 0)
         # x = self.x_repeat
 
-
         # Prepare samples.
         if len(self.data_repeat) != self.samples * n:
             self.data_repeat = self.data.repeat(n, 1)
@@ -65,9 +67,11 @@ class MarginalExtensionTorch:
         pred = pred.reshape(-1, self.samples, *pred.shape[1:])
         return np.mean(pred, axis=1)
 
+
 class MarginalExtension:
-    '''Extend a model by marginalizing out removed features using their
-    marginal distribution.'''
+    """Extend a model by marginalizing out removed features using their
+    marginal distribution."""
+
     def __init__(self, data, model):
         self.model = model
         self.data = data
@@ -78,11 +82,11 @@ class MarginalExtension:
 
     def __call__(self, x, S):
         # Prepare x and S.
-        n = len(x)  
+        n = len(x)
         x = x.repeat(self.samples, 0)
         S = S.repeat(self.samples, 0)
 
-        #device = next(self.model.parameters()).device
+        # device = next(self.model.parameters()).device
         device = self.model.device
 
         # if self.x_addr != id(x):
@@ -100,13 +104,15 @@ class MarginalExtension:
         x_ = torch.from_numpy(x_).to(device)
         # Make predictions.
         pred = self.model(x_).detach().cpu().numpy()
-        
+
         pred = pred.reshape(-1, self.samples, *pred.shape[1:])
         return np.mean(pred, axis=1)
 
+
 class UniformExtension:
-    '''Extend a model by marginalizing out removed features using a
-    uniform distribution.'''
+    """Extend a model by marginalizing out removed features using a
+    uniform distribution."""
+
     def __init__(self, values, categorical_inds, samples, model):
         self.model = model
         self.values = values
@@ -123,13 +129,12 @@ class UniformExtension:
         samples = np.zeros((n * self.samples, x.shape[1]))
         for i in range(x.shape[1]):
             if i in self.categorical_inds:
-                inds = np.random.choice(
-                    len(self.values[i]), n * self.samples)
+                inds = np.random.choice(len(self.values[i]), n * self.samples)
                 samples[:, i] = self.values[i][inds]
             else:
                 samples[:, i] = np.random.uniform(
-                    low=self.values[i][0], high=self.values[i][1],
-                    size=n * self.samples)
+                    low=self.values[i][0], high=self.values[i][1], size=n * self.samples
+                )
 
         # Replace specified indices.
         x_ = x.copy()
@@ -142,13 +147,14 @@ class UniformExtension:
 
 
 class UniformContinuousExtension:
-    '''
+    """
     Extend a model by marginalizing out removed features using a
     uniform distribution. Specific to sets of continuous features.
 
     TODO: should we have caching here for repeating x?
 
-    '''
+    """
+
     def __init__(self, min_vals, max_vals, samples, model):
         self.model = model
         self.min = min_vals
@@ -175,8 +181,9 @@ class UniformContinuousExtension:
 
 
 class ProductMarginalExtension:
-    '''Extend a model by marginalizing out removed features the
-    product of their marginal distributions.'''
+    """Extend a model by marginalizing out removed features the
+    product of their marginal distributions."""
+
     def __init__(self, data, samples, model):
         self.model = model
         self.data = data
@@ -206,7 +213,8 @@ class ProductMarginalExtension:
 
 
 class SeparateModelExtension:
-    '''Extend a model using separate models for each subset of features.'''
+    """Extend a model using separate models for each subset of features."""
+
     def __init__(self, model_dict):
         self.model_dict = model_dict
 
@@ -218,14 +226,15 @@ class SeparateModelExtension:
             model = self.model_dict[str(row)]
 
             # Make prediction.
-            output.append(model(x[i:i+1, row]))
+            output.append(model(x[i : i + 1, row]))
 
         return np.concatenate(output, axis=0)
 
 
 class ConditionalExtension:
-    '''Extend a model by marginalizing out removed features using a model of
-    their conditional distribution.'''
+    """Extend a model by marginalizing out removed features using a model of
+    their conditional distribution."""
+
     def __init__(self, conditional_model, samples, model):
         self.model = model
         self.conditional_model = conditional_model
@@ -255,16 +264,19 @@ class ConditionalExtension:
 
 
 class ConditionalSupervisedExtension:
-    '''Extend a model using a supervised surrogate model.'''
+    """Extend a model using a supervised surrogate model."""
+
     def __init__(self, surrogate):
         self.surrogate = surrogate
 
     def __call__(self, x, S):
         return self.surrogate(x, S)
 
+
 class InterventionalExtension:
-    '''Extend a model by marginalizing out removed features using their
-    marginal distribution.'''
+    """Extend a model by marginalizing out removed features using their
+    marginal distribution."""
+
     def __init__(self, data, model, ps_model, alpha):
         self.model = model
         self.data = data
@@ -272,7 +284,7 @@ class InterventionalExtension:
         self.samples = len(data)
         self.ps_model = ps_model
         self.thresholds = alpha
-        
+
         # self.x_addr = None
         # self.x_repeat = None
 
@@ -295,10 +307,12 @@ class InterventionalExtension:
         x_[~S] = self.data_repeat[~S]
         # Make predictions.
         pred = self.model(x_)
-        ps_pred = self.ps_model(np.delete(x_,7,axis=1))
-        
-        valid_ids = np.where((ps_pred < 1 - self.thresholds) & (ps_pred > self.thresholds))
-        pred = pred[valid_ids]/ps_pred[valid_ids]
-        
+        ps_pred = self.ps_model(np.delete(x_, 7, axis=1))
+
+        valid_ids = np.where(
+            (ps_pred < 1 - self.thresholds) & (ps_pred > self.thresholds)
+        )
+        pred = pred[valid_ids] / ps_pred[valid_ids]
+
         pred = pred.reshape(-1, pred.shape[0])
         return np.mean(pred, axis=1)

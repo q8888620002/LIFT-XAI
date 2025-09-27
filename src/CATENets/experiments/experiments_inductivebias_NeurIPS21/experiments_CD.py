@@ -7,8 +7,6 @@ import os
 from pathlib import Path
 from typing import Optional, Union
 
-from sklearn import clone
-
 from catenets.datasets.dataset_ihdp import get_one_data_set, load_raw, prepare_ihdp_data
 from catenets.experiment_utils.base import eval_root_mse
 from catenets.models.jax import (
@@ -23,6 +21,7 @@ from catenets.models.jax import (
     TARNet,
     TNet,
 )
+from sklearn import clone
 
 DATA_DIR = Path("catenets/datasets/data/")
 RESULT_DIR = Path("results/experiments_inductive_bias/ihdp/")

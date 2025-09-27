@@ -1,10 +1,10 @@
 import pickle
-import numpy as np
 
+import numpy as np
 from catenets.datasets import load as catenets_load
+
 from src.interpretability.datasets.news.process_news import process_news
 from src.interpretability.datasets.tcga.process_tcga import process_tcga
-
 
 
 def normalize_data(X):
@@ -12,23 +12,18 @@ def normalize_data(X):
 
     return X_normalized
 
-def load(
-        dataset_name: str, 
-        train_ratio: float = 1.0,
-        val_set: bool=False
-    ):
+
+def load(dataset_name: str, train_ratio: float = 1.0, val_set: bool = False):
     if "tcga" in dataset_name:
         try:
             tcga_dataset = pickle.load(
                 open(
-                    "/data/tcga/"+ str(dataset_name) + ".p",
+                    "/data/tcga/" + str(dataset_name) + ".p",
                     "rb",
                 )
             )
         except:
-            process_tcga(
-                max_num_genes=100, file_location="/data/tcga/"
-            )
+            process_tcga(max_num_genes=100, file_location="/data/tcga/")
             tcga_dataset = pickle.load(
                 open(
                     "/data/tcga/tcga_100.p",
@@ -45,9 +40,7 @@ def load(
                 )
             )
         except:
-            process_news(
-                max_num_features=100, file_location="data/"
-            )
+            process_news(max_num_features=100, file_location="data/")
             news_dataset = pickle.load(
                 open(
                     "data/" + str(dataset_name) + ".p",
@@ -75,8 +68,8 @@ def load(
     else:
         n = X_raw.shape[0]
 
-        val_idx = int(train_ratio*n)
-        train_idx = int(train_ratio*train_ratio*n)
+        val_idx = int(train_ratio * n)
+        train_idx = int(train_ratio * train_ratio * n)
 
         X_raw_train = X_raw[:train_idx]
         X_raw_val = X_raw[train_idx:val_idx]

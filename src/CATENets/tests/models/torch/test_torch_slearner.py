@@ -2,14 +2,13 @@ from typing import Any, Optional
 
 import numpy as np
 import pytest
+from catenets.datasets import load
+from catenets.experiment_utils.tester import evaluate_treatments_model
+from catenets.models.torch import SLearner
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LogisticRegression
 from torch import nn
 from xgboost import XGBClassifier
-
-from catenets.datasets import load
-from catenets.experiment_utils.tester import evaluate_treatments_model
-from catenets.models.torch import SLearner
 
 
 def test_nn_model_params() -> None:

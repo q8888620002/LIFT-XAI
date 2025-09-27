@@ -3,30 +3,35 @@ from typing import Dict, List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-# import shap
-
-from shapreg import shapley, games, removal, shapley_sampling
-from src.cate_utils import qini_score_cal
 from captum._utils.models.linear_model import SkLearnLinearRegression
 from captum.attr import (
     DeepLift,
     FeatureAblation,
     FeaturePermutation,
+    GradientShap,
     IntegratedGradients,
-    NoiseTunnel,
     KernelShap,
     Lime,
+    NoiseTunnel,
+    Saliency,
     ShapleyValueSampling,
-    GradientShap,
-    Saliency
-)
-from sklift.metrics import (
-    uplift_at_k, uplift_auc_score, qini_auc_score, weighted_average_uplift
 )
 from captum.attr._core.lime import get_exp_kernel_similarity_function
+from shapreg import games, removal, shapley, shapley_sampling
+from sklift.metrics import (
+    qini_auc_score,
+    uplift_at_k,
+    uplift_auc_score,
+    weighted_average_uplift,
+)
 from torch import nn
 
-#DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+from src.cate_utils import qini_score_cal
+
+# import shap
+
+
+# DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class Explainer:
@@ -53,7 +58,7 @@ class Explainer:
         baseline: Optional[torch.Tensor] = None,
     ) -> None:
 
-        self.device =  model.device
+        self.device = model.device
         self.baseline = baseline
         self.explainer_list = explainer_list
         self.feature_names = feature_names
@@ -77,9 +82,9 @@ class Explainer:
             for i in range(0, len(x_test), batch_size):
                 end_idx = min(i + batch_size, len(x_test))
                 test_values[i:end_idx] = integrated_gradients_model.attribute(
-                x_test[i:end_idx],
-                n_steps=n_steps,
-            )
+                    x_test[i:end_idx],
+                    n_steps=n_steps,
+                )
 
             return test_values
 
@@ -90,10 +95,8 @@ class Explainer:
             for i in range(0, len(x_test), batch_size):
                 end_idx = min(i + batch_size, len(x_test))
                 test_values[i:end_idx] = integrated_gradients_model.attribute(
-                x_test[i:end_idx],
-                n_steps=n_steps,
-                baselines = self.baseline
-            )
+                    x_test[i:end_idx], n_steps=n_steps, baselines=self.baseline
+                )
             return test_values
 
         def smooth_grad_cpk(x_test: torch.Tensor) -> torch.Tensor:
@@ -104,11 +107,9 @@ class Explainer:
             for i in range(0, len(x_test), batch_size):
                 end_idx = min(i + batch_size, len(x_test))
                 test_values[i:end_idx] = noise_tunnel.attribute(
-                (x_test[i:end_idx]),
-                nt_type='smoothgrad_sq'
-            )
+                    (x_test[i:end_idx]), nt_type="smoothgrad_sq"
+                )
             return test_values
-
 
         # DeepLift
         deeplift_model = DeepLift(model)
@@ -161,7 +162,7 @@ class Explainer:
                     x_test[test_ind].view(1, -1),
                     n_samples=n_samples,
                     perturbations_per_eval=perturbations_per_eval,
-                    baselines=self.baseline
+                    baselines=self.baseline,
                 )
 
                 test_values[test_ind] = lime_value.detach().cpu()
@@ -173,7 +174,9 @@ class Explainer:
             with torch.no_grad():
                 x_hat = model.predict(x_test).flatten().detach().cpu().numpy()
                 score = qini_auc_score(self.y_test, x_hat, self.w_test)
-                import ipdb;ipdb.set_trace()
+                import ipdb
+
+                ipdb.set_trace()
                 score = self._check_tensor(score)
                 return score
 
@@ -183,14 +186,14 @@ class Explainer:
         shapley_value_sampling_model = ShapleyValueSampling(model)
 
         def baseline_shapley_value_sampling_cbk(
-                x_test: torch.Tensor,
-            ) -> torch.Tensor:
+            x_test: torch.Tensor,
+        ) -> torch.Tensor:
 
             return shapley_value_sampling_model.attribute(
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
-                show_progress=True
+                show_progress=True,
             )
 
         # Marginal shapley value sampling
@@ -200,10 +203,9 @@ class Explainer:
                 x_test,
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
-                baselines = self.baseline,
-                show_progress=True
+                baselines=self.baseline,
+                show_progress=True,
             )
-
 
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
@@ -214,7 +216,7 @@ class Explainer:
                 n_samples=n_samples,
                 perturbations_per_eval=perturbations_per_eval,
                 baselines=self.baseline,
-                show_progress=True
+                show_progress=True,
             )
 
         # Gradient SHAP
@@ -236,13 +238,13 @@ class Explainer:
             return self._check_tensor(test_values)
 
         # Explain with missingness
-        def explain_with_missingness_cbk(x_test:torch.Tensor) -> torch.Tensor:
+        def explain_with_missingness_cbk(x_test: torch.Tensor) -> torch.Tensor:
 
             test_values = np.zeros((x_test.size()))
 
             for test_ind in range(len(x_test)):
                 instance = x_test[test_ind, :][None, :]
-                game  = games.CateGame(instance, model)
+                game = games.CateGame(instance, model)
                 explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
                 test_values[test_ind] = explanation.values
 
@@ -251,7 +253,7 @@ class Explainer:
         def marginal_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
 
             test_values = np.zeros((x_test.size()))
-            x_test  = x_test.detach().cpu().numpy()
+            x_test = x_test.detach().cpu().numpy()
             baseline = self.baseline.detach().cpu().numpy()
 
             marginal_extension = removal.MarginalExtension(baseline, model)
@@ -259,11 +261,12 @@ class Explainer:
             for test_ind in range(len(x_test)):
                 instance = x_test[test_ind]
                 game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley_sampling.ShapleySampling(game, thresh = 0.01, batch_size=128)
+                explanation = shapley_sampling.ShapleySampling(
+                    game, thresh=0.01, batch_size=128
+                )
                 test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)
-
 
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
@@ -278,9 +281,9 @@ class Explainer:
             "marginal_shapley_value_sampling": marginal_shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
-            "explain_with_missingness":explain_with_missingness_cbk,
+            "explain_with_missingness": explain_with_missingness_cbk,
             "marginal_shap": marginal_shap_cbk,
-            "saliency": saliency_cpk
+            "saliency": saliency_cpk,
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
@@ -289,7 +292,7 @@ class Explainer:
         else:
             return torch.from_numpy(np.asarray(X)).float().to(self.device)
 
-    def explain(self, X: torch.Tensor, W:torch.Tensor, Y:torch.Tensor) -> Dict:
+    def explain(self, X: torch.Tensor, W: torch.Tensor, Y: torch.Tensor) -> Dict:
         output = {}
 
         if self.baseline is None:
@@ -310,7 +313,6 @@ class Explainer:
             explainer = self.explainers[name]
             output[name] = explainer(x_test).detach().cpu().numpy()
         return output
-
 
     def plot(self, X: torch.Tensor) -> None:
         explanations = self.explain(X)

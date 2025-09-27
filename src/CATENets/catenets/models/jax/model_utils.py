@@ -6,9 +6,8 @@ from typing import Any, Optional
 
 import jax.numpy as jnp
 import pandas as pd
-from sklearn.model_selection import train_test_split
-
 from catenets.models.constants import DEFAULT_SEED, DEFAULT_VAL_SPLIT
+from sklearn.model_selection import train_test_split
 
 TRAIN_STRING = "training"
 VALIDATION_STRING = "validation"

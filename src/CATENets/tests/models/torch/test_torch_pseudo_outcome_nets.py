@@ -2,10 +2,6 @@ from typing import Any
 
 import numpy as np
 import pytest
-from sklearn.ensemble import RandomForestRegressor
-from torch import nn
-from xgboost import XGBClassifier
-
 from catenets.datasets import load
 from catenets.experiment_utils.tester import evaluate_treatments_model
 from catenets.models.torch import (
@@ -16,6 +12,9 @@ from catenets.models.torch import (
     ULearner,
     XLearner,
 )
+from sklearn.ensemble import RandomForestRegressor
+from torch import nn
+from xgboost import XGBClassifier
 
 
 @pytest.mark.parametrize(

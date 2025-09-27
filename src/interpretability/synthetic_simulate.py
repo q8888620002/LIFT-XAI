@@ -164,8 +164,14 @@ class SyntheticSimulatorBase:
         prog_features = np.where((self.prog_mask).astype(np.int32) != 0)
         return prog_features
 
-    def __sample_indices__(self, X: np.array, num_important_features: int, input_list: list, filtered_list :list) -> list:
-        
+    def __sample_indices__(
+        self,
+        X: np.array,
+        num_important_features: int,
+        input_list: list,
+        filtered_list: list,
+    ) -> list:
+
         indices = []
         random_index = random.choice([i for i in input_list if i not in filtered_list])
         feature_index = random_index
@@ -183,6 +189,7 @@ class SyntheticSimulatorBase:
             feature_index = next_feature
 
         return indices
+
 
 class SyntheticSimulatorLinear(SyntheticSimulatorBase):
     """
@@ -244,18 +251,17 @@ class SyntheticSimulatorLinear(SyntheticSimulatorBase):
         # prog_indices = all_indices[prog_indices]
         # pred0_indices = all_indices[pred0_indices]
         # pred1_indices = all_indices[pred1_indices]
-        
+
         if random_feature_selection:
-          np.random.shuffle(all_indices)
-        
+            np.random.shuffle(all_indices)
+
         prog_indices = all_indices[:num_important_features]
         pred0_indices = all_indices[
-          num_important_features : (2 * num_important_features)
+            num_important_features : (2 * num_important_features)
         ]
         pred1_indices = all_indices[
-          (2 * num_important_features) : (3 * num_important_features)
+            (2 * num_important_features) : (3 * num_important_features)
         ]
-
 
         prog_mask[prog_indices] = 1
         pred0_mask[pred0_indices] = 1
@@ -293,14 +299,14 @@ class SyntheticSimulatorModulatedNonLinear(SyntheticSimulatorBase):
 
     nonlinearities = [
         lambda x: np.abs(x),
-        lambda x: np.exp(-(x**2) / 2),
-        lambda x: 1 / (1 + x**2),
+        lambda x: np.exp(-(x ** 2) / 2),
+        lambda x: 1 / (1 + x ** 2),
         lambda x: np.cos(x),
         lambda x: np.arctan(x),
         lambda x: np.tanh(x),
         lambda x: np.sin(x),
-        lambda x: np.log(1 + x**2),
-        lambda x: np.sqrt(1 + x**2),
+        lambda x: np.log(1 + x ** 2),
+        lambda x: np.sqrt(1 + x ** 2),
         lambda x: np.cosh(x),
     ]
 
@@ -352,10 +358,10 @@ class SyntheticSimulatorModulatedNonLinear(SyntheticSimulatorBase):
             np.random.shuffle(all_indices)
             prog_indices = all_indices[:num_important_features]
             pred0_indices = all_indices[
-               num_important_features : 2 * num_important_features
+                num_important_features : 2 * num_important_features
             ]
             pred1_indices = all_indices[
-               2 * num_important_features : 3 * num_important_features
+                2 * num_important_features : 3 * num_important_features
             ]
 
             # prog_indices = self.__sample_indices__(X, num_important_features, all_indices.tolist(), [] )

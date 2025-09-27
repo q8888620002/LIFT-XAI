@@ -34,9 +34,13 @@ from src.CATENets.catenets.models.torch.base import (
     BasicNetMask1,
     BasicNetMaskHalf,
     PropensityNet,
-    PropensityNetMask
+    PropensityNetMask,
 )
-from src.CATENets.catenets.models.torch.utils.model_utils import predict_wrapper, train_wrapper, predict_wrapper_mask
+from src.CATENets.catenets.models.torch.utils.model_utils import (
+    predict_wrapper,
+    predict_wrapper_mask,
+    train_wrapper,
+)
 from src.CATENets.catenets.models.torch.utils.transformations import (
     dr_transformation_cate,
     pw_transformation_cate,
@@ -178,7 +182,6 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
         self._po_estimator = self._generate_po_estimator()
         if weighting_strategy is not None:
             self._propensity_estimator = self._generate_propensity_estimator()
-
 
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
@@ -434,10 +437,12 @@ class PseudoOutcomeLearner(BaseCATEEstimator):
 
         return predict_wrapper(temp_model, X[pred_mask, :])
 
+
 class PseudoOutcomeLearnerPate(BaseCATEEstimator):
     """
     Class for training with Pate
     """
+
     def __init__(
         self,
         n_unit_in: int,
@@ -595,7 +600,7 @@ class PseudoOutcomeLearnerPate(BaseCATEEstimator):
         ).to(self.device)
 
     def fit(
-        self, X: torch.Tensor, X_subset :torch.Tensor, y: torch.Tensor, w: torch.Tensor
+        self, X: torch.Tensor, X_subset: torch.Tensor, y: torch.Tensor, w: torch.Tensor
     ) -> "PseudoOutcomeLearnerPate":
         """
         Train treatment effects nets.
@@ -972,8 +977,8 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
             return copy.deepcopy(self._te_template)
         return BasicNetMask(
             name,
-            2*self.n_unit_in,
-            device = self.device,
+            2 * self.n_unit_in,
+            device=self.device,
             binary_y=False,
             n_layers_out=self.n_layers_out_t,
             n_units_out=self.n_units_out_t,
@@ -991,11 +996,11 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
             early_stopping=self.early_stopping,
             dropout=self.dropout,
             dropout_prob=self.dropout_prob,
-            mask_dis = self.mask_dis
+            mask_dis=self.mask_dis,
         ).to(self.device)
 
     def fit(
-        self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor, b:torch.tensor=None
+        self, X: torch.Tensor, y: torch.Tensor, w: torch.Tensor, b: torch.tensor = None
     ) -> "PseudoOutcomeLearner":
         """
         Train treatment effects nets.
@@ -1060,9 +1065,12 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
 
         return self
 
-
     def predict(
-        self, X: torch.Tensor, M: torch.Tensor ,return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        M: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects
@@ -1084,7 +1092,6 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
             )
         if not training:
             self.eval()
-
 
         X = self._check_tensor(X).float()
         M = self._check_tensor(M)
@@ -1178,27 +1185,32 @@ class PseudoOutcomeLearnerMask(BaseCATEEstimator):
         return predict_wrapper(temp_model, X[pred_mask, :])
 
     def _add_units(self, pre_trained):
-        '''
+        """
         n_new : integer variable counting the neurons you want to add
-        '''
+        """
         # take a copy of the current weights stored in self._fc which is an
         # ModuleList variable with only one layer
         current = pre_trained.model[0].weight.data.to(self.device)
         output_dim, input_dim = current.shape
 
         # randomly initialize a tensor with the size of the wanted layer
-        hl_input = torch.zeros([output_dim, input_dim ]).to(self.device)
+        hl_input = torch.zeros([output_dim, input_dim]).to(self.device)
         nn.init.xavier_normal_(hl_input, gain=nn.init.calculate_gain(self.nonlin))
 
         # concatenate the old weights with the new weights
         new_wi = torch.cat([current, hl_input], dim=1)
 
         # reset weight and grad variables to new size
-        self._te_estimator.model[0] = nn.Linear(2*input_dim, output_dim ).to(self.device)
+        self._te_estimator.model[0] = nn.Linear(2 * input_dim, output_dim).to(
+            self.device
+        )
 
         # set the weight data to new values
-        self._te_estimator.model[0].weight.data = torch.tensor(new_wi, requires_grad=True)
+        self._te_estimator.model[0].weight.data = torch.tensor(
+            new_wi, requires_grad=True
+        )
         # import ipdb;ipdb.set_trace()
+
 
 class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
     """
@@ -1210,8 +1222,8 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
             return copy.deepcopy(self._te_template)
         return BasicNetMask(
             name,
-            2*self.n_unit_in,
-            device = self.device,
+            2 * self.n_unit_in,
+            device=self.device,
             binary_y=False,
             n_layers_out=self.n_layers_out_t,
             n_units_out=self.n_units_out_t,
@@ -1237,7 +1249,7 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
 
         return BasicNetMask(
             name,
-            2*self.n_unit_in,
+            2 * self.n_unit_in,
             device=self.device,
             binary_y=self.binary_y,
             n_layers_out=self.n_layers_out,
@@ -1267,7 +1279,7 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
         return PropensityNetMask(
             name,
             self.device,
-            2*self.n_unit_in,
+            2 * self.n_unit_in,
             2,  # number of treatments
             self.weighting_strategy,
             n_units_out_prop=self.n_units_out_prop,
@@ -1309,8 +1321,8 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
         X = self._check_tensor(X).float()
         M = self._check_tensor(torch.ones(X[pred_mask, :].size()))
 
-        mu_0_pred = predict_wrapper_mask(temp_model_0, X[pred_mask, :],M)
-        mu_1_pred = predict_wrapper_mask(temp_model_1, X[pred_mask, :],M)
+        mu_0_pred = predict_wrapper_mask(temp_model_0, X[pred_mask, :], M)
+        mu_1_pred = predict_wrapper_mask(temp_model_1, X[pred_mask, :], M)
 
         return mu_0_pred, mu_1_pred
 
@@ -1336,7 +1348,11 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
         )
 
     def predict(
-        self, X: torch.Tensor, M: torch.Tensor ,return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        M: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects
@@ -1359,12 +1375,10 @@ class PseudoOutcomeLearnerMaskfull(PseudoOutcomeLearner):
         if not training:
             self.eval()
 
-
         X = self._check_tensor(X).float()
         M = self._check_tensor(M)
 
         return predict_wrapper_mask(self._te_estimator, X, M)
-
 
 
 class DRLearner(PseudoOutcomeLearner):
@@ -1434,6 +1448,7 @@ class DRLearnerMask(PseudoOutcomeLearnerMask):
         pseudo_outcome = dr_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
 
+
 class DRLearnerMaskFull(PseudoOutcomeLearnerMaskfull):
     """
     DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
@@ -1472,13 +1487,14 @@ class DRLearnerMask1(PseudoOutcomeLearnerMask):
     """
     DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
     """
+
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
         return BasicNetMask1(
             name,
-            2*self.n_unit_in,
-            device = self.device,
+            2 * self.n_unit_in,
+            device=self.device,
             binary_y=False,
             n_layers_out=self.n_layers_out_t,
             n_units_out=self.n_units_out_t,
@@ -1531,13 +1547,14 @@ class DRLearnerMask0(PseudoOutcomeLearnerMask):
     """
     DR-learner for PATE estimation, based on doubly robust AIPW pseudo-outcome
     """
+
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
         return BasicNetMask0(
             name,
-            2*self.n_unit_in,
-            device = self.device,
+            2 * self.n_unit_in,
+            device=self.device,
             binary_y=False,
             n_layers_out=self.n_layers_out_t,
             n_units_out=self.n_units_out_t,
@@ -1624,6 +1641,7 @@ class DRLearnerMaskHalf(DRLearnerMask):
     """
     DR-learner for CATE estimation (Training with Masks)
     """
+
     def _generate_te_estimator(self, name: str = "te_estimator") -> nn.Module:
         if self._te_template is not None:
             return copy.deepcopy(self._te_template)
@@ -1651,7 +1669,11 @@ class DRLearnerMaskHalf(DRLearnerMask):
         ).to(self.device)
 
     def predict(
-        self, X: torch.Tensor, M:torch.Tensor, return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        M: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects
@@ -1674,13 +1696,10 @@ class DRLearnerMaskHalf(DRLearnerMask):
         if not training:
             self.eval()
 
-
         X = self._check_tensor(X).float()
         M = self._check_tensor(M).float()
 
         return predict_wrapper_mask(self._te_estimator, X, M)
-
-
 
 
 class PWLearner(PseudoOutcomeLearner):
@@ -1729,7 +1748,11 @@ class RALearner(PseudoOutcomeLearner):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan  # not needed
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -1742,6 +1765,7 @@ class RALearner(PseudoOutcomeLearner):
     ) -> None:
         pseudo_outcome = ra_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
 
 class RALearnerMask(PseudoOutcomeLearnerMask):
     """
@@ -1758,7 +1782,11 @@ class RALearnerMask(PseudoOutcomeLearnerMask):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan  # not needed
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -1771,6 +1799,7 @@ class RALearnerMask(PseudoOutcomeLearnerMask):
     ) -> None:
         pseudo_outcome = ra_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
 
 class RALearnerPate(PseudoOutcomeLearnerPate):
     """
@@ -1787,7 +1816,11 @@ class RALearnerPate(PseudoOutcomeLearnerPate):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan  # not needed
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -1800,6 +1833,7 @@ class RALearnerPate(PseudoOutcomeLearnerPate):
     ) -> None:
         pseudo_outcome = ra_transformation_cate(y, w, p, mu_0, mu_1)
         train_wrapper(self._te_estimator, X, pseudo_outcome.detach())
+
 
 class ULearner(PseudoOutcomeLearner):
     """
@@ -1895,7 +1929,11 @@ class XLearner(PseudoOutcomeLearner):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -1949,7 +1987,7 @@ class XLearner(PseudoOutcomeLearner):
         weight = self._propensity_estimator.get_importance_weights(X)
         # import ipdb; ipdb.set_trace()
 
-        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
+        return weight[:, None] * tau0_pred + (1 - weight)[:, None] * tau1_pred
 
 
 class XLearnerMask(PseudoOutcomeLearnerMask):
@@ -1980,7 +2018,11 @@ class XLearnerMask(PseudoOutcomeLearnerMask):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -2003,7 +2045,11 @@ class XLearnerMask(PseudoOutcomeLearnerMask):
         train_wrapper(self._propensity_estimator, X, w)
 
     def predict(
-        self, X: torch.Tensor, M: torch.Tensor, return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        M: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects
@@ -2035,7 +2081,8 @@ class XLearnerMask(PseudoOutcomeLearnerMask):
 
         weight = self._propensity_estimator.get_importance_weights(X)
 
-        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
+        return weight[:, None] * tau0_pred + (1 - weight)[:, None] * tau1_pred
+
 
 class XLearnerPate(PseudoOutcomeLearnerPate):
     """
@@ -2065,7 +2112,11 @@ class XLearnerPate(PseudoOutcomeLearnerPate):
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mu0_pred, mu1_pred = self._impute_pos(X, y, w, fit_mask, pred_mask)
         p_pred = np.nan
-        return mu0_pred.squeeze().to(self.device), mu1_pred.squeeze().to(self.device), p_pred
+        return (
+            mu0_pred.squeeze().to(self.device),
+            mu1_pred.squeeze().to(self.device),
+            p_pred,
+        )
 
     def _second_step(
         self,
@@ -2089,7 +2140,7 @@ class XLearnerPate(PseudoOutcomeLearnerPate):
         train_wrapper(self._propensity_estimator, X, w)
 
     def fit(
-        self, X: torch.Tensor, X_subset :torch.Tensor, y: torch.Tensor, w: torch.Tensor
+        self, X: torch.Tensor, X_subset: torch.Tensor, y: torch.Tensor, w: torch.Tensor
     ) -> "XLearnerPate":
         """
         Train treatment effects nets.
@@ -2153,7 +2204,11 @@ class XLearnerPate(PseudoOutcomeLearnerPate):
         return self
 
     def predict(
-        self, X: torch.Tensor, X_subset: torch.Tensor, return_po: bool = False, training: bool = False
+        self,
+        X: torch.Tensor,
+        X_subset: torch.Tensor,
+        return_po: bool = False,
+        training: bool = False,
     ) -> torch.Tensor:
         """
         Predict treatment effects
@@ -2185,4 +2240,4 @@ class XLearnerPate(PseudoOutcomeLearnerPate):
 
         weight = self._propensity_estimator.get_importance_weights(X)
 
-        return weight[:,None] * tau0_pred + (1 - weight)[:,None]  * tau1_pred
+        return weight[:, None] * tau0_pred + (1 - weight)[:, None] * tau1_pred

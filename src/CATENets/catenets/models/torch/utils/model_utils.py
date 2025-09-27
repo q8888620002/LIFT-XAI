@@ -4,8 +4,8 @@ Model utils shared across different nets
 # Author: Alicia Curth, Bogdan Cebere
 from typing import Any, Optional
 
-import torch
 import numpy as np
+import torch
 from sklearn.model_selection import train_test_split
 
 import src.CATENets.catenets.logger as log
@@ -24,7 +24,7 @@ def make_val_split(
     val_split_prop: float = DEFAULT_VAL_SPLIT,
     seed: int = DEFAULT_SEED,
     stratify_w: bool = True,
-    device: Optional[str] = None
+    device: Optional[str] = None,
 ) -> Any:
     if val_split_prop == 0:
         # return original data
@@ -110,7 +110,10 @@ def predict_wrapper(estimator: Any, X: torch.Tensor) -> torch.Tensor:
     else:
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
 
-def predict_wrapper_mask(estimator: Any, X: torch.Tensor, M:torch.tensor) -> torch.Tensor:
+
+def predict_wrapper_mask(
+    estimator: Any, X: torch.Tensor, M: torch.tensor
+) -> torch.Tensor:
 
     if hasattr(estimator, "forward"):
         return estimator(X, M)
@@ -128,6 +131,7 @@ def predict_wrapper_mask(estimator: Any, X: torch.Tensor, M:torch.tensor) -> tor
     else:
         raise NotImplementedError(f"Invalid estimator for the {estimator}")
 
+
 def generate_masks(X, mask_dis):
 
     batch_size = X.shape[0]
@@ -138,7 +142,7 @@ def generate_masks(X, mask_dis):
     if mask_dis == "Uniform":
         ref = torch.rand(batch_size, 1)
     elif mask_dis == "Beta":
-        ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size,1))
+        ref = torch.distributions.Beta(2, 2).rsample(sample_shape=(batch_size, 1))
 
     # remove all 0s
 
@@ -149,7 +153,8 @@ def generate_masks(X, mask_dis):
 
     return masks
 
-def generate_perturb_label(x, m ):
+
+def generate_perturb_label(x, m):
     """Generate corrupted samples.
 
     Args:
@@ -177,10 +182,8 @@ def generate_perturb_label(x, m ):
     return m_new, x_tilde
 
 
-
-
 def restore_parameters(model, best_model):
-    '''Move parameters from best model to current model.'''
+    """Move parameters from best model to current model."""
     for param, best_param in zip(model.parameters(), best_model.parameters()):
         param.data = best_param
 
@@ -191,10 +194,10 @@ def weights_init(m):
 
     init_type = "normal"
 
-    if classname.find('Linear') != -1:
+    if classname.find("Linear") != -1:
         if init_type == "normal":
             # Gaussian distribution for initialization
-            m.weight.data.normal_(mean=0.0, std=1.0/np.sqrt(m.in_features))
+            m.weight.data.normal_(mean=0.0, std=1.0 / np.sqrt(m.in_features))
 
         elif init_type == "uniform":
             # apply a uniform distribution to the weights and a bias=0

@@ -3,27 +3,25 @@ import sys
 from typing import Any
 
 import src.interpretability.logger as log
-
-from src.interpretability.exp_propensity import (
-    PropensitySensitivity,
-    PropensityAssignment,
-)
-
-from src.interpretability.exp_nonlinear import (
-    NonLinearitySensitivity,
-    NonlinearitySensitivityLoss,
-    NonLinearityHeldOutOne,
-    NonLinearityHeldOutOneMask,
-    NonLinearityAssignment
-)
-
 from src.interpretability.exp_linear import (
+    PredictiveAssignment,
     PredictiveSensitivity,
     PredictiveSensitivityHeldOutOne,
+    PredictiveSensitivityHeldOutOneMask,
     PredictiveSensitivityLoss,
-    PredictiveAssignment,
-    PredictiveSensitivityHeldOutOneMask
 )
+from src.interpretability.exp_nonlinear import (
+    NonLinearityAssignment,
+    NonLinearityHeldOutOne,
+    NonLinearityHeldOutOneMask,
+    NonLinearitySensitivity,
+    NonlinearitySensitivityLoss,
+)
+from src.interpretability.exp_propensity import (
+    PropensityAssignment,
+    PropensitySensitivity,
+)
+
 
 def init_arg() -> Any:
     parser = argparse.ArgumentParser()
@@ -35,7 +33,7 @@ def init_arg() -> Any:
         "--dataset_list",
         nargs="+",
         type=str,
-        default=["twins", "acic",  "news_100"],
+        default=["twins", "acic", "news_100"],
     )
 
     parser.add_argument(

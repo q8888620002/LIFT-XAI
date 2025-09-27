@@ -55,4 +55,3 @@ For examples, see the following notebooks:
 ## References
 
 Ian Covert and Su-In Lee. "Improving KernelSHAP: Practical Shapley Value Estimation via Linear Regression." *arxiv preprint:2012.01536*
-

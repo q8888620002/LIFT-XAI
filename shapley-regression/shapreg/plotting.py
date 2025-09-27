@@ -1,24 +1,27 @@
 import warnings
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-def plot(shapley_values,
-         feature_names=None,
-         sort_features=True,
-         max_features=np.inf,
-         orientation='horizontal',
-         error_bars=True,
-         color='tab:green',
-         title='Feature Importance',
-         title_size=20,
-         tick_size=16,
-         tick_rotation=None,
-         axis_label='',
-         label_size=16,
-         figsize=(10, 7),
-         return_fig=False):
-    '''
+def plot(
+    shapley_values,
+    feature_names=None,
+    sort_features=True,
+    max_features=np.inf,
+    orientation="horizontal",
+    error_bars=True,
+    color="tab:green",
+    title="Feature Importance",
+    title_size=20,
+    tick_size=16,
+    tick_rotation=None,
+    axis_label="",
+    label_size=16,
+    figsize=(10, 7),
+    return_fig=False,
+):
+    """
     Plot Shapley values.
 
     Args:
@@ -36,11 +39,12 @@ def plot(shapley_values,
       label_size: font size for label.
       figsize: figure size (if fig is None).
       return_fig: whether to return matplotlib figure object.
-    '''
+    """
     # Default feature names.
     if feature_names is None:
-        feature_names = ['Feature {}'.format(i) for i in
-                         range(len(shapley_values.values))]
+        feature_names = [
+            "Feature {}".format(i) for i in range(len(shapley_values.values))
+        ]
 
     # Sort features if necessary.
     if len(feature_names) > max_features:
@@ -57,18 +61,17 @@ def plot(shapley_values,
 
     # Remove extra features if necessary.
     if len(feature_names) > max_features:
-        feature_names = (list(feature_names[:max_features])
-                         + ['Remaining Features'])
-        values = (list(values[:max_features])
-                  + [np.sum(values[max_features:])])
-        std = (list(std[:max_features])
-               + [np.sum(std[max_features:] ** 2) ** 0.5])
+        feature_names = list(feature_names[:max_features]) + ["Remaining Features"]
+        values = list(values[:max_features]) + [np.sum(values[max_features:])]
+        std = list(std[:max_features]) + [np.sum(std[max_features:] ** 2) ** 0.5]
 
     # Warn if too many features.
     if len(feature_names) > 50:
-        warnings.warn('Plotting {} features may make figure too crowded, '
-                      'consider using max_features'.format(
-                        len(feature_names)), Warning)
+        warnings.warn(
+            "Plotting {} features may make figure too crowded, "
+            "consider using max_features".format(len(feature_names)),
+            Warning,
+        )
 
     # Discard std if necessary.
     if not error_bars:
@@ -78,52 +81,54 @@ def plot(shapley_values,
     fig = plt.figure(figsize=figsize)
     ax = fig.gca()
 
-    if orientation == 'horizontal':
+    if orientation == "horizontal":
         # Bar chart.
-        ax.barh(np.arange(len(feature_names))[::-1], values,
-                color=color, xerr=std)
+        ax.barh(np.arange(len(feature_names))[::-1], values, color=color, xerr=std)
 
         # Feature labels.
         if tick_rotation is not None:
-            raise ValueError('rotation not supported for horizontal charts')
+            raise ValueError("rotation not supported for horizontal charts")
         ax.set_yticks(np.arange(len(feature_names))[::-1])
         ax.set_yticklabels(feature_names, fontsize=label_size)
 
         # Axis labels and ticks.
-        ax.set_ylabel('')
+        ax.set_ylabel("")
         ax.set_xlabel(axis_label, fontsize=label_size)
-        ax.tick_params(axis='x', labelsize=tick_size)
+        ax.tick_params(axis="x", labelsize=tick_size)
 
-    elif orientation == 'vertical':
+    elif orientation == "vertical":
         # Bar chart.
-        ax.bar(np.arange(len(feature_names)), values, color=color,
-               yerr=std)
+        ax.bar(np.arange(len(feature_names)), values, color=color, yerr=std)
 
         # Feature labels.
         if tick_rotation is None:
             tick_rotation = 45
         if tick_rotation < 90:
-            ha = 'right'
-            rotation_mode = 'anchor'
+            ha = "right"
+            rotation_mode = "anchor"
         else:
-            ha = 'center'
-            rotation_mode = 'default'
+            ha = "center"
+            rotation_mode = "default"
         ax.set_xticks(np.arange(len(feature_names)))
-        ax.set_xticklabels(feature_names, rotation=tick_rotation, ha=ha,
-                           rotation_mode=rotation_mode,
-                           fontsize=label_size)
+        ax.set_xticklabels(
+            feature_names,
+            rotation=tick_rotation,
+            ha=ha,
+            rotation_mode=rotation_mode,
+            fontsize=label_size,
+        )
 
         # Axis labels and ticks.
         ax.set_ylabel(axis_label, fontsize=label_size)
-        ax.set_xlabel('')
-        ax.tick_params(axis='y', labelsize=tick_size)
+        ax.set_xlabel("")
+        ax.tick_params(axis="y", labelsize=tick_size)
 
     else:
-        raise ValueError('orientation must be horizontal or vertical')
+        raise ValueError("orientation must be horizontal or vertical")
 
     # Remove spines.
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
 
     ax.set_title(title, fontsize=title_size)
     plt.tight_layout()
@@ -134,24 +139,26 @@ def plot(shapley_values,
         return
 
 
-def comparison_plot(comparison_values,
-                    comparison_names=None,
-                    feature_names=None,
-                    sort_features=True,
-                    max_features=np.inf,
-                    orientation='vertical',
-                    error_bars=True,
-                    colors=('tab:green', 'tab:blue'),
-                    title='Feature Importance Comparison',
-                    title_size=20,
-                    tick_size=16,
-                    tick_rotation=None,
-                    axis_label='',
-                    label_size=16,
-                    legend_loc=None,
-                    figsize=(10, 7),
-                    return_fig=False):
-    '''
+def comparison_plot(
+    comparison_values,
+    comparison_names=None,
+    feature_names=None,
+    sort_features=True,
+    max_features=np.inf,
+    orientation="vertical",
+    error_bars=True,
+    colors=("tab:green", "tab:blue"),
+    title="Feature Importance Comparison",
+    title_size=20,
+    tick_size=16,
+    tick_rotation=None,
+    axis_label="",
+    label_size=16,
+    legend_loc=None,
+    figsize=(10, 7),
+    return_fig=False,
+):
+    """
     Plot comparison between two different ShapleyValues objects.
 
     Args:
@@ -171,24 +178,25 @@ def comparison_plot(comparison_values,
       legend_loc: legend location.
       figsize: figure size (if fig is None).
       return_fig: whether to return matplotlib figure object.
-    '''
+    """
     # Default feature names.
     if feature_names is None:
-        feature_names = ['Feature {}'.format(i) for i in
-                         range(len(comparison_values[0].values))]
+        feature_names = [
+            "Feature {}".format(i) for i in range(len(comparison_values[0].values))
+        ]
 
     # Default comparison names.
     num_comps = len(comparison_values)
     if num_comps not in (2, 3, 4, 5):
-        raise ValueError('only support comparisons for 2-5 sets of values')
+        raise ValueError("only support comparisons for 2-5 sets of values")
     if comparison_names is None:
-        comparison_names = ['Shapley Values {}'.format(i) for i in
-                            range(num_comps)]
+        comparison_names = ["Shapley Values {}".format(i) for i in range(num_comps)]
 
     # Default colors.
     if colors is None:
-        colors = ['tab:green', 'tab:blue', 'tab:purple',
-                  'tab:orange', 'tab:pink'][:num_comps]
+        colors = ["tab:green", "tab:blue", "tab:purple", "tab:orange", "tab:pink"][
+            :num_comps
+        ]
 
     # Sort features if necessary.
     if len(feature_names) > max_features:
@@ -207,21 +215,24 @@ def comparison_plot(comparison_values,
 
     # Remove extra features if necessary.
     if len(feature_names) > max_features:
-        feature_names = (list(feature_names[:max_features])
-                         + ['Remaining Features'])
+        feature_names = list(feature_names[:max_features]) + ["Remaining Features"]
         values = [
             list(shapley_values[:max_features])
             + [np.sum(shapley_values[max_features:])]
-            for shapley_values in values]
-        std = [list(stddev[:max_features])
-               + [np.sum(stddev[max_features:] ** 2) ** 0.5]
-               for stddev in std]
+            for shapley_values in values
+        ]
+        std = [
+            list(stddev[:max_features]) + [np.sum(stddev[max_features:] ** 2) ** 0.5]
+            for stddev in std
+        ]
 
     # Warn if too many features.
     if len(feature_names) > 50:
-        warnings.warn('Plotting {} features may make figure too crowded, '
-                      'consider using max_features'.format(
-                        len(feature_names)), Warning)
+        warnings.warn(
+            "Plotting {} features may make figure too crowded, "
+            "consider using max_features".format(len(feature_names)),
+            Warning,
+        )
 
     # Discard std if necessary.
     if not error_bars:
@@ -232,57 +243,71 @@ def comparison_plot(comparison_values,
     fig = plt.figure(figsize=figsize)
     ax = fig.gca()
 
-    if orientation == 'horizontal':
+    if orientation == "horizontal":
         # Bar chart.
         enumeration = enumerate(zip(values, std, comparison_names, colors))
         for i, (shapley_values, stddev, name, color) in enumeration:
-            pos = - 0.4 + width / 2 + width * i
-            ax.barh(np.arange(len(feature_names))[::-1] - pos,
-                    shapley_values, height=width, color=color, xerr=stddev,
-                    label=name)
+            pos = -0.4 + width / 2 + width * i
+            ax.barh(
+                np.arange(len(feature_names))[::-1] - pos,
+                shapley_values,
+                height=width,
+                color=color,
+                xerr=stddev,
+                label=name,
+            )
 
         # Feature labels.
         if tick_rotation is not None:
-            raise ValueError('rotation not supported for horizontal charts')
+            raise ValueError("rotation not supported for horizontal charts")
         ax.set_yticks(np.arange(len(feature_names))[::-1])
         ax.set_yticklabels(feature_names, fontsize=label_size)
 
         # Axis labels and ticks.
-        ax.set_ylabel('')
+        ax.set_ylabel("")
         ax.set_xlabel(axis_label, fontsize=label_size)
-        ax.tick_params(axis='x', labelsize=tick_size)
+        ax.tick_params(axis="x", labelsize=tick_size)
 
-    elif orientation == 'vertical':
+    elif orientation == "vertical":
         # Bar chart.
         enumeration = enumerate(zip(values, std, comparison_names, colors))
         for i, (shapley_values, stddev, name, color) in enumeration:
-            pos = - 0.4 + width / 2 + width * i
-            ax.bar(np.arange(len(feature_names)) + pos,
-                   shapley_values, width=width, color=color, yerr=stddev,
-                   label=name)
+            pos = -0.4 + width / 2 + width * i
+            ax.bar(
+                np.arange(len(feature_names)) + pos,
+                shapley_values,
+                width=width,
+                color=color,
+                yerr=stddev,
+                label=name,
+            )
 
         # Feature labels.
         if tick_rotation is None:
             tick_rotation = 45
         if tick_rotation < 90:
-            ha = 'right'
-            rotation_mode = 'anchor'
+            ha = "right"
+            rotation_mode = "anchor"
         else:
-            ha = 'center'
-            rotation_mode = 'default'
+            ha = "center"
+            rotation_mode = "default"
         ax.set_xticks(np.arange(len(feature_names)))
-        ax.set_xticklabels(feature_names, rotation=tick_rotation, ha=ha,
-                           rotation_mode=rotation_mode,
-                           fontsize=label_size)
+        ax.set_xticklabels(
+            feature_names,
+            rotation=tick_rotation,
+            ha=ha,
+            rotation_mode=rotation_mode,
+            fontsize=label_size,
+        )
 
         # Axis labels and ticks.
         ax.set_ylabel(axis_label, fontsize=label_size)
-        ax.set_xlabel('')
-        ax.tick_params(axis='y', labelsize=tick_size)
+        ax.set_xlabel("")
+        ax.tick_params(axis="y", labelsize=tick_size)
 
     # Remove spines.
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
 
     plt.legend(loc=legend_loc, fontsize=label_size)
     ax.set_title(title, fontsize=title_size)

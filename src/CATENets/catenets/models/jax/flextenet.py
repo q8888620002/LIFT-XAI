@@ -5,20 +5,9 @@ for heterogeneous treatment effect estimation", Curth & vd Schaar (2021).
 # Author: Alicia Curth
 from typing import Any, Callable, Optional, Tuple
 
+import catenets.logger as log
 import jax.numpy as jnp
 import numpy as onp
-from jax import grad, jit, random
-from jax.example_libraries import optimizers
-from jax.example_libraries.stax import (
-    Dense,
-    Sigmoid,
-    elu,
-    glorot_normal,
-    normal,
-    serial,
-)
-
-import catenets.logger as log
 from catenets.models.constants import (
     DEFAULT_BATCH_SIZE,
     DEFAULT_DIM_P_OUT,
@@ -42,6 +31,16 @@ from catenets.models.constants import (
 )
 from catenets.models.jax.base import BaseCATENet
 from catenets.models.jax.model_utils import check_shape_1d_data, make_val_split
+from jax import grad, jit, random
+from jax.example_libraries import optimizers
+from jax.example_libraries.stax import (
+    Dense,
+    Sigmoid,
+    elu,
+    glorot_normal,
+    normal,
+    serial,
+)
 
 
 class FlexTENet(BaseCATENet):

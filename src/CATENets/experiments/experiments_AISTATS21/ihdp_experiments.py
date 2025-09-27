@@ -7,13 +7,12 @@ import os
 from pathlib import Path
 from typing import Optional, Union
 
-from sklearn import clone
-
 import catenets.logger as log
 from catenets.datasets.dataset_ihdp import get_one_data_set, load_raw, prepare_ihdp_data
 from catenets.experiment_utils.base import eval_root_mse, get_model_set
 from catenets.models.jax import PSEUDOOUT_NAME, PseudoOutcomeNet
 from catenets.models.jax.transformation_utils import RA_TRANSFORMATION
+from sklearn import clone
 
 # Some constants
 DATA_DIR = Path("catenets/datasets/data/")

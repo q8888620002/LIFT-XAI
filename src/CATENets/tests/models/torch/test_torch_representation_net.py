@@ -1,11 +1,10 @@
 from typing import Type
 
 import pytest
-from torch import nn
-
 from catenets.datasets import load
 from catenets.experiment_utils.tester import evaluate_treatments_model
 from catenets.models.torch import DragonNet, TARNet
+from torch import nn
 
 
 @pytest.mark.parametrize("snet", [TARNet, DragonNet])

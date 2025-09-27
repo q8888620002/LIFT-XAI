@@ -134,7 +134,7 @@ class BasicDragonNet(BaseCATEEstimator):
             n_units=n_units_r,
             n_layers=n_layers_r,
             nonlin=nonlin,
-            device = device,
+            device=device,
             batch_norm=batch_norm,
         )
         self._po_estimators = []
@@ -216,7 +216,12 @@ class BasicDragonNet(BaseCATEEstimator):
         w = self._check_tensor(w).squeeze().long()
 
         X, y, w, X_val, y_val, w_val, val_string = make_val_split(
-            X, y, w=w, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+            X,
+            y,
+            w=w,
+            val_split_prop=self.val_split_prop,
+            seed=self.seed,
+            device=self.device,
         )
 
         n = X.shape[0]  # could be different from before due to split
@@ -270,7 +275,9 @@ class BasicDragonNet(BaseCATEEstimator):
                     val_loss = self.loss(po_preds, prop_preds, y_val, w_val, discr)
 
                     if i % self.n_iter_print == 0:
-                        print(f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss} train_loss: {torch.mean(train_loss)}")
+                        print(
+                            f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss} train_loss: {torch.mean(train_loss)}"
+                        )
                         log.info(
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss} train_loss: {torch.mean(train_loss)}"
                         )
@@ -285,7 +292,6 @@ class BasicDragonNet(BaseCATEEstimator):
                             (i + 1) * n_batches > self.n_iter_min
                         ):
                             break
-
 
         return self
 
@@ -439,7 +445,7 @@ class BasicDragonNetMask(BaseCATEEstimator):
         self.dropout_prob = dropout_prob
 
         self._repr_estimator = RepresentationNet(
-            2*n_unit_in,
+            2 * n_unit_in,
             n_units=n_units_r,
             n_layers=n_layers_r,
             nonlin=nonlin,
@@ -523,7 +529,12 @@ class BasicDragonNetMask(BaseCATEEstimator):
         w = self._check_tensor(w).squeeze().long()
 
         X, y, w, X_val, y_val, w_val, val_string = make_val_split(
-            X, y, w=w, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+            X,
+            y,
+            w=w,
+            val_split_prop=self.val_split_prop,
+            seed=self.seed,
+            device=self.device,
         )
 
         n = X.shape[0]  # could be different from before due to split
@@ -698,6 +709,7 @@ class TARNet(BasicDragonNet):
         )
         self.prop_loss_multiplier = 0
         self.device = device
+
     def _step(
         self, X: torch.Tensor, w: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:

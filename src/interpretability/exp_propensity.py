@@ -1,40 +1,52 @@
-import sys
 import os
-import torch
 import pickle as pkl
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+import torch
 import xgboost as xgb
-
 from sklearn import metrics
-from pathlib import Path
 from utilities import subgroup_identification
 
-module_path = os.path.abspath(os.path.join('./CATENets/'))
+module_path = os.path.abspath(os.path.join("./CATENets/"))
 
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-from catenets.models.jax import TNet, SNet,SNet1, SNet2, SNet3, DRNet, RANet, PWNet, RNet, XNet
 import catenets.models as cate_models
-import catenets.models.torch.tlearner as tlearner
 import catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
+import catenets.models.torch.tlearner as tlearner
+from catenets.models.jax import (
+    DRNet,
+    PWNet,
+    RANet,
+    RNet,
+    SNet,
+    SNet1,
+    SNet2,
+    SNet3,
+    TNet,
+    XNet,
+)
 
 import src.interpretability.logger as log
-from src.interpretability.explain import Explainer
 from src.interpretability.datasets.data_loader import load
+from src.interpretability.explain import Explainer
 from src.interpretability.synthetic_simulate import (
     SyntheticSimulatorLinear,
     SyntheticSimulatorModulatedNonLinear,
 )
 from src.interpretability.utils import (
+    NuisanceFunctions,
     attribution_accuracy,
-    compute_pehe,
-    attribution_ranking,
     attribution_insertion_deletion,
+    attribution_ranking,
+    compute_pehe,
     insertion_deletion,
-    NuisanceFunctions
 )
+
 
 class PropensitySensitivity:
     """
@@ -84,18 +96,16 @@ class PropensitySensitivity:
             "feature_permutation",
             "integrated_gradients",
             "shapley_value_sampling",
-            "naive_shap"
+            "naive_shap",
         ],
     ) -> None:
         log.info(
             f"Using dataset {dataset} with num_important features = {num_important_features} and predictive scale {predictive_scale}."
         )
 
-        X_raw_train,X_raw_val, X_raw_test = load(
-            dataset,
-            train_ratio=train_ratio,
-            val_set=True
-            )
+        X_raw_train, X_raw_val, X_raw_test = load(
+            dataset, train_ratio=train_ratio, val_set=True
+        )
 
         if self.synthetic_simulator_type == "linear":
             sim = SyntheticSimulatorLinear(
@@ -116,7 +126,7 @@ class PropensitySensitivity:
             raise Exception("Unknown simulator type.")
 
         explainability_data = []
-        insertion_deletion_results  = []
+        insertion_deletion_results = []
 
         for propensity_scale in self.propensity_scales:
             log.info(f"Now working with propensity_scale = {propensity_scale}...")
@@ -148,11 +158,7 @@ class PropensitySensitivity:
                 treatment_assign=self.propensity_type,
                 prop_scale=propensity_scale,
             )
-            selection_types = [
-                "if_pehe",
-                "pseudo_outcome_r",
-                "pseudo_outcome_dr"
-            ]
+            selection_types = ["if_pehe", "pseudo_outcome_r", "pseudo_outcome_dr"]
             log.info("Fitting and explaining learners...")
             learners = {
                 # "TLearner": cate_models.torch.TLearner(
@@ -201,18 +207,18 @@ class PropensitySensitivity:
                 #     device= "cuda:1"
                 # ),
                 "XLearner": pseudo_outcome_nets.XLearner(
-                     x_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=self.n_iter,
-                     lr=1e-3,
-                     patience=10,
-                     batch_size=self.batch_size,
-                     batch_norm=False,
-                     nonlin="relu",
-                     device="cuda:1"
-                 ),
+                    x_train.shape[1],
+                    binary_y=(len(np.unique(Y_train)) == 2),
+                    n_layers_out=2,
+                    n_units_out=100,
+                    n_iter=self.n_iter,
+                    lr=1e-3,
+                    patience=10,
+                    batch_size=self.batch_size,
+                    batch_norm=False,
+                    nonlin="relu",
+                    device="cuda:1",
+                ),
                 # "CFRNet_0.01": cate_models.torch.TARNet(
                 #     x_train.shape[1],
                 #     binary_y=(len(np.unique(Y_train)) == 2),
@@ -288,15 +294,18 @@ class PropensitySensitivity:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
-                        all_important_features, attribution_est
-                    )
-                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
-                        pred_features, attribution_est
-                    )
-                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
-                        prog_features, attribution_est
-                    )
+                    (
+                        acc_scores_all_features,
+                        acc_scores_all_features_score,
+                    ) = attribution_accuracy(all_important_features, attribution_est)
+                    (
+                        acc_scores_predictive_features,
+                        acc_scores_predictive_features_score,
+                    ) = attribution_accuracy(pred_features, attribution_est)
+                    (
+                        acc_scores_prog_features,
+                        acc_scores_prog_features_score,
+                    ) = attribution_accuracy(prog_features, attribution_est)
                     cate_pred = learners[learner_name].predict(X=x_test)
 
                     pehe_test = compute_pehe(cate_true=cate_test, cate_pred=cate_pred)
@@ -305,16 +314,25 @@ class PropensitySensitivity:
 
                     log.info(f"Calculating Pehe for {explainer_name}. {learner_name}")
 
-                    insertion_results , deletion_results, insertion_results_truth, deletion_results_truth  = insertion_deletion(
-                        (x_test[: self.explainer_limit], W_test[: self.explainer_limit], Y_test[: self.explainer_limit]),
-                        x_train.mean(0).reshape(1,-1),
+                    (
+                        insertion_results,
+                        deletion_results,
+                        insertion_results_truth,
+                        deletion_results_truth,
+                    ) = insertion_deletion(
+                        (
+                            x_test[: self.explainer_limit],
+                            W_test[: self.explainer_limit],
+                            Y_test[: self.explainer_limit],
+                        ),
+                        x_train.mean(0).reshape(1, -1),
                         rank_indices,
                         learners[learner_name],
                         selection_types,
                         nuisance_functions,
-                        cate_test[: self.explainer_limit]
-                     )
-                    
+                        cate_test[: self.explainer_limit],
+                    )
+
                     auroc_results = []
                     ate_results = []
                     mse_results = []
@@ -322,7 +340,7 @@ class PropensitySensitivity:
                     for feature_idx in range(x_train.shape[1]):
 
                         auroc, ate, mse = subgroup_identification(
-                            global_rank[:feature_idx+1],
+                            global_rank[: feature_idx + 1],
                             x_train,
                             x_test,
                             learners[learner_name],
@@ -339,11 +357,11 @@ class PropensitySensitivity:
                             explainer_name,
                             insertion_results,
                             deletion_results,
-                            insertion_results_truth, 
+                            insertion_results_truth,
                             deletion_results_truth,
                             auroc_results,
                             ate_results,
-                            mse_results
+                            mse_results,
                         ]
                     )
 
@@ -401,13 +419,16 @@ class PropensitySensitivity:
             f"binary_{binary_outcome}-seed{self.seed}.csv"
         )
 
-        with open( results_path / f"propensity_scale_{dataset}_{num_important_features}_"
+        with open(
+            results_path / f"propensity_scale_{dataset}_{num_important_features}_"
             f"proptype_{self.propensity_type}_"
             f"predscl_{predictive_scale}_"
             f"nonlinscl_{nonlinearity_scale}_"
             f"trainratio_{train_ratio}_"
-            f"binary_{binary_outcome}-seed{self.seed}.pkl", 'wb') as handle:
-            pkl.dump(insertion_deletion_results , handle)
+            f"binary_{binary_outcome}-seed{self.seed}.pkl",
+            "wb",
+        ) as handle:
+            pkl.dump(insertion_deletion_results, handle)
 
 
 class PropensityAssignment:
@@ -458,7 +479,7 @@ class PropensityAssignment:
             "feature_permutation",
             "integrated_gradients",
             "shapley_value_sampling",
-            "naive_shap"
+            "naive_shap",
         ],
     ) -> None:
         log.info(
@@ -575,19 +596,18 @@ class PropensityAssignment:
                 #      device="cuda:1"
                 #  ),
                 "XLearner": pseudo_outcome_nets.XLearner(
-                     x_train.shape[1],
-                     binary_y=(len(np.unique(Y_train)) == 2),
-                     n_layers_out=2,
-                     n_units_out=100,
-                     n_iter=self.n_iter,
-                     lr=1e-3,
-                     patience=10,
-                     batch_size=self.batch_size,
-                     batch_norm=False,
-                     nonlin="relu",
-                     device="cuda:1"
-                 ),
-
+                    x_train.shape[1],
+                    binary_y=(len(np.unique(Y_train)) == 2),
+                    n_layers_out=2,
+                    n_units_out=100,
+                    n_iter=self.n_iter,
+                    lr=1e-3,
+                    patience=10,
+                    batch_size=self.batch_size,
+                    batch_norm=False,
+                    nonlin="relu",
+                    device="cuda:1",
+                ),
                 # "CFRNet_0.01": cate_models.torch.TARNet(
                 #     x_train.shape[1],
                 #     binary_y=(len(np.unique(Y_train)) == 2),
@@ -634,16 +654,14 @@ class PropensityAssignment:
             learner_explaintion_lists = {}
 
             for name in learners:
-                if not  "mask" in name.lower():
+                if not "mask" in name.lower():
                     learner_explaintion_lists[name] = [
-                    "integrated_gradients",
-                    "shapley_value_sampling",
-                    "naive_shap",
+                        "integrated_gradients",
+                        "shapley_value_sampling",
+                        "naive_shap",
                     ]
                 else:
-                    learner_explaintion_lists[name] = [
-                        "explain_with_missingness"
-                    ]
+                    learner_explaintion_lists[name] = ["explain_with_missingness"]
                 log.info(f"Fitting {name}.")
                 learners[name].fit(X=x_train, y=Y_train, w=W_train)
 
@@ -654,7 +672,7 @@ class PropensityAssignment:
                 )
                 log.info(f"Explaining {name}.")
                 learner_explanations[name] = learner_explainers[name].explain(
-                    x_test[:self.explainer_limit]
+                    x_test[: self.explainer_limit]
                 )
 
             all_important_features = sim.get_all_important_features()
@@ -677,20 +695,25 @@ class PropensityAssignment:
                     attribution_est = np.abs(
                         learner_explanations[learner_name][explainer_name]
                     )
-                    acc_scores_all_features, acc_scores_all_features_score = attribution_accuracy(
-                        all_important_features, attribution_est
-                    )
-                    acc_scores_predictive_features,acc_scores_predictive_features_score = attribution_accuracy(
-                        pred_features, attribution_est
-                    )
-                    acc_scores_prog_features, acc_scores_prog_features_score = attribution_accuracy(
-                        prog_features, attribution_est
-                    )
-                    if  not "mask" in learner_name.lower():
+                    (
+                        acc_scores_all_features,
+                        acc_scores_all_features_score,
+                    ) = attribution_accuracy(all_important_features, attribution_est)
+                    (
+                        acc_scores_predictive_features,
+                        acc_scores_predictive_features_score,
+                    ) = attribution_accuracy(pred_features, attribution_est)
+                    (
+                        acc_scores_prog_features,
+                        acc_scores_prog_features_score,
+                    ) = attribution_accuracy(prog_features, attribution_est)
+                    if not "mask" in learner_name.lower():
                         cate_pred = learners[learner_name].predict(X=x_test)
                     else:
                         prediction_mask = torch.ones(x_test.shape)
-                        cate_pred = learners[learner_name].predict(X=x_test, M=prediction_mask)
+                        cate_pred = learners[learner_name].predict(
+                            X=x_test, M=prediction_mask
+                        )
 
                     cate_pred = learners[learner_name].predict(X=x_test)
 
@@ -698,38 +721,51 @@ class PropensityAssignment:
 
                     rank_indices = np.argsort(np.mean(attribution_est, axis=0))[::-1]
 
-                    num_feature = num_important_features//4
-                    
+                    num_feature = num_important_features // 4
+
                     total_num = len(X_raw_test) + len(X_raw_train)
 
-                    if  not "mask" in learner_name.lower():
+                    if not "mask" in learner_name.lower():
                         new_y_train = learners[learner_name].predict(X=x_train)
                     else:
                         prediction_mask = torch.ones(x_train.shape)
-                        new_y_train = learners[learner_name].predict(X=x_train, M=prediction_mask)
+                        new_y_train = learners[learner_name].predict(
+                            X=x_train, M=prediction_mask
+                        )
 
                     # Define threshold & relabel subgroup
 
                     cate_threshold = torch.mean(new_y_train)
-                    new_y_train = (new_y_train > cate_threshold ).float().detach().cpu().numpy()
+                    new_y_train = (
+                        (new_y_train > cate_threshold).float().detach().cpu().numpy()
+                    )
 
-                    if  not "mask" in learner_name.lower():
+                    if not "mask" in learner_name.lower():
                         new_y_test = learners[learner_name].predict(X=x_test)
                     else:
                         prediction_mask = torch.ones(x_test.shape)
-                        new_y_test = learners[learner_name].predict(X=x_test, M=prediction_mask)
+                        new_y_test = learners[learner_name].predict(
+                            X=x_test, M=prediction_mask
+                        )
 
-                    new_y_test = (new_y_test > cate_threshold).float().detach().cpu().numpy()
+                    new_y_test = (
+                        (new_y_test > cate_threshold).float().detach().cpu().numpy()
+                    )
 
                     # Oracle ATEs
 
                     true_ites = po1_test - po0_test
-                    true_ites_oracle = np.sum(true_ites[np.where(true_ites > np.mean(true_ites))])/total_num
+                    true_ites_oracle = (
+                        np.sum(true_ites[np.where(true_ites > np.mean(true_ites))])
+                        / total_num
+                    )
 
                     # ATEs with identified important features
-                    xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
-                    new_x_train = x_train[:,rank_indices[:num_feature]]
-                    new_x_test = x_test[:,rank_indices[:num_feature]]
+                    xgb_model = xgb.XGBClassifier(
+                        objective="binary:logistic", random_state=self.seed
+                    )
+                    new_x_train = x_train[:, rank_indices[:num_feature]]
+                    new_x_test = x_test[:, rank_indices[:num_feature]]
 
                     xgb_model.fit(new_x_train, new_y_train)
 
@@ -738,21 +774,37 @@ class PropensityAssignment:
 
                     result_auroc.append(metrics.roc_auc_score(new_y_test, y_pred))
 
-                    if  not "mask" in learner_name.lower():
-                        ites = learners[learner_name].predict(X=s_hat).detach().cpu().numpy()
+                    if not "mask" in learner_name.lower():
+                        ites = (
+                            learners[learner_name]
+                            .predict(X=s_hat)
+                            .detach()
+                            .cpu()
+                            .numpy()
+                        )
                     else:
                         prediction_mask = torch.ones(s_hat.shape)
-                        ites = learners[learner_name].predict(X=s_hat, M=prediction_mask).detach().cpu().numpy()
+                        ites = (
+                            learners[learner_name]
+                            .predict(X=s_hat, M=prediction_mask)
+                            .detach()
+                            .cpu()
+                            .numpy()
+                        )
 
-                    cate_policy.append(np.sum(ites)/total_num)
-                    true_cate_policy.append(np.sum(true_ites[np.where(y_pred == 1)])/total_num)
+                    cate_policy.append(np.sum(ites) / total_num)
+                    true_cate_policy.append(
+                        np.sum(true_ites[np.where(y_pred == 1)]) / total_num
+                    )
 
                     # ATEs with random features assignment
 
-                    random_xgb_model = xgb.XGBClassifier(objective="binary:logistic", random_state=self.seed)
+                    random_xgb_model = xgb.XGBClassifier(
+                        objective="binary:logistic", random_state=self.seed
+                    )
                     np.random.shuffle(rank_indices)
-                    new_x_train = x_train[:,rank_indices[:num_feature]]
-                    new_x_test = x_test[:,rank_indices[:num_feature]]
+                    new_x_train = x_train[:, rank_indices[:num_feature]]
+                    new_x_test = x_test[:, rank_indices[:num_feature]]
 
                     random_xgb_model.fit(new_x_train, new_y_train)
                     y_pred = random_xgb_model.predict(new_x_test)
@@ -760,29 +812,63 @@ class PropensityAssignment:
                     s_hat = x_test[np.where(y_pred == 1)]
 
                     if len(s_hat) != 0:
-                        if  not "mask" in learner_name.lower():
-                            random_ites = learners[learner_name].predict(X=s_hat).detach().cpu().numpy()
+                        if not "mask" in learner_name.lower():
+                            random_ites = (
+                                learners[learner_name]
+                                .predict(X=s_hat)
+                                .detach()
+                                .cpu()
+                                .numpy()
+                            )
                         else:
                             prediction_mask = torch.ones(s_hat.shape)
-                            random_ites = learners[learner_name].predict(X=s_hat, M=prediction_mask).detach().cpu().numpy()
+                            random_ites = (
+                                learners[learner_name]
+                                .predict(X=s_hat, M=prediction_mask)
+                                .detach()
+                                .cpu()
+                                .numpy()
+                            )
                     else:
                         random_ites = 0
 
-                    cate_random.append(np.sum(random_ites)/total_num)
-                    true_cate_random.append(np.sum(true_ites[np.where(y_pred == 1)])/total_num)
+                    cate_random.append(np.sum(random_ites) / total_num)
+                    true_cate_random.append(
+                        np.sum(true_ites[np.where(y_pred == 1)]) / total_num
+                    )
 
                     # ATEs with original assignment
 
                     s_original = x_test[np.where(W_test == 1), :]
 
-                    if  not "mask" in learner_name.lower():
-                        original_assignment_ites = np.sum(learners[learner_name].predict(X=s_original).detach().cpu().numpy())/total_num
+                    if not "mask" in learner_name.lower():
+                        original_assignment_ites = (
+                            np.sum(
+                                learners[learner_name]
+                                .predict(X=s_original)
+                                .detach()
+                                .cpu()
+                                .numpy()
+                            )
+                            / total_num
+                        )
                     else:
                         prediction_mask = torch.ones(s_original.shape)
-                        original_assignment_ites = np.sum(learners[learner_name].predict(X=s_original, M=prediction_mask).detach().cpu().numpy())/total_num
+                        original_assignment_ites = (
+                            np.sum(
+                                learners[learner_name]
+                                .predict(X=s_original, M=prediction_mask)
+                                .detach()
+                                .cpu()
+                                .numpy()
+                            )
+                            / total_num
+                        )
 
                     cate_original.append(original_assignment_ites)
-                    true_cate_original.append(np.sum(true_ites[np.where(W_test == 1)])/total_num)
+                    true_cate_original.append(
+                        np.sum(true_ites[np.where(W_test == 1)]) / total_num
+                    )
 
                     assignment_data.append(
                         [
@@ -796,7 +882,7 @@ class PropensityAssignment:
                             true_cate_policy,
                             true_cate_random,
                             true_cate_original,
-                            true_ites_oracle
+                            true_ites_oracle,
                         ]
                     )
 
@@ -814,7 +900,7 @@ class PropensityAssignment:
                             pehe_test,
                             np.mean(cate_test),
                             np.var(cate_test),
-                            pehe_test / np.sqrt(np.var(cate_test))
+                            pehe_test / np.sqrt(np.var(cate_test)),
                         ]
                     )
 
@@ -861,11 +947,14 @@ class PropensityAssignment:
         if not results_path.exists():
             results_path.mkdir(parents=True, exist_ok=True)
 
-        with open( results_path / f"propensity_scale_{dataset}_{num_important_features}_"
+        with open(
+            results_path / f"propensity_scale_{dataset}_{num_important_features}_"
             f"proptype_{self.propensity_type}_"
             f"predscl_{predictive_scale}_"
             f"nonlinscl_{nonlinearity_scale}_"
             f"trainratio_{train_ratio}_"
             f"binary_{binary_outcome}"
-            f"feature_num_{num_feature}-seed{self.seed}.pkl", 'wb') as handle:
-            pkl.dump(assignment_data , handle)
+            f"feature_num_{num_feature}-seed{self.seed}.pkl",
+            "wb",
+        ) as handle:
+            pkl.dump(assignment_data, handle)

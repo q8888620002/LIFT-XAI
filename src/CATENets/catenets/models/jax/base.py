@@ -5,15 +5,9 @@ Base modules shared across different nets
 import abc
 from typing import Any, Callable, List, Optional, Tuple
 
+import catenets.logger as log
 import jax.numpy as jnp
 import numpy as onp
-from jax import grad, jit, random
-from jax.example_libraries import optimizers, stax
-from jax.example_libraries.stax import Dense, Elu, Relu, Sigmoid
-from sklearn.base import BaseEstimator, RegressorMixin
-from sklearn.model_selection import ParameterGrid
-
-import catenets.logger as log
 from catenets.models.constants import (
     DEFAULT_BATCH_SIZE,
     DEFAULT_LAYERS_OUT,
@@ -35,6 +29,11 @@ from catenets.models.jax.model_utils import (
     check_X_is_np,
     make_val_split,
 )
+from jax import grad, jit, random
+from jax.example_libraries import optimizers, stax
+from jax.example_libraries.stax import Dense, Elu, Relu, Sigmoid
+from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.model_selection import ParameterGrid
 
 
 def ReprBlock(

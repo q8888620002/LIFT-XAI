@@ -1,12 +1,10 @@
 import os
+import pickle
+
 import numpy as np
 import pandas as pd
-import pickle
 from scipy.stats import entropy
-
 from sklearn.decomposition import PCA
-
-
 
 
 def normalize_data(X):

@@ -4,9 +4,8 @@ Module implements X-learner from Kuenzel et al (2019) using NNs
 # Author: Alicia Curth
 from typing import Callable, Optional, Tuple
 
-import jax.numpy as jnp
-
 import catenets.logger as log
+import jax.numpy as jnp
 from catenets.models.constants import (
     DEFAULT_AVG_OBJECTIVE,
     DEFAULT_BATCH_SIZE,

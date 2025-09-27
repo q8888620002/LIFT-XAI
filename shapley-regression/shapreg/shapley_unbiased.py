@@ -1,22 +1,27 @@
 import numpy as np
-from shapreg import utils, games, stochastic_games
+from shapreg import games, stochastic_games, utils
 from tqdm.auto import tqdm
 
 
 def calculate_A(num_players):
-    '''Calculate A parameter's exact form.'''
+    """Calculate A parameter's exact form."""
     p_coaccur = (
-        (np.sum((np.arange(2, num_players) - 1)
-                / (num_players - np.arange(2, num_players)))) /
-        (num_players * (num_players - 1) *
-         np.sum(1 / (np.arange(1, num_players)
-                * (num_players - np.arange(1, num_players))))))
+        np.sum(
+            (np.arange(2, num_players) - 1) / (num_players - np.arange(2, num_players))
+        )
+    ) / (
+        num_players
+        * (num_players - 1)
+        * np.sum(
+            1 / (np.arange(1, num_players) * (num_players - np.arange(1, num_players)))
+        )
+    )
     A = np.eye(num_players) * 0.5 + (1 - np.eye(num_players)) * p_coaccur
     return A
 
 
 def calculate_exact_result(A, b, total, b_sum_squares, n):
-    '''Calculate the regression coefficients and uncertainty estimates.'''
+    """Calculate the regression coefficients and uncertainty estimates."""
     num_players = A.shape[1]
     scalar_values = len(b.shape) == 1
     if scalar_values:
@@ -24,16 +29,14 @@ def calculate_exact_result(A, b, total, b_sum_squares, n):
     else:
         A_inv_one = np.linalg.solve(A, np.ones((num_players, 1)))
     A_inv_vec = np.linalg.solve(A, b)
-    values = (
-        A_inv_vec -
-        A_inv_one * (np.sum(A_inv_vec, axis=0, keepdims=True) - total)
-        / np.sum(A_inv_one))
+    values = A_inv_vec - A_inv_one * (
+        np.sum(A_inv_vec, axis=0, keepdims=True) - total
+    ) / np.sum(A_inv_one)
 
     # Calculate variance.
     try:
         # Symmetrize, rescale and swap axes.
-        b_sum_squares = 0.5 * (b_sum_squares
-                               + np.swapaxes(b_sum_squares, 0, 1))
+        b_sum_squares = 0.5 * (b_sum_squares + np.swapaxes(b_sum_squares, 0, 1))
         b_cov = b_sum_squares / (n ** 2)
         if scalar_values:
             b_cov = np.expand_dims(b_cov, 0)
@@ -42,10 +45,9 @@ def calculate_exact_result(A, b, total, b_sum_squares, n):
 
         # Use Cholesky decomposition to calculate variance.
         cholesky = np.linalg.cholesky(b_cov)
-        L = (
-            np.linalg.solve(A, cholesky) +
-            np.matmul(np.outer(A_inv_one, A_inv_one), cholesky)
-            / np.sum(A_inv_one))
+        L = np.linalg.solve(A, cholesky) + np.matmul(
+            np.outer(A_inv_one, A_inv_one), cholesky
+        ) / np.sum(A_inv_one)
         beta_cov = np.matmul(L, np.moveaxis(L, -2, -1))
         var = np.diagonal(beta_cov, offset=0, axis1=-2, axis2=-1)
         std = var ** 0.5
@@ -60,23 +62,24 @@ def calculate_exact_result(A, b, total, b_sum_squares, n):
     return values, std
 
 
-def ShapleyRegression(game,
-                      batch_size=512,
-                      detect_convergence=True,
-                      thresh=0.01,
-                      n_samples=None,
-                      paired_sampling=True,
-                      return_all=False,
-                      bar=True,
-                      verbose=False):
+def ShapleyRegression(
+    game,
+    batch_size=512,
+    detect_convergence=True,
+    thresh=0.01,
+    n_samples=None,
+    paired_sampling=True,
+    return_all=False,
+    bar=True,
+    verbose=False,
+):
     # Verify arguments.
     if isinstance(game, games.CooperativeGame):
         stochastic = False
     elif isinstance(game, stochastic_games.StochasticCooperativeGame):
         stochastic = True
     else:
-        raise ValueError('game must be CooperativeGame or '
-                         'StochasticCooperativeGame')
+        raise ValueError("game must be CooperativeGame or " "StochasticCooperativeGame")
 
     # Possibly force convergence detection.
     if n_samples is None:
@@ -84,7 +87,7 @@ def ShapleyRegression(game,
         if not detect_convergence:
             detect_convergence = True
             if verbose:
-                print('Turning convergence detection on')
+                print("Turning convergence detection on")
 
     if detect_convergence:
         assert 0 < thresh < 1
@@ -130,8 +133,7 @@ def ShapleyRegression(game,
     for it in range(n_loops):
         # Sample subsets.
         S = np.zeros((batch_size, num_players), dtype=bool)
-        num_included = np.random.choice(num_players - 1, size=batch_size,
-                                        p=weights) + 1
+        num_included = np.random.choice(num_players - 1, size=batch_size, p=weights) + 1
         for row, num in zip(S, num_included):
             inds = np.random.choice(num_players, size=num, replace=False)
             row[inds] = 1
@@ -147,24 +149,30 @@ def ShapleyRegression(game,
                 game_eval = game(S, U) - null
                 S_comp = np.logical_not(S)
                 comp_eval = game(S_comp, U) - null
-                b_sample = 0.5 * (
-                    S.astype(float).T * game_eval[:, np.newaxis].T
-                    + S_comp.astype(float).T * comp_eval[:, np.newaxis].T).T
+                b_sample = (
+                    0.5
+                    * (
+                        S.astype(float).T * game_eval[:, np.newaxis].T
+                        + S_comp.astype(float).T * comp_eval[:, np.newaxis].T
+                    ).T
+                )
             else:
                 game_eval = game(S) - null
                 S_comp = np.logical_not(S)
                 comp_eval = game(S_comp) - null
-                b_sample = 0.5 * (
-                    S.astype(float).T * game_eval[:, np.newaxis].T
-                    + S_comp.astype(float).T * comp_eval[:, np.newaxis].T).T
+                b_sample = (
+                    0.5
+                    * (
+                        S.astype(float).T * game_eval[:, np.newaxis].T
+                        + S_comp.astype(float).T * comp_eval[:, np.newaxis].T
+                    ).T
+                )
         else:
             # Single sample.
             if stochastic:
-                b_sample = (S.astype(float).T
-                            * (game(S, U) - null)[:, np.newaxis].T).T
+                b_sample = (S.astype(float).T * (game(S, U) - null)[:, np.newaxis].T).T
             else:
-                b_sample = (S.astype(float).T
-                            * (game(S) - null)[:, np.newaxis].T).T
+                b_sample = (S.astype(float).T * (game(S) - null)[:, np.newaxis].T).T
 
         # Welford's algorithm.
         n += batch_size
@@ -172,26 +180,25 @@ def ShapleyRegression(game,
         b += np.sum(b_diff, axis=0) / n
         b_diff2 = b_sample - b
         b_sum_squares += np.sum(
-            np.expand_dims(b_diff, 2) * np.expand_dims(b_diff2, 1),
-            axis=0)
+            np.expand_dims(b_diff, 2) * np.expand_dims(b_diff2, 1), axis=0
+        )
 
         # Calculate progress.
         values, std = calculate_exact_result(A, b, total, b_sum_squares, n)
-        ratio = np.max(
-            np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
+        ratio = np.max(np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
 
         # Print progress message.
         if verbose:
             if detect_convergence:
-                print(f'StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})')
+                print(f"StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})")
             else:
-                print(f'StdDev Ratio = {ratio:.4f}')
+                print(f"StdDev Ratio = {ratio:.4f}")
 
         # Check for convergence.
         if detect_convergence:
             if ratio < thresh:
                 if verbose:
-                    print('Detected convergence')
+                    print("Detected convergence")
 
                 # Skip bar ahead.
                 if bar:
@@ -218,15 +225,10 @@ def ShapleyRegression(game,
     # Return results.
     if return_all:
         # Dictionary for progress tracking.
-        iters = (
-            (np.arange(it + 1) + 1) * batch_size *
-            (1 + int(paired_sampling)))
-        tracking_dict = {
-            'values': val_list,
-            'std': std_list,
-            'iters': iters}
+        iters = (np.arange(it + 1) + 1) * batch_size * (1 + int(paired_sampling))
+        tracking_dict = {"values": val_list, "std": std_list, "iters": iters}
         if detect_convergence:
-            tracking_dict['N_est'] = N_list
+            tracking_dict["N_est"] = N_list
 
         return utils.ShapleyValues(values, std), tracking_dict
     else:

@@ -4,14 +4,10 @@ Implements NN based on R-learner and U-learner (as discussed in Nie & Wager (201
 # Author: Alicia Curth
 from typing import Any, Callable, Optional
 
+import catenets.logger as log
 import jax.numpy as jnp
 import numpy as onp
 import pandas as pd
-from jax import grad, jit, random
-from jax.example_libraries import optimizers
-from sklearn.model_selection import StratifiedKFold
-
-import catenets.logger as log
 from catenets.models.constants import (
     DEFAULT_AVG_OBJECTIVE,
     DEFAULT_BATCH_SIZE,
@@ -43,6 +39,9 @@ from catenets.models.jax.base import (
     train_output_net_only,
 )
 from catenets.models.jax.model_utils import check_shape_1d_data, check_X_is_np
+from jax import grad, jit, random
+from jax.example_libraries import optimizers
+from sklearn.model_selection import StratifiedKFold
 
 R_STRATEGY_NAME = "R"
 U_STRATEGY_NAME = "U"

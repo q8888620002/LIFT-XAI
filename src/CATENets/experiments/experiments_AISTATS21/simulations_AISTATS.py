@@ -6,8 +6,6 @@ import csv
 import os
 from typing import Any, Optional, Union
 
-from sklearn import clone
-
 import catenets.logger as log
 from catenets.experiment_utils.base import eval_root_mse, get_model_set
 from catenets.experiment_utils.simulation_utils import simulate_treatment_setup
@@ -18,6 +16,7 @@ from catenets.models.jax.transformation_utils import (
     DR_TRANSFORMATION,
     RA_TRANSFORMATION,
 )
+from sklearn import clone
 
 # some constants
 RESULT_DIR = "results/experiments_AISTATS21/simulations/"

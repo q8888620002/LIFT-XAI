@@ -4,7 +4,6 @@ import jax.numpy as jnp
 import numpy as np
 import pandas as pd
 import pytest
-
 from catenets.models.jax.model_utils import (
     check_shape_1d_data,
     check_X_is_np,

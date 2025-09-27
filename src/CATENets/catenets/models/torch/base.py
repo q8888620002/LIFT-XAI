@@ -1,11 +1,11 @@
 import abc
+from copy import deepcopy
 from typing import Optional
 
 import numpy as np
 import torch
 from torch import nn
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-from copy import deepcopy
 
 import src.CATENets.catenets.logger as log
 from src.CATENets.catenets.models.constants import (
@@ -25,9 +25,20 @@ from src.CATENets.catenets.models.constants import (
     DEFAULT_VAL_SPLIT,
     LARGE_VAL,
 )
-from src.CATENets.catenets.models.torch.utils.decorators import benchmark, check_input_train
-from src.CATENets.catenets.models.torch.utils.model_utils import make_val_split, generate_masks,restore_parameters, weights_init, generate_perturb_label
-from src.CATENets.catenets.models.torch.utils.weight_utils import compute_importance_weights
+from src.CATENets.catenets.models.torch.utils.decorators import (
+    benchmark,
+    check_input_train,
+)
+from src.CATENets.catenets.models.torch.utils.model_utils import (
+    generate_masks,
+    generate_perturb_label,
+    make_val_split,
+    restore_parameters,
+    weights_init,
+)
+from src.CATENets.catenets.models.torch.utils.weight_utils import (
+    compute_importance_weights,
+)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -103,7 +114,7 @@ class BasicNet(nn.Module):
         early_stopping: bool = True,
         dropout: bool = False,
         dropout_prob: float = 0.2,
-        prob_diff:bool = False,
+        prob_diff: bool = False,
     ) -> None:
         super(BasicNet, self).__init__()
 
@@ -188,7 +199,7 @@ class BasicNet(nn.Module):
         y = self._check_tensor(y).squeeze()
         # get validation split (can be none)
         X, y, X_val, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
         )
         y_val = y_val.squeeze()
         n = X.shape[0]  # could be different from before due to split
@@ -205,10 +216,10 @@ class BasicNet(nn.Module):
 
         scheduler = ReduceLROnPlateau(
             self.optimizer,
-            patience=self.patience//2,
-            mode='min',
+            patience=self.patience // 2,
+            mode="min",
             min_lr=1e-5,
-            factor = 0.5
+            factor=0.5,
         )
         for i in range(self.n_iter):
             # shuffle data for minibatches
@@ -231,7 +242,6 @@ class BasicNet(nn.Module):
                 loss = nn.BCELoss(weight=weight_next) if self.binary_y else nn.MSELoss()
 
                 preds = self.forward(X_next).squeeze()
-
 
                 batch_loss = loss(preds, y_next)
 
@@ -275,7 +285,11 @@ class BasicNet(nn.Module):
         return self
 
     def fit_knowledge_distillation(
-        self, X: torch.Tensor, y: torch.Tensor, y_hat: torch.Tensor , weight: Optional[torch.Tensor] = None
+        self,
+        X: torch.Tensor,
+        y: torch.Tensor,
+        y_hat: torch.Tensor,
+        weight: Optional[torch.Tensor] = None,
     ) -> "BasicNet":
         self.train()
 
@@ -284,14 +298,18 @@ class BasicNet(nn.Module):
         y_hat = self._check_tensor(y_hat).squeeze()
 
         # get validation split (can be none)
-        _, y , _, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+        _, y, _, y_val, val_string = make_val_split(
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
         )
 
         y_val = y_val.squeeze()
 
         X, y_hat, X_val, y_hat_val, val_string = make_val_split(
-            X, y_hat, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+            X,
+            y_hat,
+            val_split_prop=self.val_split_prop,
+            seed=self.seed,
+            device=self.device,
         )
         y_hat_val = y_hat_val.squeeze()
 
@@ -309,10 +327,10 @@ class BasicNet(nn.Module):
 
         scheduler = ReduceLROnPlateau(
             self.optimizer,
-            patience=self.patience//2,
-            mode='min',
+            patience=self.patience // 2,
+            mode="min",
             min_lr=1e-5,
-            factor = 0.5
+            factor=0.5,
         )
         for i in range(self.n_iter):
             # shuffle data for minibatches
@@ -388,12 +406,12 @@ class BasicNet(nn.Module):
             return torch.from_numpy(np.asarray(X)).float().to(self.device)
 
 
-
 class BasicNetMask(nn.Module):
 
     """
     Class of Mask version of BasicNet.
     """
+
     """
     Basic hypothesis neural net.
 
@@ -454,7 +472,7 @@ class BasicNetMask(nn.Module):
         early_stopping: bool = True,
         dropout: bool = False,
         dropout_prob: float = 0.2,
-        mask_dis: str = "Uniform"
+        mask_dis: str = "Uniform",
     ) -> None:
         super(BasicNetMask, self).__init__()
 
@@ -522,7 +540,7 @@ class BasicNetMask(nn.Module):
 
         self.model.apply(weights_init)
 
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
 
         M = self._check_tensor(M)
         out = X * M
@@ -554,10 +572,10 @@ class BasicNetMask(nn.Module):
 
         scheduler = ReduceLROnPlateau(
             self.optimizer,
-            patience=self.patience//2,
-            mode='min',
+            patience=self.patience // 2,
+            mode="min",
             min_lr=1e-5,
-            factor = 0.5
+            factor=0.5,
         )
 
         # do training
@@ -581,7 +599,6 @@ class BasicNetMask(nn.Module):
 
                 # generate masks
                 batch_loss = 0
-
 
                 masks = generate_masks(X_next, self.mask_dis)
                 masks = self._check_tensor(masks)
@@ -625,7 +642,7 @@ class BasicNetMask(nn.Module):
                         if val_loss_best > val_loss:
                             val_loss_best = val_loss
                             patience = 0
-                            #best_model = deepcopy(self.model)
+                            # best_model = deepcopy(self.model)
                         else:
                             patience += 1
 
@@ -640,17 +657,18 @@ class BasicNetMask(nn.Module):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
-        #restore_parameters(self.model, best_model)
+        # restore_parameters(self.model, best_model)
 
         return self
+
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
             return X.to(self.device)
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
 
-class BasicNetMask0(BasicNetMask):
 
+class BasicNetMask0(BasicNetMask):
     def fit(
         self, X: torch.Tensor, y: torch.Tensor, weight: Optional[torch.Tensor] = None
     ) -> "BasicNetMask0":
@@ -672,10 +690,10 @@ class BasicNetMask0(BasicNetMask):
 
         scheduler = ReduceLROnPlateau(
             self.optimizer,
-            patience=self.patience//2,
-            mode='min',
+            patience=self.patience // 2,
+            mode="min",
             min_lr=1e-5,
-            factor = 0.5
+            factor=0.5,
         )
 
         # do training
@@ -750,11 +768,10 @@ class BasicNetMask0(BasicNetMask):
                             f"[{self.name}] Epoch: {i}, current {val_string} loss: {val_loss}, train_loss: {torch.mean(train_loss)}"
                         )
 
-        #restore_parameters(self.model, best_model)
+        # restore_parameters(self.model, best_model)
         return self
 
-
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
         M = torch.zeros(X.size())
         M = self._check_tensor(M)
 
@@ -764,7 +781,7 @@ class BasicNetMask0(BasicNetMask):
 
 
 class BasicNetMask1(BasicNetMask):
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
         M = torch.ones(X.size())
         M = self._check_tensor(M)
 
@@ -772,8 +789,9 @@ class BasicNetMask1(BasicNetMask):
 
         return self.model(out)
 
+
 class BasicNetMaskHalf(BasicNetMask):
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
 
         out = X * M
 
@@ -786,6 +804,7 @@ class MaskingModel(nn.Module):
     X * M = X_s
 
     """
+
     def __init__(
         self,
         n_unit_in: int,
@@ -793,17 +812,16 @@ class MaskingModel(nn.Module):
         n_units: int = DEFAULT_UNITS_R,
         n_iter: int = DEFAULT_N_ITER,
         batch_size: int = DEFAULT_BATCH_SIZE,
-        lr:int = 1e-2,
+        lr: int = 1e-2,
         weight_decay: int = DEFAULT_PENALTY_L2,
         nonlin: str = DEFAULT_NONLIN,
         mask_dis: str = "Uniform",
         device: str = "cpu",
         batch_norm: bool = True,
-        early_stopping: bool =False,
+        early_stopping: bool = False,
         n_iter_min: int = DEFAULT_N_ITER_MIN,
-        n_iter_print: int = DEFAULT_N_ITER_PRINT
-
-        ) -> None:
+        n_iter_print: int = DEFAULT_N_ITER_PRINT,
+    ) -> None:
         super(MaskingModel, self).__init__()
 
         self.device = device
@@ -823,7 +841,11 @@ class MaskingModel(nn.Module):
         NL = NONLIN[nonlin]
 
         if batch_norm:
-            encoder_layers = [nn.Linear(n_unit_in, n_units), nn.BatchNorm1d(n_units), NL()]
+            encoder_layers = [
+                nn.Linear(n_unit_in, n_units),
+                nn.BatchNorm1d(n_units),
+                NL(),
+            ]
         else:
             encoder_layers = [nn.Linear(n_unit_in, n_units)]
 
@@ -831,33 +853,32 @@ class MaskingModel(nn.Module):
         for i in range(n_layers - 1):
             if batch_norm:
                 encoder_layers.extend(
-                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units),NL()]
+                    [nn.Linear(n_units, n_units), nn.BatchNorm1d(n_units), NL()]
                 )
             else:
-                encoder_layers.extend([nn.Linear(n_units, n_units),NL()])
-
+                encoder_layers.extend([nn.Linear(n_units, n_units), NL()])
 
         self.encoder = nn.Sequential(*encoder_layers).to(self.device)
 
         self.mask_predictor = nn.Sequential(
-            *[nn.Linear(n_units, n_unit_in),
-            nn.Sigmoid()]
+            *[nn.Linear(n_units, n_unit_in), nn.Sigmoid()]
         ).to(self.device)
 
         self.feature_predictor = nn.Sequential(
-            *[nn.Linear(n_units, n_unit_in),
-               NL()]
+            *[nn.Linear(n_units, n_unit_in), NL()]
         ).to(self.device)
 
-        self.parameters = list(self.encoder.parameters())\
-                        + list(self.mask_predictor.parameters())\
-                         +list(self.feature_predictor.parameters())
+        self.parameters = (
+            list(self.encoder.parameters())
+            + list(self.mask_predictor.parameters())
+            + list(self.feature_predictor.parameters())
+        )
 
         self.optimizer = torch.optim.Adam(
             self.parameters, lr=lr, weight_decay=weight_decay
         )
 
-    def forward(self, X:torch.Tensor, M: torch.Tensor):
+    def forward(self, X: torch.Tensor, M: torch.Tensor):
 
         X = self._check_tensor(X)
         M = self._check_tensor(M)
@@ -891,10 +912,10 @@ class MaskingModel(nn.Module):
 
         scheduler = ReduceLROnPlateau(
             self.optimizer,
-            patience=self.patience//2,
-            mode='min',
+            patience=self.patience // 2,
+            mode="min",
             min_lr=1e-5,
-            factor = 0.5
+            factor=0.5,
         )
 
         # do training
@@ -929,7 +950,9 @@ class MaskingModel(nn.Module):
 
                 # import ipdb; ipdb.set_trace()
 
-                batch_loss = self.alpha*feature_loss(pred_features, X_next) + mask_loss(pred_masks, mask_label )
+                batch_loss = self.alpha * feature_loss(
+                    pred_features, X_next
+                ) + mask_loss(pred_masks, mask_label)
 
                 batch_loss.backward()
                 self.optimizer.step()
@@ -952,9 +975,13 @@ class MaskingModel(nn.Module):
                     pred_features, pred_masks, mask_label = self.forward(X_val, masks)
                     if i == 900:
 
-                        import ipdb; ipdb.set_trace()
+                        import ipdb
 
-                    val_loss = self.alpha*feature_loss(pred_features, X_val) + mask_loss( pred_masks, mask_label)
+                        ipdb.set_trace()
+
+                    val_loss = self.alpha * feature_loss(
+                        pred_features, X_val
+                    ) + mask_loss(pred_masks, mask_label)
 
                     scheduler.step(val_loss)
 
@@ -977,13 +1004,11 @@ class MaskingModel(nn.Module):
         # restore_parameters(self.model, best_model)
         return self
 
-
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
         if isinstance(X, torch.Tensor):
             return X.to(self.device)
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device).float()
-
 
 
 class RepresentationNet(nn.Module):
@@ -1188,7 +1213,7 @@ class PropensityNet(nn.Module):
     ) -> torch.Tensor:
 
         if X.size()[0] == 1:
-            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:,1]
+            p_pred = torch.reshape(self.forward(X).squeeze(), (1, -1))[:, 1]
         else:
             p_pred = self.forward(X).squeeze()[:, 1]
 
@@ -1205,7 +1230,7 @@ class PropensityNet(nn.Module):
 
         # get validation split (can be none)
         X, y, X_val, y_val, val_string = make_val_split(
-            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device = self.device
+            X, y, val_split_prop=self.val_split_prop, seed=self.seed, device=self.device
         )
         y_val = y_val.squeeze()
         n = X.shape[0]  # could be different from before due to split
@@ -1277,9 +1302,9 @@ class PropensityNet(nn.Module):
         else:
             return torch.from_numpy(np.asarray(X)).to(self.device)
 
-class PropensityNetMask(PropensityNet):
 
-    def forward(self, X: torch.Tensor, M:torch.Tensor) -> torch.Tensor:
+class PropensityNetMask(PropensityNet):
+    def forward(self, X: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
 
         out = X * M
         out = torch.cat([out, M], dim=1)
@@ -1296,7 +1321,7 @@ class PropensityNetMask(PropensityNet):
         if X.size()[0] != 1:
             p_pred = self.forward(X, M).squeeze()[:, 1]
         else:
-            p_pred = torch.reshape(self.forward(X, M).squeeze(), (1, -1))[:,1]
+            p_pred = torch.reshape(self.forward(X, M).squeeze(), (1, -1))[:, 1]
 
         return compute_importance_weights(p_pred, w, self.weighting_strategy, {})
 
@@ -1322,11 +1347,13 @@ class PropensityNetMask(PropensityNet):
         val_loss_best = LARGE_VAL
         patience = 0
         best_model = None
-        scheduler = ReduceLROnPlateau(self.optimizer,
-                                        patience=self.patience//2,
-                                         mode='min',
-                                         min_lr=1e-5,
-                                         factor = 0.5)
+        scheduler = ReduceLROnPlateau(
+            self.optimizer,
+            patience=self.patience // 2,
+            mode="min",
+            min_lr=1e-5,
+            factor=0.5,
+        )
 
         for i in range(self.n_iter):
             # shuffle data for minibatches
@@ -1346,7 +1373,7 @@ class PropensityNetMask(PropensityNet):
                 masks = generate_masks(X_next)
                 masks = self._check_tensor(masks)
 
-                preds = self.forward(X_next,masks).squeeze()
+                preds = self.forward(X_next, masks).squeeze()
 
                 batch_loss = self.loss(preds, y_next)
 
@@ -1363,7 +1390,7 @@ class PropensityNetMask(PropensityNet):
                 with torch.no_grad():
                     masks = torch.ones(X_val.size())
                     masks = self._check_tensor(masks)
-                    preds = self.forward(X_val,masks).squeeze()
+                    preds = self.forward(X_val, masks).squeeze()
                     val_loss = self.loss(preds, y_val)
                     scheduler.step(val_loss)
 

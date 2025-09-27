@@ -1,25 +1,26 @@
 import numpy as np
-from shapreg import utils, games, stochastic_games
+from shapreg import games, stochastic_games, utils
 from tqdm.auto import tqdm
 
 
-def ShapleySampling(game,
-                    batch_size=512,
-                    detect_convergence=True,
-                    thresh=0.01,
-                    n_samples=None,
-                    antithetical=False,
-                    return_all=False,
-                    bar=True,
-                    verbose=False):
+def ShapleySampling(
+    game,
+    batch_size=512,
+    detect_convergence=True,
+    thresh=0.01,
+    n_samples=None,
+    antithetical=False,
+    return_all=False,
+    bar=True,
+    verbose=False,
+):
     # Verify arguments.
     if isinstance(game, games.CooperativeGame):
         stochastic = False
     elif isinstance(game, stochastic_games.StochasticCooperativeGame):
         stochastic = True
     else:
-        raise ValueError('game must be CooperativeGame or '
-                         'StochasticCooperativeGame')
+        raise ValueError("game must be CooperativeGame or " "StochasticCooperativeGame")
 
     # Possibly force convergence detection.
     if n_samples is None:
@@ -27,7 +28,7 @@ def ShapleySampling(game,
         if not detect_convergence:
             detect_convergence = True
             if verbose:
-                print('Turning convergence detection on')
+                print("Turning convergence detection on")
 
     if detect_convergence:
         assert 0 < thresh < 1
@@ -69,9 +70,9 @@ def ShapleySampling(game,
     # Begin sampling.
     for it in range(n_loops):
         for i in range(batch_size):
-            
+
             ###  TODOs: modify antithetical with propensity threshold alpha
-            
+
             if antithetical and i % 2 == 1:
                 permutations[i] = permutations[i - 1][::-1]
                 print(permutations[i])
@@ -88,7 +89,7 @@ def ShapleySampling(game,
         prev_value = null
         for i in range(num_players):
             S[arange, permutations[:, i]] = 1
-            
+
             if stochastic:
                 next_value = game(S, U)
             else:
@@ -107,21 +108,20 @@ def ShapleySampling(game,
         # Calculate progress.
         var = sum_squares / (n ** 2)
         std = np.sqrt(var)
-        ratio = np.max(
-            np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
+        ratio = np.max(np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
 
         # Print progress message.
         if verbose:
             if detect_convergence:
-                print(f'StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})')
+                print(f"StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})")
             else:
-                print(f'StdDev Ratio = {ratio:.4f}')
+                print(f"StdDev Ratio = {ratio:.4f}")
 
         # Check for convergence.
         if detect_convergence:
             if ratio < thresh:
                 if verbose:
-                    print('Detected convergence')
+                    print("Detected convergence")
 
                 # Skip bar ahead.
                 if bar:
@@ -149,35 +149,33 @@ def ShapleySampling(game,
     if return_all:
         # Dictionary for progress tracking.
         iters = (np.arange(it + 1) + 1) * batch_size * num_players
-        tracking_dict = {
-            'values': val_list,
-            'std': std_list,
-            'iters': iters}
+        tracking_dict = {"values": val_list, "std": std_list, "iters": iters}
         if detect_convergence:
-            tracking_dict['N_est'] = N_list
+            tracking_dict["N_est"] = N_list
 
         return utils.ShapleyValues(values, std), tracking_dict
     else:
         return utils.ShapleyValues(values, std)
 
 
-def ShapleyPSSampling(game,
-                    batch_size=512,
-                    detect_convergence=True,
-                    thresh=0.01,
-                    n_samples=None,
-                    antithetical=False,
-                    return_all=False,
-                    bar=True,
-                    verbose=False):
+def ShapleyPSSampling(
+    game,
+    batch_size=512,
+    detect_convergence=True,
+    thresh=0.01,
+    n_samples=None,
+    antithetical=False,
+    return_all=False,
+    bar=True,
+    verbose=False,
+):
     # Verify arguments.
     if isinstance(game, games.CooperativeGame):
         stochastic = False
     elif isinstance(game, stochastic_games.StochasticCooperativeGame):
         stochastic = True
     else:
-        raise ValueError('game must be CooperativeGame or '
-                         'StochasticCooperativeGame')
+        raise ValueError("game must be CooperativeGame or " "StochasticCooperativeGame")
 
     # Possibly force convergence detection.
     if n_samples is None:
@@ -185,7 +183,7 @@ def ShapleyPSSampling(game,
         if not detect_convergence:
             detect_convergence = True
             if verbose:
-                print('Turning convergence detection on')
+                print("Turning convergence detection on")
 
     if detect_convergence:
         assert 0 < thresh < 1
@@ -227,9 +225,9 @@ def ShapleyPSSampling(game,
     # Begin sampling.
     for it in range(n_loops):
         for i in range(batch_size):
-            
+
             ###  TODOs: modify antithetical with propensity threshold alpha
-            
+
             if antithetical and i % 2 == 1:
                 permutations[i] = permutations[i - 1][::-1]
             else:
@@ -261,21 +259,20 @@ def ShapleyPSSampling(game,
         # Calculate progress.
         var = sum_squares / (n ** 2)
         std = np.sqrt(var)
-        ratio = np.max(
-            np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
+        ratio = np.max(np.max(std, axis=0) / (values.max(axis=0) - values.min(axis=0)))
 
         # Print progress message.
         if verbose:
             if detect_convergence:
-                print(f'StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})')
+                print(f"StdDev Ratio = {ratio:.4f} (Converge at {thresh:.4f})")
             else:
-                print(f'StdDev Ratio = {ratio:.4f}')
+                print(f"StdDev Ratio = {ratio:.4f}")
 
         # Check for convergence.
         if detect_convergence:
             if ratio < thresh:
                 if verbose:
-                    print('Detected convergence')
+                    print("Detected convergence")
 
                 # Skip bar ahead.
                 if bar:
@@ -303,12 +300,9 @@ def ShapleyPSSampling(game,
     if return_all:
         # Dictionary for progress tracking.
         iters = (np.arange(it + 1) + 1) * batch_size * num_players
-        tracking_dict = {
-            'values': val_list,
-            'std': std_list,
-            'iters': iters}
+        tracking_dict = {"values": val_list, "std": std_list, "iters": iters}
         if detect_convergence:
-            tracking_dict['N_est'] = N_list
+            tracking_dict["N_est"] = N_list
 
         return utils.ShapleyValues(values, std), tracking_dict
     else:

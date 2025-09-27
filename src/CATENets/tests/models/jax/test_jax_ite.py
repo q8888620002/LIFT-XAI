@@ -1,7 +1,6 @@
 from copy import deepcopy
 
 import pytest
-
 from catenets.datasets import load
 from catenets.experiment_utils.tester import evaluate_treatments_model
 from catenets.models.jax import FLEXTE_NAME, OFFSET_NAME, FlexTENet, OffsetNet

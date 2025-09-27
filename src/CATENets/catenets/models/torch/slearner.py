@@ -101,7 +101,7 @@ class SLearner(BaseCATEEstimator):
                 "slearner_po_estimator",
                 n_unit_in + 1,
                 binary_y=binary_y,
-                device = device,
+                device=device,
                 n_layers_out=n_layers_out,
                 n_units_out=n_units_out,
                 weight_decay=weight_decay,
