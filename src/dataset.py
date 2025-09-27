@@ -622,9 +622,18 @@ class Dataset:
     def get_unnorm_value(
             self,
             x: np.ndarray
-        )-> np.ndarray:
+        ) -> np.ndarray:
+        """Returns the unnormalized (inverse-transformed) values of all features except treatment and outcome."""
+        # Create a copy of x to avoid modifying the original array
+        
+        x_copy = x.copy()
+        print(x_copy.shape)
+        # Apply inverse transform only on continuous variables
+        x_copy[:, self.continuous_indices] = self.scaler.inverse_transform(x_copy[:, self.continuous_indices])
+        print(x_copy.shape)
+        # Exclude treatment and outcome indices
+        return x_copy[:]
 
-        return self.scaler.inverse_transform(x[:, self.continuous_indices])
 
     def get_norm(
             self,

@@ -12,7 +12,7 @@ import src.CATENets.catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_
 from src.dataset import Dataset
 
 DEVICE = "cuda:1"
-
+os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
 
 def compute_shap_values(model, data_sample, data_baseline):
     """Function for shapley value sampling"""
@@ -31,6 +31,16 @@ def compute_shap_values(model, data_sample, data_baseline):
     )
     return shap_values
 
+def compute_shap_similarity(shap_values_1, shap_values_2):
+    """Compute multiple similarity metrics for SHAP values."""
+
+    shap_values_1 = shap_values_1.flatten()
+    shap_values_2 = shap_values_2.flatten()
+
+    # Cosine Similarity
+    cosine_sim = np.dot(shap_values_1, shap_values_2) / (np.linalg.norm(shap_values_1) * np.linalg.norm(shap_values_2) + 1e-8)
+
+    return cosine_sim
 
 def parse_args():
     """Parser for arguments"""
@@ -128,7 +138,7 @@ def main(args):
             model.predict(X=x_train).detach().cpu().numpy().flatten()
         )
 
-        if args.baseline:
+        if not args.baseline:
             baseline = np.median(x_sampled, 0)
 
             for _, idx_lst in dataset.discrete_indices.items():
@@ -137,8 +147,9 @@ def main(args):
                     baseline[idx_lst] = 0.5
                 else:
                     # setting categorical baseline to 1/n
-                    category_counts = x_sampled[:, idx_lst].sum(axis=0)
-                    baseline[idx_lst] = category_counts / category_counts.sum()
+                    # category_counts = x_sampled[:, idx_lst].sum(axis=0)
+                    # baseline[idx_lst] = category_counts / category_counts.sum()
+                    baseline[idx_lst] = 1 / len(idx_lst)
         else:
             baseline_index = np.random.choice(len(x_train), 1)
             baseline = x_train[baseline_index]
@@ -155,19 +166,22 @@ def main(args):
         mean_shap_values = np.mean(shap_values_array, axis=0)
 
         # Compute relative change in mean local SHAP explanations
-        if i > 0:
+        if i > 5:
             prev_mean_shap_values = np.mean(np.array(cohort_shap_values[:-1]), axis=0)
             relative_change = np.abs(mean_shap_values - prev_mean_shap_values) / (
                 np.abs(prev_mean_shap_values) + 1e-8
             )
             avg_relative_change = np.mean(relative_change)
 
+            cosine_sim = compute_shap_similarity(mean_shap_values, prev_mean_shap_values)
+
             if args.wandb:
-                wandb.log({"Trials": i + 1, "Relative Change": avg_relative_change})
+                wandb.log({"Trials": i + 1, "Relative Change": avg_relative_change, "cosine sim": cosine_sim})
 
             print(
                 f"Trial {i+1}: Average Relative Change in Mean Local SHAP Explanations"
                 f" = {avg_relative_change:.6f}"
+                f" cosine sim: {cosine_sim}"
             )
 
             if avg_relative_change < args.relative_change_threshold:
