@@ -122,15 +122,24 @@ def ablate(
     # Explicand to modify
     explicand = np.copy(x_explic)
 
-    # # Initialize ablated predictions
-    if model_type == "CATENets":
-        model = lambda x: model.predict(X=x)
-    elif model_type == "CausalForest":
-        model = lambda x: model.effect(X=x)
-    else:
-        model = lambda x: model.forward(X=x)
-
-    ablated_preds = [model(explicand).detach().cpu().numpy().mean()]
+    def predict_fn(X: np.ndarray) -> np.ndarray:
+        if model_type == "CausalForest":
+            out = model.effect(X=X)                       # np.ndarray shape (n,)
+            return np.asarray(out).reshape(-1)
+        elif model_type == "CATENets":
+            # CATENets .predict accepts numpy and returns torch.Tensor
+            out = model.predict(X=X)
+        else:  # "Torch" or custom forward
+            # ensure torch tensor input
+            X_t = torch.as_tensor(X, dtype=torch.float32)
+            out = model.forward(X=X_t)
+        # normalize torch -> numpy
+        if isinstance(out, torch.Tensor):
+            out = out.detach().cpu().numpy()
+        return np.asarray(out).reshape(-1)
+    
+    base_mean = predict_fn(explicand).mean()
+    ablated_preds = [float(base_mean)]
 
     # Ablate features one by one
     for i in range(explicand.shape[1]):
@@ -146,7 +155,7 @@ def ablate(
         ]  # Update mask based on condition
         explicand[samples, top_feat] = mask_val  # Mask top features
 
-        avg_pred = model(explicand).detach().cpu().numpy().mean()
+        avg_pred = predict_fn(explicand).mean()
         ablated_preds.append(avg_pred)  # Get prediction on ablated explicand
 
     # Return ablated predictions
@@ -272,7 +281,6 @@ def insertion_deletion(
     insertion_results = {
         selection_type: np.zeros(d + 1) for selection_type in selection_types
     }
-
     for rank_index in range(len(rank_indices) + 1):
         # Skip this on the first iteration
 

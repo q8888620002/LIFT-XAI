@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader, TensorDataset, random_split
 
 import src.CATENets.catenets.models as cate_models
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
+from src.permucate.learners import CateNet, CausalForest, DRLearner
 
 
 class TwoLayerMLP(nn.Module):
@@ -244,6 +245,8 @@ def init_model(x_train, y_train, model_type, device):
             nonlin="relu",
             device=device,
         ),
+        "CausalForest": CausalForest()
+
     }
 
     return models[model_type]

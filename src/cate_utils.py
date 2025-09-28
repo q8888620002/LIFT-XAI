@@ -11,6 +11,10 @@ from sklift.metrics import (
     uplift_auc_score,
     weighted_average_uplift,
 )
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklift.metrics import qini_auc_score
 
 from src.model_utils import NuisanceFunctions, TwoLayerMLP, init_model
 
@@ -86,63 +90,60 @@ def subgroup_identification(
 
     return ate, auroc, mse
 
+def _predict_teacher(est, X, model_type):
+    if model_type == "CausalForest":
+        y = est.effect(X=X)
+    elif model_type == "CATENets":
+        y = est.predict(X=X)
+    else:
+        X_t = torch.as_tensor(X, dtype=torch.float32)
+        y = est.forward(X=X_t)
+    return (y.detach().cpu().numpy() if isinstance(y, torch.Tensor) else np.asarray(y)).reshape(-1)
+
 
 def qini_score(
     col_indices: np.ndarray,
     train_data: tuple,
     test_data: tuple,
-    pre_trained_cate: torch.nn.Module,
+    teacher,
     model_type: str,
-) -> tuple:
-
+):
     """
-    Function for calculating evaluationg metrics for student model.
-
-    args:
-        rank_indices: global ranking of features
-        train_data: training data
-        test_data: testing data
-        pre_trained_cate: trained CATE model.
-        model_type: types of CATE model
-    return:
-        qini score: AUROC for qini curve
-        mse: mean squared error for student model vs teacher model
-
+    Distill teacher CATE onto top-k features and return:
+      train_qini, test_qini, train_mse (student vs teacher), test_mse (student vs teacher)
     """
-    x_train, w_train, y_train = train_data
-    x_test, w_test, y_test = test_data
+    x_tr, w_tr, y_tr = train_data
+    x_te, w_te, y_te = test_data
+    p = x_te.shape[1]
 
-    test_effects = pre_trained_cate.predict(X=x_test).detach().cpu().numpy()
-    train_effects = pre_trained_cate.predict(X=x_train).detach().cpu().numpy()
+    idx = np.asarray(col_indices, dtype=int).ravel()
+    if idx.size == 0 or idx.min() < 0 or idx.max() >= p:
+        raise ValueError(f"Invalid feature indices: {idx}")
 
-    # init a student model
-    model = init_model(
-        x_train[:, col_indices], y_train, model_type, pre_trained_cate.device
-    )
+    # 1) Teacher targets (fixed)
+    tau_tr = _predict_teacher(teacher, x_tr, model_type)
+    tau_te = _predict_teacher(teacher, x_te, model_type)
 
-    ## Subgroup identification with global feature ranking
-    assert (
-        len(col_indices) <= x_test.shape[1]
-    ), " global rank indices don't match with testing dimension"
+    # 2) Student: Ridge regression on teacher targets (no w_tr / y_tr)
+    student = make_pipeline(
+        StandardScaler(with_mean=True, with_std=True),
+        Ridge(alpha=1e-2, fit_intercept=True, random_state=0))
+    Xtr_k, Xte_k = x_tr[:, idx], x_te[:, idx]
+    student.fit(Xtr_k, tau_tr)
 
-    model.fit(x_train[:, col_indices], y_train, w_train)
+    # 3) Student predictions
+    pred_tr = student.predict(Xtr_k)
+    pred_te = student.predict(Xte_k)
 
-    pred_train_cate = model.predict(X=x_train[:, col_indices]).detach().cpu().numpy()
-    pred_test_cate = model.predict(X=x_test[:, col_indices]).detach().cpu().numpy()
+    # 4) Distillation loss (MSE to teacher)
+    train_mse = float(np.mean((pred_tr - tau_tr) ** 2))
+    test_mse  = float(np.mean((pred_te - tau_te) ** 2))
 
-    train_mse = np.mean((pred_train_cate - train_effects) ** 2)
-    test_mse = np.mean((pred_test_cate - test_effects) ** 2)
+    # 5) Qini (use student uplift as prediction)
+    train_qini = qini_auc_score(y_true=y_tr, uplift=pred_tr, treatment=w_tr)
+    test_qini  = qini_auc_score(y_true=y_te, uplift=pred_te, treatment=w_te)
 
-    # Calculate qini score
-
-    train_score = qini_auc_score(
-        y_true=y_train, uplift=pred_train_cate.flatten(), treatment=w_train
-    )
-    test_score = qini_auc_score(
-        y_true=y_test, uplift=pred_test_cate.flatten(), treatment=w_test
-    )
-
-    return train_score, test_score, train_mse, test_mse
+    return train_qini, test_qini, train_mse, test_mse
 
 
 def qini_score_cal(treatment, outcome, pred_outcome):

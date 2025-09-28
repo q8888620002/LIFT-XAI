@@ -267,7 +267,11 @@ class Explainer:
                 test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)
-
+        
+        def dummy_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            """dummy function, returns zero tensor"""
+            return torch.zeros((x_test.size()))
+        
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
             "integrated_gradients": integrated_gradients_cbk,
@@ -284,6 +288,8 @@ class Explainer:
             "explain_with_missingness": explain_with_missingness_cbk,
             "marginal_shap": marginal_shap_cbk,
             "saliency": saliency_cpk,
+            "loco": dummy_cbk,
+            "permucate": dummy_cbk,
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:

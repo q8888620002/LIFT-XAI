@@ -53,7 +53,7 @@ def compute_r_risk(
             :, np.argwhere(model_pi.classes_ == 1.0).ravel()[0]
         ]
 
-    tau_hat = cate_estimator.effect(df_test[x_cols].values)
+    tau_hat = cate_estimator.predict(df_test[x_cols].values).detach().cpu().numpy().flatten()
     r_risk = np.array((df_test["y"] - m_hat) - (df_test["a"] - pi_hat) * tau_hat) ** 2
 
     return r_risk
@@ -83,7 +83,7 @@ def compute_tau_risk(
     if tau_true is None:
         tau_true = df_test["tau"]
 
-    tau_hat = cate_estimator.effect(df_test[x_cols].values)
+    tau_hat = cate_estimator.predict(df_test[x_cols].values).detach().cpu().numpy().flatten()
     tau_risk = np.array(tau_true - tau_hat) ** 2
     return tau_risk
 
@@ -158,6 +158,6 @@ def compute_pseudo_outcome_risk(
         )
 
     risk = (
-        np.array(pseudo_outcomes - cate_estimator.effect(df_test[x_cols].values)) ** 2
+        np.array(pseudo_outcomes - cate_estimator.predict(df_test[x_cols].values)) ** 2
     )
     return risk

@@ -17,6 +17,7 @@ from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.dataset import Dataset
 from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
+from src.permucate.importance import compute_variable_importance
 from src.utils import ablate, attribution_ranking, insertion_deletion
 
 if __name__ == "__main__":
@@ -72,15 +73,19 @@ if __name__ == "__main__":
     feature_size = x_train.shape[1]
 
     explainers = [
+        ## Global methods
+        "loco",
+        "permucate"
+        ## Local methods
         # "saliency",
         # "smooth_grad",
         # "gradient_shap",
         # "lime",
         # "baseline_lime",
-        "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling",
-        "integrated_gradients",
-        "baseline_integrated_gradients",
+        # "baseline_shapley_value_sampling",
+        # "marginal_shapley_value_sampling",
+        # "integrated_gradients",
+        # "baseline_integrated_gradients",
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -278,6 +283,44 @@ if __name__ == "__main__":
             x_test, w_test, y_test
         )
 
+        for global_att in explainers:
+            if global_att in ["loco", "permucate"]:
+                # Calculate feature importance with LOCO or PermuCate
+                x_cols = [f"x{j}" for j in range(feature_size)]
+                df_train = pd.DataFrame(x_train, columns=x_cols)
+                df_train["y"] = y_train
+                df_train["a"] = w_train
+                df_test = pd.DataFrame(x_test, columns=x_cols)
+                df_test["y"] = y_test
+                df_test["a"] = w_test
+
+                pi_hat = nuisance_functions.predict_propensity(x_test)
+                mu0_hat = nuisance_functions.predict_mu_0(x_test)
+                mu1_hat = nuisance_functions.predict_mu_1(x_test)
+                m_hat = pi_hat * mu1_hat + (1 - pi_hat) * mu0_hat
+
+                vim = compute_variable_importance(
+                    df_train=df_train,
+                    df_test=df_test,
+                    importance_estimator=model,
+                    fitted_learner=model,
+                    learner_type=learner,
+                    method=global_att,
+                    scoring="r_risk",
+                    x_cols=x_cols,
+                    scoring_params=dict(
+                        m_hat=m_hat, pi_hat=pi_hat, mu_0_hat=mu0_hat, mu_1_hat=mu1_hat
+                    ),
+                    device=DEVICE,
+                )
+                # Store importance results in learner_explanations
+                if global_att == "permucate":
+                    # mean over permutations (d, p, n) -> (n, d)
+                    learner_explanations[learner][global_att] = vim.T.mean(1)
+                else:
+                    # (d, n) -> (n, d)
+                    learner_explanations[learner][global_att] = vim.T
+
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
         for explainer_name in explainers:
@@ -294,12 +337,16 @@ if __name__ == "__main__":
 
             # obtaining global & local ranking for insertion & deletion
 
-            abs_explanation = np.abs(learner_explanations[learner][explainer_name])
-
-            local_rank = attribution_ranking(
-                learner_explanations[learner][explainer_name]
-            )
-            global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
+            if explainer_name == "permucate":
+                exp = learner_explanations[learner][explainer_name]
+                local_rank = attribution_ranking(exp)
+                global_rank = np.flip(np.argsort(np.abs(exp.mean(0))))
+            else:
+                abs_explanation = np.abs(learner_explanations[learner][explainer_name])
+                local_rank = attribution_ranking(
+                    learner_explanations[learner][explainer_name]
+                )
+                global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
             if zero_baseline:
                 baseline = np.zeros(baseline.shape)

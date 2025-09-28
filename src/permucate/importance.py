@@ -15,13 +15,15 @@ from src.permucate.scoring import (
     compute_tau_risk,
 )
 from src.permucate.utils import get_learner, get_nuisances_models
-
+from src.cate_utils import init_model
+from src.CATENets.catenets.models.torch.pseudo_outcome_nets import PseudoOutcomeLearner
 
 def joblib_compute_conditional_one(
     df_train: pd.DataFrame,
     df_test: pd.DataFrame,
     col_idx: int,
     fitted_learner,
+    learner_type: str,
     importance_estimator,
     n_perm: int,
     random_state: int = 0,
@@ -31,6 +33,7 @@ def joblib_compute_conditional_one(
     score_ref=None,
     verbose: bool = False,
     groups=None,
+    device: str = "cpu",
 ):
     """Compute a single permucate score for a given column index.
 
@@ -72,15 +75,29 @@ def joblib_compute_conditional_one(
     # Predict the dependency of X_j on X_minus_j and compute the residuals
     if isinstance(importance_estimator, list):
         importance_estimator_ = importance_estimator[col_idx]
+        importance_estimator_.fit(X_minus_j_train, X_j_train)
+
+    elif isinstance(importance_estimator, PseudoOutcomeLearner):
+        # Re-fit the entire CATE estimator without the j-th feature
+        importance_estimator_ = init_model(
+            X_minus_j_train, 
+            df_train["y"].values, 
+            learner_type, 
+            device
+        )
+        importance_estimator_.fit(
+            X_minus_j_train, df_train["y"].values, df_train["a"].values
+        )
     else:
         importance_estimator_ = clone(importance_estimator)
+        importance_estimator_.fit(X_minus_j_train, X_j_train)
+    
 
-    importance_estimator_.fit(X_minus_j_train, X_j_train)
     if hasattr(importance_estimator_, "classes_"):
         X_j_hat_test = importance_estimator_.predict_proba(X_minus_j_test)
         X_j_classes = importance_estimator_.classes_
     else:
-        X_j_hat_test = importance_estimator_.predict(X_minus_j_test)
+        X_j_hat_test = importance_estimator_.predict(X_minus_j_test).detach().cpu().numpy().flatten()
         residuals_j_test = X_j_test - X_j_hat_test
 
     # Predict the CATE with the reconstructed X_j after permuting the residuals
@@ -126,7 +143,6 @@ def joblib_compute_conditional_one(
 
         df_test_perm = df_test.copy()
         df_test_perm[x_cols] = X_perm
-
         risk_j = score_fn(
             cate_estimator=fitted_learner,
             df_test=df_test_perm,
@@ -224,12 +240,14 @@ def joblib_compute_loco_one(
     col_idx: int,
     importance_estimator,
     fitted_learner=None,
+    learner_type: str = "linear",
     x_cols: list = None,
     scoring_params: dict = dict(),
     score_fn=None,
     score_ref=None,
     verbose: bool = False,
     groups=None,
+    device: str = "cpu",
     **kwargs,
 ):
     out_dict = {}
@@ -251,6 +269,17 @@ def joblib_compute_loco_one(
         importance_estimator_j = clone(importance_estimator)
         importance_estimator_j.fit(
             X=X_minus_j_train, Y=df_train["y"].values, T=df_train["a"].values
+        )
+    elif isinstance(importance_estimator, PseudoOutcomeLearner):
+        # Re-fit the entire CATE estimator without the j-th feature
+        importance_estimator_j = init_model(
+            X_minus_j_train, 
+            df_train["y"].values, 
+            learner_type, 
+            device
+        )
+        importance_estimator_j.fit(
+            X_minus_j_train, df_train["y"].values, df_train["a"].values
         )
     else:
         # Hines style, only re-fit the final model
@@ -293,6 +322,7 @@ def compute_variable_importance(
     df_test: pd.DataFrame,
     importance_estimator,
     fitted_learner,
+    learner_type: str,
     scoring: str = "r_risk",
     x_cols: list = None,
     n_perm: int = 50,
@@ -303,6 +333,7 @@ def compute_variable_importance(
     verbose: bool = False,
     return_coefs: bool = False,
     groups=None,
+    device: str = "cpu",
 ):
     """
     Compute variable importance on the test set using the specified method.
@@ -375,6 +406,7 @@ def compute_variable_importance(
             col_idx=i,
             fitted_learner=fitted_learner,
             importance_estimator=importance_estimator,
+            learner_type=learner_type,
             n_perm=n_perm,
             random_state=random_state,
             x_cols=x_cols,
@@ -383,6 +415,7 @@ def compute_variable_importance(
             score_ref=score_ref,
             verbose=verbose,
             groups=groups,
+            device=device,
         )
         for i in bar
     ]
