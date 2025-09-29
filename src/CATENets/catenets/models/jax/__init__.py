@@ -3,20 +3,20 @@ JAX-based implementations for the CATE estimators.
 """
 from typing import Any
 
-from catenets.models.jax.disentangled_nets import SNet3
-from catenets.models.jax.flextenet import FlexTENet
-from catenets.models.jax.offsetnet import OffsetNet
-from catenets.models.jax.pseudo_outcome_nets import (
+from src.CATENets.catenets.models.jax.disentangled_nets import SNet3
+from src.CATENets.catenets.models.jax.flextenet import FlexTENet
+from src.CATENets.catenets.models.jax.offsetnet import OffsetNet
+from src.CATENets.catenets.models.jax.pseudo_outcome_nets import (
     DRNet,
     PseudoOutcomeNet,
     PWNet,
     RANet,
 )
-from catenets.models.jax.representation_nets import DragonNet, SNet1, SNet2, TARNet
-from catenets.models.jax.rnet import RNet
-from catenets.models.jax.snet import SNet
-from catenets.models.jax.tnet import TNet
-from catenets.models.jax.xnet import XNet
+from src.CATENets.catenets.models.jax.representation_nets import DragonNet, SNet1, SNet2, TARNet
+from src.CATENets.catenets.models.jax.rnet import RNet
+from src.CATENets.catenets.models.jax.snet import SNet
+from src.CATENets.catenets.models.jax.tnet import TNet
+from src.CATENets.catenets.models.jax.xnet import XNet
 
 SNET1_NAME = "SNet1"
 T_NAME = "TNet"

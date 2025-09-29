@@ -6,6 +6,7 @@ import argparse
 import collections
 import os
 import pickle
+import torch
 
 import numpy as np
 import pandas as pd
@@ -19,6 +20,31 @@ from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
 from src.permucate.importance import compute_variable_importance
 from src.utils import ablate, attribution_ranking, insertion_deletion
+
+
+
+class EnsembleTeacher:
+    def __init__(self, teachers, model_type):
+        self.teachers = teachers
+        self.model_type = model_type  # reuse your "learner" strings
+
+    def predict(self, X):
+        # mean CATE across teachers
+        outs = []
+        for t in self.teachers:
+            if self.model_type in ["SLearner", "TLearner", "TARNet", "CFRNet_0.01", "CFRNet_0.001", "DRLearner",
+                                   "XLearner", "RLearner", "RALearner"]:
+                y = t.predict(X=X)
+            else:
+                # fallback to torch forward/call if you add custom teachers
+                X_t = torch.as_tensor(X, dtype=torch.float32)
+                try:
+                    y = t(X_t)
+                except TypeError:
+                    y = t.forward(X_t)
+            y = y.detach().cpu().numpy() if isinstance(y, torch.Tensor) else np.asarray(y)
+            outs.append(y.reshape(-1))
+        return np.mean(np.vstack(outs), axis=0)
 
 if __name__ == "__main__":
 
@@ -75,16 +101,16 @@ if __name__ == "__main__":
     explainers = [
         ## Global methods
         "loco",
-        "permucate"
+        "permucate",
         ## Local methods
-        # "saliency",
-        # "smooth_grad",
+        "saliency",
+        "smooth_grad",
         # "gradient_shap",
-        # "lime",
+        "lime",
         # "baseline_lime",
-        # "baseline_shapley_value_sampling",
-        # "marginal_shapley_value_sampling",
-        # "integrated_gradients",
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling",
+        "integrated_gradients",
         # "baseline_integrated_gradients",
         # "kernel_shap"
         # "marginal_shap"
@@ -98,6 +124,7 @@ if __name__ == "__main__":
     results_test = np.zeros((trials, len(x_test)))
 
     data = Dataset(cohort_name, 0, True)
+    teachers = []
 
     for i in range(trials):
 
@@ -265,6 +292,7 @@ if __name__ == "__main__":
                 baseline[idx_lst] = 1 / len(idx_lst)
 
         model.fit(x_train, y_train, w_train)
+        teachers.append(model)
 
         results_train[i] = model.predict(X=x_train).detach().cpu().numpy().flatten()
         results_test[i] = model.predict(X=x_test).detach().cpu().numpy().flatten()
@@ -439,6 +467,51 @@ if __name__ == "__main__":
                 ]
             )
 
+        emsemble_distillation_data = []
+        ensemble_teacher = EnsembleTeacher(teachers, model_type="CATENets")
+
+        ensemble_train_score_results = []
+        ensemble_test_score_results = []
+        ensemble_train_mse_results = []
+        ensemble_test_mse_results = []
+
+        for m in explainers:
+            # 1) per-method global ranking
+            A = learner_explanations[learner][m]
+            # shape (n, d) for this method on this trial
+            global_rank_m = np.flip(np.argsort(np.abs(A).mean(0)))
+
+            # 2) distill to ensemble teacher using THIS method's rank
+            m_train_score, m_test_score = [], []
+            m_train_mse,   m_test_mse   = [], []
+
+            for k in range(1, feature_size + 1):
+                tr_sc, te_sc, tr_mse, te_mse = qini_score(
+                    global_rank_m[:k],
+                    (x_train, w_train, y_train),
+                    (x_test,  w_test,  y_test),
+                    teacher=ensemble_teacher,
+                    model_type="CATENets",
+                )
+                m_train_score.append(tr_sc)
+                m_test_score.append(te_sc)
+                m_train_mse.append(tr_mse)
+                m_test_mse.append(te_mse)
+
+
+            emsemble_distillation_data.append(
+                    [
+                        "EnsembleTeacherOverTrials",      # learner
+                        f"{m}|ensemble_teacher",          # method_name (tag with ensemble)
+                        m_train_score,                    # train_score_results
+                        m_train_mse,                      # train_mse_results
+                        m_test_score,                     # test_score_results
+                        m_test_mse,                       # test_mse_results
+                        [qini_score_cal(w_train, y_train, ensemble_teacher.predict(x_train))],
+                        [qini_score_cal(w_test,  y_test,  ensemble_teacher.predict(x_test))],
+                    ]
+                )
+
         with open(
             os.path.join(
                 f"results/{cohort_name}/",
@@ -447,6 +520,15 @@ if __name__ == "__main__":
             "wb",
         ) as output_file:
             pickle.dump(insertion_deletion_data, output_file)
+
+        with open(
+            os.path.join(
+                f"results/{cohort_name}/",
+                f"ensemble_shuffle_{shuffle}_{learner}_zero_baseline_{zero_baseline}_seed_{i}.pkl",
+            ),
+            "wb",
+        ) as output_file:
+            pickle.dump(emsemble_distillation_data, output_file)
 
         # Getting top n features
 

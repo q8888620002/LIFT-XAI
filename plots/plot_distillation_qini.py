@@ -42,7 +42,8 @@ def main():
     ap = argparse.ArgumentParser(
         description="Plot metric vs #features from insertion_deletion results."
     )
-    ap.add_argument("--results_root", required=True, help="e.g., results/ist3")
+    ap.add_argument("--results_root", default="results/", help="e.g., results")
+    ap.add_argument("--dataset", required=True, help="e.g., ist3")
     ap.add_argument("--learner", required=True, help="e.g., XLearner")
     ap.add_argument("--shuffle", default="True")
     ap.add_argument("--zero_baseline", default="True")
@@ -55,12 +56,13 @@ def main():
     ap.add_argument("--split", choices=["train", "test"], default="test")
     ap.add_argument("--metric", choices=["mse", "qini"], default="qini")
     ap.add_argument("--seeds", default="*", help="glob for seeds, e.g., 0 or *")
-    ap.add_argument("--out", default=None)
+    ap.add_argument("--out", default="plots/", help="Output directory")
     args = ap.parse_args()
 
     # collect all seed files
     pat = os.path.join(
         args.results_root,
+        args.dataset,
         f"insertion_deletion_shuffle_{args.shuffle}_{args.learner}_zero_baseline_{args.zero_baseline}_seed_{args.seeds}.pkl",
     )
     files = sorted(glob.glob(pat))
@@ -90,11 +92,13 @@ def main():
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    if args.out:
-        plt.savefig(args.out, dpi=150)
-    else:
-        plt.show()
 
+    file_name = f"distillation_qini_{args.dataset}_{args.learner}_shuffle_{args.shuffle}_zero_baseline_{args.zero_baseline}_{args.split}.png"
+    plt.savefig(
+        os.path.join(
+            args.out, file_name
+        ), dpi=150
+    )
 
 if __name__ == "__main__":
     main()
