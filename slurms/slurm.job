@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=distillation
+#SBATCH --job-name=distillation_baseline_false
 #SBATCH --account=efml
 #SBATCH --partition=gpu-a40
 #SBATCH --nodes=1
@@ -13,7 +13,7 @@
 #SBATCH --export=all
 #SBATCH --output=/gscratch/efml/mingyulu/Explain_CATE/slurms/logs/run-%A-%a.out
 #SBATCH --requeue
-#SBATCH --array=1-3
+#SBATCH --array=5-8
 
 PARAMS_FILE="/gscratch/efml/mingyulu/Explain_CATE/slurms/explain.txt"
 PARAMS="$(tail -n +${SLURM_ARRAY_TASK_ID} ${PARAMS_FILE} | head -n 1)"

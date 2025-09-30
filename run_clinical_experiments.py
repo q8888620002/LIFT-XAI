@@ -6,11 +6,12 @@ import argparse
 import collections
 import os
 import pickle
-import torch
 
 import numpy as np
 import pandas as pd
+import torch
 from scipy import stats
+from tqdm import tqdm
 
 import src.CATENets.catenets.models as cate_models
 from src.cate_utils import qini_score, qini_score_cal
@@ -22,8 +23,9 @@ from src.permucate.importance import compute_variable_importance
 from src.utils import ablate, attribution_ranking, insertion_deletion
 
 
-
 class EnsembleTeacher:
+    """Ensemble model for CATE"""
+
     def __init__(self, teachers, model_type):
         self.teachers = teachers
         self.model_type = model_type  # reuse your "learner" strings
@@ -32,8 +34,17 @@ class EnsembleTeacher:
         # mean CATE across teachers
         outs = []
         for t in self.teachers:
-            if self.model_type in ["SLearner", "TLearner", "TARNet", "CFRNet_0.01", "CFRNet_0.001", "DRLearner",
-                                   "XLearner", "RLearner", "RALearner"]:
+            if self.model_type in [
+                "SLearner",
+                "TLearner",
+                "TARNet",
+                "CFRNet_0.01",
+                "CFRNet_0.001",
+                "DRLearner",
+                "XLearner",
+                "RLearner",
+                "RALearner",
+            ]:
                 y = t.predict(X=X)
             else:
                 # fallback to torch forward/call if you add custom teachers
@@ -42,9 +53,14 @@ class EnsembleTeacher:
                     y = t(X_t)
                 except TypeError:
                     y = t.forward(X_t)
-            y = y.detach().cpu().numpy() if isinstance(y, torch.Tensor) else np.asarray(y)
+            y = (
+                y.detach().cpu().numpy()
+                if isinstance(y, torch.Tensor)
+                else np.asarray(y)
+            )
             outs.append(y.reshape(-1))
         return np.mean(np.vstack(outs), axis=0)
+
 
 if __name__ == "__main__":
 
@@ -99,19 +115,19 @@ if __name__ == "__main__":
     feature_size = x_train.shape[1]
 
     explainers = [
-        ## Global methods
+        # Global methods
         "loco",
         "permucate",
-        ## Local methods
+        # Local methods
         "saliency",
         "smooth_grad",
-        # "gradient_shap",
+        "gradient_shap",
         "lime",
-        # "baseline_lime",
+        "baseline_lime",
         "baseline_shapley_value_sampling",
         "marginal_shapley_value_sampling",
         "integrated_gradients",
-        # "baseline_integrated_gradients",
+        "baseline_integrated_gradients",
         # "kernel_shap"
         # "marginal_shap"
     ]
@@ -144,9 +160,12 @@ if __name__ == "__main__":
         #     len(x_test), size=len(x_test), replace=True
         # )
 
-        # x_train, y_train, w_train = x_train[train_indices], y_train[train_indices], w_train[train_indices]
-        # x_val, y_val, w_val = x_val[val_indices], y_val[val_indices], w_val[val_indices]
-        # x_test, y_test, w_test = x_test[test_indices], y_test[test_indices], w_test[test_indices]
+        # x_train, y_train, w_train = x_train[train_indices],
+        # y_train[train_indices], w_train[train_indices]
+        # x_val, y_val, w_val = x_val[val_indices],
+        # y_val[val_indices], w_val[val_indices]
+        # x_test, y_test, w_test = x_test[test_indices],
+        # y_test[test_indices], w_test[test_indices]
 
         models = {
             "XLearner": pseudo_outcome_nets.XLearner(
@@ -467,68 +486,19 @@ if __name__ == "__main__":
                 ]
             )
 
-        emsemble_distillation_data = []
-        ensemble_teacher = EnsembleTeacher(teachers, model_type="CATENets")
-
-        ensemble_train_score_results = []
-        ensemble_test_score_results = []
-        ensemble_train_mse_results = []
-        ensemble_test_mse_results = []
-
-        for m in explainers:
-            # 1) per-method global ranking
-            A = learner_explanations[learner][m]
-            # shape (n, d) for this method on this trial
-            global_rank_m = np.flip(np.argsort(np.abs(A).mean(0)))
-
-            # 2) distill to ensemble teacher using THIS method's rank
-            m_train_score, m_test_score = [], []
-            m_train_mse,   m_test_mse   = [], []
-
-            for k in range(1, feature_size + 1):
-                tr_sc, te_sc, tr_mse, te_mse = qini_score(
-                    global_rank_m[:k],
-                    (x_train, w_train, y_train),
-                    (x_test,  w_test,  y_test),
-                    teacher=ensemble_teacher,
-                    model_type="CATENets",
-                )
-                m_train_score.append(tr_sc)
-                m_test_score.append(te_sc)
-                m_train_mse.append(tr_mse)
-                m_test_mse.append(te_mse)
-
-
-            emsemble_distillation_data.append(
-                    [
-                        "EnsembleTeacherOverTrials",      # learner
-                        f"{m}|ensemble_teacher",          # method_name (tag with ensemble)
-                        m_train_score,                    # train_score_results
-                        m_train_mse,                      # train_mse_results
-                        m_test_score,                     # test_score_results
-                        m_test_mse,                       # test_mse_results
-                        [qini_score_cal(w_train, y_train, ensemble_teacher.predict(x_train))],
-                        [qini_score_cal(w_test,  y_test,  ensemble_teacher.predict(x_test))],
-                    ]
-                )
-
-        with open(
-            os.path.join(
-                f"results/{cohort_name}/",
-                f"insertion_deletion_shuffle_{shuffle}_{learner}_zero_baseline_{zero_baseline}_seed_{i}.pkl",
-            ),
-            "wb",
-        ) as output_file:
-            pickle.dump(insertion_deletion_data, output_file)
-
-        with open(
-            os.path.join(
-                f"results/{cohort_name}/",
-                f"ensemble_shuffle_{shuffle}_{learner}_zero_baseline_{zero_baseline}_seed_{i}.pkl",
-            ),
-            "wb",
-        ) as output_file:
-            pickle.dump(emsemble_distillation_data, output_file)
+            with open(
+                os.path.join(
+                    f"results/{cohort_name}/",
+                    (
+                        "insertion_deletion_shuffle_"
+                        f"{shuffle}_{learner}_"
+                        f"zero_baseline_{zero_baseline}_"
+                        f"seed_{i}.pkl"
+                    ),
+                ),
+                "wb",
+            ) as output_file:
+                pickle.dump(insertion_deletion_data, output_file)
 
         # Getting top n features
 
@@ -547,6 +517,63 @@ if __name__ == "__main__":
                     learner_explanations[learner][explainer_name][:, col],
                 )[0]
 
+    ensemble_distillation_data = []
+    ensemble_teacher = EnsembleTeacher(teachers, model_type="CATENets")
+
+    ensemble_train_score_results = []
+    ensemble_test_score_results = []
+    ensemble_train_mse_results = []
+    ensemble_test_mse_results = []
+
+    for m in explainers:
+        # 1) per-method global ranking
+        A = learner_explanations[learner][m]
+        # shape (n, d) for this method on this trial
+        global_rank_m = np.flip(np.argsort(np.abs(A).mean(0)))
+
+        # 2) distill to ensemble teacher using THIS method's rank
+        m_train_score, m_test_score = [], []
+        m_train_mse, m_test_mse = [], []
+
+        for k in tqdm(range(1, feature_size + 1)):
+            print(f"Computing distillation loss for ensemble with feature {k}")
+            tr_sc, te_sc, tr_mse, te_mse = qini_score(
+                global_rank_m[:k],
+                (x_train, w_train, y_train),
+                (x_test, w_test, y_test),
+                teacher=ensemble_teacher,
+                model_type="CATENets",
+            )
+            m_train_score.append(tr_sc)
+            m_test_score.append(te_sc)
+            m_train_mse.append(tr_mse)
+            m_test_mse.append(te_mse)
+
+        ensemble_distillation_data.append(
+            [
+                "EnsembleTeacherOverTrials",  # learner
+                f"{m}|ensemble_teacher",  # method_name (tag with ensemble)
+                m_train_score,  # train_score_results
+                m_train_mse,  # train_mse_results
+                m_test_score,  # test_score_results
+                m_test_mse,  # test_mse_results
+                [qini_score_cal(w_train, y_train, ensemble_teacher.predict(x_train))],
+                [qini_score_cal(w_test, y_test, ensemble_teacher.predict(x_test))],
+            ]
+        )
+
+    with open(
+        os.path.join(
+            f"results/{cohort_name}/",
+            (
+                f"ensemble_shuffle_{shuffle}_{learner}_"
+                f"zero_baseline_{zero_baseline}.pkl"
+            ),
+        ),
+        "wb",
+    ) as output_file:
+        pickle.dump(ensemble_distillation_data, output_file)
+
     for explainer_name in explainers:
 
         results = collections.Counter(top_n_results[explainer_name])
@@ -560,8 +587,10 @@ if __name__ == "__main__":
         summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=0)[indices])
 
         summary.to_csv(
-            f"results/{cohort_name}/"
-            f"{explainer_name}_top_{top_n_features}_features_shuffle_{shuffle}_{learner}.csv"
+            f"results/{cohort_name}/"(
+                f"{explainer_name}_top_{top_n_features}_features_"
+                f"shuffle_{shuffle}_{learner}.csv"
+            )
         )
 
     with open(

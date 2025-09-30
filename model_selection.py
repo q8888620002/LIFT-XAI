@@ -1,19 +1,22 @@
+"""Compute error for pseudo-surrogate for CATEs"""
+
 import argparse
 import pickle
 
 import numpy as np
-from sklift.metrics import (
+from sklearn.linear_model import LogisticRegressionCV, RidgeCV
+from sklift.metrics import (  # uplift_at_k,; weighted_average_uplift,
     qini_auc_score,
-    uplift_at_k,
     uplift_auc_score,
-    weighted_average_uplift,
 )
 
 import src.CATENets.catenets.models as cate_models
 from src.cate_utils import NuisanceFunctions, calculate_pehe
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.dataset import Dataset
-from src.utils import *
+from src.permucate.learners import CausalForest, DRLearner
+
+# from src.utils import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Description of your program")
@@ -27,7 +30,7 @@ if __name__ == "__main__":
     trials = args["num_trials"]
     shuffle = args["shuffle"]
     print(shuffle)
-    DEVICE = "cuda:3"
+    DEVICE = "cuda:0"
     ensemble_num = 40
     data = Dataset(cohort_name)
     x_train, _, _ = data.get_data("train")
@@ -45,6 +48,8 @@ if __name__ == "__main__":
         "DragonNet",
         "CFRNet_0.01",
         "CFRNet_0.001",
+        "CausalForest",
+        "LinearDR",
     ]
 
     selection_types = ["if_pehe", "pseudo_outcome_r", "pseudo_outcome_dr"]
@@ -207,6 +212,14 @@ if __name__ == "__main__":
                 nonlin="relu",
                 penalty_disc=0.001,
             ),
+            "CausalForest": CausalForest(),
+            "LinearDR": DRLearner(
+                model_final=RidgeCV(alphas=np.logspace(-3, 3, 50)),
+                model_propensity=LogisticRegressionCV(Cs=np.logspace(-3, 3, 50)),
+                model_response=RidgeCV(alphas=np.logspace(-3, 3, 50)),
+                cv=5,
+                random_state=0,
+            ),
         }
 
         if data.cohort_name in ["crash_2", "ist3", "sprint", "accord"]:
@@ -272,9 +285,12 @@ if __name__ == "__main__":
 
                 cate_model.fit(x_train, y_train, w_train)
 
-                prediction = (
-                    cate_model.predict(x_train).detach().cpu().numpy().flatten()
-                )
+                if learner_name in ["CausalForest", "LinearDR"]:
+                    prediction = cate_model.effect(x_train)
+                else:
+                    prediction = (
+                        cate_model.predict(x_train).detach().cpu().numpy().flatten()
+                    )
 
                 results[learner_name]["prediction"][i] = prediction
 
