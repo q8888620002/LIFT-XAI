@@ -12,6 +12,41 @@ TRAIN_MSE_IDX = 3
 TEST_MSE_IDX = 5
 
 
+DEFAULT_EXPLAINERS = [
+    "saliency",
+    "smooth_grad",
+    # "gradient_shap",
+    # "lime",
+    "baseline_lime",
+    "baseline_shapley_value_sampling",
+    # "marginal_shapley_value_sampling",
+    "integrated_gradients",
+    # "baseline_integrated_gradients",
+    # "kernel_shap"
+    # "marginal_shap"
+]
+
+PALETTE = [
+    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+    "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+    "#bcbd22", "#17becf"
+]
+
+# explainer-specific style (label, color, linestyle)
+STYLE = {
+    "baseline_shapley_value_sampling": ("Shapley value",            PALETTE[0], "--"),
+    "marginal_shapley_value_sampling": ("Shapley",                  PALETTE[0], "-"),
+    "smooth_grad":                    ("SmoothGrad",                 PALETTE[1], "--"),
+    "lime":                           ("Lime",                       PALETTE[2], "--"),
+    "baseline_lime":                  ("Lime",                       PALETTE[2], "-"),
+    "integrated_gradients":           ("IG",                         PALETTE[3], "-"),
+    "baseline_integrated_gradients":  ("IG - mean",                  PALETTE[3], "--"),
+    "kernel_shap":                    ("Kernel Shap",                PALETTE[4], "--"),
+    "loco":                             ("LOCO",                  PALETTE[6], "--"),
+    "permucate":                       ("PermuCATE",                  PALETTE[7], "--")
+}
+FALLBACK = ("", PALETTE[5], "-")
+
 def main():
     """Main function"""
 
@@ -66,7 +101,7 @@ def main():
         if not isinstance(e, (list, tuple)) or len(e) < 6:
             continue
         mname = str(e[METHOD_IDX])
-        if mname not in wanted or "loco" in mname:
+        if mname not in wanted:
             continue  # skip loco here, we'll load it from ens_path_loco
 
         label = mname.replace("|ensemble_teacher", "")
@@ -97,19 +132,23 @@ def main():
     os.makedirs(args.out, exist_ok=True)
 
     # Plot
-    plt.figure(figsize=(7.5, 4.6))
+    plt.figure(figsize=(8, 6))
+
     for mname in sorted(per_method.keys()):
+        print(mname)
+        label, color, ls = STYLE.get(mname, (mname or FALLBACK[0], FALLBACK[1], FALLBACK[2]))
+
         y = per_method[mname]
         x = np.arange(1, len(y) + 1)  # 1..K features
-        plt.plot(x, y, lw=2, label=mname)
+        plt.plot(x, y, lw=2, label=label, color=color)
 
-    plt.title(
-        f"Ensemble distillation loss vs #features · {args.learner} · {args.split}"
-    )
-    plt.xlabel("Number of features")
-    plt.ylabel("Distillation loss (MSE) to ensemble teacher")
+    # plt.title(
+    #     f"Ensemble distillation loss vs #features · {args.learner} · {args.split}"
+    # )
+    plt.xlabel("Number of features", size=18)
+    plt.ylabel("Distillation loss (MSE)", size=18)
     plt.grid(True, alpha=0.3)
-    plt.legend(title="Method")
+    plt.legend(  bbox_to_anchor=(0.8, -0.15))
     plt.tight_layout()
 
     out_path = os.path.join(

@@ -56,6 +56,7 @@ def load_series_loco(files, split):
 
 
 def main():
+    """Main function"""
     ap = argparse.ArgumentParser(
         description="Plot distillation loss (MSE) vs #features (mix legacy + LOCO files)."
     )
@@ -102,7 +103,7 @@ def main():
         plt.fill_between(x, mean - std, mean + std, alpha=0.15)
 
 
-    plt.title(f"Distillation loss vs #features · {args.learner} · {args.split}")
+    # plt.title(f"Distillation loss vs #features · {args.learner} · {args.split}")
     plt.xlabel("Number of features")
     plt.ylabel("Distillation loss (MSE)")
     plt.grid(True, alpha=0.3)

@@ -119,6 +119,7 @@ if __name__ == "__main__":
         "loco",
         "permucate",
         # Local methods
+        "random",
         "saliency",
         "smooth_grad",
         "gradient_shap",
@@ -377,11 +378,6 @@ if __name__ == "__main__":
             test_score_results = []
             test_mse_results = []
 
-            rand_test_results = []
-            rand_train_results = []
-            rand_train_mse_results = []
-            rand_test_mse_results = []
-
             # obtaining global & local ranking for insertion & deletion
 
             if explainer_name == "permucate":
@@ -448,24 +444,6 @@ if __name__ == "__main__":
                 test_mse_results.append(test_mse)
                 train_mse_results.append(train_mse)
 
-                (
-                    rand_train_score,
-                    rand_test_score,
-                    rand_train_mse,
-                    rand_test_mse,
-                ) = qini_score(
-                    np.random.choice(x_train.shape[1], feature_idx, replace=False),
-                    (x_train, w_train, y_train),
-                    (x_test, w_test, y_test),
-                    model,
-                    learner,
-                )
-
-                rand_train_results.append(rand_train_score)
-                rand_test_results.append(rand_test_score)
-                rand_train_mse_results.append(rand_train_mse)
-                rand_test_mse_results.append(rand_test_mse)
-
             insertion_deletion_data.append(
                 [
                     learner,
@@ -476,9 +454,6 @@ if __name__ == "__main__":
                     train_mse_results,
                     test_score_results,
                     test_mse_results,
-                    rand_test_score,
-                    rand_train_mse_results,
-                    rand_test_mse_results,
                     [qini_score_cal(w_train, y_train, results_train[i])],
                     [qini_score_cal(w_test, y_test, results_test[i])],
                     ablation_pos_results,
@@ -585,13 +560,11 @@ if __name__ == "__main__":
 
         indices = [names.tolist().index(i) for i in summary.feature.tolist()]
         summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=0)[indices])
-
-        summary.to_csv(
-            f"results/{cohort_name}/"(
-                f"{explainer_name}_top_{top_n_features}_features_"
-                f"shuffle_{shuffle}_{learner}.csv"
-            )
+        filename = (
+            f"{explainer_name}_top_{top_n_features}_features_"
+            f"shuffle_{shuffle}_{learner}.csv"
         )
+        summary.to_csv(f"results/{cohort_name}/{filename}")
 
     with open(
         os.path.join(

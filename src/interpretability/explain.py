@@ -1,3 +1,4 @@
+"""Module for explainability methods."""
 from typing import Dict, List, Optional
 
 import matplotlib.pyplot as plt
@@ -17,16 +18,9 @@ from captum.attr import (
     ShapleyValueSampling,
 )
 from captum.attr._core.lime import get_exp_kernel_similarity_function
-from shapreg import games, removal, shapley, shapley_sampling
-from sklift.metrics import (
-    qini_auc_score,
-    uplift_at_k,
-    uplift_auc_score,
-    weighted_average_uplift,
-)
+from shapreg import games, removal, shapley_sampling
+from sklift.metrics import qini_auc_score
 from torch import nn
-
-from src.cate_utils import qini_score_cal
 
 # import shap
 
@@ -35,9 +29,7 @@ from src.cate_utils import qini_score_cal
 
 
 class Explainer:
-    """
-    Explainer instance, consisting of several explainability methods.
-    """
+    """Explainer instance."""
 
     def __init__(
         self,
@@ -267,11 +259,23 @@ class Explainer:
                 test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
 
             return self._check_tensor(test_values)
-        
+
         def dummy_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            """dummy function, returns zero tensor"""
+            """Dummy function, returns zero tensor"""
             return torch.zeros((x_test.size()))
-        
+
+        def random_cbk(x_test: torch.Tensor) -> torch.Tensor:
+            """Baseline function, returns random ranking"""
+            n_samples, n_features = x_test.shape
+
+            ranks = torch.empty((n_samples, n_features), dtype=torch.long)
+            base = torch.arange(n_features)
+
+            for i in range(n_samples):
+                ranks[i] = base[torch.randperm(n_features)]
+
+            return ranks
+
         self.explainers = {
             "feature_ablation": feature_ablation_cbk,
             "integrated_gradients": integrated_gradients_cbk,
@@ -290,6 +294,7 @@ class Explainer:
             "saliency": saliency_cpk,
             "loco": dummy_cbk,
             "permucate": dummy_cbk,
+            "random": random_cbk,
         }
 
     def _check_tensor(self, X: torch.Tensor) -> torch.Tensor:
