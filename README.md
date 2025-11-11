@@ -1,6 +1,42 @@
 # Explaining Conditional Average Treatment Effect
 
-This is a repository for [CODE-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2), explaining CATE models with attribution techniques.
+This is a repository for [LIFT-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2), explaining CATE models with attribution techniques.
+
+
+
+## 1. System Requirements
+
+### 1.1 Software dependencies
+- **Operating Systems:** Linux, macOS, Windows  
+- **Python:** 3.9–3.11 (tested: 3.10)  
+- **Core packages**
+  - `torch` (tested: 2.2.1, CUDA 12.1)
+  - `numpy`, `pandas`, `scikit-learn`, `scipy`
+  - `tqdm`, `matplotlib`, `seaborn`
+- **Optional**
+  - CUDA toolkit for GPU acceleration
+
+> Full environment definitions: `requirements.txt` and `environment.yml`
+
+### 1.2 Versions tested on
+- Ubuntu 22.04, macOS 14  
+- Python 3.10  
+- PyTorch 2.2.1 (CUDA 12.1)
+
+### 1.3 Non-standard hardware
+- **None required**  
+- Optional: NVIDIA GPU (≥ 8 GB VRAM) for faster training/inference
+
+---
+
+## 2. Installation Guide
+
+**Typical install time:** 5–10 minutes on a normal desktop computer.
+
+### Conda (Recommended)
+```bash
+conda env create -f environment.yml
+conda activate liftxai
 
 Prerequisites
 
