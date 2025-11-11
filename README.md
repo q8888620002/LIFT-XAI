@@ -13,6 +13,7 @@ This is a repository for [LIFT-XAI](https://www.medrxiv.org/content/10.1101/2024
   - `torch` (tested: 2.2.1, CUDA 12.1)
   - `numpy`, `pandas`, `scikit-learn`, `scipy`
   - `tqdm`, `matplotlib`, `seaborn`
+  - CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
 - **Optional**
   - CUDA toolkit for GPU acceleration
 
@@ -37,12 +38,11 @@ This is a repository for [LIFT-XAI](https://www.medrxiv.org/content/10.1101/2024
 ```bash
 conda env create -f environment.yml
 conda activate liftxai
+```
 
-Prerequisites
+## Demo
 
-CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
-
-```run_experiments.py``` contains an experiment pipeline for synthetics data analysis, the script is modified based on
+```run_experiments.py``` contains an experiment pipeline for synthetic data analysis. 
 
 ```run_experiment_clinical_data.py```contains experiments for examining ensemble explanations with knowledge distillation. An example command is as follows
 ```
