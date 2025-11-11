@@ -2,12 +2,6 @@
 
 This repository accompanies **[LIFT-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2)** — a framework for **explaining Conditional Average Treatment Effect (CATE) models** using attribution and interpretability techniques.
 
-LIFT-XAI builds on **[CATENets](https://github.com/AliciaCurth/CATENets)** and provides tools for:
-- Training CATE estimators on synthetic and clinical data  
-- Interpreting learned models using feature attributions  
-- Comparing model explanations across cohorts  
-- Conducting Shapley- and permutation-based analyses
-
 ## 1. System Requirements
 
 ### 1.1 Software dependencies
@@ -17,7 +11,7 @@ LIFT-XAI builds on **[CATENets](https://github.com/AliciaCurth/CATENets)** and p
   - `torch` (tested: 2.2.1, CUDA 12.1)
   - `numpy`, `pandas`, `scikit-learn`, `scipy`
   - `tqdm`, `matplotlib`, `seaborn`
-  - CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
+  - CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
 - **Optional**
   - CUDA toolkit for GPU acceleration
 
