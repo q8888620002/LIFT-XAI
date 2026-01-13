@@ -73,18 +73,18 @@ if __name__ == "__main__":
     feature_size = x_train.shape[1]
 
     explainers = [
-        ## Global methods
+        # Global methods
         "loco",
-        "permucate"
-        ## Local methods
-        # "saliency",
-        # "smooth_grad",
+        "permucate",
+        # Local methods
+        "saliency",
+        "smooth_grad",
         # "gradient_shap",
-        # "lime",
+        "lime",
         # "baseline_lime",
-        # "baseline_shapley_value_sampling",
-        # "marginal_shapley_value_sampling",
-        # "integrated_gradients",
+        "baseline_shapley_value_sampling",
+        "marginal_shapley_value_sampling",
+        "integrated_gradients",
         # "baseline_integrated_gradients",
         # "kernel_shap"
         # "marginal_shap"
@@ -481,7 +481,7 @@ if __name__ == "__main__":
             f"results/{cohort_name}/"
             f"{explainer_name}_top_{top_n_features}_features_shuffle_{shuffle}_{learner}.csv"
         )
-
+        
     with open(
         os.path.join(
             f"results/{cohort_name}/",

@@ -1,5 +1,7 @@
 """Script that perform cross cohort analysis"""
 import argparse
+import collections
+import json
 import os
 import pickle
 
@@ -13,6 +15,17 @@ from src.dataset import Dataset
 
 DEVICE = "cuda:1"
 os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
+
+
+def _to_py(x):
+    """Convert numpy types to plain Python for JSON serialization."""
+    if isinstance(x, (np.integer,)):
+        return int(x)
+    if isinstance(x, (np.floating,)):
+        return float(x)
+    if isinstance(x, (np.ndarray,)):
+        return x.tolist()
+    return x
 
 
 def compute_shap_values(model, data_sample, data_baseline):
@@ -79,6 +92,12 @@ def parse_args():
         help="Threshold for stopping based on local SHAP relative change",
         default=0.05,
         type=float,
+    )
+    parser.add_argument(
+        "--top_n_features",
+        help="Number of top features to extract for summary",
+        default=10,
+        type=int,
     )
     return parser.parse_args()
 
@@ -220,7 +239,77 @@ def main(args):
     ) as output_file:
         pickle.dump(np.stack(cohort_shap_values), output_file)
 
-    print("SHAP computation completed. Results saved to:", save_path)
+    # Export JSON summary with detailed SHAP statistics
+    shap_values_array = np.stack(cohort_shap_values)  # (num_trials, num_samples, num_features)
+    feature_names = dataset.get_feature_names()
+    num_trials_completed = len(cohort_shap_values)
+    num_features = shap_values_array.shape[2]
+
+    # Compute aggregated statistics across trials and samples
+    # Mean absolute SHAP value per feature (averaged across samples, then across trials)
+    abs_mean_per_trial = np.abs(shap_values_array).mean(axis=1)  # (trials, features)
+    abs_mean = abs_mean_per_trial.mean(axis=0)  # (features,)
+    abs_std = abs_mean_per_trial.std(axis=0)  # (features,)
+
+    # Mean SHAP value per feature (signed)
+    mean_per_trial = shap_values_array.mean(axis=1)  # (trials, features)
+    mean_val = mean_per_trial.mean(axis=0)  # (features,)
+    mean_std = mean_per_trial.std(axis=0)  # (features,)
+
+    # Build per-feature records
+    feature_records = []
+    for j, fname in enumerate(feature_names):
+        feature_records.append(
+            {
+                "feature_index": int(j),
+                "feature": str(fname),
+                "shap_mean_abs": float(abs_mean[j]),
+                "shap_mean_abs_std": float(abs_std[j]),
+                "shap_mean": float(mean_val[j]),
+                "shap_mean_std": float(mean_std[j]),
+            }
+        )
+
+    # Sort by mean absolute SHAP value
+    feature_records.sort(key=lambda x: x["shap_mean_abs"], reverse=True)
+
+    # Get top N features
+    top_n = args.top_n_features
+    top_features = [rec["feature"] for rec in feature_records[:top_n]]
+
+    out = {
+        "metadata": {
+            "dataset": args.cohort_name,
+            "model": "XLearner",
+            "trials_completed": num_trials_completed,
+            "total_trials_requested": args.num_trials,
+            "baseline_mode": "random_sample" if args.baseline else "median",
+            "relative_change_threshold": args.relative_change_threshold,
+            "device": DEVICE,
+        },
+        "summary": {
+            "num_features": int(num_features),
+            "top_n_features": top_n,
+            "top_features_by_mean_abs": feature_records[:min(top_n, num_features)],
+        },
+        "features": feature_records,  # full list for programmatic use
+        "per_trial": {
+            "shap_abs_mean_per_trial": _to_py(abs_mean_per_trial),
+            "shap_mean_per_trial": _to_py(mean_per_trial),
+        },
+    }
+
+    json_path = os.path.join(
+        save_path, f"{args.cohort_name}_shap_summary_{args.baseline}.json"
+    )
+    with open(json_path, "w") as f:
+        json.dump(out, f, indent=2)
+
+    print(f"SHAP computation completed. Results saved to: {save_path}")
+    print(f"JSON summary written to: {json_path}")
+    print(f"\nTop {top_n} features by mean absolute SHAP value:")
+    for i, feat in enumerate(top_features, 1):
+        print(f"  {i}. {feat}")
 
 
 if __name__ == "__main__":
