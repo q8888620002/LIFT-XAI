@@ -17,6 +17,11 @@ DEVICE = "cuda:1"
 os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
 
 
+# -----------------------------
+# Helper Functions
+# -----------------------------
+
+
 def _to_py(x):
     """Convert numpy types to plain Python for JSON serialization."""
     if isinstance(x, (np.integer,)):
@@ -132,6 +137,10 @@ def main(args):
 
     cohort_predict_results = []
     cohort_shap_values = []
+    baseline_indices_list = []  # Track baseline indices for reproducibility
+    baseline_outputs_list = []  # Track baseline CATE predictions
+    shap_sum_pred_corr = []  # Track SHAP sum vs CATE prediction correlation
+    all_sampled_indices = []  # Track all sampled indices for Pearson correlation calculation
 
     for i in range(args.num_trials):
         # Model training
@@ -139,6 +148,7 @@ def main(args):
         sampled_indices = np.random.choice(
             len(x_train), size=int(0.9 * len(x_train)), replace=False
         )
+        all_sampled_indices.append(sampled_indices)
 
         x_sampled = x_train[sampled_indices]
         y_sampled = y_train[sampled_indices]
@@ -164,6 +174,7 @@ def main(args):
 
         if not args.baseline:
             baseline = np.median(x_sampled, 0)
+            baseline_index = None
 
             for _, idx_lst in dataset.discrete_indices.items():
                 if len(idx_lst) == 1:
@@ -178,11 +189,22 @@ def main(args):
             baseline_index = np.random.choice(len(x_train), 1)
             baseline = x_train[baseline_index]
 
+        # Track baseline metadata
+        baseline_indices_list.append(int(baseline_index[0]) if baseline_index is not None else None)
+        baseline_output = model.predict(X=baseline.reshape(1, -1)).detach().cpu().numpy().flatten()[0]
+        baseline_outputs_list.append(float(baseline_output))
+
         print(f"Trial {i+1}/{args.num_trials} - Computing SHAP values")
 
         # Compute SHAP values first
         shap_values = compute_shap_values(model, x_train, baseline)
         cohort_shap_values.append(shap_values)
+
+        # Compute correlation between SHAP sum and CATE prediction
+        shap_sum = shap_values.sum(axis=1)  # Sum SHAP values across features for each sample
+        cate_pred = cohort_predict_results[-1]  # Current trial predictions
+        corr = np.corrcoef(shap_sum, cate_pred)[0, 1]
+        shap_sum_pred_corr.append(float(corr) if not np.isnan(corr) else 0.0)
 
         shap_values_array = np.array(
             cohort_shap_values
@@ -241,9 +263,32 @@ def main(args):
 
     # Export JSON summary with detailed SHAP statistics
     shap_values_array = np.stack(cohort_shap_values)  # (num_trials, num_samples, num_features)
+    pred_array = np.stack(cohort_predict_results)  # (num_trials, num_samples)
     feature_names = dataset.get_feature_names()
     num_trials_completed = len(cohort_shap_values)
     num_features = shap_values_array.shape[2]
+
+    # Compute per-trial prediction statistics
+    pred_mean_per_trial = pred_array.mean(axis=1)  # (trials,)
+    pred_std_per_trial = pred_array.std(axis=1)  # (trials,)
+    qs = [0.05, 0.25, 0.5, 0.75, 0.95]
+    pred_quantiles_per_trial = np.quantile(pred_array, qs, axis=1).T  # (trials, quantiles)
+    pred_pos_rate_per_trial = (pred_array > 0).mean(axis=1)  # (trials,)
+    pred_neg_rate_per_trial = (pred_array < 0).mean(axis=1)  # (trials,)
+
+    # Overall CATE prediction summary (pooled across trials)
+    pred_pooled = pred_array.flatten()
+    pred_overall = {
+        "mean": float(np.mean(pred_pooled)),
+        "std": float(np.std(pred_pooled)),
+        "quantiles": {str(q): float(np.quantile(pred_pooled, q)) for q in qs},
+        "positive_rate": float((pred_pooled > 0).mean()),
+        "negative_rate": float((pred_pooled < 0).mean()),
+    }
+
+    # Baseline metadata
+    baseline_indices = baseline_indices_list
+    baseline_outputs = baseline_outputs_list
 
     # Compute aggregated statistics across trials and samples
     # Mean absolute SHAP value per feature (averaged across samples, then across trials)
@@ -256,6 +301,45 @@ def main(args):
     mean_val = mean_per_trial.mean(axis=0)  # (features,)
     mean_std = mean_per_trial.std(axis=0)  # (features,)
 
+    # Compute additional statistics for clinical_agent compatibility
+    # TopN frequency: how often each feature appears in top N most important per sample
+    top_n_tracking = min(10, num_features)  # Track top 10 per sample
+    topn_counts = np.zeros(num_features)
+
+    for trial_idx in range(num_trials_completed):
+        for sample_idx in range(shap_values_array.shape[1]):
+            sample_shap = np.abs(shap_values_array[trial_idx, sample_idx, :])
+            top_indices = np.argsort(sample_shap)[-top_n_tracking:]
+            topn_counts[top_indices] += 1
+
+    total_samples = num_trials_completed * shap_values_array.shape[1]
+    topn_frequency_pct = (topn_counts / total_samples) * 100
+
+    # Pearson sign: correlation between feature value and SHAP value
+    # Positive correlation = positive sign, negative correlation = negative sign
+    pearson_sign_pos = np.zeros(num_features)
+    pearson_sign_neg = np.zeros(num_features)
+
+    for j in range(num_features):
+        correlations = []
+        for trial_idx in range(num_trials_completed):
+            # Get the sampled indices for this trial
+            trial_sampled_indices = all_sampled_indices[trial_idx]
+            feature_values = x_train[trial_sampled_indices, j]
+            shap_values_feat = shap_values_array[trial_idx, :, j]
+
+            if len(feature_values) == len(shap_values_feat):
+                corr = np.corrcoef(feature_values, shap_values_feat)[0, 1]
+                if not np.isnan(corr):
+                    correlations.append(corr)
+
+        if correlations:
+            pos_count = sum(1 for c in correlations if c > 0)
+            neg_count = sum(1 for c in correlations if c < 0)
+            total = len(correlations)
+            pearson_sign_pos[j] = (pos_count / total) if total > 0 else 0.0
+            pearson_sign_neg[j] = (neg_count / total) if total > 0 else 0.0
+
     # Build per-feature records
     feature_records = []
     for j, fname in enumerate(feature_names):
@@ -267,6 +351,9 @@ def main(args):
                 "shap_mean_abs_std": float(abs_std[j]),
                 "shap_mean": float(mean_val[j]),
                 "shap_mean_std": float(mean_std[j]),
+                "topN_frequency_pct": float(topn_frequency_pct[j]),
+                "pearson_sign_pos_frac": float(pearson_sign_pos[j]),
+                "pearson_sign_neg_frac": float(pearson_sign_neg[j]),
             }
         )
 
@@ -281,24 +368,52 @@ def main(args):
         "metadata": {
             "dataset": args.cohort_name,
             "model": "XLearner",
+            "learner": "XLearner",  # For clinical_agent compatibility
+            "explainer": "ShapleyValueSampling",  # For clinical_agent compatibility
             "trials_completed": num_trials_completed,
             "total_trials_requested": args.num_trials,
             "baseline_mode": "random_sample" if args.baseline else "median",
             "relative_change_threshold": args.relative_change_threshold,
             "device": DEVICE,
+            "baseline_indices": baseline_indices if args.baseline else None,
+            "baseline_outputs": baseline_outputs,
         },
+
         "summary": {
             "num_features": int(num_features),
             "top_n_features": top_n,
             "top_features_by_mean_abs": feature_records[:min(top_n, num_features)],
+
+            # NEW: overall CATE prediction summary (pooled)
+            "cate_prediction_overall": pred_overall,
+
+            # NEW: SHAP↔prediction sanity (aggregated)
+            "shap_sum_vs_cate_pred_corr": {
+                "per_trial": _to_py(np.array(shap_sum_pred_corr)),
+                "mean": float(np.nanmean(shap_sum_pred_corr)),
+                "std": float(np.nanstd(shap_sum_pred_corr)),
+            },
         },
-        "features": feature_records,  # full list for programmatic use
+
+        "features": feature_records,
+
         "per_trial": {
             "shap_abs_mean_per_trial": _to_py(abs_mean_per_trial),
             "shap_mean_per_trial": _to_py(mean_per_trial),
+
+            # NEW: per-trial CATE prediction stats
+            "cate_prediction": {
+                "mean_per_trial": _to_py(pred_mean_per_trial),
+                "std_per_trial": _to_py(pred_std_per_trial),
+                "quantiles_per_trial": {
+                    "quantiles": [str(q) for q in qs],
+                    "values": _to_py(pred_quantiles_per_trial),
+                },
+                "pos_rate_per_trial": _to_py(pred_pos_rate_per_trial),
+                "neg_rate_per_trial": _to_py(pred_neg_rate_per_trial),
+            },
         },
     }
-
     json_path = os.path.join(
         save_path, f"{args.cohort_name}_shap_summary_{args.baseline}.json"
     )
