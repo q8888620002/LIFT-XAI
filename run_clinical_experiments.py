@@ -120,6 +120,7 @@ if __name__ == "__main__":
         "permucate",
         # Local methods
 <<<<<<< HEAD
+<<<<<<< HEAD
         "saliency",
         "smooth_grad",
         # "gradient_shap",
@@ -130,6 +131,8 @@ if __name__ == "__main__":
         "integrated_gradients",
         # "baseline_integrated_gradients",
 =======
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         "random",
         "saliency",
         "smooth_grad",
@@ -140,6 +143,9 @@ if __name__ == "__main__":
         "marginal_shapley_value_sampling",
         "integrated_gradients",
         "baseline_integrated_gradients",
+<<<<<<< HEAD
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
+=======
 >>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         # "kernel_shap"
         # "marginal_shap"
@@ -577,7 +583,12 @@ if __name__ == "__main__":
             f"shuffle_{shuffle}_{learner}.csv"
         )
 <<<<<<< HEAD
+<<<<<<< HEAD
         
+=======
+        summary.to_csv(f"results/{cohort_name}/{filename}")
+
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 =======
         summary.to_csv(f"results/{cohort_name}/{filename}")
 

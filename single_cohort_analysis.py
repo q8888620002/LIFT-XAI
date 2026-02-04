@@ -1,7 +1,10 @@
 """Script that perform cross cohort analysis"""
 import argparse
+<<<<<<< HEAD
 import collections
 import json
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 import os
 import pickle
 
@@ -13,11 +16,15 @@ from captum.attr import ShapleyValueSampling
 import src.CATENets.catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
 from src.dataset import Dataset
 
+<<<<<<< HEAD
 # Default device - can be overridden by command line argument
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 DEVICE = "cuda:1"
 os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
 
 
+<<<<<<< HEAD
 def _to_py(x):
     """Convert numpy types to plain Python for JSON serialization."""
     if isinstance(x, (np.integer,)):
@@ -56,6 +63,8 @@ def translate_feature_name(feature_name):
     return mappings.get(feature_name, feature_name)
 
 
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 def compute_shap_values(model, data_sample, data_baseline):
     """Function for shapley value sampling"""
     shapley_model = ShapleyValueSampling(model)
@@ -105,8 +114,13 @@ def parse_args():
     )
     parser.add_argument(
         "--baseline",
+<<<<<<< HEAD
         help="Use random sample baseline (default: False uses median baseline)",
         default=False,
+=======
+        help="whether using baseline",
+        default=True,
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         action="store_true",
     )
     parser.add_argument(
@@ -121,6 +135,7 @@ def parse_args():
         default=0.05,
         type=float,
     )
+<<<<<<< HEAD
     parser.add_argument(
         "--top_n_features",
         help="Number of top features to extract for summary",
@@ -133,11 +148,14 @@ def parse_args():
         default="cuda:1",
         type=str,
     )
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
     return parser.parse_args()
 
 
 def main(args):
     """Main function for computing shapley value"""
+<<<<<<< HEAD
     
     # Override global DEVICE with command line argument
     global DEVICE
@@ -145,6 +163,10 @@ def main(args):
 
     print(args)
     print(f"Using device: {DEVICE}")
+=======
+
+    print(args)
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
     if args.wandb:
 
@@ -171,9 +193,12 @@ def main(args):
 
     cohort_predict_results = []
     cohort_shap_values = []
+<<<<<<< HEAD
     baseline_indices_list = []  # Track baseline indices for reproducibility
     baseline_outputs_list = []  # Track baseline CATE predictions
     shap_sum_pred_corr = []  # Track SHAP sum vs CATE prediction correlation
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
     for i in range(args.num_trials):
         # Model training
@@ -206,7 +231,10 @@ def main(args):
 
         if not args.baseline:
             baseline = np.median(x_sampled, 0)
+<<<<<<< HEAD
             baseline_index = None
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
             for _, idx_lst in dataset.discrete_indices.items():
                 if len(idx_lst) == 1:
@@ -220,23 +248,29 @@ def main(args):
         else:
             baseline_index = np.random.choice(len(x_train), 1)
             baseline = x_train[baseline_index]
+<<<<<<< HEAD
         
         # Track baseline metadata
         baseline_indices_list.append(int(baseline_index[0]) if baseline_index is not None else None)
         baseline_output = model.predict(X=baseline.reshape(1, -1)).detach().cpu().numpy().flatten()[0]
         baseline_outputs_list.append(float(baseline_output))
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
         print(f"Trial {i+1}/{args.num_trials} - Computing SHAP values")
 
         # Compute SHAP values first
         shap_values = compute_shap_values(model, x_train, baseline)
         cohort_shap_values.append(shap_values)
+<<<<<<< HEAD
         
         # Compute correlation between SHAP sum and CATE prediction
         shap_sum = shap_values.sum(axis=1)  # Sum SHAP values across features for each sample
         cate_pred = cohort_predict_results[-1]  # Current trial predictions
         corr = np.corrcoef(shap_sum, cate_pred)[0, 1]
         shap_sum_pred_corr.append(float(corr) if not np.isnan(corr) else 0.0)
+=======
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
         shap_values_array = np.array(
             cohort_shap_values
@@ -293,6 +327,7 @@ def main(args):
     ) as output_file:
         pickle.dump(np.stack(cohort_shap_values), output_file)
 
+<<<<<<< HEAD
     # Export JSON summary with detailed SHAP statistics
     shap_values_array = np.stack(cohort_shap_values)  # (num_trials, num_samples, num_features)
     pred_array = np.stack(cohort_predict_results)  # (num_trials, num_samples)
@@ -414,6 +449,9 @@ def main(args):
     print(f"\nTop {top_n} features by mean absolute SHAP value:")
     for i, feat in enumerate(top_features, 1):
         print(f"  {i}. {feat}")
+=======
+    print("SHAP computation completed. Results saved to:", save_path)
+>>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
 
 
 if __name__ == "__main__":
