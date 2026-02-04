@@ -1,0 +1,980 @@
+{
+  "summary": "Across all 10 features, the proposed mechanistic explanations are generally biologically and clinically sound, well-aligned with the IST-3 context and broader alteplase literature, and accompanied by concrete validation ideas and thoughtful caveats. NIHSS, age, and stroke syndrome (TACI/PACI) are particularly strong as mechanistic TEH candidates; BP variables, weight, antiplatelets, AF, and GCS are plausible but more confounded and/or less specifically supported as true modifiers rather than risk markers. Methodological suggestions are mostly appropriate, although some mechanisms are speculative and several features (e.g., weight, GCS, PACI/TACI) may be underpowered or highly collinear with stronger predictors like NIHSS and age. Overall, the hypotheses warrant medium-to-high priority follow-up, with special emphasis on NIHSS, age, and stroke type as the most robust TEH dimensions.",
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: higher NIHSS \u2192 larger core/penumbra & proximal occlusion \u2192 more salvageable tissue and higher potential benefit",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Very strong, central to acute stroke pathophysiology; directly supported by imaging\u2013NIHSS correlations and TEH patterns in alteplase and thrombectomy trials. Testable via NIHSS\u2013imaging\u2013outcome mediation and interaction models."
+        },
+        {
+          "mechanism_type": "physiological: ultra-high NIHSS \u2192 extensive ischemia/poor collaterals \u2192 limited benefit & more reperfusion injury",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Well-grounded; consistent with malignant MCA syndrome and poor outcomes despite recanalization. Evidence mostly indirect but strong clinically; requires good representation of ultra-severe strokes for robust testing."
+        },
+        {
+          "mechanism_type": "pharmacological: large-vessel occlusion (often NIHSS \u226515) \u2192 alteplase less effective vs thrombectomy",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Biologically plausible and consistent with modern LVO data, though IST-3 predated routine thrombectomy. For IST-3, the mechanism is partly counterfactual but still valid as \u2018lower lysis success in LVO\u2019."
+        },
+        {
+          "mechanism_type": "biological: higher NIHSS \u2192 more BBB disruption & larger core \u2192 \u2191 sICH risk",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Strongly supported by multiple alteplase safety scores (e.g., SEDAN) and imaging\u2013NIHSS\u2013sICH relations. Very testable within IST-3 via NIHSS \u00d7 treatment on sICH."
+        },
+        {
+          "mechanism_type": "physiological: low NIHSS \u2192 higher spontaneous recovery & relatively greater sICH impact \u2192 smaller net benefit",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Matches NINDS, pooled analyses, and \u2018mild stroke\u2019 controversy. Well-defined and straightforward to test by restricting to NIHSS 0\u20135 subgroups."
+        },
+        {
+          "mechanism_type": "biological: specific high-NIHSS patterns (eloquent cortex) \u2192 big functional gains from modest improvement",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "Conceptually sound but evidence is more anecdotal; IST-3 likely lacks granular pattern-level data to test this well."
+        },
+        {
+          "mechanism_type": "physiological: severe strokes \u2192 more systemic complications limiting realized functional benefit",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Clinically very plausible (pneumonia, DVT, dysautonomia), but difficult to disentangle from baseline severity and treatment effects without rich complications data."
+        },
+        {
+          "mechanism_type": "statistical: NIHSS appears dominant due to prognostic power, non-linearities, interactions",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Good recognition of model-based artefacts and interaction structure. Testable by varying model forms (additive vs interaction-rich, causal forests) and checking NIHSS ranking."
+        }
+      ],
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 10,
+      "evidence_alignment": 9,
+      "subgroup_implications": 9,
+      "validation_plan_quality": 9,
+      "caveat_awareness": 9,
+      "overall_score": 9,
+      "strengths": [
+        "Clinically and biologically central feature with very accurate interpretation tied to established stroke scales and pathophysiology.",
+        "Mechanisms cover both benefit (penumbral salvage) and harm (sICH) and correctly highlight non-linearity across NIHSS spectrum.",
+        "Subgroup definitions (mild/moderate/severe/ultra-severe) map well to common clinical cutpoints and published analyses.",
+        "Validation suggestions (splines, pre-specified bands, interaction with subtype, causal forests) are specific and methodologically sound.",
+        "Caveats correctly address NIHSS compositeness, measurement error, confounding with onset-to-treatment time and imaging surrogates."
+      ],
+      "weaknesses": [
+        "Some mechanisms (eloquent-pattern specific, systemic complications) are harder to test with typical IST-3 data and could be overinterpreted.",
+        "Emphasis on thrombectomy-era considerations for LVO is less directly applicable to IST-3, which lacked routine thrombectomy.",
+        "Subgroup bands, while reasonable, may still be somewhat arbitrary and require justification from prior literature or data-driven checks."
+      ],
+      "recommendation": "high_priority",
+      "justification": "NIHSS is the most plausible and evidence-backed effect modifier in acute stroke thrombolysis, with strong mechanistic grounding, clear and actionable subgroup implications, and robust, feasible validation plans. It should be a top focus for investigating treatment effect heterogeneity in IST-3."
+    },
+    {
+      "feature_name": "dbprand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological: high diastolic BP \u2192 \u2191 transmural pressure \u2192 \u2191 sICH risk after lysis",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Well-established association between elevated BP and hemorrhage after thrombolysis; diastolic component specifically is somewhat less documented than systolic but still plausible. Highly testable with IST-3 data."
+        },
+        {
+          "mechanism_type": "physiological: very low DBP \u2192 poor perfusion \u2192 smaller salvageable penumbra",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Conceptually sound hemodynamically; direct clinical evidence is moderate, especially for diastolic-specific effects. Testable via U-shaped splines, but power at extremes may be limited."
+        },
+        {
+          "mechanism_type": "biological: chronic HTN remodeling + high DBP \u2192 fragile vessels \u2192 \u2191 rupture risk with alteplase",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Pathology of lipohyalinosis and microbleeds with hypertension is well documented; direct alteplase-interaction data are inferential but strong enough. Requires proxies (history of HTN, age) to test."
+        },
+        {
+          "mechanism_type": "pharmacological: high DBP via sympathetic surge alters alteplase PK/PD",
+          "plausibility": 4,
+          "evidence_support": 2,
+          "specificity": 4,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Highly speculative; little direct evidence that acute DBP changes alteplase kinetics or local clot-site pharmacodynamics in a clinically meaningful way."
+        },
+        {
+          "mechanism_type": "physiological: moderate DBP elevation supports collaterals and penumbra",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Reasonable and consistent with permissive hypertension concepts; evidence is mostly extrapolated and often described more for SBP/MAP than DBP alone."
+        },
+        {
+          "mechanism_type": "biological: high DBP associated with comorbid small-vessel disease/microbleeds \u2192 \u2191 hemorrhage",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Plausible as a risk marker; microbleed data were sparse in alteplase trials. In IST-3, only testable indirectly via age/HTN history interactions."
+        },
+        {
+          "mechanism_type": "physiological: low DBP as marker of cardiac dysfunction/sepsis \u2192 poorer outcomes",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "General critical-care concept; specific interaction with alteplase benefit is less documented. Hard to separate from global illness severity without detailed systemic data."
+        },
+        {
+          "mechanism_type": "statistical: DBP collinearity with SBP/age/comorbidities \u2192 apparent modification",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Sound recognition of multicollinearity; highly testable by multivariable and joint SBP\u2013DBP models and derived measures like MAP/pulse pressure."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 7,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
+      "overall_score": 7,
+      "strengths": [
+        "Mechanistic framing of U-shaped relationship between DBP and alteplase benefit is plausible and coherent with stroke hemodynamics.",
+        "Validation plan is concrete, with appropriate use of splines, joint SBP/DBP modeling, and external validation in BP-focused trials/registries.",
+        "Caveats correctly acknowledge treatment thresholds for BP, measurement error, SBP\u2013DBP correlation, and IST-3\u2019s older, stiff-artery population."
+      ],
+      "weaknesses": [
+        "Evidence for DBP-specific modification (distinct from SBP/MAP) is modest; many mechanisms likely reflect general BP effects rather than uniquely diastolic physiology.",
+        "Some mechanisms (PK/PD changes with sympathetic surge) are highly speculative and unlikely to be testable in IST-3.",
+        "Subgroup cut-offs (e.g., DBP \u2265110\u2013120) may have very small sample sizes in a trial context with BP eligibility limits, limiting power and stability of TEH estimates."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "DBP is a plausible but secondary hemodynamic modifier relative to SBP/MAP. Mechanisms and validation ideas are reasonable, but evidence is not as strong or specific, and disentangling DBP from SBP and comorbidity will be challenging. Worth studying, but below NIHSS/age/stroke-type in priority."
+    },
+    {
+      "feature_name": "weight",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "pharmacological: very high weight + dose cap \u2192 lower mg/kg \u2192 possible underdosing",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 7,
+          "comments": "Mechanistically clear given dosing rules; clinical impact on recanalization and outcomes is plausible but evidence is mixed. Testable by contrasting capped vs uncapped patients."
+        },
+        {
+          "mechanism_type": "pharmacological: very low weight \u2192 relatively higher exposure \u2192 \u2191 bleeding risk",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 6,
+          "comments": "Plausible from PK principles; empirical alteplase data are limited. IST-3 likely has small numbers of very low-weight participants, limiting precision."
+        },
+        {
+          "mechanism_type": "biological: obesity-related prothrombotic/proinflammatory state \u2192 altered clot responsiveness",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Mechanistically sensible but largely extrapolated from cardiovascular literature; IST-3 likely lacks biomarkers or detailed clot data, making this hard to verify directly."
+        },
+        {
+          "mechanism_type": "physiological: low weight as marker of frailty/sarcopenia \u2192 worse recovery",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Strong geriatric medicine concept; effect is more prognostic than treatment-specific. Hard to prove true interaction with alteplase without frailty measures."
+        },
+        {
+          "mechanism_type": "biological: \u2018obesity paradox\u2019 with better survival/recovery in overweight",
+          "plausibility": 6,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Observed in some observational studies but controversial and heavily confounded. Limited specificity to alteplase; likely a prognostic rather than a causal treatment-modifying phenomenon."
+        },
+        {
+          "mechanism_type": "pharmacological: body size/composition alters Vd, clearance, plasminogen \u2192 PK/PD variation",
+          "plausibility": 7,
+          "evidence_support": 4,
+          "specificity": 6,
+          "testability": 3,
+          "overall_score": 5,
+          "comments": "Theoretical PK/PD variation is plausible, but clinical data for alteplase in stroke are scarce. IST-3 has no drug-level data, making this largely untestable there."
+        },
+        {
+          "mechanism_type": "statistical: weight correlated with age/sex/height \u2192 confounded TEH",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Important acknowledgement that weight may largely be a surrogate for other factors. Testable by multivariable adjustment and comparing weight vs BMI if available."
+        },
+        {
+          "mechanism_type": "physiological: logistical challenges in very obese patients \u2192 delayed/complicated care",
+          "plausibility": 7,
+          "evidence_support": 4,
+          "specificity": 6,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "Clinically realistic but poorly quantified; IST-3 may not have detailed workflow and care quality metrics to test this."
+        }
+      ],
+      "mechanism_plausibility": 7,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 6,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 8,
+      "overall_score": 7,
+      "strengths": [
+        "Identifies the clear, concrete mechanism of dose capping in high-weight patients, which is genuinely pharmacological and testable.",
+        "Good appreciation that low weight can reflect frailty and that age/sex confounding is substantial.",
+        "Validation suggestions (explicit interaction, capped vs uncapped, link to BMI) are appropriate and feasible."
+      ],
+      "weaknesses": [
+        "Several mechanisms are speculative or only loosely tied to alteplase (obesity paradox, generic PK/PD variation) and may overreach what IST-3 can test.",
+        "Evidence that weight meaningfully modifies alteplase benefit, beyond being a prognostic factor, is limited in the literature.",
+        "Extremes of weight are likely underrepresented, reducing power to study the most mechanistically interesting ranges (dose cap, very low weight)."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Weight has some concrete pharmacological relevance via dosing rules, but overall evidence for strong alteplase TEH is modest, and confounding by age/sex is substantial. Worth exploring with attention to dose-cap thresholds, but not a top-tier modifier."
+    },
+    {
+      "feature_name": "sbprand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological: high SBP \u2192 \u2191 wall stress in fragile vessels \u2192 \u2191 sICH",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Very well-established association supported by multiple alteplase trials and BP analyses. Highly testable with IST-3 data."
+        },
+        {
+          "mechanism_type": "biological: chronic HTN & high SBP \u2192 small-vessel disease/microbleeds \u2192 \u2191 parenchymal hemorrhage with alteplase",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Strong pathophysiological basis; alteplase\u2013microbleed risk has some direct evidence. Lack of microbleed imaging in IST-3 limits direct testing but indirect proxies exist."
+        },
+        {
+          "mechanism_type": "physiological: moderate SBP elevation supports collateral flow & penumbra",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Supported by concept of permissive hypertension and collateral physiology; clinical evidence is moderate. Testable by non-linear SBP modeling and interaction with outcome."
+        },
+        {
+          "mechanism_type": "physiological: very low SBP \u2192 hypoperfusion \u2192 larger cores \u2192 less benefit",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Plausible hemodynamic mechanism with some support from observational data; rare in thrombolysis-eligible populations, so estimates at low SBP may be unstable."
+        },
+        {
+          "mechanism_type": "pharmacological: acute BP lowering to meet thresholds may alter outcomes",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "The ENCHANTED trial suggests BP management matters, but direct alteplase\u2013BP-lowering interaction is complicated. IST-3 may not have detailed pre-treatment BP-lowering data to test this well."
+        },
+        {
+          "mechanism_type": "physiological: high SBP as marker of severe stroke/sympathetic surge",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Reasonable; helps explain confounding by severity. Testable by adjusting for NIHSS and exploring joint NIHSS\u2013SBP interactions."
+        },
+        {
+          "mechanism_type": "statistical: U-shaped SBP\u2013outcome with sparse extreme data \u2192 unstable TEH",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Important modeling caveat; straightforward to examine via splines and influence diagnostics."
+        },
+        {
+          "mechanism_type": "biological: SBP influences pressure gradient across plaques/emboli \u2192 embolization patterns",
+          "plausibility": 4,
+          "evidence_support": 2,
+          "specificity": 4,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Highly speculative and only tangentially related to alteplase-specific TEH; unlikely to be testable in IST-3."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 8,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
+      "overall_score": 8,
+      "strengths": [
+        "Accurate, nuanced clinical interpretation of SBP\u2019s role in eligibility, safety, and perfusion.",
+        "Strong alignment with existing evidence linking high SBP to increased sICH and poorer outcomes post-thrombolysis.",
+        "Subgroup proposals and modeling strategies (splines, SBP strata, mediation via sICH) are clinically sensible and statistically appropriate."
+      ],
+      "weaknesses": [
+        "Some speculative mechanisms (embolization dynamics) are unlikely to be relevant or testable and distract slightly from stronger pathways.",
+        "As with DBP, separating SBP\u2019s effect from overall hypertensive vasculopathy and age may be difficult, raising risk of over-attributing TEH to SBP alone.",
+        "Data at very low and very high SBP extremes may be sparse due to eligibility and BP-lowering practices, making U-shaped estimates uncertain."
+      ],
+      "recommendation": "high_priority",
+      "justification": "SBP is a key safety determinant with well-documented associations with sICH and outcome after alteplase. Mechanistic plausibility and evidence support are strong, and the proposed analyses are feasible and clinically meaningful. Among hemodynamic variables, SBP merits high-priority TEH investigation."
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: antiplatelets + alteplase \u2192 synergistic bleeding risk (\u2191 sICH)",
+          "plausibility": 9,
+          "evidence_support": 9,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Well supported by multiple meta-analyses and registries showing modestly increased sICH with prior antiplatelet use. Highly testable in IST-3."
+        },
+        {
+          "mechanism_type": "biological: antiplatelets as marker of atherosclerotic disease with platelet-rich thrombi",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Reasonable etiologic link but only partially supported; clot composition data are limited. Indirectly testable via stroke subtype/AF proxies."
+        },
+        {
+          "mechanism_type": "biological: antiplatelets reduce re-occlusion after lysis",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Concept plausible from coronary literature; direct stroke evidence is weaker. IST-3 lacks routine recanalization imaging, so only inferable via early NIHSS changes."
+        },
+        {
+          "mechanism_type": "physiological: antiplatelet users with prior TIAs/strokes may have better collaterals/secondary prevention",
+          "plausibility": 6,
+          "evidence_support": 4,
+          "specificity": 5,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "Some plausibility but speculative and difficult to isolate from confounding by care quality and comorbidities."
+        },
+        {
+          "mechanism_type": "biological: macro vs microvascular balance (no-reflow vs microhemorrhages) with combined therapy",
+          "plausibility": 5,
+          "evidence_support": 3,
+          "specificity": 5,
+          "testability": 3,
+          "overall_score": 4,
+          "comments": "Largely theoretical without direct clinical correlates; untestable in IST-3 without advanced imaging."
+        },
+        {
+          "mechanism_type": "statistical: antiplatelet use collinear with age/comorbidities/etiology \u2192 confounded TEH",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Important caveat, well grounded in epidemiology. Straightforward to address by multivariable modeling and sensitivity analyses."
+        },
+        {
+          "mechanism_type": "biological: heterogeneity across antiplatelet types/dual therapy within a binary variable",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "True in principle; many studies show different bleeding profiles for dual vs single therapy. IST-3\u2019s coding will determine testability."
+        },
+        {
+          "mechanism_type": "pharmacological: platelet inhibition changes clot stability/alteplase penetration by etiology",
+          "plausibility": 6,
+          "evidence_support": 4,
+          "specificity": 6,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "Plausible but mostly theoretical for stroke; limited data on clot histology across antiplatelet strata."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 8,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 9,
+      "overall_score": 8,
+      "strengths": [
+        "Central bleeding-risk mechanism (antiplatelets + alteplase \u2192 \u2191 sICH) is well supported and clearly articulated.",
+        "Good acknowledgment of antiplatelet use as a non-random marker of vascular disease and age, and of heterogeneity across agents/dual therapy.",
+        "Validation plan is concrete and appropriate, including interaction modeling on sICH and function, mediation analyses, and comparison with external datasets."
+      ],
+      "weaknesses": [
+        "Subgroup ideas around dual therapy and specific agents may exceed what IST-3 can reliably support, depending on data granularity.",
+        "Some proposed mechanisms (collaterals, microcirculatory no-reflow) are speculative and hard to test without imaging or physiological data.",
+        "Net functional effect modification by baseline antiplatelets appears modest in meta-analyses; risk of overemphasizing this factor relative to NIHSS, age, and BP."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Baseline antiplatelet use has a well-documented interaction with alteplase-related bleeding risk and is clinically important for risk\u2013benefit assessment. Mechanistic plausibility and evidence support are strong, and analyses are feasible, justifying high-priority evaluation as a modifier of alteplase safety and possibly net benefit."
+    },
+    {
+      "feature_name": "gcs_score_rand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: low GCS \u2192 large hemispheric/brainstem infarcts \u2192 large cores & poor prognosis \u2192 limited benefit",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Well grounded in stroke neuroanatomy and outcome data. Testable via interaction models, though imaging confirmation of core size may be limited."
+        },
+        {
+          "mechanism_type": "physiological: reduced consciousness \u2192 aspiration/pneumonia \u2192 worse functional outcomes",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Very plausible clinically; requires complication data to test as mediator, which may be incomplete in IST-3."
+        },
+        {
+          "mechanism_type": "biological: comatose patients have more BBB disruption \u2192 \u2191 hemorrhagic transformation with alteplase",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Conceptual but not strongly documented as GCS-specific; more generally linked to infarct severity. Hard to distinguish from NIHSS severity effects."
+        },
+        {
+          "mechanism_type": "physiological: very low GCS reflects systemic issues (hypoxia, hypotension, metabolic) \u2192 worse prognosis, less relative impact of reperfusion",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Reasonable but confounded by non-stroke factors; requires rich systemic data to evaluate, likely limited in IST-3."
+        },
+        {
+          "mechanism_type": "biological: some low GCS due to post-ictal/metabolic states with smaller strokes \u2192 heterogeneous TEH",
+          "plausibility": 7,
+          "evidence_support": 4,
+          "specificity": 6,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "Reflects stroke mimic issues; applicable but rare in a thrombolysis trial with screening. Difficult to quantify effects on TEH."
+        },
+        {
+          "mechanism_type": "physiological: preserved GCS supports engagement in rehab and better translation of neurological gains",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Plausible yet generally prognostic; specific alteplase interaction is indirect. Rehab data are usually sparse."
+        },
+        {
+          "mechanism_type": "statistical: GCS overlaps with NIHSS consciousness items; residual severity effects and interactions",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Important recognition of collinearity; easily testable via joint NIHSS\u2013GCS models and feature importance comparisons."
+        },
+        {
+          "mechanism_type": "biological: brainstem strokes (often low GCS) may respond differently to alteplase",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Conceptually sound, but basilar thrombosis is underrepresented and imaging data limited; TEH by GCS as a proxy for brainstem involvement is crude."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 7,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 8,
+      "overall_score": 7,
+      "strengths": [
+        "Recognizes GCS as a global severity and systemic-illness marker and articulates several clinically logical pathways limiting benefit in comatose patients.",
+        "Appropriate emphasis on overlap with NIHSS and risk that GCS adds little independent TEH information.",
+        "Subgroup definitions by GCS range are clinically sensible (e.g., GCS \u22648) and feasible to implement."
+      ],
+      "weaknesses": [
+        "Many mechanisms are prognostic more than specifically treatment-modifying; true alteplase interaction may be limited after adjusting for NIHSS and stroke type.",
+        "IST-3 likely has relatively few very low-GCS patients treated with alteplase, yielding imprecise estimates at critical extremes.",
+        "Several proposed mechanisms (aspiration, systemic complications) rely on data rarely complete in acute stroke trials, limiting testability of mediation pathways."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "GCS plausibly modulates realized functional benefit via severity and complications, but much of its effect may be redundant with NIHSS and subtype. Worth exploring, especially for very low GCS, yet with moderate priority and strong adjustment for collinearity."
+    },
+    {
+      "feature_name": "age",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: older age \u2192 small-vessel disease/microbleeds/fragility \u2192 \u2191 sICH with alteplase",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Very strong support from imaging and thrombolysis safety literature; mechanistically sound and highly relevant in IST-3\u2019s elderly population."
+        },
+        {
+          "mechanism_type": "biological: reduced neuroplasticity with age \u2192 limited functional gains after reperfusion",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Supported more by basic and rehab science than direct alteplase data, but conceptually important. Difficult to measure directly in IST-3."
+        },
+        {
+          "mechanism_type": "physiological: comorbidities in older adults \u2192 complicated care and rehab \u2192 attenuated benefit",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Well established clinically; largely prognostic but may interact with treatment via competing risks and complications. Testable with comorbidity adjustments."
+        },
+        {
+          "mechanism_type": "biological: age-related thrombus characteristics (calcified/atherosclerotic) alter lytic responsiveness",
+          "plausibility": 6,
+          "evidence_support": 4,
+          "specificity": 5,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "Some indirect evidence; not strongly documented for ischemic stroke. IST-3 lacks clot histology, limiting testability."
+        },
+        {
+          "mechanism_type": "physiological: higher competing mortality risks with age constrain observed independence gains",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Conceptually solid; can be examined by decomposing mortality vs disability endpoints and competing-risk analyses."
+        },
+        {
+          "mechanism_type": "pharmacological: age-related PK changes with uncertain clinical relevance",
+          "plausibility": 6,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 3,
+          "overall_score": 4,
+          "comments": "PK differences are likely minor for alteplase and overshadowed by vascular fragility; poorly supported and largely untestable here."
+        },
+        {
+          "mechanism_type": "statistical: age confounded with many risk factors \u2192 apparent TEH may not be causal",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Critical caveat, well supported by pooled analyses showing benefit across age strata when adequately adjusted."
+        },
+        {
+          "mechanism_type": "biological: younger patients have different etiologies (dissection, PFO) with different alteplase responsiveness",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Plausible; direct evidence is limited. Etiology-detail in IST-3 is modest, so only partially testable via AF/OCSP proxies."
+        }
+      ],
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 9,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 9,
+      "overall_score": 9,
+      "strengths": [
+        "Excellent alignment with IST-3\u2019s central question about benefit in very elderly patients and with published subgroup/meta-analytic results showing maintained, though sometimes attenuated, benefit with age.",
+        "Mechanisms correctly span bleeding risk, reduced plasticity, comorbidities, and competing mortality, and explicitly acknowledge strong confounding and the risk of ageism.",
+        "Validation recommendations (continuous spline modeling, absolute risk differences, cross-trial meta-analysis) are methodologically sound and clinically relevant."
+      ],
+      "weaknesses": [
+        "Some mechanisms (PK variation, thrombus calcification) are speculative and not directly testable in IST-3.",
+        "Subgroup bands (<70, 70\u201380, \u226580/\u226585) are common but still somewhat arbitrary; emphasis should remain on continuous modeling.",
+        "Outcome used (OHS 0\u20132) may not fully capture quality-of-life nuances especially important in very elderly, which slightly limits mechanistic interpretation."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age is a central and well-studied potential modifier in alteplase therapy, particularly in IST-3. Mechanistic plausibility and empirical evidence are strong, and understanding age-specific absolute benefits/harms is essential for clinical decision-making."
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: TACI \u2192 large cores/penumbrae; early recanalization yields large functional gains",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Strongly supported by OCSP literature and LVO data; TACI is a reasonable clinical proxy for large anterior circulation strokes with high potential benefit if salvaged."
+        },
+        {
+          "mechanism_type": "biological: TACI \u2192 severe BBB disruption \u2192 \u2191 sICH/malignant edema with reperfusion",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Plausible and consistent with large infarct pathophysiology and high hemorrhage/edema rates; direct alteplase-specific evidence is more limited but consistent."
+        },
+        {
+          "mechanism_type": "physiological: collateral variability in TACI \u2192 heterogeneity in salvageable tissue and benefit",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "Conceptually strong; testing requires collateral/perfusion imaging, which IST-3 likely lacks or has only in subsets."
+        },
+        {
+          "mechanism_type": "pharmacological: large proximal thrombi in TACI less responsive to alteplase",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Supported by modern LVO vs IVT recanalization data; less directly tested in IST-3 era but mechanistically reasonable. Imaging to confirm LVO is limited."
+        },
+        {
+          "mechanism_type": "physiological: mass effect/swelling in TACI may dominate outcome despite recanalization",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 8,
+          "comments": "Well recognized in malignant MCA syndrome; alteplase cannot fully reverse mass effect. Requires data on decompressive surgery and edema-associated outcomes."
+        },
+        {
+          "mechanism_type": "biological: TACI often high NIHSS/low GCS; TEH may partially reflect severity/consciousness rather than territory",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "Important and testable by adjusting for NIHSS/GCS in interaction models and examining incremental value of TACI."
+        },
+        {
+          "mechanism_type": "physiological: cardioembolic vs atherothrombotic TACI respond differently to alteplase",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Plausible but limited evidence; AF and other proxies can only partially separate etiologies."
+        },
+        {
+          "mechanism_type": "statistical: TACI is coarse with within-group heterogeneity; model importance may mask that",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Valid caution; testable via sensitivity analyses and, where available, imaging-defined LVO vs non-LVO."
+        }
+      ],
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 8,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 9,
+      "overall_score": 8,
+      "strengths": [
+        "Clear, clinically accurate description of TACI as a proxy for large anterior circulation strokes with high risk and high potential benefit/harm.",
+        "Mechanisms appropriately cover both potential for large benefit from salvage and high risk of hemorrhage/edema, consistent with existing TACI/OCSP literature.",
+        "Validation ideas correctly emphasize separating TACI effects from NIHSS/age and, where possible, linking to imaging-defined LVO."
+      ],
+      "weaknesses": [
+        "Clinical TACI categorization is imperfect and subject to inter-rater variability; IST-3\u2019s ability to refine within-TACI heterogeneity is limited without rich imaging.",
+        "Current thrombectomy-era context changes management of many TACI/LVO strokes, so external applicability of alteplase-only TEH is limited.",
+        "Sample size within TACI, especially when stratified by age/NIHSS, may result in wide confidence intervals and unstable subgroup estimates."
+      ],
+      "recommendation": "high_priority",
+      "justification": "TACI captures a major, clinically recognizable large-vessel phenotype with high stakes for alteplase treatment. Mechanisms are strong and consistent with prior data, and clarifying TEH in TACI vs non-TACI remains clinically relevant even in the thrombectomy era."
+    },
+    {
+      "feature_name": "atrialfib_rand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: AF cardioembolic clots are fibrin-rich and more alteplase-responsive",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Supported by some histopathological and coronary analogies; evidence in stroke is moderate. IST-3 has limited direct clot data but can use recanalization surrogates."
+        },
+        {
+          "mechanism_type": "biological: AF strokes more severe and larger territory \u2192 greater absolute benefit potential",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Well supported by observational and trial data; testable via AF\u2013NIHSS interactions and outcome modeling."
+        },
+        {
+          "mechanism_type": "biological: AF patients older with more microbleeds \u2192 \u2191 sICH risk",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Strong pathophysiological and epidemiological support; microbleeds not directly measured but age and imaging surrogates exist."
+        },
+        {
+          "mechanism_type": "pharmacological: AF patients on anticoagulants/antiplatelets \u2192 residual effect increases bleeding risk with alteplase",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Well-known interaction; IST-3 excluded full anticoagulation but residual effects are plausible. Testing requires anticoagulant status data."
+        },
+        {
+          "mechanism_type": "physiological: AF associated with impaired cardiac function/hemodynamics \u2192 worse perfusion/recovery",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Clinically plausible; specific effect on alteplase TEH harder to isolate without detailed cardiac data."
+        },
+        {
+          "mechanism_type": "biological: AF emboli may fragment during lysis \u2192 distal embolization and heterogeneous outcomes",
+          "plausibility": 6,
+          "evidence_support": 3,
+          "specificity": 5,
+          "testability": 3,
+          "overall_score": 4,
+          "comments": "Speculative with limited direct evidence; unlikely to be testable without serial vascular imaging."
+        },
+        {
+          "mechanism_type": "statistical: AF correlated with age/NIHSS/comorbidities \u2192 confounded TEH",
+          "plausibility": 10,
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "Key caveat; strongly supported by prior meta-analyses showing similar relative benefit in AF vs non-AF when adjusted."
+        },
+        {
+          "mechanism_type": "biological: non-AF etiologies differ (atherothrombotic/small-vessel) with other alteplase responsiveness profiles",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Conceptually sound but broad; specific differences by etiology are not well quantified in trials without detailed TOAST classification."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 8,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 9,
+      "overall_score": 8,
+      "strengths": [
+        "Accurate interpretation of AF as a key cardioembolic marker with implications for clot composition, stroke severity, and bleeding risk.",
+        "Mechanisms capture the tension between potentially better lytic responsiveness and higher hemorrhage/comorbidity burden.",
+        "Validation plan (adjusted interaction models, recanalization surrogates, cross-trial comparison) is appropriate and feasible."
+      ],
+      "weaknesses": [
+        "Some mechanisms (embolus fragmentation) are speculative and difficult to verify in IST-3.",
+        "AF is a strongly confounded, non-random factor; even sophisticated models may struggle to infer causal TEH rather than prognostic differences.",
+        "Changes in anticoagulation practice since IST-3 (widespread DOAC use) limit direct translatability of findings to current AF populations."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "AF is mechanistically and clinically important, but much of its apparent effect modification is likely due to confounding by age, severity, and antithrombotic use. It deserves focused but cautious analysis, with priority below core modifiers such as NIHSS and age."
+    },
+    {
+      "feature_name": "Stroke Type: PACI (Partial Anterior Circulation Infarct)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological: PACI \u2192 smaller cores, favorable collaterals \u2192 higher penumbra/core ratio and good benefit potential",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Reasonable extrapolation from OCSP literature; direct penumbra data often lacking. Partially testable via outcome and NIHSS distributions."
+        },
+        {
+          "mechanism_type": "biological: smaller cores in PACI \u2192 lower sICH risk \u2192 better safety profile",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Plausible and consistent with link between infarct size and hemorrhage; IST-3 sICH data allow partial testing but lack routine core imaging."
+        },
+        {
+          "mechanism_type": "physiological: focal but disabling deficits where modest size reductions yield large independence gains",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "Clinically realistic scenario; quantifying this effect in IST-3 is challenging without detailed domain-specific outcome measures."
+        },
+        {
+          "mechanism_type": "physiological: some PACI lesions due to distal branch occlusions with spontaneous recanalization \u2192 limited incremental alteplase benefit",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "Plausible; early NIHSS improvement in controls vs treated could hint at high spontaneous recanalization rates, but imaging would help."
+        },
+        {
+          "mechanism_type": "biological: diverse etiologies in PACI \u2192 heterogeneous alteplase responsiveness",
+          "plausibility": 7,
+          "evidence_support": 5,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 6,
+          "comments": "Likely true but broad; IST-3\u2019s limited etiologic data constrain detailed analysis."
+        },
+        {
+          "mechanism_type": "statistical: PACI overlaps with moderate NIHSS; TEH may reflect severity rather than territory",
+          "plausibility": 9,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Important and very testable; adjusting for NIHSS will reveal whether PACI adds independent TEH information."
+        },
+        {
+          "mechanism_type": "biological: clinical\u2013imaging mismatch in some PACI indicating large penumbra",
+          "plausibility": 7,
+          "evidence_support": 4,
+          "specificity": 6,
+          "testability": 3,
+          "overall_score": 5,
+          "comments": "Attractive hypothesis but requires detailed perfusion imaging rarely available in IST-3."
+        },
+        {
+          "mechanism_type": "physiological: better baseline prognosis/rehab potential in PACI \u2192 efficient translation of neurological gains",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 5,
+          "overall_score": 7,
+          "comments": "General rehabilitation concept; largely prognostic and not clearly alteplase-specific."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 7,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 8,
+      "overall_score": 7,
+      "strengths": [
+        "Good clinical description of PACI and its contrast with TACI, aligned with OCSP stroke-syndrome framework.",
+        "Mechanisms for both higher proportional benefit and potentially lower absolute benefit are sensible, given better baseline prognosis and smaller cores.",
+        "Validation suggestions (PACI vs TACI/others with NIHSS and age adjustment, sICH comparison, cross-trial OCSP checks) are methodologically reasonable."
+      ],
+      "weaknesses": [
+        "Many proposed mechanisms depend on imaging (core/penumbra, distal occlusions) that IST-3 largely lacks, limiting direct mechanistic validation.",
+        "Overlap with NIHSS may mean PACI adds little independent information as a TEH driver beyond severity measures.",
+        "Sample sizes in PACI subgroups, especially when stratifying further by age/NIHSS/AF, may limit precision."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "PACI is a plausible clinical proxy for smaller anterior circulation strokes with relatively favorable prognosis and good potential for benefit from alteplase, but its added value beyond NIHSS and age is uncertain and constrained by limited imaging. It warrants exploration, but with moderate priority compared to TACI and NIHSS."
+    }
+  ],
+  "top_features": [
+    "nihss",
+    "age",
+    "sbprand",
+    "antiplat_rand",
+    "Stroke Type: TACI (Total Anterior Circulation Infarct)"
+  ],
+  "methodological_concerns": [
+    "Multiple features are strongly collinear (NIHSS, GCS, TACI/PACI, SBP/DBP, age\u2013AF\u2013antiplatelets\u2013weight), so interaction analyses must be carefully adjusted and interpreted to avoid attributing TEH to surrogate variables.",
+    "Extremes of key modifiers (very high BP, very low/high weight, ultra-severe NIHSS or low GCS) are likely sparsely represented; spline-based or high-granularity subgroup analyses in these ranges may be unstable and require shrinkage/regularization.",
+    "Several hypothesized mechanisms rely on data not routinely present in IST-3 (e.g., detailed perfusion or collateral imaging, clot histology, comprehensive complication and rehab data), so mechanistic conclusions there should be explicitly labeled as inferential/speculative.",
+    "Given the non-random nature of many features (antiplatelet use, AF, weight, BP), causal interpretation of TEH requires careful adjustment, possible use of causal inference methods, and triangulation with external trial/registry data."
+  ]
+}

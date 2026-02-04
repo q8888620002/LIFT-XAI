@@ -13,13 +13,9 @@ from captum.attr import ShapleyValueSampling
 import src.CATENets.catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
 from src.dataset import Dataset
 
+# Default device - can be overridden by command line argument
 DEVICE = "cuda:1"
 os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
-
-
-# -----------------------------
-# Helper Functions
-# -----------------------------
 
 
 def _to_py(x):
@@ -31,6 +27,33 @@ def _to_py(x):
     if isinstance(x, (np.ndarray,)):
         return x.tolist()
     return x
+
+
+def get_feature_name_mappings():
+    """Return human-readable names for encoded categorical features."""
+    return {
+        # IST3 stroke types
+        "stroketype_1.0": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+        "stroketype_2.0": "Stroke Type: PACI (Partial Anterior Circulation Infarct)",
+        "stroketype_3.0": "Stroke Type: LACI (Lacunar Infarct)",
+        "stroketype_4.0": "Stroke Type: POCI (Posterior Circulation Infarct)",
+        "stroketype_5.0": "Stroke Type: Other",
+        
+        # IST3 infarct visible on CT
+        "infarct_0": "Infarct Visible on CT: No",
+        "infarct_1.0": "Infarct Visible on CT: Possibly Yes",
+        "infarct_2.0": "Infarct Visible on CT: Definitely Yes",
+        
+        # CRASH-2 injury type
+        "iinjurytype_1": "Injury Type: Blunt",
+        "iinjurytype_2": "Injury Type: Penetrating",
+    }
+
+
+def translate_feature_name(feature_name):
+    """Translate encoded feature name to human-readable version if mapping exists."""
+    mappings = get_feature_name_mappings()
+    return mappings.get(feature_name, feature_name)
 
 
 def compute_shap_values(model, data_sample, data_baseline):
@@ -82,8 +105,8 @@ def parse_args():
     )
     parser.add_argument(
         "--baseline",
-        help="whether using baseline",
-        default=True,
+        help="Use random sample baseline (default: False uses median baseline)",
+        default=False,
         action="store_true",
     )
     parser.add_argument(
@@ -104,13 +127,24 @@ def parse_args():
         default=10,
         type=int,
     )
+    parser.add_argument(
+        "--device",
+        help="CUDA device to use (e.g., cuda:0, cuda:1)",
+        default="cuda:1",
+        type=str,
+    )
     return parser.parse_args()
 
 
 def main(args):
     """Main function for computing shapley value"""
+    
+    # Override global DEVICE with command line argument
+    global DEVICE
+    DEVICE = args.device
 
     print(args)
+    print(f"Using device: {DEVICE}")
 
     if args.wandb:
 
@@ -140,7 +174,6 @@ def main(args):
     baseline_indices_list = []  # Track baseline indices for reproducibility
     baseline_outputs_list = []  # Track baseline CATE predictions
     shap_sum_pred_corr = []  # Track SHAP sum vs CATE prediction correlation
-    all_sampled_indices = []  # Track all sampled indices for Pearson correlation calculation
 
     for i in range(args.num_trials):
         # Model training
@@ -148,7 +181,6 @@ def main(args):
         sampled_indices = np.random.choice(
             len(x_train), size=int(0.9 * len(x_train)), replace=False
         )
-        all_sampled_indices.append(sampled_indices)
 
         x_sampled = x_train[sampled_indices]
         y_sampled = y_train[sampled_indices]
@@ -188,7 +220,7 @@ def main(args):
         else:
             baseline_index = np.random.choice(len(x_train), 1)
             baseline = x_train[baseline_index]
-
+        
         # Track baseline metadata
         baseline_indices_list.append(int(baseline_index[0]) if baseline_index is not None else None)
         baseline_output = model.predict(X=baseline.reshape(1, -1)).detach().cpu().numpy().flatten()[0]
@@ -199,7 +231,7 @@ def main(args):
         # Compute SHAP values first
         shap_values = compute_shap_values(model, x_train, baseline)
         cohort_shap_values.append(shap_values)
-
+        
         # Compute correlation between SHAP sum and CATE prediction
         shap_sum = shap_values.sum(axis=1)  # Sum SHAP values across features for each sample
         cate_pred = cohort_predict_results[-1]  # Current trial predictions
@@ -267,7 +299,7 @@ def main(args):
     feature_names = dataset.get_feature_names()
     num_trials_completed = len(cohort_shap_values)
     num_features = shap_values_array.shape[2]
-
+    
     # Compute per-trial prediction statistics
     pred_mean_per_trial = pred_array.mean(axis=1)  # (trials,)
     pred_std_per_trial = pred_array.std(axis=1)  # (trials,)
@@ -275,7 +307,7 @@ def main(args):
     pred_quantiles_per_trial = np.quantile(pred_array, qs, axis=1).T  # (trials, quantiles)
     pred_pos_rate_per_trial = (pred_array > 0).mean(axis=1)  # (trials,)
     pred_neg_rate_per_trial = (pred_array < 0).mean(axis=1)  # (trials,)
-
+    
     # Overall CATE prediction summary (pooled across trials)
     pred_pooled = pred_array.flatten()
     pred_overall = {
@@ -285,7 +317,7 @@ def main(args):
         "positive_rate": float((pred_pooled > 0).mean()),
         "negative_rate": float((pred_pooled < 0).mean()),
     }
-
+    
     # Baseline metadata
     baseline_indices = baseline_indices_list
     baseline_outputs = baseline_outputs_list
@@ -301,59 +333,18 @@ def main(args):
     mean_val = mean_per_trial.mean(axis=0)  # (features,)
     mean_std = mean_per_trial.std(axis=0)  # (features,)
 
-    # Compute additional statistics for clinical_agent compatibility
-    # TopN frequency: how often each feature appears in top N most important per sample
-    top_n_tracking = min(10, num_features)  # Track top 10 per sample
-    topn_counts = np.zeros(num_features)
-
-    for trial_idx in range(num_trials_completed):
-        for sample_idx in range(shap_values_array.shape[1]):
-            sample_shap = np.abs(shap_values_array[trial_idx, sample_idx, :])
-            top_indices = np.argsort(sample_shap)[-top_n_tracking:]
-            topn_counts[top_indices] += 1
-
-    total_samples = num_trials_completed * shap_values_array.shape[1]
-    topn_frequency_pct = (topn_counts / total_samples) * 100
-
-    # Pearson sign: correlation between feature value and SHAP value
-    # Positive correlation = positive sign, negative correlation = negative sign
-    pearson_sign_pos = np.zeros(num_features)
-    pearson_sign_neg = np.zeros(num_features)
-
-    for j in range(num_features):
-        correlations = []
-        for trial_idx in range(num_trials_completed):
-            # Get the sampled indices for this trial
-            trial_sampled_indices = all_sampled_indices[trial_idx]
-            feature_values = x_train[trial_sampled_indices, j]
-            shap_values_feat = shap_values_array[trial_idx, :, j]
-
-            if len(feature_values) == len(shap_values_feat):
-                corr = np.corrcoef(feature_values, shap_values_feat)[0, 1]
-                if not np.isnan(corr):
-                    correlations.append(corr)
-
-        if correlations:
-            pos_count = sum(1 for c in correlations if c > 0)
-            neg_count = sum(1 for c in correlations if c < 0)
-            total = len(correlations)
-            pearson_sign_pos[j] = (pos_count / total) if total > 0 else 0.0
-            pearson_sign_neg[j] = (neg_count / total) if total > 0 else 0.0
-
     # Build per-feature records
     feature_records = []
     for j, fname in enumerate(feature_names):
         feature_records.append(
             {
                 "feature_index": int(j),
-                "feature": str(fname),
+                "feature": translate_feature_name(str(fname)),
+                "feature_original": str(fname),
                 "shap_mean_abs": float(abs_mean[j]),
                 "shap_mean_abs_std": float(abs_std[j]),
                 "shap_mean": float(mean_val[j]),
                 "shap_mean_std": float(mean_std[j]),
-                "topN_frequency_pct": float(topn_frequency_pct[j]),
-                "pearson_sign_pos_frac": float(pearson_sign_pos[j]),
-                "pearson_sign_neg_frac": float(pearson_sign_neg[j]),
             }
         )
 
@@ -368,8 +359,6 @@ def main(args):
         "metadata": {
             "dataset": args.cohort_name,
             "model": "XLearner",
-            "learner": "XLearner",  # For clinical_agent compatibility
-            "explainer": "ShapleyValueSampling",  # For clinical_agent compatibility
             "trials_completed": num_trials_completed,
             "total_trials_requested": args.num_trials,
             "baseline_mode": "random_sample" if args.baseline else "median",

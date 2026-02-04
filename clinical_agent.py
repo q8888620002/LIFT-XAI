@@ -38,8 +38,8 @@ Example:
     --shap_json results/ist3/shap_summary.json \
     --out_json results/ist3/hypotheses.json \
     --trial_name ist3 \
-    --verifier_model gpt-4o-2024-08-06 \
-    --judge_model gpt-4o-2024-08-06
+    --enable_verifier \
+    --enable_judge
 """
 
 import argparse
@@ -568,8 +568,16 @@ def load_top_features(shap_json_path: str, n_features: int) -> dict:
 
     # Prefer pre-sorted list by mean_abs if present
     features = data.get("features", [])
+    
+    # If features is empty, return baseline mode (no SHAP data available)
+    # This allows baseline experiments where generator proposes features from literature
     if not features:
-        raise ValueError("No 'features' array found in Shapley JSON.")
+        return {
+            "dataset": dataset,
+            "learner": learner,
+            "explainer": "baseline_no_shap",
+            "top_feature_evidence": [],
+        }
 
     # Sort defensively by shap_mean_abs desc
     features_sorted = sorted(
@@ -644,16 +652,25 @@ def get_trial_metadata(trial_name: str) -> dict:
 
 
 def search_and_extract_article(
-    query: str, trial_name: str, client: OpenAI
+    query: str, trial_name: str, client: OpenAI, model_name: str = "gpt-4o-2024-08-06"
 ) -> Optional[ArticleExtraction]:
     """Search for trial article and extract key information.
-    
-    This is a simplified implementation. In production, you'd want to:
+
+    Args:
+        query: Search query for the article
+        trial_name: Name of the clinical trial
+        client: OpenAI client
+        model_name: Model to use for extraction
+
+    Returns:
+        ArticleExtraction or None if error
+
+    Note: This is a simplified implementation. In production, you'd want to:
     - Use a proper academic search API (PubMed, Semantic Scholar, etc.)
     - Implement web scraping with appropriate permissions
     - Use OpenAI's web browsing capability if available
     """
-    
+
     # For now, provide known URLs for the major trials
     known_articles = {
         "ist3": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(12)60768-5/fulltext",
@@ -661,14 +678,14 @@ def search_and_extract_article(
         "sprint": "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939",
         "accord": "https://www.nejm.org/doi/full/10.1056/NEJMoa0802743",
     }
-    
+
     trial_lower = trial_name.lower()
     if trial_lower not in known_articles:
         print(f"Warning: No known article URL for trial '{trial_name}'. Skipping article retrieval.")
         return None
-    
+
     article_url = known_articles[trial_lower]
-    
+
     # Prompt LLM to extract information
     # Note: In practice, you'd need to fetch the actual article content
     # This is a simplified version that relies on the LLM's training data
@@ -678,7 +695,7 @@ def search_and_extract_article(
         "Be accurate and cite only what is typically reported in such trials. "
         "If you don't know specific details, use 'not specified' or mark fields as null."
     )
-    
+
     extraction_prompt = {
         "task": "Extract trial characteristics and results",
         "trial_name": trial_name,
@@ -693,10 +710,10 @@ def search_and_extract_article(
         ],
         "note": "Use your knowledge of this published trial. Be conservative - don't invent details."
     }
-    
+
     try:
         extraction = client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",  # Use a capable model for extraction
+            model=model_name,
             messages=[
                 {"role": "system", "content": extraction_system},
                 {"role": "user", "content": json.dumps(extraction_prompt, indent=2)},
@@ -716,40 +733,76 @@ def generate_feature_hypotheses(
     model_name: str = "gpt-4o-2024-08-06"
 ) -> Optional[FeatureHypothesesSet]:
     """Generate mechanistic hypotheses for why top features are important.
-    
+
     Args:
         top_features: List of feature evidence dicts with SHAP values
         study_context: Dict with dataset, learner, treatment, outcome, population
         client: OpenAI client
         model_name: Model to use
-    
+
     Returns:
         FeatureHypothesesSet with generated hypotheses, or None if error
     """
     system_instructions = (
         "You are a clinical research expert generating mechanistic hypotheses for "
-        "treatment effect heterogeneity based on feature importance from SHAP analysis. "
-        "For each important feature, explain:\n"
+        "treatment effect heterogeneity based on clinical knowledge and published literature. "
+        "Based on the trial context (treatment, outcome, population), propose features that "
+        "might be important effect modifiers and explain:\n"
         "1. What the feature represents clinically\n"
         "2. Why it might modify treatment effects (mechanisms)\n"
         "3. What subgroups it implies\n"
-        "4. How to validate these hypotheses\n"
-        "Be specific, evidence-based, and acknowledge uncertainty."
+        "\n"
+        "Ground your hypotheses in:\n"
+        "- Known pathophysiology and pharmacology\n"
+        "- Published trial subgroup analyses\n"
+        "- Clinical guidelines and expert consensus\n"
+        "- Biological plausibility\n"
+        "\n"
+        "Use available information (e.g., SHAP feature importance values) if provided to "
+        "guide and support your hypotheses, but always ground reasoning in clinical literature.\n"
+        "\n"
+        "Be honest about:\n"
+        "- Which hypotheses are well-supported vs speculative\n"
+        "- Limitations of the reasoning approach\n"
+        "- Alternative explanations and confounders\n"
+        "\n"
+        "When generating feature names, use concrete, specific names without "
+        "placeholder prefixes. For example, use 'time_from_injury_to_TXA' instead of "
+        "'PLACEHOLDER_FEATURE_1 (e.g., time_from_injury_to_TXA)'. Use actual clinical "
+        "variable names that would appear in a dataset."
     )
+
+    n_mechanisms = study_context.get("n_hypotheses_per_feature", 3)
+    n_features_requested = study_context.get("n_features", len(top_features))
     
-    user_prompt = {
-        "task": "Generate mechanistic hypotheses for feature importance",
-        "study_context": study_context,
-        "top_features": top_features,
-        "instructions": [
-            "For each feature, explain why it's important for treatment heterogeneity",
-            "Propose biological/clinical mechanisms",
+    # Adjust instructions based on whether SHAP features are provided
+    if len(top_features) > 0:
+        task_description = "Generate mechanistic hypotheses for feature importance"
+        feature_instructions = [
+            "For each provided feature, explain why it's important for treatment heterogeneity",
+            f"Propose up to {n_mechanisms} biological/clinical mechanisms per feature",
             "Suggest validation approaches",
             "Acknowledge limitations and alternative explanations",
             "Consider interactions and patterns across features",
-        ],
-    }
+        ]
+    else:
+        task_description = "Generate mechanistic hypotheses for expected treatment effect modifiers"
+        feature_instructions = [
+            f"Propose {n_features_requested} features you expect to be important effect modifiers based on clinical literature",
+            "For each proposed feature, explain why it might be important for treatment heterogeneity",
+            f"Propose up to {n_mechanisms} biological/clinical mechanisms per feature",
+            "Suggest validation approaches",
+            "Acknowledge limitations and alternative explanations",
+        ]
     
+    user_prompt = {
+        "task": task_description,
+        "study_context": study_context,
+        "top_features": top_features,
+        "n_mechanisms_per_feature": n_mechanisms,
+        "instructions": feature_instructions,
+    }
+
     try:
         completion = client.beta.chat.completions.parse(
             model=model_name,
@@ -762,6 +815,145 @@ def generate_feature_hypotheses(
         return completion.choices[0].message.parsed
     except Exception as e:
         print(f"Error generating feature hypotheses: {e}")
+        return None
+
+
+def score_feature_hypotheses(
+    hypotheses: List[dict],
+    study_context: dict,
+    evidence: dict,
+    client: OpenAI,
+    model_name: str,
+    article_extraction: Optional[ArticleExtraction] = None,
+    is_revised: bool = False,
+) -> Optional[FeatureJudgeOutput]:
+    """Score feature hypotheses using an independent judge.
+
+    Args:
+        hypotheses: List of feature hypothesis dicts to score
+        study_context: Study context dict
+        evidence: Top feature evidence dict
+        client: OpenAI client
+        model_name: Model to use for judging
+        article_extraction: Optional article context
+        is_revised: Whether these are revised hypotheses
+
+    Returns:
+        FeatureJudgeOutput with scores, or None if error
+    """
+    # Use same judging criteria for both WITH and WITHOUT SHAP conditions
+    judge_system = (
+        "You are an independent scientific judge for feature-level mechanistic hypotheses.\n"
+        "Evaluate each feature hypothesis on multiple dimensions using a 1-10 scale.\n"
+        "Be objective, fair, and constructive.\n"
+        "\n"
+        "SCORING CRITERIA:\n"
+        "\n"
+        "1. Mechanism Plausibility (1-10):\n"
+        "   - Biological/physiological coherence of proposed mechanisms\n"
+        "   - Consistency with established pathophysiology and pharmacology\n"
+        "   - Specificity to the treatment and outcome context\n"
+        "   - Avoidance of generic mechanisms that could apply to any feature\n"
+        "   Score 9-10: Strong biological basis, well-established pathways, specific to context\n"
+        "   Score 5-7: Reasonable but speculative, some supporting literature, moderately specific\n"
+        "   Score 1-3: Implausible, contradicts known biology, purely generic\n"
+        "\n"
+        "2. Clinical Interpretation (1-10):\n"
+        "   - Accuracy of what the feature represents clinically\n"
+        "   - Clarity and precision of clinical description\n"
+        "   - Appropriate understanding of how feature is measured/coded\n"
+        "   - Recognition of clinical relevance and decision-making context\n"
+        "   Score 9-10: Accurate, precise, clinically sophisticated\n"
+        "   Score 5-7: Generally correct but lacks nuance or has minor inaccuracies\n"
+        "   Score 1-3: Misinterprets feature meaning, clinically naive\n"
+        "\n"
+        "3. Evidence Alignment (1-10):\n"
+        "   - Grounding in published clinical trials and systematic reviews\n"
+        "   - Citations or references to established treatment effect heterogeneity\n"
+        "   - Connection to known biological markers and risk stratification literature\n"
+        "   - Appropriate recognition when evidence is sparse or speculative\n"
+        "   Score 9-10: Strong grounding in literature, well-documented heterogeneity\n"
+        "   Score 5-7: Some literature support, but gaps or weak evidence base\n"
+        "   Score 1-3: Unsupported speculation, contradicts literature, no cited basis\n"
+        "\n"
+        "4. Subgroup Implications (1-10):\n"
+        "   - Clarity and actionability of proposed subgroups\n"
+        "   - Feasibility of defining subgroups in practice (available data, clear cutpoints)\n"
+        "   - Clinical utility - would these subgroups inform treatment decisions?\n"
+        "   - Avoidance of arbitrary or clinically meaningless stratifications\n"
+        "   Score 9-10: Clear, actionable, clinically meaningful subgroups\n"
+        "   Score 5-7: Reasonable but vague or difficult to operationalize\n"
+        "   Score 1-3: Unclear, arbitrary, or clinically meaningless\n"
+        "\n"
+        "5. Validation Plan Quality (1-10):\n"
+        "   - Concreteness and specificity of proposed validation analyses\n"
+        "   - Methodological appropriateness (correct statistical approaches)\n"
+        "   - Awareness of confounding and bias in proposed validation\n"
+        "   - Feasibility given typical data availability\n"
+        "   Score 9-10: Specific, rigorous, methodologically sound validation plan\n"
+        "   Score 5-7: General suggestions, some methodological gaps\n"
+        "   Score 1-3: Vague, methodologically flawed, or unfeasible\n"
+        "\n"
+        "6. Caveat Awareness (1-10):\n"
+        "   - Thoroughness in acknowledging limitations and alternative explanations\n"
+        "   - Recognition of potential confounding, bias, measurement error\n"
+        "   - Appropriate epistemic humility (avoiding overclaiming)\n"
+        "   - Acknowledgment when evidence is weak or mechanisms speculative\n"
+        "   Score 9-10: Comprehensive caveats, honest about limitations\n"
+        "   Score 5-7: Some caveats but incomplete or superficial\n"
+        "   Score 1-3: Overclaiming, ignoring limitations, false certainty\n"
+        "\n"
+        "For EACH individual mechanism, also score:\n"
+        "- Plausibility (1-10): biological believability of this specific mechanism\n"
+        "- Evidence support (1-10): how well clinical literature supports this mechanism\n"
+        "- Specificity (1-10): how detailed and connected to clinical/biological reasoning\n"
+        "- Testability (1-10): how testable/falsifiable with available data and methods\n"
+        "- Overall score (1-10): holistic assessment of this mechanism\n"
+        "- Brief comments: strengths, weaknesses, any concerns\n"
+        "\n"
+        "If original trial article context is provided, use it to:\n"
+        "- Assess mechanism plausibility based on trial physiology\n"
+        "- Judge interpretation accuracy against population characteristics\n"
+        "- Evaluate validation feasibility given trial design\n"
+        "- Cross-check if proposed mechanisms contradict known trial findings\n"
+        "\n"
+        "Provide honest, rigorous critique in strengths/weaknesses. Use the full 1-10 range."
+    )
+
+    judge_prompt = {
+        "evidence": {
+            "study_context": study_context,
+        },
+        "feature_hypotheses_to_score": hypotheses,
+        "scoring_instructions": {
+            "be_objective": True,
+            "score_range": "1-10 for each dimension",
+            "provide_justification": True,
+        },
+    }
+
+    if is_revised:
+        judge_prompt["scoring_instructions"]["note"] = "These are REVISED hypotheses after verification"
+
+    if article_extraction is not None:
+        judge_prompt["trial_article_context"] = article_extraction.model_dump()
+        judge_prompt["scoring_instructions"]["use_article_context"] = (
+            "Use trial article context to inform scoring, especially for "
+            "mechanism plausibility and clinical interpretation accuracy."
+        )
+
+    try:
+        result = client.beta.chat.completions.parse(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": judge_system},
+                {"role": "user", "content": json.dumps(judge_prompt, indent=2)},
+            ],
+            response_format=FeatureJudgeOutput,
+        )
+        return result.choices[0].message.parsed
+    except Exception as e:
+        print(f"Error scoring feature hypotheses: {e}")
         return None
 
 
@@ -815,14 +1007,14 @@ def main():
         help="Model name supporting structured outputs (e.g., gpt-4o-2024-08-06).",
     )
     parser.add_argument(
-        "--verifier_model",
+        "--enable_verifier",
         action="store_true",
-        help="Enable verification pass with the same model as --model.",
+        help="Enable verification/refinement pass using the model specified by --model.",
     )
     parser.add_argument(
-        "--judge_model",
+        "--enable_judge",
         action="store_true",
-        help="Enable independent judging pass with the same model as --model.",
+        help="Enable independent judging/scoring pass using the model specified by --model.",
     )
     parser.add_argument(
         "--verifier_iterations",
@@ -843,8 +1035,8 @@ def main():
     args = parser.parse_args()
 
     # Set verifier and judge models based on flags
-    verifier_model = args.model if args.verifier_model else None
-    judge_model = args.model if args.judge_model else None
+    verifier_model = args.model if args.enable_verifier else None
+    judge_model = args.model if args.enable_judge else None
 
     # Initialize API key and OpenAI client once
     api_key = os.getenv("OPENAI_API_KEY")
@@ -882,18 +1074,18 @@ def main():
     if args.retrieve_article and args.trial_name:
         print(f"Retrieving article information for {args.trial_name}...")
         article_query = trial_meta.get("article_query", f"{args.trial_name} clinical trial")
-        
+
         article_extraction = search_and_extract_article(
-            article_query, args.trial_name, client
+            article_query, args.trial_name, client, model_name=args.model
         )
         if article_extraction:
-            print(f"Successfully extracted article information.")
+            print("Successfully extracted article information.")
     elif args.retrieve_article and not args.trial_name:
         print("Warning: --retrieve_article requires --trial_name. Skipping article retrieval.")
 
     # ---------- GENERATE FEATURE HYPOTHESES ----------
     print("Generating mechanistic hypotheses for individual features...")
-    
+
     study_context = {
         "dataset": evidence["dataset"],
         "learner": evidence["learner"],
@@ -901,18 +1093,20 @@ def main():
         "treatment": treatment,
         "outcome": outcome,
         "source_explainer": evidence["explainer"],
+        "n_hypotheses_per_feature": args.n_hypotheses,
+        "n_features": args.n_features,  # Pass n_features so generator knows how many to propose if no SHAP
     }
-    
+
     feature_hypotheses = generate_feature_hypotheses(
         top_features=evidence["top_feature_evidence"],
         study_context=study_context,
         client=client,
         model_name=args.model,
     )
-    
+
     if not feature_hypotheses:
         raise RuntimeError("Failed to generate feature hypotheses")
-    
+
     print(f"Generated feature-level hypotheses for {len(feature_hypotheses.feature_hypotheses)} features.")
 
     final_output = feature_hypotheses
@@ -921,11 +1115,11 @@ def main():
     # ---------- VERIFY (optional) ----------
     if verifier_model:
         print(f"Refining feature hypotheses with verifier ({args.verifier_iterations} iteration(s))...")
-        
+
         for iteration in range(args.verifier_iterations):
             if iteration > 0:
                 print(f"  Refinement iteration {iteration + 1}/{args.verifier_iterations}...")
-            
+
             verifier_system = (
                 "You are a collaborative scientific advisor helping to REFINE feature-level mechanistic hypotheses.\n"
                 "Your role is to IMPROVE the hypotheses, not just evaluate them.\n"
@@ -964,7 +1158,7 @@ def main():
 
             # Use current hypotheses (either original or from previous iteration)
             current_hypotheses = final_output if iteration > 0 else feature_hypotheses
-            
+
             verifier_prompt = {
                 "iteration": iteration + 1,
                 "total_iterations": args.verifier_iterations,
@@ -990,7 +1184,7 @@ def main():
                     "Make hypotheses more specific, actionable, and evidence-based",
                 ],
             }
-            
+
             # Add article context if available
             if article_extraction is not None:
                 verifier_prompt["trial_article_context"] = article_extraction.model_dump()
@@ -1012,13 +1206,13 @@ def main():
             if verification_report.revised is not None:
                 final_output = verification_report.revised
                 num_revisions = sum(
-                    1 for review in verification_report.per_feature 
+                    1 for review in verification_report.per_feature
                     if review.verdict in ["revise", "reject"]
                 )
                 print(f"    Refined {num_revisions}/{len(verification_report.per_feature)} features")
             else:
                 print(f"    No revisions produced in iteration {iteration + 1}")
-        
+
         print(f"Completed {args.verifier_iterations} refinement iteration(s). Using final refined hypotheses.")
 
     # ---------- JUDGE (optional) ----------
@@ -1027,118 +1221,43 @@ def main():
 
     if judge_model:
         print("Scoring feature hypotheses...")
-        judge_system = (
-            "You are an independent scientific judge for feature-level mechanistic hypotheses.\n"
-            "Evaluate each feature hypothesis on multiple dimensions using a 1-10 scale.\n"
-            "Be objective, fair, and constructive. Score based on:\n"
-            "- Mechanism plausibility (biological/clinical coherence)\n"
-            "- Clinical interpretation (accuracy and clarity)\n"
-            "- Evidence alignment (SHAP support)\n"
-            "- Subgroup implications (clarity and usefulness)\n"
-            "- Validation plan quality (concreteness)\n"
-            "- Caveat awareness (thoroughness)\n"
-            "\n"
-            "For EACH individual mechanism, also score:\n"
-            "- Plausibility (1-10): how believable\n"
-            "- Evidence support (1-10): how well supported\n"
-            "- Specificity (1-10): how detailed\n"
-            "- Testability (1-10): how testable/falsifiable\n"
-            "- Overall score (1-10) for the mechanism\n"
-            "- Brief comments on strengths/weaknesses\n"
-            "\n"
-            "If original trial article context is provided, use it to:\n"
-            "- Assess mechanism plausibility based on trial physiology\n"
-            "- Judge interpretation accuracy against population characteristics\n"
-            "- Evaluate validation feasibility given trial design\n"
-            "Provide honest critique in strengths/weaknesses."
+        judge_report = score_feature_hypotheses(
+            hypotheses=feature_hypotheses.model_dump()["feature_hypotheses"],
+            study_context=study_context,
+            evidence=evidence,
+            client=client,
+            model_name=judge_model,
+            article_extraction=article_extraction,
+            is_revised=False,
         )
-
-        # Score original hypotheses
-        judge_prompt = {
-            "evidence": {
-                "study_context": study_context,
-                "top_feature_evidence": evidence["top_feature_evidence"],
-            },
-            "feature_hypotheses_to_score": feature_hypotheses.model_dump()["feature_hypotheses"],
-            "scoring_instructions": {
-                "be_objective": True,
-                "score_range": "1-10 for each dimension",
-                "provide_justification": True,
-            },
-        }
-        
-        # Add article context if available
-        if article_extraction is not None:
-            judge_prompt["trial_article_context"] = article_extraction.model_dump()
-            judge_prompt["scoring_instructions"]["use_article_context"] = (
-                "Use trial article context to inform scoring, especially for "
-                "mechanism plausibility and clinical interpretation accuracy."
-            )
-
-        j = client.beta.chat.completions.parse(
-            model=judge_model,
-            messages=[
-                {"role": "system", "content": judge_system},
-                {"role": "user", "content": json.dumps(judge_prompt, indent=2)},
-            ],
-            response_format=FeatureJudgeOutput,
-        )
-        judge_report: FeatureJudgeOutput = j.choices[0].message.parsed
 
         # If there are revised hypotheses, score those too
         if verification_report is not None and verification_report.revised is not None:
             print("Scoring revised feature hypotheses...")
-            judge_prompt_revised = {
-                "evidence": {
-                    "study_context": study_context,
-                    "top_feature_evidence": evidence["top_feature_evidence"],
-                },
-                "feature_hypotheses_to_score": verification_report.revised.model_dump()[
-                    "feature_hypotheses"
-                ],
-                "scoring_instructions": {
-                    "be_objective": True,
-                    "score_range": "1-10 for each dimension",
-                    "provide_justification": True,
-                    "note": "These are REVISED hypotheses after verification",
-                },
-            }
-            
-            # Add article context if available
-            if article_extraction is not None:
-                judge_prompt_revised["trial_article_context"] = article_extraction.model_dump()
-                judge_prompt_revised["scoring_instructions"]["use_article_context"] = (
-                    "Use trial article context to inform scoring, especially for "
-                    "mechanism plausibility and clinical interpretation accuracy."
-                )
-
-            j_rev = client.beta.chat.completions.parse(
-                model=judge_model,
-                messages=[
-                    {"role": "system", "content": judge_system},
-                    {
-                        "role": "user",
-                        "content": json.dumps(judge_prompt_revised, indent=2),
-                    },
-                ],
-                response_format=FeatureJudgeOutput,
+            judge_report_revised = score_feature_hypotheses(
+                hypotheses=verification_report.revised.model_dump()["feature_hypotheses"],
+                study_context=study_context,
+                evidence=evidence,
+                client=client,
+                model_name=judge_model,
+                article_extraction=article_extraction,
+                is_revised=True,
             )
-            judge_report_revised: FeatureJudgeOutput = j_rev.choices[0].message.parsed
 
     # ---------- WRITE OUTPUTS ----------
     ensure_out_dir(args.out_json)
     with open(args.out_json, "w") as f:
         json.dump(final_output.model_dump(), f, indent=2)
-    
+
     print(f"Wrote feature hypotheses to: {args.out_json}")
-    
+
     # Write verifier report if available
     if verification_report is not None:
         report_path = os.path.splitext(args.out_json)[0] + "_verification.json"
         with open(report_path, "w") as f:
             json.dump(verification_report.model_dump(), f, indent=2)
         print(f"Wrote verifier report to: {report_path}")
-    
+
     # Write judge reports (original and revised if applicable)
     if judge_report is not None:
         judge_path = os.path.splitext(args.out_json)[0] + "_judge_original.json"
@@ -1151,14 +1270,14 @@ def main():
             with open(judge_path_rev, "w") as f:
                 json.dump(judge_report_revised.model_dump(), f, indent=2)
             print(f"Wrote judge report (revised) to: {judge_path_rev}")
-    
+
     # Write article extraction if available
     if article_extraction is not None:
         article_path = os.path.splitext(args.out_json)[0] + "_article_context.json"
         with open(article_path, "w") as f:
             json.dump(article_extraction.model_dump(), f, indent=2)
         print(f"Wrote article context to: {article_path}")
-    
+
     if (
         args.fail_on_reject
         and verification_report is not None

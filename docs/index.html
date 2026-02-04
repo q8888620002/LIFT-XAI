@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Hypothesis Evaluation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Clinical Hypothesis Evaluation</h1>
+            <p class="subtitle">Rate mechanistic hypotheses for treatment effect heterogeneity</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="cohort-select">Select Trial Cohort:</label>
+                <select id="cohort-select">
+                    <option value="">-- Select Cohort --</option>
+                    <option value="crash_2">CRASH-2 (Tranexamic Acid)</option>
+                    <option value="ist3">IST-3 (Alteplase for Stroke)</option>
+                    <option value="sprint">SPRINT (Intensive BP Control)</option>
+                    <option value="accord">ACCORD (Intensive Glucose Control)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="condition-select">Condition:</label>
+                <select id="condition-select">
+                    <option value="with_shap">WITH SHAP (Data-Driven)</option>
+                    <option value="without_shap">WITHOUT SHAP (Literature-Based)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="rater-id">Your ID (initials or name):</label>
+                <input type="text" id="rater-id" placeholder="e.g., JD or John Doe">
+            </div>
+
+            <button id="load-btn" class="btn btn-primary">Load Hypotheses</button>
+        </div>
+
+        <div id="trial-info" class="info-box" style="display: none;">
+            <h3>Trial Context</h3>
+            <p><strong>Treatment:</strong> <span id="trial-treatment"></span></p>
+            <p><strong>Outcome:</strong> <span id="trial-outcome"></span></p>
+            <p><strong>Population:</strong> <span id="trial-population"></span></p>
+        </div>
+
+        <div id="hypotheses-container"></div>
+
+        <div id="summary-section" style="display: none;">
+            <button id="export-btn" class="btn btn-success">Export Ratings as JSON</button>
+            <p class="help-text">Click to download your ratings for submission</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

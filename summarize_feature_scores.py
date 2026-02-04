@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """summarize_feature_scores.py
 
-Compute average scores for each feature from judge output JSON files.
+Compute average scores comparing hypotheses WITH SHAP vs WITHOUT SHAP.
 
 Usage:
+    # Compare WITH SHAP vs WITHOUT SHAP for a single cohort
     python summarize_feature_scores.py \
-        --judge_json results/agents/hypotheses_baseline_shapley_XLearner_judge_original.json \
-        --out_csv results/agents/feature_scores_summary.csv
+        --judge_with_shap results/crash_2/hypotheses_with_shap_XLearner_judge_original.json \
+        --judge_without_shap results/crash_2/hypotheses_without_shap_baseline_judge_original.json \
+        --out_csv results/crash_2/shap_comparison.csv \
+        --plot
 
-    # Compare original vs revised
+    # Compare multiple cohorts
     python summarize_feature_scores.py \
-        --judge_json results/agents/hypotheses_baseline_shapley_XLearner_judge_original.json \
-        --judge_json_revised results/agents/hypotheses_baseline_shapley_XLearner_judge_revised.json \
-        --out_csv results/agents/feature_scores_comparison.csv \
+        --judge_with_shap results/crash_2/hypotheses_with_shap_XLearner_judge_original.json \
+                          results/ist3/hypotheses_with_shap_XLearner_judge_original.json \
+        --judge_without_shap results/crash_2/hypotheses_without_shap_baseline_judge_original.json \
+                             results/ist3/hypotheses_without_shap_baseline_judge_original.json \
+        --out_csv results/multi_cohort_shap_comparison.csv \
         --plot
 """
 
@@ -25,6 +30,61 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+
+
+def extract_hypothesis_scores(judge_json_path: str) -> Dict:
+    """Extract feature-level scores from judge JSON as proxy for hypothesis quality.
+
+    Returns:
+        Dictionary with overall metrics and per-feature scores
+    """
+    with open(judge_json_path, 'r') as f:
+        data = json.load(f)
+
+    # Extract scores from scored_features (these represent hypotheses about features)
+    feature_scores = []
+    for feat in data.get('scored_features', []):
+        feature_scores.append({
+            'feature_name': feat.get('feature_name', ''),
+            'mechanism_plausibility': feat.get('mechanism_plausibility', 0),
+            'clinical_interpretation': feat.get('clinical_interpretation', 0),
+            'evidence_alignment': feat.get('evidence_alignment', 0),
+            'subgroup_implications': feat.get('subgroup_implications', 0),
+            'validation_plan_quality': feat.get('validation_plan_quality', 0),
+            'caveat_awareness': feat.get('caveat_awareness', 0),
+            'overall_score': feat.get('overall_score', 0),
+            'recommendation': feat.get('recommendation', ''),
+        })
+    
+    # Compute average scores across all features
+    if feature_scores:
+        avg_scores = {
+            'biological_plausibility': np.mean([h['mechanism_plausibility'] for h in feature_scores]),
+            'clinical_relevance': np.mean([h['clinical_interpretation'] for h in feature_scores]),
+            'evidence_quality': np.mean([h['evidence_alignment'] for h in feature_scores]),
+            'subgroup_definition_clarity': np.mean([h['subgroup_implications'] for h in feature_scores]),
+            'validation_plan_quality': np.mean([h['validation_plan_quality'] for h in feature_scores]),
+            'caveat_awareness': np.mean([h['caveat_awareness'] for h in feature_scores]),
+            'overall_score': np.mean([h['overall_score'] for h in feature_scores]),
+            'num_hypotheses': len(feature_scores),
+        }
+    else:
+        avg_scores = {
+            'biological_plausibility': 0,
+            'clinical_relevance': 0,
+            'evidence_quality': 0,
+            'subgroup_definition_clarity': 0,
+            'validation_plan_quality': 0,
+            'caveat_awareness': 0,
+            'overall_score': 0,
+            'num_hypotheses': 0,
+        }
+    
+    return {
+        'summary': data.get('summary', ''),
+        'avg_scores': avg_scores,
+        'hypotheses': feature_scores,
+    }
 
 
 def extract_feature_scores(judge_json_path: str) -> pd.DataFrame:
@@ -71,6 +131,99 @@ def extract_feature_scores(judge_json_path: str) -> pd.DataFrame:
 
     df = pd.DataFrame(records)
     return df
+
+
+def compare_shap_vs_baseline(with_shap_paths: List[str], without_shap_paths: List[str]) -> pd.DataFrame:
+    """Compare average hypothesis scores between WITH SHAP and WITHOUT SHAP conditions.
+    
+    Args:
+        with_shap_paths: List of judge JSON paths for WITH SHAP condition
+        without_shap_paths: List of judge JSON paths for WITHOUT SHAP condition
+    
+    Returns:
+        DataFrame with comparison statistics
+    """
+    # Extract scores from all files
+    with_shap_data = [extract_hypothesis_scores(path) for path in with_shap_paths]
+    without_shap_data = [extract_hypothesis_scores(path) for path in without_shap_paths]
+    
+    # Aggregate scores
+    score_metrics = [
+        'biological_plausibility',
+        'clinical_relevance', 
+        'evidence_quality',
+        'subgroup_definition_clarity',
+        'validation_plan_quality',
+        'caveat_awareness',
+        'overall_score'
+    ]
+    
+    results = []
+    for metric in score_metrics:
+        with_shap_scores = [d['avg_scores'][metric] for d in with_shap_data]
+        without_shap_scores = [d['avg_scores'][metric] for d in without_shap_data]
+        
+        results.append({
+            'metric': metric.replace('_', ' ').title(),
+            'with_shap_mean': np.mean(with_shap_scores),
+            'with_shap_std': np.std(with_shap_scores),
+            'without_shap_mean': np.mean(without_shap_scores),
+            'without_shap_std': np.std(without_shap_scores),
+            'difference': np.mean(with_shap_scores) - np.mean(without_shap_scores),
+            'percent_improvement': ((np.mean(with_shap_scores) - np.mean(without_shap_scores)) / 
+                                   np.mean(without_shap_scores) * 100) if np.mean(without_shap_scores) > 0 else 0,
+        })
+    
+    comparison_df = pd.DataFrame(results)
+    return comparison_df
+
+
+def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comparison.png'):
+    """Plot comparison between WITH SHAP and WITHOUT SHAP conditions."""
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    
+    # 1. Bar chart comparison
+    ax = axes[0]
+    x = np.arange(len(comparison_df))
+    width = 0.35
+    
+    ax.bar(x - width/2, comparison_df['with_shap_mean'], width, 
+           label='WITH SHAP', alpha=0.8, color='steelblue',
+           yerr=comparison_df['with_shap_std'], capsize=5)
+    ax.bar(x + width/2, comparison_df['without_shap_mean'], width,
+           label='WITHOUT SHAP (Baseline)', alpha=0.8, color='coral',
+           yerr=comparison_df['without_shap_std'], capsize=5)
+    
+    ax.set_ylabel('Average Score (1-10)')
+    ax.set_title('Hypothesis Quality: WITH SHAP vs WITHOUT SHAP')
+    ax.set_xticks(x)
+    ax.set_xticklabels(comparison_df['metric'], rotation=45, ha='right')
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
+    ax.axhline(y=5, color='gray', linestyle='--', alpha=0.5, label='Midpoint')
+    ax.set_ylim(0, 10)
+    
+    # 2. Improvement chart
+    ax = axes[1]
+    colors = ['green' if x > 0 else 'red' for x in comparison_df['difference']]
+    bars = ax.barh(comparison_df['metric'], comparison_df['difference'], color=colors, alpha=0.7)
+    
+    ax.set_xlabel('Score Difference (WITH SHAP - WITHOUT SHAP)')
+    ax.set_title('Improvement with SHAP Feature Guidance')
+    ax.axvline(x=0, color='black', linestyle='-', linewidth=1)
+    ax.grid(axis='x', alpha=0.3)
+    
+    # Add percentage labels
+    for i, (diff, pct) in enumerate(zip(comparison_df['difference'], comparison_df['percent_improvement'])):
+        label = f'{diff:+.2f} ({pct:+.1f}%)'
+        x_pos = diff + (0.1 if diff > 0 else -0.1)
+        ha = 'left' if diff > 0 else 'right'
+        ax.text(x_pos, i, label, va='center', ha=ha, fontsize=9)
+    
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=300, bbox_inches='tight')
+    print(f"Saved comparison plot to: {out_path}")
+    plt.close()
 
 
 def compute_summary_stats(df: pd.DataFrame) -> pd.DataFrame:
@@ -278,19 +431,30 @@ def plot_mechanism_scores(df: pd.DataFrame, judge_json_path: str,
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Summarize feature scores from judge output")
+    parser = argparse.ArgumentParser(description="Compare hypothesis scores WITH SHAP vs WITHOUT SHAP")
+    parser.add_argument(
+        '--judge_with_shap',
+        nargs='+',
+        required=True,
+        help='Path(s) to judge JSON for hypotheses WITH SHAP'
+    )
+    parser.add_argument(
+        '--judge_without_shap',
+        nargs='+',
+        required=True,
+        help='Path(s) to judge JSON for hypotheses WITHOUT SHAP (baseline)'
+    )
     parser.add_argument(
         '--judge_json',
-        required=True,
-        help='Path to judge output JSON (original or revised)'
+        help='(Legacy) Path to judge output JSON'
     )
     parser.add_argument(
         '--judge_json_revised',
-        help='Path to judge output JSON for revised hypotheses (for comparison)'
+        help='(Legacy) Path to judge output JSON for revised hypotheses'
     )
     parser.add_argument(
         '--out_csv',
-        help='Path to save feature scores CSV'
+        help='Path to save comparison CSV'
     )
     parser.add_argument(
         '--out_summary_csv',
@@ -303,8 +467,8 @@ def main():
     )
     parser.add_argument(
         '--out_plot',
-        default='feature_scores.png',
-        help='Path to save feature scores plot'
+        default='shap_comparison.png',
+        help='Path to save comparison plot'
     )
     parser.add_argument(
         '--out_mechanism_plot',
@@ -313,57 +477,98 @@ def main():
     )
     args = parser.parse_args()
 
-    # Extract scores
-    print(f"Loading judge output from: {args.judge_json}")
-    df = extract_feature_scores(args.judge_json)
-
-    df_revised = None
-    if args.judge_json_revised:
-        print(f"Loading revised judge output from: {args.judge_json_revised}")
-        df_revised = extract_feature_scores(args.judge_json_revised)
-
-    # Compute summary statistics
-    summary = compute_summary_stats(df)
-
-    # Print to console
-    print("\n" + "="*80)
-    print("FEATURE SCORES SUMMARY")
-    print("="*80)
-    print("\nPer-Feature Scores:")
-    print(df.to_string(index=False))
-
-    print("\n" + "="*80)
-    print("SUMMARY STATISTICS")
-    print("="*80)
-    print(summary.to_string(index=False))
-
-    if df_revised is not None:
-        print("\n" + "="*80)
-        print("COMPARISON: ORIGINAL vs REVISED")
+    # Main comparison mode: WITH SHAP vs WITHOUT SHAP
+    if args.judge_with_shap and args.judge_without_shap:
         print("="*80)
-        comparison = pd.DataFrame({
-            'feature_name': df['feature_name'],
-            'original_score': df['overall_score'],
-            'revised_score': df_revised['overall_score'],
-            'improvement': df_revised['overall_score'] - df['overall_score']
-        })
-        print(comparison.to_string(index=False))
-        print(f"\nAverage improvement: {comparison['improvement'].mean():.2f}")
+        print("COMPARING: WITH SHAP vs WITHOUT SHAP")
+        print("="*80)
+        print(f"\nWITH SHAP files: {args.judge_with_shap}")
+        print(f"WITHOUT SHAP files: {args.judge_without_shap}")
+        
+        comparison_df = compare_shap_vs_baseline(args.judge_with_shap, args.judge_without_shap)
+        
+        print("\n" + "="*80)
+        print("HYPOTHESIS QUALITY COMPARISON")
+        print("="*80)
+        print(comparison_df.to_string(index=False))
+        
+        # Determine winner
+        overall_improvement = comparison_df[comparison_df['metric'] == 'Overall Score']['difference'].values[0]
+        print(f"\n{'='*80}")
+        if overall_improvement > 0:
+            print(f"✓ WITH SHAP performs BETTER (avg improvement: +{overall_improvement:.2f} points)")
+        elif overall_improvement < 0:
+            print(f"✗ WITHOUT SHAP performs BETTER (avg difference: {overall_improvement:.2f} points)")
+        else:
+            print("≈ Both conditions perform EQUALLY")
+        print("="*80)
+        
+        # Save comparison CSV
+        if args.out_csv:
+            comparison_df.to_csv(args.out_csv, index=False)
+            print(f"\nSaved comparison to: {args.out_csv}")
+        
+        # Generate comparison plot
+        if args.plot:
+            print("\nGenerating comparison plot...")
+            plot_shap_comparison(comparison_df, args.out_plot)
+        
+        return
+    
+    # Legacy mode: single judge file analysis
+    if args.judge_json:
+        print(f"Loading judge output from: {args.judge_json}")
+        df = extract_feature_scores(args.judge_json)
 
-    # Save CSVs
-    if args.out_csv:
-        df.to_csv(args.out_csv, index=False)
-        print(f"\nSaved feature scores to: {args.out_csv}")
+        df_revised = None
+        if args.judge_json_revised:
+            print(f"Loading revised judge output from: {args.judge_json_revised}")
+            df_revised = extract_feature_scores(args.judge_json_revised)
 
-    if args.out_summary_csv:
-        summary.to_csv(args.out_summary_csv, index=False)
-        print(f"Saved summary statistics to: {args.out_summary_csv}")
+        # Compute summary statistics
+        summary = compute_summary_stats(df)
 
-    # Generate plots
-    if args.plot:
-        print("\nGenerating plots...")
-        plot_feature_scores(df, df_revised, args.out_plot)
-        plot_mechanism_scores(df, args.judge_json, args.out_mechanism_plot)
+        # Print to console
+        print("\n" + "="*80)
+        print("FEATURE SCORES SUMMARY")
+        print("="*80)
+        print("\nPer-Feature Scores:")
+        print(df.to_string(index=False))
+
+        print("\n" + "="*80)
+        print("SUMMARY STATISTICS")
+        print("="*80)
+        print(summary.to_string(index=False))
+
+        if df_revised is not None:
+            print("\n" + "="*80)
+            print("COMPARISON: ORIGINAL vs REVISED")
+            print("="*80)
+            comparison = pd.DataFrame({
+                'feature_name': df['feature_name'],
+                'original_score': df['overall_score'],
+                'revised_score': df_revised['overall_score'],
+                'improvement': df_revised['overall_score'] - df['overall_score']
+            })
+            print(comparison.to_string(index=False))
+            print(f"\nAverage improvement: {comparison['improvement'].mean():.2f}")
+
+        # Save CSVs
+        if args.out_csv:
+            df.to_csv(args.out_csv, index=False)
+            print(f"\nSaved feature scores to: {args.out_csv}")
+
+        if args.out_summary_csv:
+            summary.to_csv(args.out_summary_csv, index=False)
+            print(f"Saved summary statistics to: {args.out_summary_csv}")
+
+        # Generate plots
+        if args.plot:
+            print("\nGenerating plots...")
+            plot_feature_scores(df, df_revised, args.out_plot)
+            plot_mechanism_scores(df, args.judge_json, args.out_mechanism_plot)
+    else:
+        parser.error("Must provide either (--judge_with_shap and --judge_without_shap) OR --judge_json")
 
 
 if __name__ == '__main__':

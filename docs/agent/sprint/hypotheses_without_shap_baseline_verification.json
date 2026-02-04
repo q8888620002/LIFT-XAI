@@ -1,0 +1,1459 @@
+{
+  "overall_verdict": "revise",
+  "summary": "Most feature-level hypotheses are conceptually strong and well-aligned with SPRINT-like physiology, but several mechanisms overstate evidence strength, blur short- vs long-term effects, or treat proxy markers (age, pulse pressure, frailty) as if they were direct causal modifiers. I refine them by (1) tightening biological plausibility with more specific cardiovascular/renal details, (2) adjusting evidence levels to better match trial/epidemiologic support, (3) clarifying that most modifiers alter net benefit via baseline risk, vulnerability, and competing risks rather than changing the relative risk reduction dramatically, (4) making subgroup cutpoints more clinically aligned with guidelines and SPRINT, and (5) proposing more targeted and feasible validation analyses, including focus on achieved BP, early vs late hazards, and component outcomes. Caveats are expanded to emphasize limited power for interaction tests and the risk of overinterpreting observational patterns (e.g., DBP J-curve, cognitive decline).",
+  "per_feature": [
+    {
+      "feature_name": "baseline_systolic_bp",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "Evidence level for some mechanisms (e.g., benefit via LV afterload reduction) is strong for BP lowering in general but only moderate for *differential* benefit by baseline SBP within a SPRINT-like range."
+        },
+        {
+          "type": "other",
+          "severity": "low",
+          "message": "Needs clearer distinction between absolute-risk driven heterogeneity vs true variation in relative treatment effect across baseline SBP."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": false,
+          "comments": "Very plausible and well supported for BP lowering in general, but subgroup differences in RRR by baseline SBP within typical trial ranges are less definitively established.",
+          "suggested_revision": "Rephrase to focus on higher baseline SBP producing larger *absolute* event reductions because of larger achievable BP drops and higher baseline risk; downgrade evidence to moderate for heterogeneity."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Plausible link between chronic high BP, remodeling, and benefit from more intensive control; moderate evidence is appropriate.",
+          "suggested_revision": "Clarify that reversal of structural changes over a 3\u20135 year horizon is partial; emphasize stroke/HF rather than MI as most affected in this timeframe."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Very plausible lower limit/autoregulation mechanism, supported by physiology and some clinical data, but not definitively proven in trials.",
+          "suggested_revision": "Add that within SPRINT-like ranges (SBP \u2265130), harms at the lower end are suggested mainly by subgroup trends and observational data, not definitive trial evidence."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Sound description of drug burden vs marginal benefit; evidence from adverse event patterns is consistent with a moderate rating.",
+          "suggested_revision": "Explicitly tie to increased rates of hypotension, syncope, and AKI observed in intensive arms when more drugs are required."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Regression-to-the-mean concerns are valid, but randomization and repeated measures blunt their impact.",
+          "suggested_revision": "Clarify that in well-randomized trials regression to the mean should affect both arms similarly; any residual bias is likely small but still worth sensitivity analyses."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Good link between SBP, stiffness, pulse pressure, and microvascular injury.",
+          "suggested_revision": "Note that this mechanism probably overlaps heavily with pulse pressure and LVH features and may not be independent."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Speculative but plausible in less tightly controlled settings; in trials, protocolized care may reduce but not abolish such differences.",
+          "suggested_revision": "Clarify that this is more relevant to real-world implementation heterogeneity than to biological effect modification."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Conceptually consistent with concerns about low SBP + stiff arteries; data are limited, so speculative rating is appropriate.",
+          "suggested_revision": "Anchor this mechanism more explicitly to low diastolic BP and pulse pressure rather than SBP alone."
+        }
+      ],
+      "suggested_edits": "Clarify that much of the heterogeneity by baseline SBP is expected to be in absolute, not necessarily relative, benefit, and that trial evidence within a SPRINT-like SBP spectrum shows fairly consistent RRR but larger ARR at higher baseline SBP. Downgrade evidence for mechanism 1 from strong to moderate for *effect modification* and emphasize joint modeling of SBP with DBP and pulse pressure. In subgroup implications, align cutpoints to those used in major guidelines and trials (e.g., <130, 130\u2013149, 150\u2013169, \u2265170) and highlight that patients with SBP already near 130 likely have the narrowest margin for intensive therapy.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "age",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "Mechanisms sometimes treat age as causal rather than as a proxy for vascular damage, frailty, and competing risks."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": false,
+          "comments": "Age increases baseline risk clearly; but specific evidence that older age alone increases *relative* benefit from intensive control is mixed.",
+          "suggested_revision": "Change emphasis to greater absolute benefit in older adults due to higher baseline risk, while noting that relative risk reductions appear broadly similar; adjust evidence to moderate for modification."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Good articulation of stiffness vs hypotension/fall risk trade-off.",
+          "suggested_revision": "Mention SPRINT\u2019s finding of substantial benefit in \u226575 but also higher serious adverse event rates, illustrating this trade-off."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Cerebral autoregulation shifts are well described; moderate evidence is appropriate.",
+          "suggested_revision": "Add that most RCTs (including SPRINT MIND) did not show major cognitive harm with intensive BP lowering but power for very old/frail subgroups is limited."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Consistent with clinical AKI patterns in older adults with intensive therapy.",
+          "suggested_revision": "Clarify that many AKI episodes are hemodynamic and at least partially reversible; long-term kidney outcome impact is less certain."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Polypharmacy and falls risk are well-recognized issues.",
+          "suggested_revision": "Highlight that adverse event reporting and threshold for hospitalization are often lower in the very old, affecting apparent harm rates."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Reasonable note about age as a frailty proxy.",
+          "suggested_revision": "Clarify that randomization balances age but not necessarily unmeasured frailty components; interaction tests by age may still be confounded by differential post-randomization care."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Plausible but trial horizons are often too short to see strong differential effects in middle-aged vs older; speculative rating is apt.",
+          "suggested_revision": "Add that longer-term cohort data suggest that middle-aged individuals may benefit most for dementia prevention, even if short-term CV benefits are similar."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Competing risk logic is sound.",
+          "suggested_revision": "Encourage use of competing-risk models to empirically quantify this attenuation in very old or multimorbid patients."
+        }
+      ],
+      "suggested_edits": "Reframe age less as a direct biological modifier and more as an integrator of vascular damage, stiffness, frailty, and competing risks. Emphasize that relative risk reductions with intensive control appear roughly similar across age groups, with older individuals gaining larger absolute benefits but also more adverse events. Subgroup implications should recommend age bands that match SPRINT and guideline thresholds (e.g., 50\u201364, 65\u201374, \u226575, consideration of \u226580 where sample size permits) and explicitly call for joint stratification with frailty and cognitive function rather than age alone.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "chronic_kidney_disease_stage",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "low",
+          "message": "Some mechanisms imply clear net benefit in CKD when trial data suggest a more nuanced balance between CV benefit and AKI/CKD progression."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": false,
+          "comments": "CKD as a high-risk state is strongly supported; whether intensive control yields proportionally greater benefit vs non-CKD is less certain.",
+          "suggested_revision": "Clarify that CKD patients clearly have higher absolute event rates and thus higher potential absolute benefit, but relative risk reductions may be similar; downgrade evidence for effect modification per se to moderate."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Excellent description of impaired autoregulation and AKI trade-off.",
+          "suggested_revision": "Add distinction between early, reversible hemodynamic eGFR drops and longer-term structural loss; emphasize that the former may not fully translate into worse long-term kidney outcomes."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Connection between albuminuria, BP lowering, and renal/CV outcomes is well supported.",
+          "suggested_revision": "Note that the time horizon in many BP trials may be too short to observe the full renal-mediated contribution to CV risk reduction."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Volume/salt sensitivity in CKD is well established.",
+          "suggested_revision": "Suggest that HF benefit may be particularly pronounced in volume-overloaded phenotypes, but electrolyte and renal harms also cluster here."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Renal handling of drugs is a valid concern in intensive regimens.",
+          "suggested_revision": "Encourage evaluation of class-specific intensive strategies (e.g., RAAS-heavy vs others) within CKD strata if data permit."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Competing risk considerations are appropriate.",
+          "suggested_revision": "Specify that Fine\u2013Gray or cause-specific hazard models should be used to evaluate this directly."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Mechanistically plausible, especially in advanced CKD with LVH.",
+          "suggested_revision": "Emphasize the likely dependence on low DBP and severe LVH; suggest joint analysis with DBP and LVH features."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Frequent contact and complex regimens likely alter adherence and monitoring.",
+          "suggested_revision": "Highlight that in a tightly controlled trial this effect may be smaller but is important for external validity."
+        }
+      ],
+      "suggested_edits": "Clarify that CKD predominantly modifies *absolute* benefit and harm via higher baseline CV risk and heightened vulnerability to AKI, rather than clearly altering relative risk reduction. Make subgroup categories align with KDIGO cutpoints likely present in the data (e.g., eGFR \u226560, 45\u201359, 30\u201344, <30; albuminuria A1\u2013A3) and recommend separate modeling for eGFR vs albuminuria-defined CKD. Strengthen validation suggestions by explicitly calling for time-varying eGFR analyses separating early hemodynamic dips from long-term slope changes.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "history_of_clinical_cardiovascular_disease",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "low",
+          "message": "Need stronger acknowledgment that many highest-risk ASCVD phenotypes (recent ACS, severe HF) are underrepresented/excluded in SPRINT-like trials."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Plaque rupture and shear stress logic is standard and supported.",
+          "suggested_revision": "Add that the main incremental benefit may be more clearly seen for stroke and HF than for MI in some trials."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Consistent with data showing strong HF reduction with BP lowering in LV dysfunction.",
+          "suggested_revision": "Suggest that stratified analyses by baseline EF or HF history, where available, would further test this mechanism."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Balanced view of stroke recurrence vs hypoperfusion risk.",
+          "suggested_revision": "Clarify that most RCT data support net stroke benefit with lower BP after prior stroke, but optimal target may be slightly higher in those with severe intracranial stenoses."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "J-curve concept is physiologically plausible but epidemiologically contested.",
+          "suggested_revision": "Stress that any harmful J-curve effect appears modest in trials and may be driven largely by low DBP in sicker patients rather than intensive therapy per se."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Layering intensive BP control onto multi-drug ASCVD therapy is realistic.",
+          "suggested_revision": "Encourage component-wise analysis of composite outcomes to quantify where marginal benefits remain (e.g., stroke vs MI)."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Adherence heterogeneity by prior event status is plausible but not well quantified.",
+          "suggested_revision": "Add that in a trial setting with standardized follow-up, these behavioral differences may be attenuated but still relevant clinically."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Correctly notes confounding by intensity of usual care.",
+          "suggested_revision": "Highlight the need for adjustment for baseline secondary-prevention therapies and risk-factor control when assessing effect modification."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Mesenteric/renal ischemia concern in PAD is plausible but under-studied.",
+          "suggested_revision": "Keep as speculative and suggest targeted evaluation if PAD numbers permit, focusing on GI ischemia and renal events."
+        }
+      ],
+      "suggested_edits": "Reinforce that prior ASCVD mainly increases baseline risk (and thus potential absolute benefit) but that relative risk reduction from intensive SBP lowering appears broadly similar, with especially strong effects on stroke and HF. Subgroup implications should distinguish coronary-only, cerebrovascular, and PAD phenotypes where sample size allows and pair these with baseline DBP/PP to test J-curve concerns more rigorously. Expand caveats to stress the exclusion of very recent ACS, decompensated HF, and some severe PAD phenotypes from SPRINT-like trials.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "baseline_frailty_index",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "low",
+          "message": "Some mechanisms imply clear net harm in frail patients, whereas SPRINT-type analyses often show preserved CV benefit but greater adverse events, with net effect still debated."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Well-grounded mechanistically and clinically.",
+          "suggested_revision": "Point to SPRINT subgroup analyses showing higher rates of hypotension and syncope in frailer elders under intensive targets."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Systemic inflammation/catabolism link to vulnerability is plausible.",
+          "suggested_revision": "Clarify that this likely amplifies harms but does not preclude significant CV benefit in some frail individuals with high baseline risk."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Logical but more speculative; data are limited.",
+          "suggested_revision": "Tie this mechanism closely to coexisting LVH, low DBP, and diastolic HF phenotypes to make it more testable."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Medication complexity is a major issue in frailty.",
+          "suggested_revision": "Encourage use of adherence or dose-intensity measures, where available, to quantify this pathway."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Competing non-CV mortality is a key concept.",
+          "suggested_revision": "Explicitly recommend using restricted mean survival time or net benefit metrics integrating CV events, adverse events, and functional decline."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Altered pharmacokinetics in frailty is plausible.",
+          "suggested_revision": "Suggest measuring drug levels only in substudies; otherwise rely on proxy markers (e.g., lower BMI, albumin) in modeling."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Good counterpoint describing why robust elders may safely benefit.",
+          "suggested_revision": "Mention that observational and trial data show that healthier older adults often reap the largest net gains from intensive prevention strategies."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Treatment de-intensification in frailty is well described clinically.",
+          "suggested_revision": "Recommend modeling achieved BP as a mediator and frailty as a modifier of the treatment\u2013achieved BP relationship."
+        }
+      ],
+      "suggested_edits": "Clarify that frailty likely modifies the *tolerability* window of intensive BP control more than the biological responsiveness of CV risk to BP lowering. Recommend using validated frailty indices (e.g., SPRINT frailty index, gait speed) where available and analyzing composite outcomes that integrate CV events, serious adverse events, and functional trajectories. Subgroup implications should highlight specific, validated thresholds (e.g., gait speed <0.8 m/s) rather than generic frail/prefrail categories when possible.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "baseline_left_ventricular_hypertrophy",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "validation_plan_weak",
+          "severity": "low",
+          "message": "Validation suggestions could more clearly separate ECG vs echo-defined LVH and account for missing imaging."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Strong mechanistic and clinical evidence that LVH regression improves outcomes and that BP lowering facilitates this.",
+          "suggested_revision": "Clarify that the timescale for meaningful LVH regression is typically \u22651\u20132 years; short follow-up may underestimate this pathway."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Appropriate discussion of diastolic dysfunction vs ischemia risk.",
+          "suggested_revision": "Encourage interaction analyses with baseline DBP and presence of coronary disease to identify those at highest ischemic risk."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Arrhythmia substrate link is solid.",
+          "suggested_revision": "Suggest evaluation of atrial fibrillation incidence, if available, as an intermediate outcome in LVH-positive patients."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Drug class\u2013specific LVH regression is well supported.",
+          "suggested_revision": "Highlight the potential confounding between intensive arm assignment and preferential use of RAAS/CCB agents in some trial protocols."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Arterial stiffness and PP link is accurate.",
+          "suggested_revision": "Recommend joint modeling of LVH with pulse pressure and age to separate independent contributions."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Correctly points out that LVH may be a risk marker rather than a pure mediator.",
+          "suggested_revision": "Stress the importance of mediation analyses including both baseline LVH and its on-treatment change."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Advanced hypertensive heart disease with low DBP risk is plausible but not well quantified.",
+          "suggested_revision": "Keep as speculative and suggest focusing on individuals with combined LVH, low DBP, and CAD when testing this mechanism."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Clinician behavior could confound LVH-related patterns outside trials; in trials protocols may reduce but not eliminate this.",
+          "suggested_revision": "Clarify that this mechanism is more relevant for real-world external validity rather than within-trial biological heterogeneity."
+        }
+      ],
+      "suggested_edits": "Emphasize that LVH is both a risk marker and a potentially modifiable mediator and that effect modification may partly arise because intensive strategies drive greater LVH regression in those with higher baseline mass. Strengthen validation by recommending (1) separate analyses for ECG- vs echo-defined LVH, (2) use of multiple imputation or IPW for missing echo data, and (3) modeling of changes in LV mass over time where available to quantify mediation.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "baseline_diastolic_bp",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "J-curve mechanisms are plausible but data from RCTs are mixed; harms at low DBP are often confounded by underlying illness."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": false,
+          "comments": "Coronary perfusion dependence on DBP is physiologically solid, but translation into clear clinical harm with intensive therapy is not strongly confirmed.",
+          "suggested_revision": "Maintain the mechanism but downgrade evidence to weak\u2013moderate for effect modification; stress confounding by disease severity and need for cautious interpretation."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Low DBP as a marker of stiffness/microvascular disease is well described.",
+          "suggested_revision": "Clarify that low DBP may be more a vulnerability marker than a direct driver of harm from BP lowering."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Tolerability of DBP reduction is reasonable; moderate support.",
+          "suggested_revision": "Stress that higher baseline DBP allows larger absolute reductions without necessarily hitting the hypothesized perfusion threshold."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Confounding/reverse causality in J-curve data is appropriately noted.",
+          "suggested_revision": "Encourage stratified or sensitivity analyses excluding patients with low-output states or severe HF to mitigate this bias."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Class-differential effects on DBP are real; clinical harm patterns less well studied.",
+          "suggested_revision": "Keep as speculative and suggest exploring interaction between drug class mix, baseline DBP, and MI/HF outcomes."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Combination of low DBP, tachycardia, and stiffness worsening perfusion is plausible but under-tested.",
+          "suggested_revision": "Recommend exploring this with joint interaction terms for DBP, heart rate, and PP if data allow."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Autonomic dysfunction link is plausible; data are limited.",
+          "suggested_revision": "Suggest using orthostatic hypotension or heart rate variability as proxies when available."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Clinicians often back off when DBP is low despite intensive targets.",
+          "suggested_revision": "Recommend mediation analysis where achieved SBP/DBP mediate the treatment effect and baseline DBP modifies the treatment\u2013achieved BP relationship."
+        }
+      ],
+      "suggested_edits": "Reframe DBP as primarily a *risk/vulnerability marker* rather than a proven causal determinant of harm with intensive SBP targets in this population. Lower the evidence strength for a harmful J-curve from moderate to weak\u2013moderate and emphasize that RCTs like SPRINT have not consistently demonstrated clear excess MI at low DBP under intensive control. Suggest more emphasis on joint SBP\u2013DBP\u2013PP analysis and on distinguishing baseline DBP from on-treatment nadir DBP when testing for J-shaped relationships.",
+      "mechanism_quality": "moderate",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "baseline_cognitive_function_score",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "validation_plan_weak",
+          "severity": "low",
+          "message": "Validation suggestions should note limited power and follow-up for cognitive outcomes in many BP trials and encourage pooling across datasets where possible."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Association between low cognition, small-vessel disease, and impaired autoregulation is plausible and supported by imaging/cognitive studies.",
+          "suggested_revision": "Add that direct evidence of cognitive worsening from intensive BP lowering is limited; SPRINT MIND generally showed neutral-to-beneficial cognitive effects overall."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "High BP as a driver of cognitive decline is well known.",
+          "suggested_revision": "Clarify that substantial benefits may require longer follow-up than typical trials provide; short-term effects on cognition may be modest."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Patients with cognitive impairment plausibly report symptoms less reliably.",
+          "suggested_revision": "Keep as speculative and suggest using caregiver-reported adverse events where available."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Adherence issues in cognitive impairment are well documented.",
+          "suggested_revision": "Recommend adherence-adjusted (e.g., using pill counts or pharmacy refill data) analyses to differentiate biological vs implementation heterogeneity."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Competing-risk framing is valid.",
+          "suggested_revision": "Encourage competing-risk or multi-state models including institutionalization and dementia as states."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Plausible that preserved autoregulation allows safe BP lowering.",
+          "suggested_revision": "Tie this to younger/less vascularly damaged patients and explicitly note likely overlap with age and frailty variables."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Brain\u2013kidney microvascular correlation is plausible but under-studied.",
+          "suggested_revision": "Suggest exploring joint effect modification by CKD and cognitive score, but keep claims cautious."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Caregiver presence can mitigate adherence problems, though data are limited.",
+          "suggested_revision": "Note this as an implementation factor more relevant to real-world settings than to tightly monitored trials."
+        }
+      ],
+      "suggested_edits": "Clarify that current RCT evidence does not support major cognitive harm from intensive BP lowering in the overall population and that any adverse cognitive effect is most plausible in those with marked baseline impairment and extensive small-vessel disease. Emphasize cognitive status as both a vulnerability marker and an adherence/implementation modifier. Strengthen validation suggestions by recommending pooled or meta-analytic analyses of cognitive outcomes, use of domain-specific cognitive tests where available, and incorporation of incident stroke and silent infarcts as mediators.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "baseline_pulse_pressure",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "other",
+          "severity": "low",
+          "message": "Need clearer discussion that pulse pressure is highly collinear with age and SBP; independent effect modification may be modest."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Arterial stiffness and pulsatile load mechanisms are strong.",
+          "suggested_revision": "Clarify that evidence for *greater* relative benefit from intensive control at high PP is suggestive but not definitive; emphasize absolute risk differences."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Narrow therapeutic window in high PP + low DBP is coherent.",
+          "suggested_revision": "Recommend joint stratification by PP and DBP, not PP alone, when testing this."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Link between PP, LVH, and HF is well-supported.",
+          "suggested_revision": "Highlight likely overlap with LVH feature; PP may partly capture unmeasured LV structural changes."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Central pressure vs brachial BP distinction is accurate.",
+          "suggested_revision": "Encourage any available central BP substudy to test whether central PP is a stronger modifier than brachial PP."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Collinearity with age, CKD, CVD is a major issue.",
+          "suggested_revision": "Suggest careful multivariable modeling and possibly penalized regression to handle collinearity when testing PP interactions."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Class differences in central BP effects are known; impact on heterogeneity is speculative.",
+          "suggested_revision": "Recommend exploratory analyses of drug class composition in intensive vs standard arms across PP strata."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Lower marginal benefit in low-PP patients is plausible but under-tested.",
+          "suggested_revision": "Keep speculative and propose sensitivity analyses examining absolute risk reductions across PP strata to verify smaller gains at low PP."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Irreversibility of extreme stiffness is plausible.",
+          "suggested_revision": "Suggest examining whether high-PP strata show attenuated relative risk reduction or just higher residual risk despite treatment."
+        }
+      ],
+      "suggested_edits": "Present pulse pressure explicitly as an integrative marker of arterial stiffness that may help identify patients at especially high risk of stroke and HF, but with only modest evidence that it changes the relative benefit of intensive vs standard BP control beyond age and SBP. Emphasize joint PP\u2013DBP and PP\u2013LVH analyses, and strengthen validation suggestions by proposing standardized PP categories consistent with prior literature (e.g., <50, 50\u201369, \u226570 mmHg) and component-outcome modeling focused on stroke and HF.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "number_of_antihypertensive_classes_at_baseline",
+      "verdict": "approve",
+      "issues": [
+        {
+          "type": "other",
+          "severity": "medium",
+          "message": "Feature blends biology (resistant hypertension) and behavior (adherence, prescribing style); mechanisms should differentiate these pathways more explicitly."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Reasonable: more drugs reflect harder-to-control BP and a need for further intensification.",
+          "suggested_revision": "Clarify that realized BP reduction under an intensive protocol may actually be *smaller* in some resistant patients despite more drugs, leading to smaller-than-expected benefit."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Side-effect ceiling with multiple drugs is realistic.",
+          "suggested_revision": "Recommend evaluating dose changes and drug additions as intermediate process measures in validation analyses."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Secondary causes and neurohormonal activation are plausible in resistant hypertension.",
+          "suggested_revision": "Keep speculative and suggest using simple proxies (e.g., hypokalemia for primary aldosteronism, OSA diagnosis) where available."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "High pill burden reducing adherence is well-known.",
+          "suggested_revision": "Encourage per-protocol or adherence-adjusted analyses to separate biological from implementation effects."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Confounding by healthcare utilization and prescribing style is valid.",
+          "suggested_revision": "Suggest clustering or random-effects models by site/physician if data permit, to handle prescribing-style heterogeneity."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Benefit per added drug is likely larger in previously undertreated patients.",
+          "suggested_revision": "Explicitly distinguish previously undertreated (low drug count, high BP) from resistant (high drug count, high BP) phenotypes in subgroup implications."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Volume/salt-sensitive phenotype is plausible.",
+          "suggested_revision": "Recommend evaluating baseline edema, BMI, and natriuretic peptide levels (if available) as proxies for this phenotype."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Close supervision and health literacy may cluster with higher drug counts in some systems, but the direction can vary.",
+          "suggested_revision": "Emphasize heterogeneity by healthcare setting; interpret this mechanism cautiously in trial vs real-world contexts."
+        }
+      ],
+      "suggested_edits": "Clarify that this feature encapsulates at least three distinct phenotypes: (1) undertreated but easily modifiable hypertension (few drugs, high BP), (2) resistant hypertension (many drugs, high BP), and (3) well-controlled on multiple drugs (many drugs, near-goal BP). Subgroup implications should distinguish these by combining drug-class count with baseline SBP/DBP. Strengthen validation by recommending process metrics (change in number of classes, defined daily dose equivalents) and achieved BP as mediators, with number of baseline classes as a modifier of these treatment\u2013process relationships.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    }
+  ],
+  "revised": {
+    "dataset": "unknown_dataset",
+    "model": "unknown_learner",
+    "summary": "In non-diabetic adults \u226550 years with hypertension and elevated cardiovascular risk (SPRINT-like), intensive systolic BP control (<120 mmHg) likely has fairly consistent *relative* risk reduction across many subgroups, but large variation in *absolute* benefit and harm. Key modifiers are markers of baseline cardiovascular/renal damage (CKD, LVH, prior CVD, high pulse pressure), vascular/hemodynamic phenotype (SBP, DBP, PP combinations), and physiological reserve and vulnerability (age, frailty, cognitive status), as well as implementation factors (baseline treatment intensity). Features mostly function as integrative proxies for underlying pathology and competing risks, rather than strictly causal effect modifiers. Trial-based evidence supports these patterns qualitatively, but robust causal claims about heterogeneity require careful modeling of achieved BP, component outcomes, adverse events, and competing risks, along with replication in external datasets.",
+    "feature_hypotheses": [
+      {
+        "feature_name": "baseline_systolic_bp",
+        "importance_rank": 1,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Office systolic blood pressure (mmHg) prior to randomization, typically averaged over several standardized readings. Captures the initial severity of hypertension and the distance to the intensive target (<120 mmHg), and is closely linked to arterial stiffness, pulse pressure, and cumulative BP exposure.",
+        "why_important": "Baseline SBP strongly determines both baseline cardiovascular risk and the magnitude of achievable SBP reduction under an intensive strategy. Within a SPRINT-like range (generally \u2265130 mmHg), higher starting SBP tends to confer larger *absolute* risk reductions because of higher baseline risk and greater achievable BP lowering, but may also require more medications and increase adverse events. At the lower end of the treated SBP spectrum (e.g., 120\u2013130 mmHg), the margin for further safe reduction may be narrower, especially when combined with low DBP or high pulse pressure.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Higher baseline systolic BP reflects greater mechanical stress on arterial walls and myocardium and usually allows larger absolute BP reductions with intensive therapy. For a given proportional reduction in event risk per mmHg SBP lowering, patients starting at higher SBP experience larger *absolute* reductions in MI, stroke, and HF events because they both fall more in BP and start from a higher baseline risk.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Chronically elevated SBP promotes vascular remodeling (media hypertrophy, rarefaction, increased stiffness) and microvascular damage. In those with very high baseline SBP, more intensive control may better slow progression or partially reverse these maladaptive changes, particularly in the cerebral and renal microcirculation, yielding greater benefit for stroke and HF over a 3\u20135 year horizon.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "At lower baseline SBP (e.g., 120\u2013130 mmHg), the absolute BP change achievable with intensive targets is smaller, and in susceptible individuals (e.g., with stiff arteries, low DBP, or impaired autoregulation) further lowering may approach or cross the lower limit of cerebral and coronary autoregulation. This can increase risk of ischemic symptoms, syncope, or hemodynamic AKI in a subset, potentially attenuating net benefit despite similar relative risk reductions for events.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "More intensive BP targets at higher baseline SBP generally require more antihypertensive agents and higher doses. In those starting very high, the cardiovascular benefit per additional drug remains substantial given the high baseline risk, whereas in patients with only modestly elevated SBP the marginal benefit of each added agent is smaller and the risks of adverse effects (electrolyte disturbances, hypotension, AKI) become relatively more important.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Regression to the mean is more pronounced in individuals with extreme baseline SBP measurements. Although randomization and repeated measurements mitigate this, some apparent greater benefit in the highest SBP strata could reflect natural reversion of elevated readings rather than a pure causal interaction, exaggerating perceived heterogeneity by baseline SBP if not carefully modeled.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Baseline SBP correlates strongly with arterial stiffness and central pulse pressure. High SBP/high pulse pressure phenotypes are exposed to greater pulsatile stress on the brain, kidney, and heart. Intensive SBP lowering that also reduces central pulse pressure may therefore particularly reduce microvascular damage and associated stroke and HF events in these high-SBP/stiffness phenotypes.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Patients presenting with very high SBP may have had poor prior adherence or suboptimal treatment. Enrollment into an intensive management protocol (with frequent visits, medication titration, and counseling) can improve overall adherence and risk factor control beyond BP alone, making the realized benefit of randomization to an intensive arm appear larger at higher baseline SBP in pragmatic or real-world settings.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Individuals with modestly elevated SBP but advanced vascular stiffness (e.g., high pulse pressure, LVH) may already operate near the lower limit of safe diastolic pressure for coronary perfusion. In such patients, intensive therapy at relatively low baseline SBP can disproportionately reduce DBP, risking subendocardial ischemia or HF exacerbation and offsetting gains in stroke prevention.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Actionable subgroups to examine: (1) Baseline SBP categories anchored to common guidelines and trial ranges: 130\u2013139, 140\u2013149, 150\u2013169, and \u2265170 mmHg, assessing absolute vs relative risk reduction in each. (2) Joint phenotypes combining SBP with pulse pressure: high SBP with high PP (stiff arteries) vs high SBP with lower PP (less stiff), as these may differ in microvascular risk and tolerance of intensive lowering. (3) Participants with SBP 120\u2013129 mmHg but high CV risk, where the incremental benefit\u2013harm ratio of pushing <120 mmHg may be smallest, particularly if low DBP or frailty is present.",
+        "validation_suggestions": [
+          "Model treatment-by-baseline_systolic_bp interactions using restricted cubic splines to assess nonlinearity and identify any threshold effects, reporting both relative and absolute risk differences.",
+          "Stratify participants by clinically relevant SBP categories (e.g., 130\u2013139, 140\u2013149, 150\u2013169, \u2265170 mmHg) and compare absolute and relative risk reductions for the composite outcome and key components (stroke, HF).",
+          "Fit joint SBP\u2013DBP\u2013pulse pressure interaction models (e.g., 2D or 3D spline surfaces) to separate the role of SBP from low DBP/high PP phenotypes in modifying intensive-treatment effects.",
+          "Use causal forests or other machine-learning heterogeneity methods including achieved SBP as a mediator to distinguish baseline SBP\u2019s role as an effect modifier from its role as a predictor of achieved BP reduction and baseline risk.",
+          "Perform sensitivity analyses excluding participants with marked white-coat patterns or high BP measurement variability to reduce regression-to-the-mean artifacts."
+        ],
+        "caveats": [
+          "Baseline SBP is strongly correlated with age, pulse pressure, LVH, and CKD, making it difficult to attribute effect modification uniquely to SBP rather than to the broader vascular risk phenotype.",
+          "Measurement error, white-coat hypertension, and visit-to-visit variability can misclassify patients across SBP strata, biasing interaction estimates toward or away from null.",
+          "In randomized trials, baseline SBP is balanced across arms; subgroup differences often reflect variations in baseline and residual risk rather than large changes in the *relative* treatment effect.",
+          "Joint modeling with DBP and pulse pressure is essential: SBP in isolation may overstate or misrepresent risk in patients with low DBP (wide PP) vs those with proportionally elevated DBP."
+        ]
+      },
+      {
+        "feature_name": "age",
+        "importance_rank": 2,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Chronological age in years at baseline among adults \u226550. Age integrates lifetime exposure to cardiovascular risk factors and correlates with arterial stiffness, vascular burden, frailty, cognitive decline, and competing non-cardiovascular mortality risk.",
+        "why_important": "Age is a major determinant of baseline CV event risk and of vulnerability to treatment-related harms (falls, AKI, syncope). In trials resembling SPRINT, older adults\u2014especially \u226575 years\u2014experience higher absolute benefits from intensive BP control due to higher baseline risk, but also more adverse events. Age thus shapes the net benefit\u2013harm trade-off, partly through correlated factors such as frailty, arterial stiffness, CKD, and cognitive status.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Older individuals have more advanced atherosclerosis and arteriosclerosis, leading to higher baseline risk of MI, stroke, and HF. For a similar proportional risk reduction from BP lowering, this higher starting risk translates into greater absolute benefit from intensive control, even if the relative treatment effect is similar across ages.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Age-related arterial stiffness increases systolic and pulse pressures and impairs baroreflex function. Intensive BP control in older adults can substantially reduce pulsatile load, reducing HF and stroke risk, but also increases susceptibility to orthostatic hypotension, falls, and syncope due to impaired autonomic compensation.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Cerebral autoregulation shifts rightward with chronic hypertension, especially in older adults. Aggressive BP lowering in very old or frail individuals may drop BP toward or below their autoregulatory threshold, increasing risk of cerebral hypoperfusion and ischemic symptoms in some; however, trial data to date have not shown large average cognitive harms from intensive BP lowering.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Renal autoregulation declines with age, particularly in nephrosclerotic kidneys. Older participants are more prone to acute declines in GFR and hemodynamic AKI with intensive BP lowering, especially when RAAS blockade and diuretics are escalated, which can influence clinicians to de-intensify treatment and may offset some CV benefits.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "With advancing age, polypharmacy, frailty, and cognitive impairment become more prevalent. Very elderly patients have higher rates of dizziness, falls, and drug\u2013drug interactions at intensive targets and may struggle with complex regimens, thereby reducing net benefit despite higher CV risk.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Age correlates with many unmeasured frailty dimensions (e.g., sarcopenia, subclinical cognitive impairment) that may be the true effect modifiers. Even in randomized trials, interactions by age can be partially confounded by these factors and by differential post-randomization management tailored to perceived frailty or life expectancy.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "In middle-aged participants (50\u201365), target-organ damage may be less advanced. Intensive BP lowering could delay progression of LVH, microalbuminuria, and carotid atherosclerosis, but within the relatively short timeframe of most trials, these long-term preventive benefits may be only partially captured, yielding smaller apparent differences between intensive and standard strategies.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "In very old individuals with limited life expectancy and substantial multimorbidity, competing non-cardiovascular mortality can blunt the observed effect of intensive BP lowering on CV outcomes over typical follow-up durations, reducing absolute event reduction despite persisting biological benefits of lower BP.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Actionable age-related subgroups include: (1) 50\u201364, 65\u201374, and \u226575 years, mirroring SPRINT stratifications, with exploratory evaluation of \u226580 years where numbers permit. (2) Age strata combined with frailty status (robust vs frail) to distinguish healthy older adults likely to benefit substantially from those in whom harms and competing risks dominate. (3) Age combined with cognitive function and CKD to identify very old, high-risk patients with limited physiological reserve where more conservative targets may be reasonable.",
+        "validation_suggestions": [
+          "Estimate age-by-treatment interactions using flexible spline models rather than single cutpoints, reporting both relative and absolute risk differences across age.",
+          "Replicate and extend SPRINT-type analyses by comparing treatment effects in \u226575 vs <75 years, and where sample size allows, \u226580 vs <80 years, including serious adverse events (falls, syncope, AKI).",
+          "Adjust models for frailty indices, functional status, and comorbidities (e.g., CKD, prior CVD) to assess whether age per se contributes beyond these factors to effect modification.",
+          "Use competing-risk methods to quantify how non-CV death and other events (e.g., cancer, infection) modulate absolute benefits across age groups.",
+          "Where multiple datasets are available, perform pooled or meta-analytic analyses to improve power for detecting interactions in the very old."
+        ],
+        "caveats": [
+          "Age is a composite proxy for vascular damage, frailty, cognitive status, and comorbidities; observed age interactions may reflect these correlated factors rather than age itself.",
+          "Subgroup analyses by age\u2014especially for the very old (\u226580)\u2014can be underpowered and produce imprecise or unstable interaction estimates.",
+          "Clinical implementation often individualizes BP targets based on perceived frailty and goals of care; post-randomization treatment adherence and intensity may differ by age, complicating causal interpretation.",
+          "Adverse event detection and hospitalization thresholds can vary with age, potentially inflating apparent harms in older subgroups."
+        ]
+      },
+      {
+        "feature_name": "chronic_kidney_disease_stage",
+        "importance_rank": 3,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Baseline chronic kidney disease severity characterized by estimated GFR and albuminuria (e.g., KDIGO G1\u2013G5 and A1\u2013A3). Captures chronic renal parenchymal damage, systemic microvascular disease, and associated metabolic and hemodynamic abnormalities.",
+        "why_important": "CKD substantially amplifies cardiovascular risk and alters hemodynamic and pharmacologic responses to BP lowering. Patients with CKD have higher baseline rates of MI, stroke, HF, and death, and thus greater potential absolute benefit from intensive BP control, but also heightened vulnerability to hemodynamic AKI, electrolyte disturbances, and rapid GFR decline. The net treatment effect of intensive BP lowering may therefore differ across CKD stages and albuminuria levels.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "CKD is associated with endothelial dysfunction, chronic inflammation, vascular calcification, and uremic toxin accumulation, all of which increase susceptibility to atherothrombotic and HF events. Intensive BP lowering in CKD reduces afterload and pulsatile stress and can lower stroke and HF risk, potentially yielding larger absolute benefits because baseline CV risk is higher, even if relative risk reductions are similar to non-CKD patients.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Impaired renal autoregulation in CKD makes GFR more dependent on systemic BP, especially in advanced stages and with RAAS blockade or diuretics. Aggressive BP reduction can precipitate hemodynamic GFR declines and AKI episodes, which may be partially reversible but can also prompt treatment de-intensification or unmask underlying structural vulnerability.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Albuminuria reflects generalized endothelial leakiness and microvascular disease. Intensive BP control\u2014especially with RAAS inhibitors\u2014reduces intraglomerular pressure and albuminuria, which can slow CKD progression and may indirectly reduce CV events by preserving renal function and attenuating uremia-related vascular toxicity over time.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Volume overload and salt sensitivity are common in CKD, particularly at lower eGFR. Intensive BP control often requires more diuretics and stricter sodium restriction, which can substantially reduce HF hospitalization risk and BP variability but may increase risks of electrolyte disturbances, hypotension, and pre-renal AKI in this group.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "CKD alters pharmacokinetics and pharmacodynamics of several antihypertensives (e.g., renally excreted beta-blockers, certain diuretics), increasing the risk of drug accumulation and side effects under intensive regimens. This can attenuate net benefit or necessitate dose reductions, especially in moderate-to-severe CKD.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Patients with more severe CKD have higher competing risks of ESRD, infections, and non-CV death. These competing events can attenuate the *observed* effect of intensive BP lowering on the composite CV endpoint in standard survival analyses, even if pathophysiologic benefit exists.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "CKD-related anemia and LVH can make the myocardium more vulnerable to ischemia when DBP falls. In advanced CKD, aggressive SBP reduction with concomitant low DBP may compromise coronary perfusion during diastole, particularly in patients with significant LVH or coronary artery disease.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Patients with advanced CKD often have complex medication regimens and frequent healthcare contact. This can both improve monitoring under intensive strategies and reduce adherence due to pill burden and treatment fatigue, leading to heterogeneity in realized BP differences and side-effect profiles across CKD stages.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Relevant CKD-related subgroups: (1) eGFR \u226560, 45\u201359, 30\u201344, and <30 mL/min/1.73 m\u00b2, recognizing that very advanced CKD (<30) is often underrepresented. (2) Albuminuria categories A1 (<30 mg/g), A2 (30\u2013299 mg/g), and A3 (\u2265300 mg/g), including individuals with albuminuria but preserved eGFR vs reduced eGFR without albuminuria. (3) CKD phenotypes with clinical evidence of volume overload/resistant hypertension vs those without, to assess differential HF and AKI risk under intensive regimens.",
+        "validation_suggestions": [
+          "Formally test treatment-by-eGFR and treatment-by-albuminuria interactions using both KDIGO categories and continuous measures with restricted cubic splines, adjusting for age and baseline BP.",
+          "Reproduce and extend CKD subgroup analyses by modeling separate effects on stroke, HF, MI, AKI, and CKD progression (e.g., 40% eGFR decline, ESRD) under intensive vs standard treatment.",
+          "Use mediation analyses to quantify the extent to which changes in albuminuria and eGFR slopes mediate CV risk reduction in CKD subgroups.",
+          "Apply competing-risk regression (e.g., Fine\u2013Gray models) accounting for ESRD initiation and non-CV death to estimate net clinical benefit across CKD stages.",
+          "Where feasible, stratify by likely CKD etiology (e.g., hypertensive/vascular vs other non-diabetic causes) using available clinical data to explore etiologic differences in treatment response."
+        ],
+        "caveats": [
+          "CKD staging based on single baseline creatinine and albuminuria measures is prone to short-term variability, regression to the mean, and misclassification.",
+          "Most BP-lowering trials, including SPRINT, excluded very advanced CKD and dialysis patients, limiting generalizability of effect modification findings to these groups.",
+          "Early hemodynamic eGFR declines after BP lowering can be partially reversible and may not indicate true CKD progression; conflating these with structural decline can overstate kidney harm.",
+          "CKD is closely correlated with age, hypertension duration, and vascular disease; residual confounding by these factors can influence observed effect modification even in randomized settings."
+        ]
+      },
+      {
+        "feature_name": "history_of_clinical_cardiovascular_disease",
+        "importance_rank": 4,
+        "shap_value": 0.0,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Indicator of established atherosclerotic cardiovascular disease (ASCVD) at baseline, including prior myocardial infarction, coronary revascularization, symptomatic peripheral artery disease, or prior ischemic stroke/TIA. Reflects high vascular burden and structural heart or brain injury.",
+        "why_important": "Patients with pre-existing ASCVD have substantially higher baseline risks of recurrent events and HF, leading to greater potential absolute benefit from intensive BP lowering, particularly for stroke and HF. However, they may also be more susceptible to coronary perfusion compromise and other harms when DBP is lowered too much. The risk\u2013benefit profile of intensive BP control can thus differ meaningfully between primary and secondary prevention populations and across ASCVD subtypes.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Existing coronary and cerebrovascular plaques are prone to rupture under high shear stress and BP surges. Intensive BP control stabilizes hemodynamic conditions and reduces wall stress, lowering the likelihood of plaque rupture and recurrent MI or stroke, with particularly large *absolute* gains in patients with prior events due to their very high baseline risk.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Prior MI and LV dysfunction increase HF risk by impairing systolic and diastolic function. Reducing afterload and BP with intensive therapy decreases myocardial oxygen demand and wall stress, leading to disproportionate reductions in HF hospitalizations among those with pre-existing structural heart disease compared with those without.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Patients with prior stroke often have impaired cerebral autoregulation and fragile microvasculature. Intensive BP lowering generally reduces recurrence of ischemic and hemorrhagic stroke, but in those with severe intracranial stenoses or extensive small-vessel disease, excessive lowering could increase hypoperfusion risk, making the optimal target more individualized.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "In patients with diffuse coronary disease, especially with existing low diastolic BP, further intensive SBP reduction can lower diastolic perfusion pressure and potentially increase type 2 MI risk (a J-curve-like phenomenon). This risk is most plausible among those with high coronary burden and very low on-treatment DBP.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Patients with prior ASCVD are usually on multiple cardioprotective drugs (statins, antiplatelets, beta-blockers). Intensive BP lowering added to this regimen may yield diminishing marginal benefits for MI prevention if coronary risk is already partly addressed but can still produce substantial incremental benefit for stroke and HF, leading to heterogeneous effects across components of the composite endpoint.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "A history of CVD can influence adherence and healthcare engagement. Some patients become more adherent and closely monitored after an event, enhancing the realized benefit of intensive control, whereas others may be overwhelmed by complex regimens, leading to nonadherence and more side effects.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Prior CVD strongly predicts both baseline risk and intensity of background care (e.g., more aggressive lipid and antiplatelet management). Residual confounding related to these secondary-prevention strategies and healthcare behaviors can mimic or mask true effect modification by prior CVD if not adequately adjusted.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Peripheral artery disease indicates diffuse atherosclerosis, including involvement of renal and mesenteric vessels. In such patients, intensive BP lowering might, in rare cases, exacerbate mesenteric or renal ischemia, attenuating net benefit relative to patients with coronary disease alone, particularly if DBP is driven very low.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Subgroups of interest: (1) Any prior ASCVD vs pure primary prevention (no prior CVD) to compare absolute and relative treatment effects. (2) Within ASCVD, separate coronary-only, cerebrovascular, and PAD groups, because stroke recurrence prevention vs coronary perfusion concerns may shift the optimal target. (3) Patients with prior MI or LV dysfunction vs those with structurally normal hearts, combined with baseline DBP, to better characterize potential J-curve phenomena and HF risk modification.",
+        "validation_suggestions": [
+          "Estimate treatment effects separately in participants with vs without prior clinical ASCVD, and formally test interaction terms on both relative and absolute scales.",
+          "Disaggregate the composite endpoint into MI, stroke, HF, and CV death and examine whether prior CVD status alters which components drive benefit from intensive BP control.",
+          "Adjust interaction models for baseline secondary-prevention therapies (statins, antiplatelets, beta-blockers) and risk-factor control to reduce confounding by background management intensity.",
+          "Use flexible models incorporating baseline DBP and coronary disease status to examine J-shaped relationships between DBP and MI/HF in the context of intensive vs standard SBP targets.",
+          "If data permit, perform subgroup analyses within PAD patients focusing on renal function changes and GI ischemic events to explore potential mesenteric/renal perfusion harms."
+        ],
+        "caveats": [
+          "Many trials exclude some of the highest-risk ASCVD populations (e.g., recent ACS, advanced symptomatic HF, severe valvular disease), limiting generalizability of effect modification results to those groups.",
+          "Definitions of prior CVD may miss silent MI or subclinical cerebrovascular disease, leading to misclassification and underestimation of heterogeneity.",
+          "Diastolic BP and coronary perfusion concerns are plausible but inconsistently demonstrated across RCTs; much of the observed J-shaped relationship may reflect confounding by underlying illness severity.",
+          "Prior CVD is correlated with CKD, age, and frailty; carefully adjusting for these factors is crucial to avoid attributing their influence solely to ASCVD history."
+        ]
+      },
+      {
+        "feature_name": "baseline_frailty_index",
+        "importance_rank": 5,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "A composite measure of frailty at baseline (e.g., deficit accumulation index, gait speed, grip strength, or multi-domain geriatric assessment). Captures diminished physiological reserve, vulnerability to stressors, and increased competing mortality risk beyond chronological age.",
+        "why_important": "Frailty strongly shapes the risk\u2013benefit balance of intensive BP control. Frail patients are more prone to orthostatic symptoms, falls, AKI, and functional decline when BP is lowered aggressively, and they face higher competing non-CV mortality, which can limit the time over which CV benefits accrue. Robust older adults, by contrast, often achieve substantial CV risk reduction with comparatively fewer serious harms, making them better candidates for intensive targets.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Frailty is associated with impaired baroreflex sensitivity, autonomic dysfunction, and a higher prevalence of orthostatic hypotension. Intensive BP reductions in frail individuals can more easily exceed their limited compensatory capacity, increasing the risk of syncope, falls, and related injuries.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Frailty reflects systemic inflammatory and catabolic states (sarcopenia, malnutrition) that increase vulnerability to physiological stressors, including rapid BP changes and drug side effects. This can magnify the harms of intensive therapy and reduce net CV benefit, even though baseline CV risk is high.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Frail patients often have reduced cardiac reserve and diastolic dysfunction. Excessive BP lowering may limit coronary and cerebral perfusion without proportionately reducing wall stress, especially if DBP falls substantially, resulting in a narrower and more patient-specific therapeutic window for intensive control.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Complex medication regimens required to achieve intensive targets can be more challenging for frail patients with cognitive or functional limitations, leading to nonadherence, dosing errors, or high BP variability, which may blunt benefits and increase the risk of adverse events.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Frailty is strongly associated with non-CV mortality (e.g., infections, fractures, malignancy) and institutionalization, reducing the effective time horizon over which intensive BP control can manifest CV benefits. As a result, frail patients may experience relatively more short-term harms than longer-term CV gains within typical trial follow-up.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Frail individuals may have altered pharmacokinetics and pharmacodynamics due to lower muscle mass, changes in body composition, and hypoalbuminemia. These changes can increase effective exposure to antihypertensives for a given dose, amplifying BP reductions and side effects compared with robust individuals.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "In robust older adults, preserved autonomic and vascular responses allow safe adaptation to lower BP levels. In this context, high baseline CV risk (due to age and vascular burden) combined with preserved reserve can yield substantial net benefit from intensive BP lowering without a large increase in serious adverse events.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Frail patients and their clinicians may prioritize comfort and functional maintenance over strict BP targets. This can lead to treatment de-intensification or reluctance to escalate therapy even in an intensive arm, resulting in smaller achieved BP differences and attenuated observed treatment effects in frail vs robust groups.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Key subgroups: (1) Robust vs prefrail vs frail based on a standardized frailty index or gait speed cutpoints (e.g., gait speed \u22650.8 vs <0.8 m/s). (2) Frail vs robust participants among those \u226575 years, to differentiate age-based from frailty-based modification. (3) Frailty combined with orthostatic hypotension status and low DBP to identify individuals at particularly high risk of syncope, falls, and AKI under intensive targets.",
+        "validation_suggestions": [
+          "Apply validated frailty indices (e.g., SPRINT frailty index, gait speed) to classify participants and test treatment-by-frailty interactions on both CV outcomes and serious adverse events.",
+          "Examine rates of falls, syncope, hypotension, and AKI under intensive vs standard control across frailty strata, using interaction tests and absolute risk differences.",
+          "Use multi-state or joint models that incorporate survival, institutionalization, and functional decline (e.g., disability progression) to assess net clinical benefit in frail vs robust participants.",
+          "Model achieved BP (and change over time) as a mediator and frailty as a modifier to disentangle biological effects of BP lowering from implementation choices (de-intensification) driven by frailty.",
+          "Perform sensitivity analyses excluding participants with missing key frailty components or using multiple imputation, to avoid biased frailty classification."
+        ],
+        "caveats": [
+          "Frailty is often not directly measured in cardiovascular trials; post hoc indices derived from available variables may incompletely capture true frailty and can be measurement-model dependent.",
+          "Residual confounding by age, comorbidities, and baseline cognitive impairment may bias estimates of frailty-related heterogeneity even when frailty indices are used.",
+          "Clinician-driven treatment de-intensification in frail patients, regardless of randomization, can attenuate observed treatment contrasts and obscure biological effect modification.",
+          "Frailty definitions and cutpoints vary widely across studies, complicating external validity and cross-trial synthesis."
+        ]
+      },
+      {
+        "feature_name": "baseline_left_ventricular_hypertrophy",
+        "importance_rank": 6,
+        "shap_value": 0.0,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Presence and severity of left ventricular hypertrophy (LVH) at baseline, defined by ECG criteria and, where available, by echocardiographic LV mass index. Reflects long-standing pressure overload and structural cardiac remodeling due to hypertension and other stressors.",
+        "why_important": "LVH is a strong predictor of cardiovascular events, particularly HF, arrhythmias, and sudden death, and is partly reversible with effective BP lowering. Patients with LVH may derive disproportionate benefit from intensive BP control through LV mass regression and reduced HF and arrhythmic events, but advanced hypertensive heart disease can also limit perfusion reserve and increase susceptibility to hypotension-related ischemia.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "LVH indicates maladaptive cardiomyocyte hypertrophy, interstitial fibrosis, and microvascular rarefaction. Intensive BP reduction lowers afterload and wall stress, facilitating partial reverse remodeling and reducing HF and sudden death risk more markedly in patients with LVH than in those without, over a medium-term (1\u20135 year) horizon.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Patients with concentric LVH often exhibit diastolic dysfunction and elevated LV filling pressures. Reducing systolic load with intensive BP control can improve diastolic filling and symptoms, but if DBP is reduced excessively, coronary perfusion to a hypertrophied myocardium may be compromised, raising ischemia risk in a subset.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Hypertrophied ventricles provide an arrhythmogenic substrate due to fibrosis, altered conduction, and repolarization abnormalities. Regression of LVH under intensive BP control, particularly when regimens include RAAS inhibitors and certain CCBs, may reduce atrial fibrillation and ventricular arrhythmias, lowering stroke and sudden death risk.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Antihypertensive classes used to implement intensive strategies (ACE inhibitors, ARBs, CCBs) differ in their capacity to regress LVH. Intensive regimens rich in these agents may provide additional structural benefits beyond BP reduction in LVH-positive patients, enhancing treatment effects on HF and arrhythmic outcomes.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "LVH is frequently associated with wide pulse pressure and arterial stiffness. Intensive therapy that reduces systolic load and, to some extent, pulse pressure can be particularly beneficial for LVH-positive patients by lowering microvascular damage to the myocardium, brain, and kidneys and reducing HF and stroke risk.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "LVH reflects long-standing exposure to high BP and unmeasured risk factors (e.g., genetic susceptibility, neurohormonal activation). Apparent effect modification attributed to LVH may capture these underlying processes rather than LV mass itself, especially if changes in LVH over time are not accounted for.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "In some patients with advanced hypertensive heart disease and low diastolic BP, further intensive BP lowering can precipitate subendocardial ischemia and worsen HF, particularly if coronary disease coexists. This would counterbalance benefits and create heterogeneous responses within LVH-positive subgroups.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "The presence of LVH may prompt clinicians in real-world settings to intensify cardioprotective therapy (e.g., RAAS blockade, beta-blockers) regardless of trial arm, potentially amplifying apparent benefits for LVH-positive patients outside strict protocolized contexts.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Actionable LVH-related subgroups: (1) LVH present vs absent, using ECG where echo is unavailable, with sensitivity analyses restricted to echo-defined LVH. (2) Degree of LVH (none, mild, moderate, severe) by LV mass index, focusing on HF and sudden death outcomes. (3) LVH patterns (concentric vs eccentric) combined with baseline DBP and history of coronary disease to identify patients who may have a narrower safe window for intensive BP lowering.",
+        "validation_suggestions": [
+          "Estimate treatment-by-LVH interactions using echo-defined LV mass index where available, and in the broader cohort using ECG-based LVH, with appropriate attention to ECG\u2019s low sensitivity.",
+          "Compare treatment effects on HF-specific outcomes, stroke, arrhythmias (e.g., incident atrial fibrillation if captured), and sudden death between LVH-positive and LVH-negative patients.",
+          "Conduct mediation analyses to estimate how much of the intensive-treatment effect on CV events is mediated through changes in LV mass over time in subsets with serial imaging.",
+          "Jointly model LVH with pulse pressure, age, and CKD to assess whether LVH captures independent effect modification beyond these correlated features.",
+          "Use multiple imputation or weighting methods to address missing echocardiographic data when estimating LVH-related heterogeneity."
+        ],
+        "caveats": [
+          "LVH detection by ECG has limited sensitivity and can misclassify many patients with true LVH as negative, reducing apparent effect modification.",
+          "Echocardiographic data are often available only in substudies, restricting power and possibly introducing selection bias in LVH-based analyses.",
+          "LVH can regress under both intensive and standard protocols, and baseline LVH may not fully capture dynamic structural changes that drive outcomes.",
+          "Coexisting structural heart diseases (valvular disease, cardiomyopathies) can influence treatment effects and confound the role of LVH as a modifier if not accounted for."
+        ]
+      },
+      {
+        "feature_name": "baseline_diastolic_bp",
+        "importance_rank": 7,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Office diastolic blood pressure (DBP) in mmHg at baseline. Reflects peripheral vascular resistance and contributes to coronary and cerebral perfusion pressure, especially in patients with coronary artery disease or LVH.",
+        "why_important": "Although intensive treatment targets SBP, DBP usually falls concurrently. Observational studies have suggested a J-shaped association between low DBP and increased coronary events, particularly in patients with CAD and LVH, raising concern that intensive SBP lowering in patients with low baseline DBP could compromise myocardial perfusion. Conversely, patients with higher baseline DBP may tolerate larger absolute DBP reductions without reaching harmful levels, allowing safer benefit from intensive SBP lowering.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Coronary blood flow occurs predominantly during diastole; very low DBP can impair myocardial perfusion, especially in the presence of significant epicardial stenoses. Intensive SBP lowering in patients who already have low baseline DBP may further reduce DBP and coronary perfusion pressure, potentially increasing MI risk in vulnerable individuals, even as stroke risk falls.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Low DBP is often a marker of advanced arterial stiffness and wide pulse pressure in older adults, reflecting reduced vascular recoil. Such patients may already have impaired microvascular perfusion; aggressive SBP lowering may exacerbate this, particularly in heart and brain microvasculature, although clear causal evidence in trials is limited.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Patients with higher baseline DBP (e.g., \u226580\u201390 mmHg) can typically sustain a greater absolute reduction in DBP without crossing into ranges associated with ischemia. For these patients, intensive SBP lowering can be achieved with less risk of compromising coronary perfusion, making net benefit more favorable.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "The observed J-shaped relationship between low DBP and coronary events in some studies is likely confounded by severe underlying illnesses (e.g., HF, cachexia) that cause both low DBP and higher event risk. Nevertheless, baseline low DBP may still act as a marker for such vulnerability, which can influence observed treatment benefits and harms in intensive vs standard arms.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Different antihypertensive classes can have differential effects on DBP vs SBP and on central vs brachial pressures. Intensive regimens that rely heavily on vasodilators (e.g., dihydropyridine CCBs) may disproportionately lower DBP; patients starting with low DBP may thus face a greater risk of perfusion-related side effects when these regimens are used aggressively.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "DBP interacts with heart rate and arterial stiffness to determine coronary perfusion time and pressure. A low DBP combined with tachycardia and high pulse pressure shortens diastolic filling time and lowers perfusion pressure, amplifying any potential harms of intensive BP lowering in this hemodynamic milieu.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Chronic low DBP can be a surrogate for autonomic dysfunction and low-output states. Patients with such physiology may be more prone to hypotensive episodes and organ hypoperfusion when treated intensively, increasing risks of syncope, AKI, and possibly myocardial ischemia.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Clinicians may be reluctant to further intensify BP therapy in patients with very low DBP despite assignment to an intensive arm, effectively limiting achieved BP reductions and attenuating benefits in this stratum while also potentially reducing harms.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Clinically relevant DBP-related subgroups: (1) Baseline DBP <70, 70\u201379, and \u226580 mmHg, examining whether low DBP is associated with diminished net benefit or increased MI risk under intensive SBP targets. (2) Low DBP (<70 mmHg) combined with known coronary disease vs low DBP without known CAD, as the former may have a higher risk of perfusion-related harm. (3) High pulse pressure (e.g., SBP high, DBP low) vs more proportional SBP/DBP elevations, to distinguish stiff-artery phenotypes from those with high resistance.",
+        "validation_suggestions": [
+          "Fit joint interaction models including both baseline SBP and DBP (and derived pulse pressure), using 2D spline surfaces, to explore how combined SBP\u2013DBP patterns modify treatment effects.",
+          "Test for J-shaped relationships between *on-treatment* nadir DBP (rather than baseline DBP alone) and MI/HF events within each treatment arm, adjusting for baseline risk and comorbidities.",
+          "Conduct stratified analyses in participants with known coronary artery disease to determine whether low baseline or on-treatment DBP modifies the intensive vs standard treatment effect differently than in participants without CAD.",
+          "Perform sensitivity analyses excluding participants with baseline HF, cachexia, or very low baseline SBP to reduce confounding from low-output states and serious illness.",
+          "Evaluate whether clinicians de-intensified therapy disproportionally in patients with low DBP (e.g., smaller achieved SBP differences), using mediation or path analyses with achieved BP as an intermediate."
+        ],
+        "caveats": [
+          "DBP is variable and prone to measurement error, which can obscure true relationships and bias interaction tests toward null.",
+          "Evidence for a harmful DBP J-curve in RCTs is inconsistent, and much of the association in observational studies is likely due to reverse causality and confounding by comorbid illness.",
+          "Because intensive strategies primarily target SBP, disentangling independent DBP effects from SBP reduction and pulse pressure is challenging; DBP may function mainly as a vulnerability marker.",
+          "Guidelines increasingly de-emphasize DBP-specific targets in older adults; any DBP-related modification of benefit is likely modest and should be considered alongside other risk and vulnerability factors."
+        ]
+      },
+      {
+        "feature_name": "baseline_cognitive_function_score",
+        "importance_rank": 8,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Baseline global cognitive performance, measured by tools such as MoCA or MMSE. Reflects current cognitive status, educational and cultural background, and may serve as a proxy for cerebral reserve and small-vessel disease burden.",
+        "why_important": "Cognitive status influences both biological vulnerability of the brain to BP changes and the ability to adhere to intensive treatment regimens. Intensive BP lowering may protect against future cognitive decline and stroke over the long term, particularly in cognitively intact or mildly impaired patients, but could theoretically exacerbate symptoms in individuals with compromised cerebral perfusion or extensive small-vessel disease. Cognitive impairment also affects adherence, monitoring, and competing risks (e.g., dementia-related mortality), which shape net benefit.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Low baseline cognitive scores are often associated with cerebral small-vessel disease, white-matter hyperintensities, and impaired autoregulation. Intensive BP lowering in such patients may risk further reductions in cerebral perfusion, with potential for transient or subtle cognitive worsening in vulnerable individuals, although large randomized trials have generally not shown major average cognitive harm.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "High BP is a key driver of future cognitive decline and vascular dementia. Intensive BP control can reduce the incidence of stroke and may slow progression of small-vessel disease in cognitively intact or mildly impaired patients, potentially yielding meaningful long-term benefits in cognitive trajectories that extend beyond the typical trial follow-up.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Patients with advanced cognitive impairment may have limited capacity to report symptoms of hypotension, dizziness, or medication side effects. Under intensive regimens, this can lead to unrecognized or undertreated adverse events, increasing the risk of falls, delirium, or functional decline.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Cognitive impairment can reduce adherence to complex medication schedules and lifestyle recommendations required for intensive BP control, leading to smaller achieved BP differences between treatment arms and lower realized benefit in this subgroup.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Baseline cognitive impairment is associated with high non-CV mortality, institutionalization, and competing morbidities (e.g., dementia progression), which can attenuate the observed CV benefit of intensive BP control over typical trial durations.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "In patients with intact cognition and relatively preserved cerebral autoregulation, the brain can adapt to lower perfusion pressures without clinically significant symptoms, allowing them to benefit from stroke risk reduction with minimal short-term cognitive harm.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Baseline cognitive status may reflect cumulative microvascular damage that overlaps with renal microvascular injury. Interactions between kidney function, cognitive status, and BP control may create complex patterns of effect modification where patients with dual brain\u2013kidney microvascular disease are simultaneously at high risk for both benefit (stroke, HF reduction) and harm (AKI, hypoperfusion).",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Caregiver involvement is more common in cognitively impaired patients. When present and effective, caregivers can improve adherence, monitoring, and early detection of adverse events, partly mitigating risks of intensive treatment despite patients\u2019 cognitive deficits.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Relevant subgroups: (1) Normal, mild, and moderate cognitive impairment using standardized test cutoffs (e.g., MoCA \u226526, 18\u201325, <18), recognizing test-specific thresholds. (2) Cognitively impaired patients with strong caregiver support vs those without, to explore adherence and monitoring effects. (3) Patients with combined evidence of brain small-vessel disease (e.g., prior stroke, imaging markers if available) and cognitive impairment vs those without, to identify those with the narrowest cerebral perfusion margin.",
+        "validation_suggestions": [
+          "Test treatment-by-cognitive_score interactions for both cardiovascular outcomes and cognitive trajectories (change in test scores) over time using mixed-effects models.",
+          "Evaluate whether intensive vs standard BP control differentially affects incident MCI/dementia or rate of cognitive decline across baseline cognitive strata, accounting for practice effects and education.",
+          "Where imaging is available, incorporate markers of cerebral small-vessel disease (e.g., white-matter hyperintensity volumes, lacunes) into models to refine assessment of cerebral vulnerability as an effect modifier.",
+          "Perform adherence-adjusted or per-protocol analyses to determine whether cognitive impairment primarily acts through reduced realized treatment intensity rather than altering biological response.",
+          "Use competing-risk or multi-state models to account for transitions to dementia, institutionalization, and death when estimating net benefit across cognitive strata."
+        ],
+        "caveats": [
+          "Many BP trials lack comprehensive baseline cognitive assessments or repeated measures, limiting power and precision of cognitive effect-modification analyses.",
+          "Cognitive test scores are influenced by education, language, and cultural factors, which can confound associations with outcomes if not properly adjusted.",
+          "Observed heterogeneity may primarily reflect differences in life expectancy, stroke risk, and competing risks rather than a direct modification of BP benefit by cognition.",
+          "Adjustment for age, frailty, CKD, and prior stroke can attenuate cognitive-score-associated effect modification, complicating causal interpretation."
+        ]
+      },
+      {
+        "feature_name": "baseline_pulse_pressure",
+        "importance_rank": 9,
+        "shap_value": 0.0,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Pulse pressure (PP) at baseline, calculated as SBP minus DBP (mmHg). Serves as a surrogate for arterial stiffness and large-artery compliance, particularly in older adults, and integrates information about vascular aging beyond SBP alone.",
+        "why_important": "High pulse pressure indicates stiff arteries and high pulsatile load on the heart, brain, and kidneys, and is associated with LVH, HF, and stroke risk. Patients with elevated PP may experience greater absolute reductions in microvascular damage and HF with intensive BP control, but may also have low DBP and limited perfusion reserve, narrowing the safe therapeutic window. PP can help distinguish vascular phenotypes with similar SBP but differing stiffness and risk profiles.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Arterial stiffness increases systolic peaks, widens PP, and augments central pulse pressure, damaging microvasculature in target organs. Intensive BP control that effectively lowers central SBP and PP may substantially reduce microvascular injury and related events (stroke, HF) in high-PP patients, who bear higher baseline risk.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "High PP combined with low DBP often indicates advanced stiffness and limited capacity to further lower SBP without compromising coronary and cerebral perfusion. These patients may have a narrower therapeutic window, requiring individualized BP targets to balance protection from stroke and HF against perfusion-related harms.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Increased PP is associated with LVH and diastolic dysfunction. Intensive BP lowering may provide particularly large benefits via LVH regression and HF risk reduction in this subgroup, given their high baseline risk and structural susceptibility.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Pulse pressure correlates with central (aortic) pressure, which more closely reflects left ventricular afterload and coronary perfusion than brachial BP. Intensive regimens that preferentially lower central pressures (e.g., RAAS inhibitors, certain CCBs) may confer especially strong benefits among those with high baseline PP.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Pulse pressure is strongly associated with age, SBP, CKD, and prior CVD. Some apparent effect modification by PP may be attributable to these correlated factors, making PP an integrated risk marker rather than an independent causal modifier.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Certain antihypertensive classes (e.g., RAAS inhibitors, CCBs) are more effective at reducing central pressure and PP than others. High-PP patients might benefit more from intensive regimens that preferentially use such agents, which may coincide with protocols emphasizing intensive SBP targets.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "In low-PP patients (more elastic arteries), microvascular damage burden may be lower. For these individuals, the incremental microvascular benefit of further SBP reduction may be smaller, such that standard control could suffice for many, leading to smaller absolute gains from intensive strategies.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Extremely high PP may signal advanced, less reversible vascular stiffness and plaque burden. In such cases, intensive BP lowering may still reduce events but less than expected from BP changes alone, because structural stiffness and plaque load remain high despite improved hemodynamics.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Key PP-related subgroups: (1) Low (<50 mmHg), moderate (50\u201369 mmHg), and high (\u226570 mmHg) baseline PP, aligned with prior epidemiologic thresholds. (2) High PP with low DBP (<70 mmHg) vs high PP with relatively preserved DBP, to separate stiff-artery, low-perfusion phenotypes from those with more preserved perfusion reserve. (3) High PP combined with LVH vs high PP without LVH, to evaluate whether structural cardiac remodeling interacts with stiffness to modify intensive-treatment effects.",
+        "validation_suggestions": [
+          "Model treatment-by-pulse_pressure interactions using PP as a continuous variable with spline terms, supplemented by categorical analyses (<50, 50\u201369, \u226570 mmHg) for interpretability.",
+          "Assess treatment effects on specific outcomes (e.g., HF, stroke, MI) across PP strata to determine which components most strongly drive heterogeneity by PP.",
+          "Jointly adjust for age, SBP, DBP, CKD, and prior CVD when testing PP interactions to evaluate whether PP remains an independent modifier or acts primarily as a composite risk marker.",
+          "In cohorts with central BP measurements, compare effect modification patterns using brachial PP vs central PP to assess whether central measures better capture relevant physiology.",
+          "Explore interactions between PP, LVH status, and DBP to identify particularly high-risk phenotypes with both structural and hemodynamic vulnerability."
+        ],
+        "caveats": [
+          "Pulse pressure is a proxy for arterial stiffness and is influenced by heart rate and measurement conditions; single baseline measurements may not fully represent true vascular properties.",
+          "Strong collinearity between PP, age, and SBP complicates statistical separation of PP\u2019s independent modifying role; over-adjustment can obscure true relationships, whereas under-adjustment can exaggerate them.",
+          "Most trials are underpowered to detect small-to-moderate interactions; PP-related effect modification may be modest at the individual level.",
+          "PP may serve more as a risk stratification tool than as a direct determinant of who should receive intensive vs standard targets; clinical decisions should integrate PP with age, LVH, CKD, and frailty."
+        ]
+      },
+      {
+        "feature_name": "number_of_antihypertensive_classes_at_baseline",
+        "importance_rank": 10,
+        "shap_value": 0.0,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Count of distinct antihypertensive drug classes (e.g., ACE inhibitor/ARB, thiazide, CCB, beta-blocker, others) taken at baseline. Reflects baseline treatment intensity and may serve as a proxy for resistant hypertension, disease duration, clinician prescribing style, and medication tolerance/adherence.",
+        "why_important": "Baseline treatment intensity captures heterogeneous phenotypes: undertreated individuals with few drugs and high BP, patients with apparent resistant hypertension on multiple drugs but still uncontrolled, and well-controlled patients requiring polypharmacy. These groups differ in their capacity for further BP reduction, susceptibility to side effects, and adherence. As a result, the additional benefit and harm achievable with an intensive BP strategy and the degree to which protocol targets are realized likely vary with baseline drug-class count.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Multiple baseline drugs often signal that BP has been difficult to control. Such patients may require further intensification (higher doses, more agents) to reach <120 mmHg, yet may achieve smaller incremental BP reductions than expected if true resistant hypertension is present, limiting incremental benefit despite higher treatment burden.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Patients already on combination therapy may have limited remaining safety margin for intensification, as additional drugs or higher doses raise the risk of electrolyte abnormalities, bradycardia, renal dysfunction, and hypotension. Thus, the adverse-event cost per additional mmHg BP reduction may be higher in these patients than in those on few baseline drugs.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Resistant hypertension in patients on multiple classes frequently reflects secondary causes (e.g., primary aldosteronism, sleep apnea) and heightened neurohormonal activation. Standard intensification strategies may yield smaller BP reductions and CV benefits in such patients unless these underlying mechanisms are specifically addressed.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "High baseline pill burden is associated with reduced adherence. Further increasing medication complexity under an intensive strategy can worsen overall adherence, diminishing realized BP differences between intensive and standard arms and potentially increasing variability in BP control and side effects.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Baseline treatment intensity correlates with disease duration, prior BP control patterns, healthcare utilization, and clinician risk perception. These factors can confound associations between number of drugs and treatment response, as they influence both likelihood of more aggressive management and outcomes (e.g., via more frequent monitoring).",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Patients on no or few drugs at baseline often experience large initial BP drops with relatively simple regimens under intensive control, with fewer cumulative side effects. They may therefore realize greater net benefit per added medication compared with patients already on multiple agents who are closer to a side-effect threshold.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Some individuals require multiple drugs due to heightened salt sensitivity or volume expansion. In these phenotypes, intensive therapy emphasizing more aggressive diuresis and sodium restriction may yield substantial HF risk reduction and BP improvement, potentially offsetting higher side-effect risk.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "behavioral",
+            "description": "Being on multiple drugs may, in certain healthcare systems, signal close medical supervision and higher health literacy, which could enhance monitoring for adverse effects under intensive regimens and partially mitigate risks, even as pill burden increases.",
+            "evidence_level": "speculative"
+          }
+        ],
+        "subgroup_implications": "Subgroups should distinguish at least three baseline treatment phenotypes: (1) Low drug-class count (0\u20131 classes) with uncontrolled or moderately high BP (undertreated, potentially highly responsive to intensification). (2) High drug-class count (\u22653 classes) with uncontrolled BP (likely resistant hypertension with limited additional achievable BP reduction and higher side-effect risk). (3) High drug-class count with near-goal BP (polypharmacy but good control, potentially limited benefit from further intensification). Additional exploration could compare RAAS-based vs non-RAAS-based baseline regimens.",
+        "validation_suggestions": [
+          "Test treatment-by-baseline drug-class count interactions, jointly stratified by baseline SBP levels, to distinguish undertreated from resistant phenotypes and assess differences in achieved BP reductions.",
+          "Conduct per-protocol and adherence-adjusted analyses to evaluate whether realized BP differences between intensive and standard arms vary systematically by baseline medication burden.",
+          "Examine rates of key adverse events (AKI, electrolyte abnormalities, bradycardia, hypotension) under intensive vs standard control across baseline drug-count strata to quantify harm gradients.",
+          "Model changes in number of drugs and total dose intensity (e.g., defined daily dose equivalents) as mediators, with baseline drug-class count as a modifier of these treatment\u2013process relationships.",
+          "Use site- or provider-level random-effects models, where information is available, to account for differences in prescribing practices that could confound baseline drug-count-related heterogeneity."
+        ],
+        "caveats": [
+          "Number of drug classes is an imperfect proxy for resistant hypertension; it does not capture actual dosing, adherence, white-coat effects, or home/out-of-office BP.",
+          "Post-randomization intensification patterns may differ substantially from baseline, so baseline drug count alone may not fully represent treatment complexity and exposure over follow-up.",
+          "Residual confounding by unmeasured factors influencing prescribing decisions (e.g., clinician risk tolerance, patient socioeconomic status) is likely, especially in observational settings.",
+          "Adherence data are often incomplete or crude, limiting the ability to separate pharmacologic (biological) from behavioral mechanisms in observed heterogeneity."
+        ]
+      }
+    ],
+    "cross_feature_patterns": "Several cross-cutting patterns emerge. (1) Markers of higher baseline vascular and structural damage (CKD, LVH, prior CVD, high pulse pressure, older age) predict higher *absolute* benefit from intensive BP lowering but also higher susceptibility to harms (AKI, hypotension, perfusion deficits); most do not clearly change relative risk reduction. (2) Measures of physiological reserve and vulnerability (frailty, low DBP, cognitive impairment, very old age) appear central in determining how safely intensive targets can be implemented, with frailty and orthostatic tendencies particularly important for fall and syncope risk. (3) Vascular phenotype features (combinations of SBP, DBP, PP, LVH, CAD) often interact: high SBP with low DBP and high PP plus LVH or CAD suggests a narrow therapeutic window. (4) Implementation-related features (baseline number of antihypertensive classes, adherence proxies) shape how fully an intensive strategy is realized in practice and how adverse events accumulate, highlighting that some apparent heterogeneity reflects differences in *delivered* rather than assigned treatment. Overall, effect modification is likely modest on the relative scale but meaningful on the absolute scale, and arises from joint patterns of vascular burden, reserve, and treatment implementation rather than from any single variable in isolation."
+  }
+}
