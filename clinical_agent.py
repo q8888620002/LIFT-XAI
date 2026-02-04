@@ -449,29 +449,29 @@ class MechanismScore(BaseModel):
     plausibility: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Plausibility (1-10): how believable is this mechanism"
+        le=5,
+        description="Plausibility (1-5): how believable is this mechanism"
     )
     evidence_support: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Evidence support (1-10): how well is this mechanism supported by evidence"
+        le=5,
+        description="Evidence support (1-5): how well is this mechanism supported by evidence"
     )
     specificity: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Specificity (1-10): how specific and detailed is the mechanism description"
+        le=5,
+        description="Specificity (1-5): how specific and detailed is the mechanism description"
     )
     testability: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Testability (1-10): how testable/falsifiable is this mechanism"
+        le=5,
+        description="Testability (1-5): how testable/falsifiable is this mechanism"
     )
     overall_score: int = Field(
-        ..., ge=1, le=10, description="Overall score (1-10) for this mechanism"
+        ..., ge=1, le=5, description="Overall score (1-5) for this mechanism"
     )
     comments: str = Field(
         ..., description="Brief comments on this mechanism's strengths and weaknesses"
@@ -486,41 +486,41 @@ class FeatureHypothesisScoreWithMechanisms(BaseModel):
     mechanism_plausibility: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Mechanism plausibility (1-10): biological/clinical coherence of proposed mechanisms",
+        le=5,
+        description="Mechanism plausibility (1-5): biological/clinical coherence of proposed mechanisms",
     )
     clinical_interpretation: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Clinical interpretation (1-10): accuracy and clarity of what the feature represents",
+        le=5,
+        description="Clinical interpretation (1-5): accuracy and clarity of what the feature represents",
     )
     evidence_alignment: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Alignment with existing literature (1-10): how well grounded in published clinical evidence",
+        le=5,
+        description="Alignment with existing literature (1-5): how well grounded in published clinical evidence",
     )
     subgroup_implications: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Subgroup implications (1-10): clarity and usefulness of suggested subgroups",
+        le=5,
+        description="Subgroup implications (1-5): clarity and usefulness of suggested subgroups",
     )
     validation_plan_quality: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Validation quality (1-10): concreteness and appropriateness of validation suggestions",
+        le=5,
+        description="Validation quality (1-5): concreteness and appropriateness of validation suggestions",
     )
     caveat_awareness: int = Field(
         ...,
         ge=1,
-        le=10,
-        description="Caveat awareness (1-10): thoroughness in acknowledging limitations and alternatives",
+        le=5,
+        description="Caveat awareness (1-5): thoroughness in acknowledging limitations and alternatives",
     )
     overall_score: int = Field(
-        ..., ge=1, le=10, description="Overall score (1-10): holistic assessment"
+        ..., ge=1, le=5, description="Overall score (1-5): holistic assessment"
     )
     strengths: List[str] = Field(..., description="Key strengths")
     weaknesses: List[str] = Field(..., description="Key weaknesses")
@@ -827,7 +827,7 @@ def score_feature_hypotheses(
     # Use same judging criteria for both WITH and WITHOUT SHAP conditions
     judge_system = (
         "You are an independent scientific judge for mechanistic hypotheses.\n"
-        "Evaluate each hypothesis on multiple dimensions using a 1-10 scale.\n"
+        "Evaluate each hypothesis on multiple dimensions using a 1-5 scale.\n"
         "Be objective, fair, and constructive.\n"
         "\n"
         "IMPORTANT: Each hypothesis includes an 'importance_rank' field (1=most important feature).\n"
@@ -838,16 +838,16 @@ def score_feature_hypotheses(
         "\n"
         "SCORING CRITERIA:\n"
         "\n"
-        "1. Mechanism Plausibility (1-10):\n"
+        "1. Mechanism Plausibility (1-5):\n"
         "   - Biological/physiological coherence of proposed mechanisms\n"
         "   - Consistency with established pathophysiology and pharmacology\n"
         "   - Specificity to the treatment and outcome context\n"
         "   - Avoidance of generic mechanisms that could apply to any feature\n"
-        "   Score 9-10: Strong biological basis, well-established pathways, specific to context\n"
-        "   Score 5-7: Reasonable but speculative, some supporting literature, moderately specific\n"
-        "   Score 1-3: Implausible, contradicts known biology, purely generic\n"
+        "   Score 5: Strong biological basis, well-established pathways, specific to context\n"
+        "   Score 3: Reasonable but speculative, some supporting literature, moderately specific\n"
+        "   Score 1: Implausible, contradicts known biology, purely generic\n"
         "\n"
-        "2. Evidence Alignment (1-10):\n"
+        "2. Evidence Alignment (1-5):\n"
         "   - Feature importance: Whether identified features are known effect modifiers from published trials\n"
         "   - Ranking accuracy: Does the feature's importance_rank align with clinical literature?\n"
         "     * Higher-ranked features (rank 1, 2, 3) should be well-established modifiers\n"
@@ -859,27 +859,27 @@ def score_feature_hypotheses(
         "   - Mechanistic grounding: Citations and references to established treatment effect heterogeneity\n"
         "   - Connection to known biological markers and risk stratification literature\n"
         "   - Appropriate recognition when evidence is sparse or speculative\n"
-        "   Score 9-10: Feature is a well-established modifier AND ranking position matches clinical importance\n"
-        "   Score 5-7: Plausible modifier with some literature support, OR ranking doesn't match expected clinical priority\n"
-        "   Score 1-3: Unlikely modifier, contradicts literature, OR inappropriate ranking (weak feature ranked too high)\n"
+        "   Score 5: Feature is a well-established modifier AND ranking position matches clinical importance\n"
+        "   Score 3: Plausible modifier with some literature support, OR ranking doesn't match expected clinical priority\n"
+        "   Score 1: Unlikely modifier, contradicts literature, OR inappropriate ranking (weak feature ranked too high)\n"
         "\n"
-        "3. Subgroup Implications (1-10):\n"
+        "3. Subgroup Implications (1-5):\n"
         "   - Clarity and actionability of proposed subgroups\n"
         "   - Feasibility of defining subgroups in practice (available data, clear cutpoints)\n"
         "   - Clinical utility - would these subgroups inform treatment decisions?\n"
         "   - Avoidance of arbitrary or clinically meaningless stratifications\n"
-        "   Score 9-10: Clear, actionable, clinically meaningful subgroups\n"
-        "   Score 5-7: Reasonable but vague or difficult to operationalize\n"
-        "   Score 1-3: Unclear, arbitrary, or clinically meaningless\n"
+        "   Score 5: Clear, actionable, clinically meaningful subgroups\n"
+        "   Score 3: Reasonable but vague or difficult to operationalize\n"
+        "   Score 1: Unclear, arbitrary, or clinically meaningless\n"
         "\n"
-        "4. Caveat Awareness (1-10):\n"
+        "4. Caveat Awareness (1-5):\n"
         "   - Thoroughness in acknowledging limitations and alternative explanations\n"
         "   - Recognition of potential confounding, bias, measurement error\n"
         "   - Appropriate epistemic humility (avoiding overclaiming)\n"
         "   - Acknowledgment when evidence is weak or mechanisms speculative\n"
-        "   Score 9-10: Comprehensive caveats, honest about limitations\n"
-        "   Score 5-7: Some caveats but incomplete or superficial\n"
-        "   Score 1-3: Overclaiming, ignoring limitations, false certainty\n"
+        "   Score 5: Comprehensive caveats, honest about limitations\n"
+        "   Score 3: Some caveats but incomplete or superficial\n"
+        "   Score 1: Overclaiming, ignoring limitations, false certainty\n"
         "\n"
         "For EACH individual mechanism, also score:\n"
         "- Plausibility (1-10): biological believability of this specific mechanism\n"
@@ -905,7 +905,7 @@ def score_feature_hypotheses(
         "feature_hypotheses_to_score": hypotheses,
         "scoring_instructions": {
             "be_objective": True,
-            "score_range": "1-10 for each dimension",
+            "score_range": "1-5 for each dimension",
             "provide_justification": True,
         },
     }

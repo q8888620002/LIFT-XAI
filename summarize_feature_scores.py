@@ -215,14 +215,14 @@ def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comp
            label='WITHOUT SHAP (Baseline)', alpha=0.8, color='coral',
            yerr=comparison_df['without_shap_std'], capsize=5)
     
-    ax.set_ylabel('Average Score (1-10)')
+    ax.set_ylabel('Average Score (1-5)')
     ax.set_title('Hypothesis Quality: WITH SHAP vs WITHOUT SHAP')
     ax.set_xticks(x)
     ax.set_xticklabels(comparison_df['metric'], rotation=45, ha='right')
     ax.legend()
     ax.grid(axis='y', alpha=0.3)
-    ax.axhline(y=5, color='gray', linestyle='--', alpha=0.5, label='Midpoint')
-    ax.set_ylim(0, 10)
+    ax.axhline(y=2.5, color='gray', linestyle='--', alpha=0.5, label='Midpoint')
+    ax.set_ylim(0, 5)
     
     # 2. Improvement chart
     ax = axes[1]
