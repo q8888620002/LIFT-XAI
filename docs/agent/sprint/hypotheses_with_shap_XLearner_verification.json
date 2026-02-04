@@ -1,18 +1,24 @@
 {
   "overall_verdict": "revise",
-  "summary": "The current hypotheses are generally well-aligned with SPRINT biology and trial findings, with strong emphasis on baseline global risk, renal reserve, and hemodynamic safety margins as key modifiers of intensive BP control. Main refinements focus on: (1) tightening claims to what SPRINT actually showed vs extrapolations; (2) clarifying which mechanisms are prognostic vs truly predictive; (3) specifying clinically actionable cutpoints and combinations; (4) strengthening validation plans with more concrete modeling strategies and sensitivity analyses; and (5) adding caveats around measurement, selection, and correlated features. No mechanisms are outright implausible, but several are over-specified relative to available evidence and are downgraded to weaker evidence or reframed more cautiously.",
+  "summary": "The feature-level hypotheses showcase a strong foundation with well-supported mechanisms, though there are opportunities to enhance specificity and provide more actionable outcomes. Each hypothesis generally aligns with plausible biological and physiological pathways relevant to intensive blood pressure control effects on cardiovascular outcomes. Improvements include clearer connections between clinical details and mechanisms, further aligning evidence direction with SHAP values, and making subgroup implications and validation suggestions more specific.",
   "per_feature": [
     {
       "feature_name": "age",
-      "verdict": "approve",
-      "issues": [],
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Include potential impact of age-related frailty on treatment outcomes."
+        }
+      ],
       "per_mechanism": [
         {
           "mechanism_type": "biological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Solid, well-supported description of age-related CVD burden and amplification of absolute benefit.",
+          "comments": "Biological plausibility is strong given the known relation between age and arterial stiffness.",
           "suggested_revision": null
         },
         {
@@ -20,59 +26,19 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Arterial stiffening and isolated systolic hypertension in older adults are well-described; effect on stroke/HF reduction is plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Baroreflex/autonomic decline and orthostatic risk with age fit both physiology and SPRINT AE patterns.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Renal reserve decline with age is well-supported and directly relevant to AKI risk under intensive control.",
-          "suggested_revision": null
+          "comments": "Account for the role of frailty in physiological responses to treatment.",
+          "suggested_revision": "Older adults have different cardiovascular risk profiles and may experience treatment differently due to physiological changes, including frailty."
         },
         {
           "mechanism_type": "pharmacological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Age-related PK/PD differences with antihypertensives are well-described.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Adherence/falls/frailty are plausible but only weakly evidenced within SPRINT and should be framed more generically.",
-          "suggested_revision": "Rephrase to emphasize that older age may correlate with higher falls risk and functional limitation, which can lead to more frequent treatment interruptions or dose reductions after adverse events, thereby attenuating realized intensity of BP lowering."
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Important to emphasize confounding/correlation with CKD, BP, and comorbidities.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Competing non-CVD mortality is a standard consideration in older populations.",
+          "comments": "Pharmacokinetics vary with age and affect cardiovascular and other systemic responses.",
           "suggested_revision": null
         }
       ],
-      "suggested_edits": "Clarify that SPRINT showed at least preserved relative benefit in older adults with larger absolute benefit due to higher baseline risk, and that SHAP bidirectionality likely reflects tradeoffs between increased benefit and increased harms at very advanced ages or in those with limited reserve.",
+      "suggested_edits": "Refine the physiological mechanism to include the consideration of frailty and multimorbidity in older adults, which affects their treatment response beyond arterial stiffness.",
       "mechanism_quality": "strong",
       "confidence": "high"
     },
@@ -86,15 +52,7 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Well-supported relationship between reduced eGFR and CVD risk and absolute risk reduction.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Hemodynamic susceptibility of CKD kidneys under lower perfusion pressures is central to SPRINT renal findings.",
+          "comments": "Kidney function strongly influences cardiovascular risk independently.",
           "suggested_revision": null
         },
         {
@@ -102,23 +60,7 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Altered clearance of some antihypertensives at low eGFR is well-established.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "CKD-related anemia and uremic cardiomyopathy are real, but specific linkage to type 2 MI risk from intensive BP lowering in SPRINT is speculative.",
-          "suggested_revision": "Describe more generally: \"CKD-related structural heart changes (e.g., LV hypertrophy, fibrosis) may increase dependence on adequate perfusion pressure; in patients with markedly reduced eGFR, very low achieved BP could theoretically increase myocardial supply\u2013demand mismatch, potentially attenuating benefit if BP is pushed too low.\" Downgrade evidence to speculative."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Reasonable explanation of added RAAS-related benefit particularly in proteinuric CKD, though proteinuria was limited in SPRINT.",
+          "comments": "Renal function's effect on pharmacokinetics is well-established.",
           "suggested_revision": null
         },
         {
@@ -126,49 +68,31 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Volume expansion and HF risk in CKD and diuretic benefit are well-supported.",
+          "comments": "Fluid and sodium balance is crucial in blood pressure management and further supports this inclusion.",
           "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Essential caveat about overlapping information with creatinine and binary CKD.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Closer monitoring of CKD patients is plausible but should be framed more as possible care-pattern effect, not a primary driver.",
-          "suggested_revision": "Frame as: \"Because CKD participants often undergo more frequent laboratory and clinical monitoring, intensive-arm harms may be detected and managed earlier in this group, which could modestly influence net observed benefit, although this is not a primary biological mechanism.\""
         }
       ],
-      "suggested_edits": "Emphasize that SHAP bidirectionality likely reflects a classic tradeoff: as eGFR falls below ~60, baseline CVD risk and HF benefit increase, but renal adverse events and possible over-lowering risks also rise, so the optimal net-benefit range may lie in moderate CKD rather than the lowest eGFR values represented in SPRINT.",
+      "suggested_edits": "No critical changes needed. Consider mentioning specific cardiovascular outcomes potentially modified by eGFR.",
       "mechanism_quality": "strong",
       "confidence": "high"
     },
     {
       "feature_name": "dbp",
-      "verdict": "approve",
-      "issues": [],
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Include potential role of autonomic dysregulation in affecting DBP-related outcomes."
+        }
+      ],
       "per_mechanism": [
         {
           "mechanism_type": "physiological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Captures coronary perfusion J-curve concern appropriately.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Reasonable description that high DBP may allow safer diastolic margin under intensive treatment.",
+          "comments": "The balance of DBP and perfusion pressure is central to cardiovascular health.",
           "suggested_revision": null
         },
         {
@@ -176,51 +100,19 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Correct that low DBP often flags stiff arteries/high pulse pressure and complex risk patterns.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Renal perfusion dependence on diastolic pressure is an important complement to the coronary mechanism.",
+          "comments": "Supports the myocardial oxygen supply-demand balance.",
           "suggested_revision": null
         },
         {
           "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Drug-class\u2013dependent SBP vs DBP effects are plausible but not central in SPRINT; keep but de-emphasize.",
-          "suggested_revision": "Clarify that while certain drug classes (e.g., dihydropyridine CCBs) may preferentially lower SBP relative to DBP, SPRINT\u2019s protocol-driven regimens mean this is a secondary contributor; baseline DBP may influence how close patients come to potentially unsafe diastolic levels under class mixes used to reach SBP <120."
-        },
-        {
-          "mechanism_type": "statistical",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Good to highlight DBP\u2019s role in encoding pulse pressure when combined with SBP.",
+          "comments": "Different antihypertensive drugs have varied impacts on DBP.",
           "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "Sympathetic overdrive and neurohormonal activation with very high DBP are plausible but evidence for incremental HF benefit specifically from intensive lowering by DBP stratum is limited.",
-          "suggested_revision": "Rephrase more generically, and downgrade to speculative: \"Markedly elevated DBP may be a marker of heightened sympathetic and RAAS activation. In such patients, more intensive BP lowering could reduce neurohormonal stress and LV afterload, but direct evidence that this produces a distinct DBP-specific treatment interaction in SPRINT is limited.\""
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Clinician behavior in titrating intensive goals by baseline DBP is plausible but speculative.",
-          "suggested_revision": "Clarify that clinicians may have been more cautious intensifying treatment in patients with very low baseline DBP (e.g., perceived frailty or CAD), leading to smaller achieved BP differences between arms in this subgroup and attenuating apparent treatment effect."
         }
       ],
-      "suggested_edits": "Explicitly note that SHAP bidirectional importance for DBP likely corresponds to a U-shaped relationship: patients starting with very low DBP may experience attenuated or harmful effects from further lowering, while those with mid-to-high DBP can safely realize more benefit from intensive SBP reduction.",
+      "suggested_edits": "Add discussion on autonomic factors that may affect diastolic response to blood pressure treatments, potentially influencing outcomes.",
       "mechanism_quality": "strong",
       "confidence": "high"
     },
@@ -234,67 +126,27 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Correct and parallel to eGFR-based CKD risk.",
+          "comments": "Serum creatinine as a marker of kidney function is well-established.",
           "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Captures vulnerability to AKI and hemodynamic injury at higher creatinine.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "High muscle-mass\u2013driven creatinine is a niche but real scenario; evidence linking this to different treatment effect within SPRINT is speculative.",
-          "suggested_revision": "Reframe as speculative and narrow: \"In a minority of participants, mildly elevated creatinine may primarily reflect higher muscle mass rather than intrinsic kidney disease; in such cases, renal vulnerability to intensive BP lowering may be overestimated if creatinine is interpreted uncritically as CKD.\""
         },
         {
           "mechanism_type": "pharmacological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Dose adjustment based on creatinine is standard practice and directly relevant to realized intensity.",
+          "comments": "Consistent with known impacts of kidney function on drug pharmacokinetics.",
           "suggested_revision": null
         },
         {
           "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Reasonable to note that creatinine can capture nuances not subsumed by eGFR, including lab or dynamic aspects.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Important reminder about collinearity with eGFR and CKD subgroup.",
+          "comments": "Microvascular damage is logically linked to cardiovascular risks.",
           "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Prior AKI as encoded by elevated creatinine is plausible but not directly measured in SPRINT.",
-          "suggested_revision": "Clarify that elevated baseline creatinine may, in some participants, reflect prior subclinical structural damage or unrecorded AKI episodes, which could increase susceptibility to future AKI under intensive BP lowering, although this cannot be distinguished from chronic CKD in the data."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Monitoring-based behavioral adjustments are plausible but secondary.",
-          "suggested_revision": "Tone down to: \"Higher creatinine often prompts more cautious clinical monitoring and earlier dose adjustments in routine care; if similar patterns occurred within SPRINT, they could slightly mitigate harms from intensive treatment in this subgroup, though protocolized treatment may have limited this effect.\""
         }
       ],
-      "suggested_edits": "Highlight explicitly that SHAP bidirectionality for creatinine is likely driven by the same benefit\u2013harm tension seen with eGFR: higher creatinine denotes higher CVD risk and potential benefit but also reduced renal reserve and more frequent renal AEs when BP is pushed aggressively.",
+      "suggested_edits": "No critical changes needed. Emphasize potential impact on cardiovascular medication metabolism further.",
       "mechanism_quality": "strong",
       "confidence": "high"
     },
@@ -303,9 +155,9 @@
       "verdict": "revise",
       "issues": [
         {
-          "type": "overclaiming_certainty",
+          "type": "missing_caveats",
           "severity": "medium",
-          "message": "Some mechanisms overstate the strength of evidence for cholesterol-dependent modification of BP-treatment effect and for microvascular/HFpEF pathways."
+          "message": "The interaction between lipid levels and antihypertensive treatments needs further detail."
         }
       ],
       "per_mechanism": [
@@ -314,97 +166,15 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "High LDL/total cholesterol as a marker of higher ASCVD burden is well-grounded.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Reverse causality for low cholesterol and competing risks is appropriate, though should be framed as one possible explanation.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "Synergy between statins and BP lowering is plausible but trial-level evidence for strong interaction by baseline cholesterol is limited.",
-          "suggested_revision": "Rephrase to: \"Because high cholesterol often leads to statin initiation, some participants with elevated total cholesterol may have received combined LDL- and BP-lowering therapy. This could modestly enhance overall CVD risk reduction, but clear evidence of a strong cholesterol-dependent interaction with intensive BP targets in SPRINT is limited.\" Downgrade evidence to weak."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "Link between hypercholesterolemia, arterial stiffness, and incremental intensive-BP benefit is plausible but under-evidenced.",
-          "suggested_revision": "Frame more cautiously and downgrade to weak: \"Chronic hypercholesterolemia contributes to arterial stiffening and endothelial dysfunction. In such a stiff-artery phenotype, lowering central SBP may be particularly important for stroke and HF prevention, but direct evidence that this produces a cholesterol-specific modification of intensive BP benefit in SPRINT is limited.\""
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Appropriately notes cholesterol\u2019s role as a risk-score component and risk stratifier.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "Triglyceride-rich lipoproteins, microvascular dysfunction, and HFpEF are interesting but highly speculative in this context.",
-          "suggested_revision": "Recast as speculative and optional: \"In some patients, higher total cholesterol reflects elevated triglyceride-rich lipoproteins, which have been linked to microvascular dysfunction and HFpEF. If present, intensive BP control might preferentially reduce microvascular HF events in this phenotype, but this pathway is speculative and unlikely to be a major driver of cholesterol-related heterogeneity in SPRINT.\""
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Behavioral differences by cholesterol level are plausible but minor.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Effect of niacin/fibrates on BP is small and these agents were not central to SPRINT; importance is limited.",
-          "suggested_revision": "Clarify that use of HDL- or triglyceride-focused lipid therapies (e.g., niacin, fibrates) was likely infrequent and any BP effects minimal, so this mechanism probably contributes little to SHAP importance."
-        }
-      ],
-      "suggested_edits": "Sharpen the clinical interpretation to emphasize that total cholesterol here is mainly functioning as a global ASCVD risk marker rather than implying a strong causal interaction with BP-lowering efficacy. Make subgroups more practically oriented (e.g., combine total cholesterol with HDL and SBP to define very-high-risk vs lower-risk phenotypes rather than focusing heavily on statin synergy).",
-      "mechanism_quality": "moderate",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "sub_ckd",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Correct description of CKD-driven CVD risk amplification.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Accurately reflects impaired autoregulation and vulnerability to AKI in CKD.",
+          "comments": "High cholesterol ratios and atherosclerosis connection is strong.",
           "suggested_revision": null
         },
         {
           "mechanism_type": "pharmacological",
           "verdict": "approve",
-          "plausibility": "high",
+          "plausibility": "moderate",
           "evidence_level_appropriate": true,
-          "comments": "Medication mix in CKD is relevant to both benefit and harm.",
+          "comments": "The influence of lipid profiles on antihypertensive efficacy requires more evidence.",
           "suggested_revision": null
         },
         {
@@ -412,1015 +182,191 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "CKD-related HF risk and potential for strong HF reduction under intensive control are appropriate points.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "As with eGFR, care-pattern differences should be de-emphasized as primary mechanisms.",
-          "suggested_revision": "State more briefly that CKD subgroup participants may have undergone closer monitoring and lab surveillance within the protocol, which could slightly influence early detection and management of AEs but is unlikely to be the main explanation for CKD\u2019s predictive role."
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good explanation of binary vs continuous renal measures and risk thresholds.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Different optimal BP range in CKD vs non-CKD is plausible but poorly quantified in SPRINT.",
-          "suggested_revision": "Frame more cautiously: \"Some observational and trial data suggest that the BP\u2013outcome relationship may differ in CKD versus non-CKD populations, implying that the \u2018optimal\u2019 BP range for balancing CVD and renal outcomes could shift in CKD. SPRINT is not powered to precisely define this optimum but supports that CKD status may change the shape of benefit\u2013harm curves.\""
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Volume-dependent hypertension in CKD and benefit from diuretics/RAAS blockade are well supported.",
+          "comments": "Influence of cholesterol on endothelial function is relevant and supported.",
           "suggested_revision": null
         }
       ],
-      "suggested_edits": "Clarify that sub_ckd\u2019s SHAP importance partly reflects its role as a randomization stratifier and pre-specified subgroup in SPRINT, making it a particularly stable predictor of heterogeneous treatment effects. Emphasize that bidirectionality embodies the cardiovascular benefit vs renal-harm tradeoff, similar to eGFR but at a coarser level.",
+      "suggested_edits": "Include how specific lipid-lowering strategies might interact with intensive BP management to change cardiovascular outcomes.",
       "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "n_agents",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Correct that more agents often signals more severe/resistant hypertension and higher baseline risk.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Diminishing returns and limited options for further intensification in polytreated patients are clinically plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Increased AE risk with polypharmacy is well-supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Secondary hypertension mechanisms are reasonable but may be over-detailed relative to SPRINT data.",
-          "suggested_revision": "Condense to emphasize that a higher n_agents may indicate underlying resistant hypertension from various causes (e.g., volume overload, hormonal disorders), which can make additional BP reductions harder to achieve and necessitate more aggressive regimens with different side-effect profiles."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Adherence patterns in polypharmacy are a reasonable consideration.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Association of high agent count with comorbidities and reduced reserve is well-motivated.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Appropriately notes correlation with baseline SBP, duration of hypertension, and risk.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Different combinations matter, but n_agents only approximates this complexity.",
-          "suggested_revision": "Clarify that n_agents may partially proxy regimen complexity and drug-class diversity, but without explicit class variables, the model cannot disentangle which combinations drive heterogeneity."
-        }
-      ],
-      "suggested_edits": "Make subgroup definitions more explicitly tied to guideline concepts of resistant hypertension (e.g., \u22653 agents including a diuretic with uncontrolled SBP), and propose to examine whether SHAP patterns are mainly driven by this resistant-hypertension subset versus general polypharmacy.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "sbp",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Well-grounded link between higher SBP, CVD risk, and larger absolute benefit from lowering.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Accurately portrays greater safety margin for reduction at higher baseline SBP.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "LVH/diasotlic dysfunction reversal with SBP lowering is reasonable, though not directly measured in SPRINT.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Correct that lower baseline SBP yields smaller intensive\u2013standard separation and smaller absolute benefit.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Important nuance that very high SBP with low DBP can introduce J-curve risks.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Need for more intensive drug regimens at higher SBP and associated AEs is realistic.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Motivation/adherence differences at high SBP are plausible although secondary.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Low SBP as a frailty/illness marker is a valid caveat and consistent with reverse causation concerns.",
-          "suggested_revision": null
-        }
-      ],
-      "suggested_edits": "Make explicit that the positive SHAP mean for SBP indicates that, on average, higher baseline SBP predicts greater benefit from intensive vs standard treatment in this model, consistent with SPRINT and meta-analytic evidence, but that this must be interpreted jointly with DBP to avoid harmful over-lowering in wide-pulse-pressure phenotypes.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "hdl",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Appropriately frames low HDL as a higher ASCVD-risk marker with greater scope for absolute benefit.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Anti-inflammatory and endothelial roles of HDL are plausible, although causality is debated.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "High HDL as a general health marker is fine; the role of genetic/extreme HDL is niche.",
-          "suggested_revision": "Clarify that, in this population, very high HDL usually tracks with healthier lifestyle and lower global risk, so absolute BP-lowering benefit may be smaller, while acknowledging that rare genetic HDL disorders are unlikely to influence SPRINT patterns."
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good to position HDL mainly as a risk-score component.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Behavioral correlations with HDL are plausible but modest.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Low-HDL metabolic syndrome phenotype and HFpEF risk are reasonable, though indirect.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Role of niacin/fibrates is minimal in SPRINT; keep as a minor note.",
-          "suggested_revision": "Condense to say that HDL-modifying drugs were not central to SPRINT and are unlikely major contributors to HDL\u2019s SHAP importance."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Microvascular/ischemia modulation by HDL at very low levels is interesting but speculative here.",
-          "suggested_revision": "Rephrase as speculative and secondary: \"Severely reduced HDL might be associated with impaired coronary microvascular function, potentially altering how low BP can be safely lowered without ischemia, but this mechanism is speculative and not directly testable with available SPRINT data.\""
-        }
-      ],
-      "suggested_edits": "Stress that HDL\u2019s contribution is primarily through global risk stratification (low HDL = higher risk, more absolute benefit) rather than HDL-specific biology affecting BP response. Align HDL categories with guideline cutpoints (<40 in men/<50 in women; optionally simplified to <40, 40\u201359, \u226560 given trial demographics).",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "female",
-      "verdict": "revise",
-      "issues": [
-        {
-          "type": "overclaiming_certainty",
-          "severity": "medium",
-          "message": "Some mechanisms imply sex-specific thresholds or adverse-event profiles more strongly than current trial evidence warrants."
-        }
-      ],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "HFpEF and microvascular differences by sex are well-described and relevant.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": false,
-          "comments": "Hormone-related differences in optimal BP targets are plausible but not well-quantified.",
-          "suggested_revision": "Downgrade evidence to speculative and rephrase to: \"Changes in sex hormones around menopause influence endothelial function and RAAS activity. These biology differences could in theory shift BP\u2013risk relationships, but SPRINT was not designed to define distinct sex-specific optimal targets.\""
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Sex differences in PK/PD for antihypertensives and AEs are well-known.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Higher preventive-care engagement among women is plausible but modest.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Lower baseline CVD risk in women at given BP levels is accurate and key for absolute vs relative benefit distinctions.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Important explanation of sex correlations with HDL, eGFR, body size, etc.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Claims of higher susceptibility of women to orthostasis or hyponatremia need softer wording; evidence is mixed.",
-          "suggested_revision": "Rephrase to: \"Some data suggest women may be more prone to certain diuretic-related adverse effects (e.g., hyponatremia) and may have lower absolute BP at baseline. If intensive treatment leads to similar target SBP in both sexes, women could, in theory, reach relatively lower absolute pressures, potentially influencing adverse-event risk, but clear sex-specific AE patterns in SPRINT were limited.\""
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Cardiac/vascular remodeling differences by sex are real but may not strongly modify BP-treatment effect here.",
-          "suggested_revision": "Condense this to emphasize that sex differences in concentric remodeling and microvascular function could subtly influence which endpoints (HF vs MI vs stroke) are most impacted by BP reduction, rather than implying large shifts in overall treatment effect."
-        }
-      ],
-      "suggested_edits": "Explicitly note that SPRINT\u2019s published analyses did not identify a statistically strong sex-by-treatment interaction for the primary outcome; SHAP importance here may mainly reflect sex as a proxy for global risk profile (e.g., lower absolute risk, higher HDL, different body size). Refocus subgroup implications on quantifying absolute vs relative benefit and AE profiles, rather than on hypothesized sex-specific BP targets.",
-      "mechanism_quality": "moderate",
       "confidence": "high"
     }
   ],
   "revised": {
-    "dataset": "SPRINT",
+    "dataset": "sprint",
     "model": "unknown_learner",
-    "summary": "In SPRINT, heterogeneity in the benefit\u2013harm balance of intensive vs standard BP control is most strongly shaped by features that encode (1) baseline global cardiovascular risk (age, SBP, renal function, lipids), (2) organ perfusion and reserve (eGFR, creatinine, DBP, CKD status), and (3) treatment intensity or pharmacologic burden (number of agents, partly sex). SHAP patterns and trial physiology together suggest that patients with higher baseline risk and preserved perfusion reserve derive the largest net benefit from intensive SBP targets, whereas those with limited renal/hemodynamic reserve (e.g., advanced CKD, low DBP, heavy polypharmacy) face a narrower therapeutic window and higher risk of treatment-related harms. Lipid variables (total cholesterol, HDL) and sex mainly act as markers of global risk and metabolic profile rather than strong independent modulators of the biological response to BP lowering.",
+    "summary": "The features identified as important contain both clinical and laboratory measures relevant to cardiovascular outcomes in patients under intensive blood pressure management. Age and kidney function, represented by eGFR and serum creatinine, are key due to their established roles in cardiovascular disease pathophysiology. Also crucial are diastolic blood pressure and cholesterol ratio, which relate to their influence on systemic vascular resistance and circulating lipid profile, all influencing patient outcomes under intensive blood pressure control.",
     "feature_hypotheses": [
       {
         "feature_name": "age",
         "importance_rank": 1,
-        "shap_value": 0.0251690801,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline chronological age in years among non-diabetic adults \u226550 years with hypertension and elevated cardiovascular risk enrolled in SPRINT.",
-        "why_important": "Age is a dominant determinant of baseline cardiovascular risk, vascular stiffness, autonomic and renal reserve, and competing non-CVD mortality. In SPRINT, older participants\u2014especially \u226575\u2014had higher absolute event rates and showed at least similar relative benefit, translating into larger absolute risk reductions with intensive BP control, but also experienced more adverse events such as hypotension and AKI. SHAP bidirectionality for age likely reflects this tension: increasing age amplifies potential cardiovascular benefit but also narrows hemodynamic safety margins and increases vulnerability to harms, so the net treatment effect varies nonlinearly across the age spectrum.",
+        "shap_value": 0.02516908012330532,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Age is a numeric measure of biological aging and a known risk factor for cardiovascular diseases, affecting physiological reserves and risk profiles.",
+        "why_important": "Age influences treatment effects due to changes in cardiovascular physiology and risk profiles with advancing age, impacting treatment efficacy and safety differently across age groups.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "Greater atherosclerotic and structural cardiovascular burden with advancing age (more coronary plaque, carotid disease, LV hypertrophy, diastolic dysfunction) increases baseline risk of MI, stroke, HF, and CV death. Because intensive BP control reduces afterload and vascular stress, older high-risk patients can achieve larger absolute event reductions than younger, lower-risk participants, even if relative risk reductions are similar.",
+            "description": "With increasing age, arterial stiffness increases, impacting the benefit-risk ratio of antihypertensive treatment and possibly exacerbating age-related cardiovascular decline.",
             "evidence_level": "strong"
           },
           {
             "mechanism_type": "physiological",
-            "description": "Age-related arterial stiffening leads to isolated systolic hypertension and widened pulse pressure. In this phenotype, intensive SBP lowering meaningfully reduces central pulsatile load on the heart and brain, which can yield particularly pronounced reductions in HF and stroke rates among older adults, provided diastolic pressure is not driven into a harmful range.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "With aging, baroreflex sensitivity and autonomic responsiveness decline, and cerebral autoregulation may become less robust. As a result, aggressive BP lowering can more easily produce orthostatic hypotension, syncope, and cerebral hypoperfusion in older or frailer individuals, partially offsetting cardiovascular benefits or leading to net harm in a subset near the limits of perfusion reserve.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Age-related loss of nephrons and impaired renal autoregulatory capacity reduce renal reserve. Intensive BP control, especially regimens relying on RAAS blockers and diuretics, can cause larger hemodynamic drops in intraglomerular pressure and more frequent AKI episodes in older participants, which may attenuate long-term benefit or increase renal-related morbidity.",
+            "description": "Older adults show different baseline risks and physiological responses to blood pressure reduction, often altered by comorbidities and frailty, which influence treatment outcomes.",
             "evidence_level": "moderate"
           },
           {
             "mechanism_type": "pharmacological",
-            "description": "Older adults often have altered pharmacokinetics and pharmacodynamics (reduced volume of distribution, hepatic metabolism, and renal clearance). These changes can increase sensitivity to standard antihypertensive doses and side effects, making the same titration steps produce larger BP reductions and more AEs in older compared with younger patients, thereby modifying the realized intensive\u2013standard BP difference and harm profile.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Older age frequently coincides with higher falls risk, functional limitations, and reliance on caregivers. When adverse events such as dizziness, syncope, or falls occur under intensive treatment, clinicians may down-titrate or discontinue therapies, reducing sustained BP differences between arms and diluting realized benefit among the oldest or frailest participants.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Age is highly correlated with other effect modifiers such as CKD (lower eGFR), higher baseline SBP, longer duration of hypertension, and comorbid CVD. Part of age\u2019s SHAP importance may therefore reflect these correlated features rather than a purely independent causal age effect, and careful multivariable and interaction modeling is required to disentangle these relationships.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Competing risk from non-cardiovascular mortality rises steeply with age. In the oldest participants, death from cancer, infection, or other non-CVD causes may truncate follow-up before full realization of CVD risk reduction from intensive BP control, diminishing observed net benefit even if relative CVD risk reductions are similar.",
-            "evidence_level": "moderate"
+            "description": "Age affects pharmacokinetics and pharmacodynamics of antihypertensive medications, altering treatment efficacy and safety, especially with polypharmacy common in older adults.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Clinically relevant subgroups include: (1) Age 50\u201364, 65\u201374, and \u226575 years, to assess how absolute and relative benefits and harms evolve across later life; (2) Within \u226575, stratification by markers of robustness vs frailty (e.g., gait speed, functional status, falls history, if available) to separate healthy elderly from those with limited reserve; (3) Age combined with renal function (e.g., \u226575 with eGFR <45 vs \u226545) to identify very high-risk but also highly vulnerable phenotypes. These strata can help target intensive BP control to robust older adults with high baseline CVD risk and sufficient perfusion reserve, while exercising more caution in the oldest old with CKD or frailty.",
+        "subgroup_implications": "Older adults may have a distinct treatment benefit-risk profile for intensive BP control, potentially requiring adjusted targeting.",
         "validation_suggestions": [
-          "Fit Cox models with treatment\u2013age interaction, first using SPRINT\u2019s conventional age categories (<65, 65\u201374, \u226575) and then modeling age continuously with restricted cubic splines, to characterize any nonlinear modification of treatment effect on the primary composite outcome.",
-          "Repeat interaction analyses for key safety outcomes (hypotension, syncope, AKI, injurious falls), to quantify how harm gradients with age compare to benefit gradients.",
-          "Construct joint interaction models including age, eGFR, and baseline SBP (with splines) to assess whether age remains a modifier after adjusting for renal function and BP, or whether its effect is largely mediated through these factors.",
-          "Where frailty or functional measures are available, stratify older participants by frailty status and compare intensive vs standard effects within age\u2013frailty strata to determine whether chronological age or frailty better explains heterogeneity.",
-          "Perform competing-risk analyses for CVD events vs non-CVD death by age strata and treatment arm to quantify the impact of competing mortality on apparent benefit.",
-          "Compare age-related interaction patterns with those reported in other intensive BP trials (e.g., STEP, HYVET), focusing on whether older but non-frail patients consistently show substantial net benefit."
+          "Conduct age-stratified analyses for cardiovascular outcomes under intensive treatment.",
+          "Assess arterial stiffness and its interaction with intensive BP lowering across age strata."
         ],
         "caveats": [
-          "Chronological age aggregates diverse biological aging trajectories and social determinants; observed interactions may reflect unmeasured frailty, comorbidities, or lifestyle rather than age per se.",
-          "SPRINT excluded diabetics and very frail or institutionalized individuals, so findings may underestimate harms and overestimate benefit in the oldest and frailest real-world patients.",
-          "Because age is tightly correlated with eGFR, SBP, duration of hypertension, and prior CVD, residual confounding and collinearity can complicate interpretation of age as an independent modifier.",
-          "Single-trial subgroup analyses by age can be underpowered for subtle interactions and are prone to chance fluctuations; consistency across related trials should be sought.",
-          "SHAP summarizes how age contributes to predicted treatment effect on average; within-age-band heterogeneity (e.g., robust vs frail septuagenarians) may not be fully captured."
+          "Possible confounding by other age-related factors like frailty and multimorbidity.",
+          "Potential differential baseline treatment affecting outcomes in older adults."
         ]
       },
       {
         "feature_name": "egfr",
         "importance_rank": 2,
-        "shap_value": 0.0213769414,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline estimated glomerular filtration rate (eGFR, mL/min/1.73 m\u00b2) calculated from serum creatinine, age, sex, and race, representing kidney function and CKD severity among SPRINT participants.",
-        "why_important": "eGFR is central to both cardiovascular risk stratification and susceptibility to harm from intensive BP lowering. Lower eGFR indicates higher baseline CVD and HF risk\u2014raising the potential absolute benefit of intensive BP control\u2014but also reduced renal autoregulatory reserve and higher likelihood of AKI and progressive CKD when BP is pushed aggressively. SHAP bidirectionality likely reflects this dual role: intermediate reductions in eGFR may identify patients with high potential benefit and still-manageable harm, whereas very low eGFR marks those in whom harms from further BP lowering can offset or outweigh cardiovascular gains.",
+        "shap_value": 0.021376941353082657,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Estimated glomerular filtration rate (eGFR) is a clinical measure of kidney function, integral to cardiovascular risk assessment due to its influence on systemic volume and pressure regulation.",
+        "why_important": "eGFR is critical given its impact on cardiovascular outcomes and its modification of safety profiles for intensive blood pressure management.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "Reduced eGFR is a strong independent risk factor for MI, stroke, HF, and CV death, mediated by endothelial dysfunction, chronic inflammation, oxidative stress, vascular calcification, and LV hypertrophy. These processes raise baseline event rates, so effective interventions like intensive BP control produce larger absolute risk reductions in participants with lower eGFR compared with those with preserved kidney function.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "In CKD, loss of afferent and efferent arteriolar autoregulatory capacity makes glomerular filtration more dependent on systemic perfusion pressure. Intensive BP lowering, particularly using RAAS blockade and diuretics, can substantially reduce intraglomerular pressure, leading to acute declines in eGFR and AKI events, especially at baseline eGFR <60 mL/min/1.73 m\u00b2. These renal harms may blunt or delay net clinical benefit in the lowest-eGFR strata.",
+            "description": "Diminished eGFR is independently correlated with elevated cardiovascular risk, impacting the net benefit of BP control.",
             "evidence_level": "strong"
           },
           {
             "mechanism_type": "pharmacological",
-            "description": "Reduced eGFR alters the clearance and active metabolite profiles of several antihypertensives (e.g., some beta-blockers, thiazide vs loop diuretics). This can increase drug exposure and BP-lowering potency at standard doses, raising risk of hypotension, electrolyte disturbances, and AKI in low-eGFR participants, but may also enable target BP to be reached with fewer dose escalations, affecting the realized intensive\u2013standard BP separation.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "CKD is often accompanied by LV hypertrophy, fibrosis, and uremic cardiomyopathy, which can increase dependence on adequate perfusion pressure to maintain myocardial oxygen supply\u2013demand balance. In patients with markedly reduced eGFR, excessively low achieved BP could theoretically precipitate myocardial supply\u2013demand mismatch, potentially attenuating net benefit if BP targets are pushed too low relative to their limited reserve.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Proteinuric CKD, when present, is particularly responsive to RAAS blockade, which can reduce intraglomerular pressure and proteinuria independent of BP reduction. Intensive strategies that favor RAAS up-titration may confer additional renal and cardiovascular protection in proteinuric, lower-eGFR patients, enhancing benefit beyond what would be predicted from BP changes alone.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "CKD is associated with sodium and volume retention and a high incidence of HF. Intensive BP control in these patients often involves diuretics and RAAS blockers that reduce volume overload and afterload, particularly lowering HF hospitalizations and HF-related components of the composite outcome, thereby increasing observed treatment effect in lower-eGFR groups.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "eGFR is strongly correlated with serum creatinine and the binary CKD subgroup indicator (sub_ckd). Its SHAP importance likely reflects its role as a more finely graded, continuous measure of CKD severity, capturing non-linear risk and benefit\u2013harm tradeoffs across the 20\u201390 mL/min/1.73 m\u00b2 range better than binary CKD status or creatinine alone.",
+            "description": "Renal function significantly affects drug metabolism and elimination, modifying the dosing and safety of antihypertensives.",
             "evidence_level": "strong"
           },
           {
-            "mechanism_type": "behavioral",
-            "description": "Patients classified as having CKD typically undergo more frequent laboratory monitoring and may prompt clinicians to adjust or hold medications sooner in response to small creatinine rises. If similar patterns occurred despite SPRINT\u2019s protocolized care, this closer surveillance could modestly mitigate some treatment-related harms in low-eGFR patients, slightly influencing net observed benefit.",
-            "evidence_level": "weak"
+            "mechanism_type": "biological",
+            "description": "Kidney impairment alters fluid and sodium homeostasis, potentially regulating blood pressure response and treatment effect.",
+            "evidence_level": "moderate"
           }
         ],
-        "subgroup_implications": "Important eGFR-based subgroups include: (1) eGFR \u226560 (non-CKD), 45\u201359 (mild\u2013moderate CKD), and 20\u201344 mL/min/1.73 m\u00b2 (more advanced CKD included in SPRINT); (2) Within CKD, stratification by albuminuria/proteinuria if available, as proteinuric patients may gain added RAAS-mediated benefit; (3) Combined strata such as low eGFR (<45) plus low DBP (<70) or high n_agents (\u22653), which may identify patients at particularly high risk for AKI and hypotension where net benefit of intensive BP control is most uncertain.",
+        "subgroup_implications": "Patients with lower eGFR may experience a different therapeutic balance from intensive BP lowering, necessitating tailored approaches.",
         "validation_suggestions": [
-          "Estimate treatment\u2013eGFR interactions using Cox models with eGFR both as categorical (e.g., \u226560, 45\u201359, 30\u201344, <30 if present) and continuous (restricted cubic splines), for the primary composite and key components (HF, MI, stroke).",
-          "Model interactions separately for renal outcomes (AKI, \u226530% or \u226540% sustained eGFR decline, progression to ESRD) to quantify how renal harms escalate across eGFR strata compared with cardiovascular benefits.",
-          "Examine three-way interaction surfaces for treatment \u00d7 eGFR \u00d7 DBP to test whether low eGFR combined with low DBP marks a subgroup where intensive treatment yields net harm or minimal net benefit.",
-          "Assess how much of the difference in intensive vs standard outcomes by eGFR stratum is mediated by achieved SBP reduction vs early eGFR dip, using mediation or joint modeling approaches.",
-          "Adjust for baseline albuminuria/proteinuria (if available) and repeat interaction analyses, to distinguish hemodynamic (eGFR-driven) from structural (proteinuria-driven) renal risk.",
-          "Compare patterns with CKD-focused BP trials (e.g., AASK, MDRD) using meta-analytic or qualitative comparison to evaluate consistency of eGFR-related heterogeneity."
+          "Cardiovascular outcomes analysis stratified by baseline eGFR.",
+          "Investigate eGFR changes during treatment as a cardiovascular risk modifier."
         ],
         "caveats": [
-          "eGFR is estimated from creatinine, age, sex, and race, introducing error and embedding information from these other variables; observed interactions may partly reflect these components rather than renal function alone.",
-          "SPRINT excluded diabetics and patients with very advanced CKD (eGFR <20), limiting generalizability to diabetic nephropathy or stage 4\u20135 CKD.",
-          "Serum creatinine and the binary CKD subgroup are also model features; collinearity among these renal metrics complicates attribution of SHAP importance to eGFR specifically.",
-          "Baseline eGFR does not distinguish stable CKD from recovering AKI or rapidly progressive disease; such dynamics could influence susceptibility to further eGFR decline under intensive treatment.",
-          "As with all subgroup findings, eGFR-based heterogeneity should be interpreted in the context of statistical power and potential multiple-testing artifacts."
+          "Variability in eGFR estimation affects accuracy.",
+          "Exclusion of patients with advanced renal impairment may limit findings."
         ]
       },
       {
         "feature_name": "dbp",
         "importance_rank": 3,
-        "shap_value": 0.0207126178,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline diastolic blood pressure (DBP, mmHg), measured seated prior to randomization, reflecting arterial tone and a key determinant of coronary and renal perfusion pressure during diastole.",
-        "why_important": "DBP is central to the long-recognized J-curve phenomenon: while moderate DBP lowering reduces vascular stress and stroke risk, excessively low DBP can compromise perfusion of the coronary and renal circulations, especially in patients with stiff arteries or coronary disease. In SPRINT\u2019s intensive arm, participants with low baseline DBP are at risk of reaching very low achieved DBP when SBP is pushed below 120, whereas those with higher baseline DBP retain a greater diastolic safety margin. SHAP bidirectionality for DBP likely reflects this tradeoff: intensive therapy may be most beneficial for patients starting with mid-to-high DBP and high SBP, but may offer diminished or even negative net benefit in those with already-low DBP, particularly when combined with wide pulse pressure or CKD.",
+        "shap_value": 0.02071261778473854,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Diastolic blood pressure (DBP), the minimum arterial pressure during the resting phase of the cardiac cycle, informs on systemic vascular resistance.",
+        "why_important": "DBP highlights systemic perfusion and vascular resistance, essential for understanding organ perfusion under intensive BP management in hypertensive patients.",
         "mechanisms": [
           {
             "mechanism_type": "physiological",
-            "description": "Low baseline DBP combined with intensive SBP lowering can drive achieved DBP into ranges (<60\u201370 mmHg) where coronary blood flow during diastole may be impaired, particularly in patients with LV hypertrophy, significant coronary atherosclerosis, or microvascular dysfunction. This can increase risk of myocardial ischemia or type 2 MI and attenuate or reverse the expected benefit of intensive BP control in the low-DBP subgroup.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Higher baseline DBP generally indicates higher systemic vascular resistance and provides more diastolic perfusion reserve. In such patients, intensive SBP lowering can achieve substantial BP reductions while maintaining DBP above critical perfusion thresholds, yielding strong CVD risk reduction without major compromise of coronary or renal blood flow.",
+            "description": "Excessive DBP reduction in older, stiffer arteries could compromise critical organ perfusion, including coronary circulation.",
             "evidence_level": "moderate"
           },
           {
             "mechanism_type": "biological",
-            "description": "Low DBP often co-occurs with high SBP and wide pulse pressure, reflecting advanced arterial stiffness and atherosclerosis. In this phenotype, risk may be driven more by SBP and pulse pressure than DBP alone. The relationship between DBP and treatment benefit is thus complex and nonlinear: modestly lower DBP can be beneficial, but when DBP is very low in the context of high SBP, further SBP lowering may expose patients to perfusion-related harms.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Renal blood flow and filtration are partially dependent on diastolic perfusion pressure. In patients with low baseline DBP, further diastolic pressure reductions under intensive therapy, especially when combined with RAAS blockade and diuretics, can precipitate prerenal azotemia and AKI, particularly among those with CKD, thereby worsening renal outcomes and modifying net benefit.",
-            "evidence_level": "moderate"
+            "description": "DBP directly influences myocardial oxygen supply and is tied to coronary perfusion pressure, central in the oxygen demand-supply balance in hypertensive contexts.",
+            "evidence_level": "strong"
           },
           {
             "mechanism_type": "pharmacological",
-            "description": "Certain antihypertensive classes (e.g., dihydropyridine calcium channel blockers) may preferentially reduce SBP more than DBP. Under SPRINT\u2019s regimen, baseline DBP could influence how close intensively treated patients come to potentially unsafe DBP levels given the drug classes required to achieve SBP <120, subtly modifying the balance between SBP reduction and diastolic perfusion risk.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "DBP is correlated with SBP but not perfectly; when modeled jointly, the combination of SBP and DBP effectively encodes pulse pressure and thus arterial stiffness, a strong CVD prognostic factor. DBP\u2019s SHAP importance may therefore partly reflect its role, together with SBP, in capturing vascular stiffness phenotypes that influence both baseline risk and sensitivity to intensive BP lowering.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Markedly elevated DBP can be a marker of heightened sympathetic tone and RAAS activation. In such patients, BP lowering may reduce neurohormonal stress and LV afterload, particularly for HF prevention, but direct evidence that this effect yields a distinct DBP-specific treatment interaction in SPRINT is limited.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Clinicians may be more cautious in intensifying antihypertensive therapy in participants with very low baseline DBP (e.g., due to perceived frailty or coronary disease), even within a trial protocol. This could lead to smaller achieved BP differences between intensive and standard arms in the low-DBP subgroup, attenuating apparent treatment effect compared to those with higher baseline DBP.",
-            "evidence_level": "speculative"
+            "description": "Antihypertensives variably affect DBP, influencing cardiovascular outcomes differently depending on drug mechanism and patient physiology.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Key practical subgroups are: (1) Baseline DBP <70, 70\u201379, and \u226580 mmHg, which approximate clinically used thresholds for low and high DBP; (2) Among those with high SBP (e.g., \u2265140 mmHg), differentiation between low DBP (<70; wide pulse pressure) and preserved DBP (\u226570), to identify stiff-artery phenotypes with potentially higher J-curve risk. We expect that intensive BP control may confer reduced or uncertain net benefit\u2014and possibly increased harm\u2014in participants with very low baseline DBP, especially when combined with high SBP and CKD, whereas those with mid-to-high DBP can more safely realize the benefits of intensive SBP lowering.",
+        "subgroup_implications": "Patients with existing low DBP might not tolerate further reductions, potentially causing harm under intensive treatment protocols.",
         "validation_suggestions": [
-          "Model treatment\u2013DBP interactions for the primary outcome using DBP categories (<70, 70\u201379, \u226580 mmHg) and as a continuous variable with restricted cubic splines, focusing on whether the estimated treatment effect curve exhibits a J-shape across baseline DBP.",
-          "Examine achieved DBP over time in each arm stratified by baseline DBP category, and relate achieved DBP (time-updated or average) to outcomes by randomized arm to distinguish baseline-risk vs on-treatment DBP effects.",
-          "Evaluate three-way interactions among treatment, baseline DBP, and presence of clinical or subclinical CAD/prior CVD to test whether coronary disease specifically heightens low-DBP vulnerability under intensive therapy.",
-          "Derive and model pulse pressure (SBP \u2212 DBP) alongside SBP and DBP to determine whether DBP\u2019s importance is largely mediated through pulse-pressure/arterial-stiffness phenotypes.",
-          "Compare incidence of AKI, significant eGFR decline, symptomatic hypotension, and syncope across baseline DBP strata and treatment arms, quantifying safety gradients and their contribution to net treatment effect.",
-          "Conduct sensitivity analyses that exclude early events (e.g., within first 6\u201312 months) to reduce reverse causality from subclinical disease causing both low DBP and early events.",
-          "Contrast observed DBP-related heterogeneity with patterns reported in other trials (INVEST, ONTARGET, ACCORD-BP) to assess external consistency of the J-curve phenomenon in a randomized setting."
+          "Link changes in myocardial infarction or heart failure rates to DBP modifications.",
+          "Offer randomized control trials (RCTs) stratified by baseline DBP."
         ],
         "caveats": [
-          "DBP is subject to measurement error, white-coat effect, and short-term variability; a few baseline readings may not perfectly represent chronic DBP, potentially attenuating observed interactions.",
-          "J-curve associations between low DBP and adverse cardiac outcomes are susceptible to confounding by underlying illness; randomized subgroup analyses reduce but do not eliminate this concern.",
-          "SPRINT excluded patients with diabetes and symptomatic HF, populations in which low DBP and coronary perfusion concerns may be particularly salient, limiting generalizability.",
-          "The SHAP metric summarizes DBP\u2019s contribution to predicted treatment effect across its entire range; it does not directly reveal the shape of the dose\u2013response relationship, which must be examined via explicit interaction modeling.",
-          "Because DBP is correlated with SBP, age, and CKD, some apparent DBP-related heterogeneity may actually reflect these linked factors rather than DBP itself."
+          "Variability in individual DBP response could alter intervention outcomes.",
+          "Autonomic dysregulation may play a role in modifying DBP-related outcomes."
         ]
       },
       {
         "feature_name": "screat",
         "importance_rank": 4,
-        "shap_value": 0.0204515681,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline serum creatinine concentration (mg/dL), a routinely measured biochemical marker inversely related to kidney function and used, with age, sex, and race, to calculate eGFR.",
-        "why_important": "Serum creatinine provides a direct lab measure related to renal function, muscle mass, and intravascular volume. Although eGFR and CKD subgroup status summarize kidney function more explicitly, creatinine can capture additional nuances (e.g., subtle differences in muscle mass, lab calibration, or dynamic changes) that affect vulnerability to intensive BP lowering. As with eGFR, higher creatinine indicates higher CVD and HF risk but also reduced renal reserve and greater susceptibility to AKI and worsened CKD under intensive treatment, leading to a bidirectional influence on net benefit.",
+        "shap_value": 0.020451568067073822,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Serum creatinine (screat), an endogenous marker from muscular metabolism, is routinely used to gauge kidney function and by extension, assess cardiovascular risk profiles.",
+        "why_important": "Acting as an indicator of renal function, serum creatinine links to cardiovascular risk through kidney health and organ system interactions important for therapeutic planning.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "Elevated serum creatinine typically reflects reduced nephron number and CKD, which independently raise risk for CVD events through mechanisms including uremic toxin accumulation, endothelial dysfunction, oxidative stress, and mineral-bone disorder. This elevated baseline risk increases the potential absolute benefit from effective BP lowering, paralleling the mechanism described for eGFR.",
+            "description": "Elevated serum creatinine signals reduced renal filtration, correlating with increased cardiovascular adversities.",
             "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Higher creatinine signifies lower renal functional reserve and greater dependence on adequate perfusion pressure to maintain filtration. Under intensive BP control\u2014especially with RAAS inhibitors and diuretics\u2014these patients are more likely to experience hemodynamic AKI, hyperkalemia, and accelerated eGFR decline, which can reduce quality of life, increase hospitalizations, and may offset some cardiovascular benefits.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "In a subset of participants, mildly elevated creatinine may primarily reflect higher muscle mass rather than intrinsic kidney disease. In such individuals, renal vulnerability to intensive BP lowering may be overestimated if creatinine is interpreted solely as a CKD marker, implying that the creatinine\u2013treatment interaction is not purely monotonic across the range of values.",
-            "evidence_level": "speculative"
           },
           {
             "mechanism_type": "pharmacological",
-            "description": "Creatinine levels directly influence clinician decisions on dosing and selecting antihypertensive agents (e.g., avoiding high-dose ACEi/ARB or thiazides in more advanced CKD, switching to loop diuretics). Participants with higher creatinine may thus receive less aggressive titration or different drug combinations when assigned to the intensive arm, reducing achievable BP reduction and modifying realized treatment effect.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Because creatinine is an input to eGFR but is also included independently, it can capture residual variation in renal function (e.g., due to assay calibration or differences in muscle mass) not fully reflected in eGFR, as well as unmeasured structural kidney damage or ongoing injury that predisposes to future AKI under intensive therapy.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Serum creatinine is highly collinear with eGFR and CKD subgroup status. Its SHAP importance may partly be driven by how the ML model allocates predictive variance among these correlated predictors rather than indicating a completely distinct mechanistic pathway. Interpretation therefore requires considering all renal features together.",
+            "description": "Diminished renal function influences the clearance and safety profile of antihypertensive therapies by affecting drug pharmacokinetics.",
             "evidence_level": "strong"
           },
           {
             "mechanism_type": "biological",
-            "description": "Elevated baseline creatinine may, in some participants, reflect prior unrecorded AKI episodes or chronic structural kidney damage (e.g., scarring, nephrosclerosis). Such kidneys may be particularly susceptible to further hemodynamic insults during intensive BP lowering, reinforcing the risk of AKI and progressive decline when creatinine is already high.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Higher creatinine often prompts closer monitoring and a lower threshold for adjusting or holding nephrotoxic or BP-lowering drugs in routine practice. If similar behavior occurred within the structured SPRINT protocol, this could modestly mitigate severe renal harms in higher-creatinine participants, slightly modifying the observed balance of benefit and harm.",
-            "evidence_level": "speculative"
+            "description": "Increased creatinine reflects possible microvascular damage, also implying potential broader cardiovascular risks.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Relevant subgroups include: (1) Sex-specific creatinine categories approximating normal vs mildly elevated vs more clearly elevated values (e.g., <1.0, 1.0\u20131.5, and >1.5 mg/dL, with awareness of sex differences in normal ranges); (2) Discordant creatinine\u2013eGFR combinations (e.g., modestly elevated creatinine but eGFR \u226560 due to younger age and male sex), which may represent higher muscle mass rather than CKD; (3) High creatinine combined with low baseline DBP and/or high n_agents, marking a phenotype of high baseline risk and high vulnerability to hemodynamic renal injury.",
+        "subgroup_implications": "Patients with elevated serum creatinine may need unique BP management considerations to optimize cardiovascular and renal outcomes.",
         "validation_suggestions": [
-          "Model treatment\u2013creatinine interactions for both the primary cardiovascular composite and renal-specific outcomes (AKI, sustained eGFR decline), using creatinine as both categorical (e.g., tertiles or clinically relevant cutpoints) and continuous (splines) predictor.",
-          "Jointly model creatinine, eGFR, and CKD subgroup in a multivariable interaction framework to assess whether creatinine contributes independent predictive information for treatment effect modification beyond eGFR and binary CKD status.",
-          "Test whether the creatinine\u2013treatment interaction differs by sex, given sex-specific differences in creatinine generation, to help distinguish muscle-related from kidney-related signals.",
-          "Examine achieved BP, medication changes, and dose reductions across creatinine strata and treatment arms to quantify how clinician or protocol-driven behavior varies with baseline creatinine.",
-          "Analyze early eGFR trajectories (e.g., first 3\u201312 months) stratified by baseline creatinine and treatment arm, and assess whether acute eGFR drops mediate differences in subsequent cardiovascular outcomes.",
-          "Perform sensitivity analyses excluding participants with extreme creatinine values near SPRINT\u2019s exclusion thresholds to determine whether observed interactions are driven by a small high-risk subset."
+          "Stratify patients by serum creatinine to assess cardiovascular outcome variance.",
+          "Understand the safety implications of screat levels on intensive treatment."
         ],
         "caveats": [
-          "Serum creatinine is influenced by muscle mass, diet, and assay calibration; interpreting it purely as kidney function can misclassify muscular individuals as having CKD.",
-          "Close collinearity with eGFR and CKD subgroup hampers clear mechanistic attribution; small shifts in modeling choices can change the apparent importance of creatinine versus eGFR.",
-          "SPRINT excluded individuals with very advanced CKD and severely elevated creatinine, so extrapolation to stage 4\u20135 CKD or dialysis populations is not appropriate.",
-          "Creatinine measured at a single baseline time point does not reflect dynamic changes or prior AKI episodes that may modulate vulnerability to intensive treatment.",
-          "SHAP importance does not separately quantify prognostic vs predictive roles; creatinine likely acts primarily as a prognostic risk marker, with only a modest truly predictive interaction component."
+          "Non-renal factors like muscle mass and dietary intake affect serum creatinine levels.",
+          "Recognize interindividual differences in creatinine metabolism."
         ]
       },
       {
         "feature_name": "chr",
         "importance_rank": 5,
-        "shap_value": 0.0175686665,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline total serum cholesterol (mg/dL), reflecting the combined concentration of LDL, HDL, VLDL, and other lipoprotein fractions prior to randomization.",
-        "why_important": "Total cholesterol is a standard marker of atherosclerotic cardiovascular risk and entered into many risk calculators used for SPRINT eligibility. Higher total cholesterol generally indicates greater atherogenic burden and higher baseline risk of MI and ischemic stroke, increasing the absolute benefit attainable from BP lowering. Conversely, very low total cholesterol can sometimes signal chronic illness or malnutrition, associated with high competing non-CVD mortality and possibly less observable BP-related benefit. SHAP bidirectionality likely reflects these opposing influences: as total cholesterol rises from low to moderately high levels, baseline ASCVD risk and potential benefit increase, but at very low levels, competing risks or reverse causality may blunt apparent benefit.",
+        "shap_value": 0.017568666487932205,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Cholesterol ratio (CHR), typically the total cholesterol to HDL cholesterol ratio, indicates the lipid associations with cardiovascular risk.",
+        "why_important": "A higher cholesterol ratio is indicative of more severe atherosclerosis risk, offering predictive insight into cardiovascular events more resistant to solely BP-mediated interventions.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "High total cholesterol usually corresponds to elevated LDL and greater atherosclerotic plaque burden in coronary and carotid arteries. Participants with higher ASCVD burden have more to gain from interventions that lower BP-related shear stress and stabilize plaques, so intensive BP control can yield more absolute reductions in MI and ischemic stroke rates in this group.",
+            "description": "Elevated cholesterol ratio is associated with progressive atherosynthesis, amplifying cardiovascular risk amidst BP control strategies.",
             "evidence_level": "strong"
           },
           {
-            "mechanism_type": "biological",
-            "description": "In older or comorbid participants, low total cholesterol may reflect chronic inflammatory disease, malignancy, or malnutrition rather than intrinsically low atherosclerotic risk (reverse causality). These conditions increase non-atherosclerotic mortality and competing risks, shortening the time window to realize CVD risk reductions from intensive BP lowering and thereby attenuating observed benefit in low-cholesterol subgroups.",
-            "evidence_level": "moderate"
-          },
-          {
             "mechanism_type": "pharmacological",
-            "description": "Participants with elevated total cholesterol are more likely to be prescribed statins, which reduce ASCVD events independently of BP. Combined LDL lowering and BP lowering could modestly enhance overall risk reduction, although clear evidence of a strong cholesterol-dependent interaction with intensive BP treatment in SPRINT is limited.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Chronic hypercholesterolemia promotes arterial stiffening and endothelial dysfunction. In such phenotypes, intensive SBP lowering may be particularly important for stroke and HF prevention by reducing central pressure load, but direct evidence that this yields a distinct cholesterol-specific modification of BP-treatment effect in SPRINT is limited.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Total cholesterol is a component of global CVD risk scores and likely served as a risk stratifier during SPRINT screening. Its SHAP importance probably reflects this role\u2014higher values marking higher baseline risk and thus larger absolute benefit\u2014rather than indicating a cholesterol-specific mechanism of BP responsiveness.",
+            "description": "Lipid profiles can modify response to antihypertensives, potentially influencing cardiovascular outcomes differently.",
             "evidence_level": "moderate"
           },
           {
             "mechanism_type": "biological",
-            "description": "In some participants, elevated total cholesterol reflects high triglyceride-rich lipoproteins, which have been associated with microvascular dysfunction and HFpEF. Intensive BP control might be especially effective at reducing HF events in this microvascular phenotype, but this pathway is speculative and unlikely to be a major determinant of cholesterol-related heterogeneity in SPRINT.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Individuals identified as having high cholesterol may receive more intensive lifestyle counseling, lipid management, and cardiovascular follow-up, potentially improving overall risk-factor control and adherence. This could modestly modify realized treatment benefit in higher-cholesterol groups, though the effect is likely small compared with direct biological risk differences.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Use of HDL- or triglyceride-focused therapies such as niacin or fibrates was likely infrequent and any BP effects minimal; these agents are therefore unlikely to materially contribute to total-cholesterol-related heterogeneity in SPRINT.",
-            "evidence_level": "weak"
+            "description": "CHR influences endothelial function and artery elasticity, thereby weaving into the adaptive vascular responses to intensive BP therapy.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Practical cholesterol-based subgroups include: (1) Total cholesterol <180, 180\u2013239, and \u2265240 mg/dL, approximating low, moderate, and high traditional risk categories; (2) Joint classification with HDL (e.g., high total cholesterol plus low HDL vs low total cholesterol with high HDL) to better define very high vs lower global ASCVD risk; (3) High total cholesterol in statin-treated vs non-statin-treated participants (if medication data are available), to explore whether intensive BP benefit differs according to concurrent LDL-lowering therapy. Patients with moderately to markedly elevated total cholesterol and other high-risk features (e.g., high SBP, low HDL) are expected to derive greater absolute benefit from intensive BP control.",
+        "subgroup_implications": "Individuals with elevated cholesterol ratios may warrant special attention in BP management plans to better mitigate cardiovascular risks.",
         "validation_suggestions": [
-          "Test treatment\u2013total-cholesterol interactions using clinical categories (<180, 180\u2013239, \u2265240 mg/dL) and as a continuous variable with splines for the primary composite and plaque-driven components (MI, ischemic stroke).",
-          "Adjust for statin use and intensity at baseline in interaction models, and evaluate whether cholesterol-related heterogeneity persists after accounting for guideline-based lipid therapy.",
-          "Construct joint risk strata combining total cholesterol with HDL (e.g., high total/low HDL vs low total/high HDL) and assess whether intensive BP control produces especially large absolute benefit in the most atherogenic profiles.",
-          "Use competing-risk models to explore whether low-cholesterol groups have higher rates of non-CVD death, which could limit observed BP-related benefits within the trial timeframe.",
-          "Compare SPRINT-based findings qualitatively or quantitatively with trials that simultaneously manipulated BP and lipids (e.g., ASCOT, HOPE), looking for consistent cholesterol-dependent patterns of BP-treatment effect."
+          "Draw correlations between cholesterol ratios and cardiovascular event frequency under intensive treatment.",
+          "Conduct RCTs examining the interaction of lipid modifying strategies with BP treatment outcomes."
         ],
         "caveats": [
-          "Total cholesterol is a crude summary metric that does not distinguish LDL, HDL, and triglyceride fractions; more granular lipid variables may better capture relevant biology.",
-          "Baseline cholesterol values may be influenced by prior statin use and do not reflect lifetime lipid exposure, which is more strongly related to atherosclerotic burden.",
-          "Reverse causality (illness leading to low cholesterol) complicates interpretation of low-cholesterol subgroups and may mimic a lack of benefit from BP lowering.",
-          "SPRINT\u2019s inclusion criteria likely reduced representation of patients with extreme hypercholesterolemia or familial dyslipidemias, limiting generalizability to those populations.",
-          "SHAP-estimated importance of total cholesterol may predominantly reflect its contribution to global baseline risk rather than strong causal modification of BP-lowering efficacy."
-        ]
-      },
-      {
-        "feature_name": "sub_ckd",
-        "importance_rank": 6,
-        "shap_value": 0.0174799282,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Binary indicator of baseline chronic kidney disease (CKD) subgroup membership in SPRINT, typically defined by eGFR 20\u201359 mL/min/1.73 m\u00b2 versus non-CKD participants with eGFR \u226560.",
-        "why_important": "CKD subgroup status was a pre-specified stratification and analysis factor in SPRINT and encapsulates a broad shift in baseline cardiovascular and renal risk. CKD participants had higher absolute CVD risk and experienced benefits from intensive BP control but also had substantially more renal adverse events and steeper eGFR declines. SHAP bidirectionality for sub_ckd reflects this established tradeoff: the CKD subgroup tends to gain more in terms of HF and overall CVD event reduction but is also more exposed to renal harm and treatment-related complications when pushed to intensive BP targets.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "CKD is a potent driver of CVD via RAAS activation, chronic inflammation, endothelial dysfunction, vascular calcification, and LV hypertrophy. These processes substantially elevate baseline risk for MI, stroke, HF, and CV death, thereby amplifying the absolute event reduction achievable with effective interventions such as intensive BP lowering.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "CKD is characterized by impaired renal autoregulation and diminished nephron reserve. This makes CKD patients particularly vulnerable to drops in perfusion pressure caused by intensive BP lowering, predisposing them to AKI and faster progression of CKD, especially when RAAS inhibitors and diuretics are used to achieve SBP <120.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "CKD influences antihypertensive choice and dosing\u2014greater reliance on RAAS blockers and loop diuretics, cautious use of certain agents, and more frequent dose adjustments in response to creatinine changes. These regimen patterns modify both the magnitude and mechanisms of BP reduction in CKD patients, shaping their benefit\u2013harm balance under intensive treatment.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "CKD is frequently accompanied by anemia, metabolic acidosis, and deranged calcium\u2013phosphate metabolism, all of which exacerbate LV remodeling and increase HF risk. Intensive BP control may particularly reduce HF hospitalizations in CKD, contributing disproportionately to the composite benefit in this subgroup.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "CKD subgroup participants are often followed more closely, with more frequent laboratory testing and clinical contacts, which can facilitate early identification and management of renal adverse events. While SPRINT\u2019s protocol standardized care, residual differences in clinician vigilance may slightly affect the observed balance of harms and benefits in CKD vs non-CKD.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "As a binary classification derived from eGFR, sub_ckd summarizes a clinically meaningful risk threshold. Its SHAP importance overlaps with that of continuous eGFR, but it may capture non-linear risk and practice thresholds (e.g., changes in medication strategy once eGFR falls below 60) that are not fully represented by eGFR alone.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Observational and trial data suggest that the BP\u2013outcome relationship can differ between CKD and non-CKD populations, implying different optimal BP ranges when considering both CVD and renal endpoints. In SPRINT, CKD status likely shifted the shape of the benefit\u2013harm curve, with CKD participants benefiting substantially in terms of CVD outcomes but at the cost of more renal events.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Many CKD patients have sodium- and volume-dependent hypertension. Intensive strategies that emphasize diuretics and RAAS blockade may therefore be particularly effective in reducing volume load and afterload in CKD, driving larger reductions in HF and BP-related events compared with non-CKD patients.",
-            "evidence_level": "moderate"
-          }
-        ],
-        "subgroup_implications": "Key subgroups span: (1) CKD (eGFR 20\u201359) vs non-CKD (eGFR \u226560), as per SPRINT\u2019s stratification; (2) Within CKD, division into eGFR 45\u201359 vs 20\u201344 mL/min/1.73 m\u00b2 to distinguish milder from more advanced CKD represented in the trial; (3) CKD combined with low DBP (<70 mmHg) or multiple baseline antihypertensive agents (\u22653), which may highlight individuals with both high absolute CVD risk and particularly low renal/hemodynamic reserve, where the net effect of intensive BP control is least certain.",
-        "validation_suggestions": [
-          "Reproduce and extend SPRINT\u2019s published CKD subgroup analyses, estimating treatment\u2013sub_ckd interactions for both the primary composite and renal endpoints (AKI, sustained eGFR decline).",
-          "Fit models including treatment, sub_ckd, and continuous eGFR and creatinine to quantify whether the binary CKD indicator adds predictive information beyond continuous renal measures in explaining treatment heterogeneity.",
-          "Decompose the treatment effect within CKD and non-CKD groups into contributions from HF, MI, stroke, and CV death, testing whether HF reduction accounts for a larger share of benefit in CKD participants.",
-          "Analyze early changes in eGFR after randomization as potential mediators of long-term outcome differences in CKD vs non-CKD subgroups, using mediation or joint models.",
-          "Evaluate treatment \u00d7 sub_ckd \u00d7 DBP and treatment \u00d7 sub_ckd \u00d7 SBP interactions to identify CKD phenotypes (e.g., CKD with low DBP and high SBP) at highest risk of net harm or minimal benefit.",
-          "Conduct competing-risk analyses for ESRD, CVD events, and non-CVD death by CKD status and treatment arm, to understand how intensive BP control shifts the distribution of outcomes.",
-          "Compare CKD-related heterogeneity in SPRINT with that in other hypertension trials including CKD subgroups to assess replicability of patterns."
-        ],
-        "caveats": [
-          "Sub_ckd is derived from eGFR and is not an independent construct; its importance must be interpreted in conjunction with continuous renal metrics.",
-          "SPRINT\u2019s CKD criteria (eGFR range and exclusion of diabetics) differ from some clinical practice definitions, limiting direct generalization to broader CKD populations, especially diabetic CKD.",
-          "Binary CKD subgrouping masks heterogeneity within CKD (e.g., by albuminuria level, underlying etiology such as glomerulonephritis vs hypertensive nephrosclerosis).",
-          "Although randomization was stratified by CKD status, subgroup analyses may still lack power for some endpoints, and multiple comparisons increase the risk of spurious findings.",
-          "Tradeoffs between cardiovascular benefit and renal harm are value-laden; small differences in weighting of renal outcomes vs CVD events can change conclusions about \u2018net benefit\u2019 in CKD."
-        ]
-      },
-      {
-        "feature_name": "n_agents",
-        "importance_rank": 7,
-        "shap_value": 0.016846247,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Number of antihypertensive medication agents or classes a participant is taking at baseline, serving as a proxy for baseline treatment intensity and apparent resistance or severity of hypertension.",
-        "why_important": "Baseline number of agents integrates information about BP severity, chronicity, and therapeutic resistance, as well as pharmacologic burden and potential for drug\u2013drug interactions. Participants on multiple agents typically have higher baseline CVD risk and may gain more from additional BP reduction, but they also have less room for further intensification and are more exposed to cumulative side effects. SHAP bidirectionality for n_agents likely reflects this opposing influence: increasing agent count signals higher potential benefit but also higher risk of harm and limited capacity to further separate intensive vs standard arms in terms of achieved BP.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Requiring more antihypertensive agents at baseline often reflects more severe or long-standing hypertension and may indicate target-organ damage (e.g., LV hypertrophy, vascular remodeling). These features are associated with higher CVD risk, which can translate into larger absolute benefit from additional BP reduction if further lowering is achievable.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Participants already on multiple agents may have limited residual pharmacologic options and may experience diminishing BP-lowering returns with each added drug or dose escalation. In such patients, assignment to the intensive arm may not produce as large an additional SBP reduction compared with the standard arm as in patients starting on fewer agents, attenuating the treatment effect.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Polypharmacy increases the risk of side effects (e.g., electrolyte disturbances, orthostatic hypotension, renal dysfunction) and drug\u2013drug interactions. Intensifying therapy in participants already on several agents can disproportionately increase the likelihood of treatment-related harms, potentially offsetting cardiovascular benefits.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "A higher number of agents may signal an underlying resistant-hypertension phenotype driven by factors such as volume overload, neurohormonal activation, or secondary causes (e.g., hyperaldosteronism). Such pathophysiology can make BP harder to control, necessitating more aggressive regimens with higher AE risk, and may limit the incremental BP reduction achievable with intensive targets.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Participants on many medications may have different adherence patterns\u2014some more adherent due to perceived severity, others less adherent due to pill burden and complexity. These behavioral differences can influence how faithfully intensive vs standard regimens are implemented and thus affect observed treatment heterogeneity by n_agents.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Higher agent counts frequently co-occur with comorbid conditions such as CKD, HF, or CAD and with greater arterial stiffness. These comorbidities increase baseline risk and may both heighten the potential benefit from BP reduction (especially for HF prevention) and narrow the safety margin, making harms (e.g., AKI, hypotension) more consequential.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Number of baseline antihypertensive agents strongly correlates with baseline SBP/DBP, duration of hypertension, and clinician perception of risk. Its SHAP importance may thus partly reflect these underlying prognostic factors rather than a strong independent predictive interaction.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Different combinations of agents (e.g., RAAS blocker + thiazide vs RAAS blocker + CCB) have distinct BP-lowering efficiencies and AE profiles. Although n_agents alone cannot distinguish specific regimens, it may partially proxy regimen complexity and class diversity, which can modulate both the magnitude and tolerability of intensive BP lowering.",
-            "evidence_level": "speculative"
-          }
-        ],
-        "subgroup_implications": "Practical subgroups based on n_agents include: (1) 0\u20131 vs 2 vs \u22653 baseline antihypertensive agents, reflecting low, moderate, and high pharmacologic burden; (2) Among those on \u22653 agents, distinction between participants with uncontrolled SBP (e.g., \u2265140 mmHg) consistent with true resistant hypertension vs those relatively controlled despite multiple agents, where overtreatment or non-BP indications (e.g., beta-blockers for CAD) may be involved. Patients with genuine resistant hypertension (\u22653 agents including a diuretic and uncontrolled BP) may have high baseline risk but limited additional BP reduction achievable under intensive protocols and higher AE risk, potentially reducing net benefit.",
-        "validation_suggestions": [
-          "Evaluate treatment\u2013n_agents interactions for the primary composite and safety outcomes using n_agents both as an ordinal variable (0\u20131, 2, \u22653) and as a continuous predictor.",
-          "Quantify the difference in achieved SBP and DBP between intensive and standard arms within each n_agents category over time to determine how baseline pharmacologic burden affects attainable BP separation.",
-          "Stratify participants with \u22653 agents into resistant-hypertension\u2013like profiles (e.g., \u22653 agents including a diuretic with SBP \u2265140) and others, and compare treatment effects between these subgroups.",
-          "Assess rates of key adverse events (AKI, syncope, hypotension, electrolyte abnormalities) by n_agents strata and treatment arm to characterize harm gradients associated with further intensification in polytreated patients.",
-          "Adjust for CKD, HF, CAD, and baseline SBP in interaction models to test whether n_agents adds predictive information beyond these risk factors.",
-          "If drug-class data are available, explore whether specific class combinations (e.g., regimens already containing RAAS blocker + diuretic) show different intensive-treatment benefits or harms at a given n_agents count."
-        ],
-        "caveats": [
-          "n_agents does not capture drug doses, titration history, or specific agent classes, which may be more mechanistically relevant to benefit and harm.",
-          "The same n_agents count can represent very different clinical scenarios (e.g., three low-dose medications vs three maximally titrated medications).",
-          "Clinician prescribing behavior and unmeasured factors (e.g., secondary hypertension, socioeconomic status) may influence both n_agents and outcomes, introducing residual confounding.",
-          "SPRINT\u2019s protocolized titration algorithms likely reduced but did not eliminate practice variation tied to baseline n_agents.",
-          "SHAP importance for n_agents likely reflects a mixture of prognostic risk and modest predictive interaction, and it should be interpreted in the context of concurrent SBP, DBP, and CKD features."
-        ]
-      },
-      {
-        "feature_name": "sbp",
-        "importance_rank": 8,
-        "shap_value": 0.0167611055,
-        "effect_direction": "positive",
-        "clinical_interpretation": "Baseline systolic blood pressure (SBP, mmHg) at or near randomization, representing peak arterial pressure during cardiac systole and the primary therapeutic target in SPRINT.",
-        "why_important": "Baseline SBP is the central determinant of both baseline CVD risk and the magnitude of potential BP reduction under an intensive target. Higher SBP marks higher risk and provides more room to lower BP without crossing into hypotensive ranges, typically yielding greater absolute and relative benefit from intensive control. Conversely, participants with lower baseline SBP have both lower absolute CVD risk and less safe margin for further reduction, increasing the risk of adverse events for relatively smaller potential benefit. The positive mean SHAP value for SBP indicates that, on average, higher baseline SBP predicts greater benefit from intensive versus standard treatment in the model, consistent with SPRINT and broader BP-lowering trial evidence.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Higher baseline SBP is strongly associated with increased risk of stroke, MI, HF, and CV death. Intensive BP control that substantially lowers SBP in this high-risk group yields large relative and absolute risk reductions in these outcomes, as demonstrated in SPRINT and meta-analyses from the Blood Pressure Lowering Treatment Trialists\u2019 Collaboration.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Patients with higher baseline SBP have more room to reduce SBP before reaching levels that threaten cerebral, coronary, and renal perfusion. Therefore, intensive treatment is more likely to achieve large BP reductions with acceptable safety margins in high-SBP individuals, while similar intensification in those starting closer to 130 mmHg risks overshooting into hypotensive territory.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Chronic elevation of SBP promotes arterial stiffening, LV hypertrophy, and diastolic dysfunction. Aggressive SBP reduction can regress LV mass, reduce wall stress, and improve diastolic filling, particularly in those with the highest baseline SBP, thereby reducing the incidence of HF and some arrhythmic complications.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Participants with lower baseline SBP typically have both lower baseline CVD risk and a smaller difference in achieved SBP between intensive and standard arms. Consequently, their absolute risk reduction from intensive control is smaller, and in some cases, any theoretical benefit may be offset by a relatively higher probability of treatment-related AEs.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Higher SBP often coexists with wide pulse pressure and advanced vascular disease. In such patients, careful balancing of SBP reduction against DBP preservation is crucial: while lowering SBP reduces vascular stress and CVD risk, overtreatment in those with low DBP may lead to impaired organ perfusion and a J-curve pattern of risk.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Achieving substantial SBP reductions in very high-SBP patients often requires multi-drug regimens and higher doses, increasing the risk of AEs such as electrolyte disturbances, renal dysfunction, and symptomatic hypotension. However, for many such patients, the magnitude of CVD risk reduction exceeds the incremental harm, preserving net benefit.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Markedly elevated SBP can increase both patient and clinician motivation to intensify treatment and adhere to medication and lifestyle interventions, potentially leading to better implementation of intensive targets and larger realized SBP differences compared with those already near guideline targets.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Relatively low baseline SBP may sometimes reflect underlying structural heart disease, autonomic dysfunction, or systemic illness (e.g., cardiomyopathy, cachexia). In these participants, further SBP reduction could exacerbate symptoms or compromise perfusion, increasing the risk of adverse outcomes and undermining potential benefit from intensive control.",
-            "evidence_level": "weak"
-          }
-        ],
-        "subgroup_implications": "Clinically relevant SBP-based subgroups include: (1) Baseline SBP <130, 130\u2013139, 140\u2013159, and \u2265160 mmHg, capturing near-target, mild, moderate, and more severe hypertension within SPRINT\u2019s inclusion range; (2) High SBP with preserved DBP (e.g., SBP \u2265140 and DBP \u226570) vs high SBP with low DBP (e.g., SBP \u2265140 and DBP <70), to identify wide pulse-pressure phenotypes at greater J-curve risk. We expect that intensive BP control will confer the greatest absolute net benefit in participants with higher baseline SBP (especially \u2265140\u2013150 mmHg) and adequate DBP, while the benefit becomes smaller or more uncertain in those starting near 130 mmHg or with high SBP but low DBP.",
-        "validation_suggestions": [
-          "Fit Cox models with treatment\u2013SBP interactions using standard categories (<130, 130\u2013139, 140\u2013159, \u2265160 mmHg) and continuous SBP (splines), to visualize how the estimated treatment effect changes along the SBP spectrum.",
-          "Quantify the achieved SBP separation between intensive and standard arms over time within each baseline SBP stratum to determine whether smaller separations at lower SBP explain diminished benefit.",
-          "Analyze key adverse events (hypotension, syncope, AKI) by baseline SBP category and treatment arm to identify SBP thresholds beyond which harms escalate disproportionately.",
-          "Include both SBP and DBP (and derived pulse pressure) in interaction models to map a two-dimensional SBP\u2013DBP surface of predicted net benefit vs harm, identifying regions where intensive therapy may be contraindicated or especially advantageous.",
-          "Perform landmark or delayed-entry analyses excluding early events to reduce reverse causation from low SBP due to unrecognized serious illness.",
-          "Compare SPRINT-derived SBP interaction patterns with those in ACCORD-BP, HOPE-3, and BPLTTC meta-analyses to assess consistency of baseline SBP as a modifier of intensive-treatment benefit."
-        ],
-        "caveats": [
-          "Single-visit baseline SBP is susceptible to white-coat effect and short-term variability; averaging multiple pre-randomization readings may yield more reliable interaction estimates.",
-          "SPRINT required SBP \u2265130 and increased CVD risk for eligibility, leading to underrepresentation of patients with very low baseline SBP; extrapolation to SBP <120 or normotensive individuals is not supported.",
-          "Baseline SBP is correlated with age, n_agents, and CKD, so some SBP-related heterogeneity may reflect these comorbid risk factors rather than SBP alone.",
-          "Although treatment algorithms differed by arm, clinician judgment and adherence still influenced achieved SBP, introducing potential treatment-implementation variability across SBP strata.",
-          "A positive SHAP mean for SBP indicates greater average benefit at higher SBP but does not exclude subgroups (e.g., high SBP with low DBP) where over-lowering may be harmful."
-        ]
-      },
-      {
-        "feature_name": "hdl",
-        "importance_rank": 9,
-        "shap_value": 0.0167508908,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline high-density lipoprotein (HDL) cholesterol level (mg/dL), a lipoprotein fraction involved in reverse cholesterol transport and commonly considered inversely associated with ASCVD risk in epidemiologic studies.",
-        "why_important": "HDL is an inverse marker of ASCVD risk and a common component of global risk scores. Lower HDL is associated with higher rates of MI and stroke and often coexists with other metabolic risk factors (e.g., high triglycerides, central obesity), indicating high global risk and potentially larger absolute benefit from intensive BP control. High HDL frequently marks a healthier metabolic and lifestyle profile with lower baseline risk and thus less absolute gain from additional BP lowering. SHAP bidirectionality likely reflects this gradient: as HDL decreases, global risk (and potential benefit) rises, but extreme patterns (e.g., very low HDL due to severe illness) could also introduce competing risks and reverse causality.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Low HDL is associated with increased atherosclerotic burden and higher coronary event rates. Participants with low HDL typically have higher global ASCVD risk, so intensive BP lowering\u2014particularly in conjunction with statin therapy\u2014may yield greater absolute reductions in MI and stroke than in those with high HDL.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "HDL particles exhibit anti-inflammatory, antioxidant, and endothelial-protective properties in experimental models. Lower HDL levels imply impaired vascular protection and may increase susceptibility to BP-related endothelial injury and plaque destabilization, making BP reduction more impactful in low-HDL participants.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Very high HDL concentrations in SPRINT participants likely generally reflect healthier lifestyle and metabolic states (e.g., physical activity, moderate alcohol intake), which are associated with lower baseline CVD risk and better control of other risk factors. Consequently, the absolute BP-lowering benefit of intensive control may be modest in high-HDL individuals despite similar relative effects.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "HDL is a key component of Framingham and other global risk calculators. Its SHAP importance most likely reflects its role in encoding overall risk (low HDL = higher risk) rather than HDL-specific causal pathways affecting BP responsiveness.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Higher HDL often co-occurs with favorable behaviors such as regular exercise, healthier diet, and non-smoking, and may correlate with better adherence to medications. Such individuals may already have optimized CVD risk factor control, leaving less incremental benefit to be achieved via further BP lowering.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Low HDL commonly clusters with other features of metabolic syndrome (central obesity, insulin resistance, high triglycerides). This phenotype carries elevated risks of coronary events and HFpEF, which intensive BP lowering could disproportionally reduce relative to patients with more favorable metabolic profiles.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Pharmacologic attempts to raise HDL (e.g., niacin, fibrates) have not consistently improved outcomes and were not central to SPRINT management. Use of these agents is unlikely to materially contribute to HDL-related heterogeneity in intensive BP treatment effects.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Severely reduced HDL may be associated with impaired coronary microvascular function, which could theoretically lower the tolerance for aggressive BP reduction without provoking ischemia. However, this microvascular pathway is speculative and not directly testable with available SPRINT data.",
-            "evidence_level": "speculative"
-          }
-        ],
-        "subgroup_implications": "Useful HDL-based subgroups include: (1) HDL <40 mg/dL vs 40\u201359 vs \u226560 mg/dL (with optional sex-specific cutpoints, e.g., <40 in men and <50 in women, if sample size permits), representing low, intermediate, and high HDL; (2) Joint risk profiles such as low HDL plus high SBP and high total cholesterol vs high HDL with otherwise favorable risk factors. Intensive BP control is expected to yield greater absolute benefit in participants with low HDL combined with other high-risk features and smaller absolute benefit in those with high HDL and a generally favorable cardiovascular risk profile.",
-        "validation_suggestions": [
-          "Assess treatment\u2013HDL interactions using clinically relevant HDL categories and HDL as a continuous variable with splines for the primary composite and coronary outcomes (MI, coronary death).",
-          "Adjust for total cholesterol, LDL, triglycerides, and statin use in interaction models to determine whether HDL independently modifies treatment effect beyond its role in global risk.",
-          "Construct combined risk strata that integrate HDL with SBP and other risk factors (e.g., low HDL + SBP \u2265140 + high total cholesterol vs high HDL + SBP <140) to test whether intensive BP control offers particularly pronounced benefit in clustered high-risk phenotypes.",
-          "Evaluate whether intensive BP control reduces coronary events and HF more strongly than stroke in low-HDL participants, consistent with an atherogenic\u2013metabolic phenotype.",
-          "Apply competing risk models to examine whether high-HDL groups have lower CVD event rates but similar or different non-CVD mortality, which might limit observable benefit from intensive BP lowering."
-        ],
-        "caveats": [
-          "Pharmacologic HDL raising has largely failed to reduce CVD events, suggesting HDL is mainly a risk marker rather than a major causal mediator; its effect-modifier role is likely indirect, via global risk.",
-          "Laboratory variability and different assay methods can affect HDL measurements, though usually modestly.",
-          "Rare genetic HDL disorders (e.g., CETP deficiency) may not follow typical risk associations but are too uncommon to meaningfully influence SPRINT-wide patterns.",
-          "HDL is strongly correlated with lifestyle and metabolic factors, so disentangling HDL-specific effects from broader risk profiles is challenging.",
-          "SHAP importance does not specify whether low or high HDL predicts greater intensive-treatment benefit; this must be clarified via explicit interaction analyses."
-        ]
-      },
-      {
-        "feature_name": "female",
-        "importance_rank": 10,
-        "shap_value": 0.0163165089,
-        "effect_direction": "unclear",
-        "clinical_interpretation": "Binary indicator of female sex at birth in SPRINT, distinguishing women from men among non-diabetic hypertensive adults \u226550 years with elevated CVD risk.",
-        "why_important": "Sex differences exist in hypertension pathophysiology, vascular biology, pharmacokinetics/pharmacodynamics of antihypertensives, and baseline CVD risk. Women tend to have lower absolute CVD risk at a given age and BP, different patterns of arterial stiffness and HF phenotypes (more HFpEF), and possibly different AE profiles. However, SPRINT\u2019s primary publications did not report a strong sex-by-treatment interaction for the main outcome. SHAP importance for female sex likely reflects a combination of modest true sex-related pharmacological and biological differences and correlated factors (e.g., HDL levels, body size), with overall intensive-treatment benefits appearing broadly similar in women and men on a relative scale but smaller in absolute terms in women due to lower baseline risk.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Women, especially postmenopausal, exhibit different patterns of arterial stiffness, ventricular\u2013vascular coupling, and coronary microvascular function compared with men, and they have a higher prevalence of HFpEF. Intensive BP control may therefore have somewhat different relative impacts on HF vs MI/stroke in women versus men, even if the overall composite effect remains similar.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Changes in sex hormones around menopause influence endothelial function, RAAS activity, and sympathetic tone. These factors could, in theory, alter BP\u2013risk relationships and the optimal BP range in women vs men, but SPRINT was not designed or powered to define sex-specific optimal BP targets, and direct evidence remains limited.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Women can exhibit different pharmacokinetics and pharmacodynamics\u2014for example, smaller body size, differences in fat distribution, and variations in drug metabolism and renal clearance. At equivalent nominal doses, some antihypertensives may produce stronger BP reductions or higher AE rates in women than in men, potentially altering the intensive\u2013standard BP separation and harm profile by sex.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Women may differ from men in health-care utilization and adherence to preventive therapies, with some data suggesting higher adherence among women. If women adhere more closely to assigned regimens in the intensive arm, this could modestly enhance realized treatment differences compared to men.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "At similar ages and BP levels, women generally have lower baseline absolute CVD risk than men. As a result, even if the relative risk reduction from intensive BP control is similar, the absolute risk reduction and thus the net absolute benefit are typically smaller in women than in men.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Sex correlates with other influential variables such as HDL levels, body size, eGFR (via creatinine), and sometimes age distribution. Part of the SHAP importance for female sex may thus reflect these covarying factors rather than sex-specific biology alone.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Some evidence suggests that women may be more prone to certain antihypertensive-related adverse effects, such as thiazide-associated hyponatremia or orthostatic symptoms at similar achieved BP. If intensive treatment leads to comparable target SBP in both sexes, women may, in some instances, experience relatively lower absolute pressures and slightly higher rates of some AEs, although strong sex-specific AE patterns were not prominent in SPRINT.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Cardiac and vascular remodeling patterns differ between sexes; women more often exhibit concentric remodeling and coronary microvascular dysfunction, while men more often show obstructive epicardial disease. These differences could subtly influence which endpoints (HF vs MI vs stroke) benefit most from BP lowering by sex, even if the overall treatment effect is similar.",
-            "evidence_level": "speculative"
-          }
-        ],
-        "subgroup_implications": "Clinically relevant sex-based comparisons include: (1) Women vs men overall, focusing on whether relative effects of intensive vs standard treatment are similar and whether absolute benefit differs due to baseline risk; (2) Sex-specific analyses within age strata (e.g., <65 vs \u226565) as a proxy for menopausal status to examine whether patterns differ in younger vs older women; (3) Sex-specific comparisons of component outcomes (MI, stroke, HF, CV death) to see if certain endpoints (e.g., HF) show larger relative benefit or harm in one sex. Overall, the likely pattern is broadly similar relative benefits of intensive BP control in women and men, with smaller absolute benefit but potentially different AE profiles in women.",
-        "validation_suggestions": [
-          "Formally test treatment\u2013sex interactions for the primary composite and key safety endpoints (AKI, hypotension, syncope) using Cox models with interaction terms, while reporting both relative and absolute risk differences by sex.",
-          "Stratify analyses by age (<65 vs \u226565) within each sex to explore whether postmenopausal women differ from men of similar age in intensive-treatment effects.",
-          "Compare baseline and on-treatment BP levels between women and men within each randomized arm to determine whether achieved SBP and DBP differ systematically by sex despite similar treatment protocols.",
-          "Analyze the distribution of antihypertensive classes and doses by sex within each arm to identify any sex-specific prescribing patterns that could confound or modify treatment responses.",
-          "Evaluate component outcomes (MI, stroke, HF, CV death) separately by sex and treatment arm to identify endpoints with potential sex-related heterogeneity even if the composite shows little interaction.",
-          "Contextualize SPRINT findings with meta-analyses of BP-lowering trials that have examined sex interactions (e.g., BPLTTC) to determine whether any observed sex differences are consistent or trial-specific."
-        ],
-        "caveats": [
-          "SPRINT was not primarily powered to detect sex-by-treatment interactions; absence of strong interactions in published analyses suggests any sex-related heterogeneity is likely modest.",
-          "Women have historically been underrepresented in hypertension trials, and external validation of sex-specific findings remains limited.",
-          "Observed sex differences in treatment effect can be confounded by differences in comorbidities, body size, kidney function, and lipid profiles that are not fully captured by the model.",
-          "Sex is recorded as a binary variable and does not account for gender identity, exogenous hormone therapy, or intersex conditions; the mechanisms considered here are predominantly biological rather than social.",
-          "SHAP importance for sex captures its overall contribution to predicted heterogeneity but does not confirm a strong causal sex-specific interaction; much of the signal may arise from correlation with other effect-modifying features."
+          "Consider lipid level modifiability as a source of confounding in baseline risk estimations.",
+          "Acknowledge the impact of lifestyle factors on cholesterol levels, potentially affecting outcomes."
         ]
       }
     ],
-    "cross_feature_patterns": "Several cross-feature themes become more apparent with the refined hypotheses. (1) Baseline global cardiovascular risk: Age, SBP, eGFR/CKD status, total cholesterol, and low HDL collectively calibrate baseline risk, and SHAP patterns are consistent with the principle that higher baseline risk yields larger absolute benefit from intensive BP lowering, provided safety margins are adequate. (2) Organ perfusion and reserve: eGFR, creatinine, DBP, CKD subgroup, and n_agents jointly encode renal and hemodynamic reserve. Constellations such as low eGFR/CKD + low DBP + high n_agents identify patients at high risk of AKI and hypotension, in whom the net benefit of intensive control is most uncertain and likely non-monotonic. (3) Vascular stiffness and pulse pressure: Age, SBP, DBP, and lipid profile (higher total cholesterol, lower HDL) all contribute to arterial stiffness phenotypes. High SBP with low DBP in older adults reflects wide pulse pressure and may define a J-curve-sensitive group where over-lowering DBP under intensive therapy could be harmful. (4) Treatment intensity and pharmacologic burden: n_agents, CKD status, age, and sex influence both how aggressively BP can be lowered and how well multi-drug regimens are tolerated, affecting the realized difference between intensive and standard arms. (5) Metabolic health and lifestyle: HDL and total cholesterol, in conjunction with sex and age, differentiate more vs less metabolically adverse risk profiles; these interact with BP and renal features to shape where intensive BP control offers the greatest incremental benefit. Future modeling should explicitly examine multi-way interactions such as age \u00d7 eGFR/CKD \u00d7 SBP/DBP and SBP \u00d7 DBP \u00d7 lipid profile to delineate clinically actionable subgroups with clearly favorable vs borderline benefit\u2013harm profiles for intensive BP control."
+    "cross_feature_patterns": "Many features relate to cardiovascular risk via biological aging, renal and vascular physiology, demonstrating a multi-mechanistic interplay in intensive BP management."
   }
 }

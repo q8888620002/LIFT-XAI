@@ -1,979 +1,253 @@
 {
-  "summary": "All ten feature-level hypotheses are clinically and mechanistically well-motivated for intensive vs standard glucose control in high CV\u2011risk type 2 diabetes. Interpretation of variables is generally accurate, mechanisms are consistent with major trial data (UKPDS, ACCORD, ADVANCE, VADT), and validation plans are methodologically appropriate. The main cross-cutting limitations are (1) frequent reliance on correlated constructs (age, duration, complications) without fully disentangling them, (2) some mechanisms and subgroup thresholds being extrapolations rather than trial-validated, and (3) limited attention to multiplicity and overfitting when testing many interactions. Overall, these hypotheses deserve medium\u2011to\u2011high priority for follow\u2011up, with greatest immediate value in ASCVD history, duration, age, renal function, prior severe hypoglycemia, and baseline insulin use.",
+  "summary": "The hypothesis assessments indicate varying degrees of strength in mechanistic plausibility, evidence alignment, and actionability for subgroup implications. Generally, the hypothesized mechanisms align with existing clinical knowledge, but improvements in evidence alignment and clarity of subgroup definitions could benefit subsequent analyses.",
   "scored_features": [
     {
-      "feature_name": "baseline_history_of_major_atherosclerotic_cardiovascular_disease",
+      "feature_name": "Baseline HbA1c",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: advanced, less modifiable plaque in established ASCVD",
+          "mechanism_type": "physiological",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 8,
+          "testability": 9,
+          "overall_score": 8,
+          "comments": "The physiological mechanism is plausible and supported by the need to address severe insulin resistance for effective treatment, although not heavily detailed."
+        },
+        {
+          "mechanism_type": "pharmacological",
           "plausibility": 9,
           "evidence_support": 8,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Very coherent with pathophysiology and secondary vs primary prevention differences. Supported indirectly by lack of macrovascular benefit in ACCORD/VADT vs legacy effects in UKPDS. Harder to test directly (plaque stage not routinely measured), but baseline ASCVD status is observable."
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "The pharmacological mechanism is highly plausible with literature indicating baseline HbA1c as a factor influencing hypoglycemia risk with intensive therapy."
         },
         {
-          "mechanism_type": "physiological: diffuse disease/endothelial dysfunction & autonomic neuropathy \u2191 vulnerability to hypoglycemia effects",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Strongly plausible and consistent with experimental data on hypoglycemia\u2011induced ischemia/arrhythmias; ASCVD and neuropathy can be proxied by clinical history, but disentangling mechanisms is challenging."
-        },
-        {
-          "mechanism_type": "pharmacological: need for multiple high\u2011risk agents to reach <6% in ASCVD patients",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Consistent with ACCORD treatment algorithms and documented hypoglycemia patterns by regimen. Testable by stratifying on treatment combinations and ASCVD status."
-        },
-        {
-          "mechanism_type": "biological: legacy effect mainly earlier in disease; window partly closed with advanced ASCVD",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Conceptually tied to UKPDS legacy effect vs neutral/negative late\u2011stage trials. Specificity is moderate; difficult to separate from duration and age."
-        },
-        {
-          "mechanism_type": "physiological: impaired cardiac/cerebral reserve in prior MI/stroke \u2192 hypoglycemia more dangerous",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Mechanistically convincing; some observational and physiologic data support greater vulnerability after MI/stroke. Testable by interaction between prior MI/stroke, severe hypoglycemia, and outcomes."
-        },
-        {
-          "mechanism_type": "behavioral: polypharmacy & regimen complexity reduce adherence to cardioprotective drugs",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 7,
+          "mechanism_type": "biological",
+          "plausibility": 6,
+          "evidence_support": 5,
+          "specificity": 6,
           "testability": 5,
-          "overall_score": 5,
-          "comments": "Behavioral channel is reasonable but evidence sparse and largely speculative; adherence data often limited."
-        },
-        {
-          "mechanism_type": "statistical: high short\u2011term event risk \u2192 benefits can\u2019t manifest in time",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Competing\u2011risk and time\u2011horizon argument is sound and readily testable with landmark and competing\u2011risk models."
-        },
-        {
-          "mechanism_type": "biological: inflammation/thrombosis dominate recurrent events; glycemic effects modest",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 7,
-          "comments": "Fits broader ASCVD biology and relative effects of statins/antiplatelets vs glucose lowering, but direct evidence that this fully explains effect modification is limited."
+          "overall_score": 6,
+          "comments": "The biological mechanism involving genetic variability is speculative with limited direct evidence but cannot be disregarded."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
       "evidence_alignment": 9,
       "subgroup_implications": 8,
       "validation_plan_quality": 9,
       "caveat_awareness": 9,
       "overall_score": 9,
       "strengths": [
-        "Clinically central feature with clear, guideline\u2011consistent rationale for effect modification.",
-        "Mechanistic pathways (advanced plaque, hypoglycemia vulnerability, time horizon) are specific and biologically coherent.",
-        "Strong alignment with patterns seen across UKPDS vs ACCORD/ADVANCE/VADT.",
-        "Validation plan includes appropriate interaction modeling, absolute risk differences, gradients of ASCVD burden, and mediation via hypoglycemia."
+        "Strong evidence for pharmacological mechanism.",
+        "Clear validation strategies based on existing RCTs.",
+        "Appropriate caveats regarding variability and confounding."
       ],
       "weaknesses": [
-        "Some mechanisms (e.g., behavioral adherence displacement) are speculative with little direct evidence.",
-        "Binary ASCVD vs no ASCVD may oversimplify heterogeneous disease phenotypes (e.g., stable vs unstable, single\u2011 vs multivessel).",
-        "Does not fully address multiple testing or correlation with age/duration when proposing several overlapping modifiers."
+        "Biological mechanism is weakly supported."
       ],
       "recommendation": "high_priority",
-      "justification": "History of major ASCVD is one of the most biologically and clinically compelling effect modifiers for intensive glycemic control. The hypothesis is tightly grounded in trial data and pathophysiology, with a robust, testable validation plan and good caveat handling. It deserves priority analysis, ideally with more granular ASCVD characterization where available."
+      "justification": "Baseline HbA1c's mechanisms are well-supported with key evidence, especially in pharmacology. Subgroup implications are actionable, and the validation plan aligns with existing knowledge."
     },
     {
-      "feature_name": "duration_of_diabetes_years",
+      "feature_name": "Renal Function (eGFR)",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: shorter duration \u2192 earlier, more reversible vascular disease",
+          "mechanism_type": "pharmacological",
           "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Well supported by UKPDS vs later trials and microvascular data; duration is easy to measure and interact with treatment in models."
-        },
-        {
-          "mechanism_type": "biological: metabolic memory/epigenetic changes reduce reversibility with longer duration",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Metabolic memory is supported (e.g., DCCT/EDIC, UKPDS follow\u2011up) but mechanisms are partly inferred; testability limited to indirect proxies (duration, prior HbA1c)."
-        },
-        {
-          "mechanism_type": "physiological: longer duration \u2192 beta\u2011cell failure, more insulin/secretagogues \u2192 \u2191 hypoglycemia",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong mechanistic and clinical trial support; directly testable using baseline regimen and hypoglycemia outcomes stratified by duration."
-        },
-        {
-          "mechanism_type": "physiological: autonomic neuropathy and impaired awareness with longer duration",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Coherent; some data on duration\u2013neuropathy\u2013hypoglycemia links exist. Neuropathy is not always well captured, limiting empirical testing."
-        },
-        {
-          "mechanism_type": "biological: accumulated microvascular complications lessen marginal impact of late intensive control",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reasonable and consistent with microvascular progression data, though effect on macrovascular outcomes is harder to isolate from confounding."
-        },
-        {
-          "mechanism_type": "behavioral: treatment fatigue and poor adherence with longer disease",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Intuitively plausible but largely speculative; adherence data usually crude."
-        },
-        {
-          "mechanism_type": "pharmacological: early disease controlled with metformin/lifestyle vs late requiring insulin/SU",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly supported by treatment patterns; easily testable by stratifying on baseline therapy and duration."
-        },
-        {
-          "mechanism_type": "statistical: longer duration \u2192 higher baseline risk and early events before benefit accrues",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Sound competing\u2011risk/time\u2011horizon rationale; testable with time\u2011dependent and landmark analyses."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 9,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 9,
-      "strengths": [
-        "Captures a core dimension (disease chronicity) clearly linked to both benefit (legacy effects in early disease) and harm (hypoglycemia in long\u2011standing disease).",
-        "Mechanisms are specific, tie directly to pharmacologic regimens and hypoglycemia, and match patterns from UKPDS vs ACCORD/ADVANCE/VADT.",
-        "Validation suggestions (splines, categories, landmark analyses, mediation) are methodologically strong and practical."
-      ],
-      "weaknesses": [
-        "Duration is strongly correlated with age, micro/macrovascular disease, and treatment, making causal interpretation of effect modification challenging.",
-        "Relies on diagnosis\u2011based duration, which underestimates true exposure time and can introduce non\u2011differential misclassification.",
-        "Some behavioral mechanisms are speculative."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Duration of diabetes is a central, easily measured modifier with strong biological plausibility and clear evidence from comparative trial programs. The proposed analyses are rigorous and feasible, making this a high\u2011yield feature to examine carefully, ideally adjusting jointly with age and complications."
-    },
-    {
-      "feature_name": "baseline_hba1c_level",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: higher baseline HbA1c \u2192 more glycotoxicity, greater marginal biological gain when lowered",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Plausible and supported by microvascular risk curves; macrovascular evidence is more mixed but consistent with diminishing returns at low HbA1c."
-        },
-        {
-          "mechanism_type": "pharmacological: low baseline HbA1c \u2192 small treatment gain but hypoglycemia risk \u2191 steeply as targets pushed <6%",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well grounded in ACCORD analyses and general hypoglycemia epidemiology; directly testable via interaction of baseline HbA1c, achieved levels, and regimen with hypoglycemia and mortality."
-        },
-        {
-          "mechanism_type": "physiological: rapid, large reductions from very high HbA1c may have transient adverse hemodynamic/retinopathy effects",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Supported in retinopathy literature; CV hemodynamic consequences less clearly tied to outcomes in trials."
-        },
-        {
-          "mechanism_type": "physiological: non\u2011linear rise in hypoglycemia risk as HbA1c approaches normal range",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly supported by epidemiologic and mechanistic data; easily evaluated by modeling HbA1c\u2013hypoglycemia relationship."
-        },
-        {
-          "mechanism_type": "biological: low HbA1c may reflect favorable phenotype; further treatment gives minimal metabolic gain but drug toxicity",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Conceptually interesting but not well supported; phenotype differences difficult to distinguish from treatment intensity."
-        },
-        {
-          "mechanism_type": "statistical: regression to the mean in high baseline HbA1c groups",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Valid concern and testable via adjustment and re\u2011randomization checks, though it explains bias rather than a true biological mechanism."
-        },
-        {
-          "mechanism_type": "behavioral: high baseline HbA1c marks poor adherence/barriers to care",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but weakly evidenced; adherence metrics rarely robust enough to confirm."
-        },
-        {
-          "mechanism_type": "biological: association of high HbA1c with other metabolic syndrome features that may synergize with glycemic improvement",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Relatively vague and weakly supported; incremental predictive value beyond known risk factors is uncertain."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Correct, nuanced understanding of HbA1c as both a risk marker and determinant of achievable reduction and hypoglycemia risk.",
-        "Mechanisms about non\u2011linear hypoglycemia risk and diminishing macrovascular returns at low HbA1c are strong and testable.",
-        "Validation suggestions (continuous interactions with splines, mediation by achieved HbA1c, time\u2011dependent effects) are sophisticated and appropriate."
-      ],
-      "weaknesses": [
-        "Some biological mechanisms (favorable phenotype, metabolic syndrome synergy) are fairly generic and weakly supported.",
-        "Evidence that very high baseline HbA1c clearly improves macrovascular outcomes with intensive control is not robust; the hypothesis may over\u2011state benefit in that subgroup.",
-        "Does not fully address that most older trials capped extreme HbA1c values, limiting inference at tails."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Baseline HbA1c is inherently important and mechanistically plausible as an effect modifier, especially for hypoglycemia\u2011related harm. However, macrovascular benefit heterogeneity by baseline HbA1c is less clearly established than for duration/ASCVD. It should be analyzed, but perhaps after the more clearly supported modifiers."
-    },
-    {
-      "feature_name": "age_years",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: vascular aging and less modifiable pathology in older adults",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Consistent with general vascular biology; specific incremental impact of glycemic lowering vs other risk factor control is plausible but not directly measured."
-        },
-        {
-          "mechanism_type": "physiological: impaired counterregulation, renal clearance, polypharmacy \u2192 \u2191 hypoglycemia risk with age",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly supported by geriatric endocrinology literature; directly testable in trial data with age\u2013treatment interactions on hypoglycemia."
-        },
-        {
-          "mechanism_type": "physiological: hypoglycemia in older adults more likely to cause falls, fractures, arrhythmias, strokes",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Robust observational and mechanistic evidence; outcomes such as fractures and arrhythmias may not always be captured in CV trials but mortality and stroke are."
-        },
-        {
-          "mechanism_type": "biological: younger patients have more modifiable risk profiles and larger relative contribution of glycemia",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "General logic consistent with lifetime risk concepts; direct trial evidence of greater long\u2011term macrovascular benefit in younger subgroups is suggestive but not definitive."
-        },
-        {
-          "mechanism_type": "statistical: shorter life expectancy & competing risks dilute benefits in older patients",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong and standard argument; easily examined via competing\u2011risk and restricted\u2011mean\u2011survival analyses."
-        },
-        {
-          "mechanism_type": "behavioral: regimen complexity harder to manage with cognitive impairment/frailty",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible; evidence from geriatric diabetes management supports this qualitatively, though rigorous data are limited."
-        },
-        {
-          "mechanism_type": "pharmacological: altered PK/PD with age \u2192 greater potency/toxicity of hypoglycemic agents",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Well established for many drugs; effect on event rates under intensive vs standard regimens is assessable."
-        },
-        {
-          "mechanism_type": "biological: inflammation/frailty drive CV risk independently of glycemia in older adults",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Conceptually plausible but under\u2011specified and difficult to separate from age itself without good frailty measures."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 9,
-      "strengths": [
-        "Age is accurately interpreted and tied to both time horizon of benefit and risk of hypoglycemia\u2011related harm, aligning with current guideline recommendations for relaxed targets in older adults.",
-        "Mechanisms are specific, especially regarding counterregulation, PK/PD, and competing risks.",
-        "Validation plan is solid (continuous and categorical interactions, competing\u2011risk analyses, frailty refinement)."
-      ],
-      "weaknesses": [
-        "Age is highly collinear with duration, ASCVD, and CKD; independent effect modification by age may be overstated if not modeled jointly with these.",
-        "Very old or institutionalized populations are underrepresented in major trials, so extrapolation to \u226580 or frail nursing\u2011home residents is uncertain.",
-        "Some biological explanations (frailty/inflammation) are only loosely specified and not easily testable with standard trial data."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Given its central role in guidelines and strong mechanistic rationale, age is a key effect modifier for intensive glycemic control. It should be analyzed alongside duration and ASCVD, with careful adjustment for correlated factors."
-    },
-    {
-      "feature_name": "estimated_glomerular_filtration_rate",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: CKD\u2011driven atherosclerosis/arteriosclerosis via uremic milieu \u2192 glycemia less central",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Mechanistically sound and supported by CKD\u2013CV literature; quantifying attenuation of glycemic benefit is indirect but feasible via interaction analyses."
-        },
-        {
-          "mechanism_type": "pharmacological: reduced clearance of insulin/SUs in CKD \u2192 \u2191 severe/prolonged hypoglycemia",
-          "plausibility": 10,
           "evidence_support": 9,
           "specificity": 9,
           "testability": 9,
           "overall_score": 9,
-          "comments": "Very strong evidence and clear clinical relevance; directly testable via eGFR\u2013treatment interaction on hypoglycemia and mortality."
+          "comments": "Strong evidence supports the pharmacological mechanism as renal function is pivotal to drug clearance and treatment response."
         },
         {
-          "mechanism_type": "physiological: impaired renal gluconeogenesis/counterregulation in CKD",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported by physiology and some clinical data; hypoglycemia risk by eGFR category under intensive vs standard therapy is testable."
-        },
-        {
-          "mechanism_type": "biological: anemia, LVH, diastolic dysfunction in CKD increase susceptibility to ischemia triggered by hypoglycemia/BP swings",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Coherent but evidence linking this specifically to intensive glycemic control is indirect."
-        },
-        {
-          "mechanism_type": "pharmacological: polypharmacy & nephrotoxic drugs \u2192 more interactions/AKI during intensive management",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative and not well supported; AKI and drug\u2013drug interaction effects on CV outcomes not clearly tied to intensive glycemic strategies in trials."
-        },
-        {
-          "mechanism_type": "statistical: high non\u2011CV mortality/competing risks in advanced CKD limit observable benefit",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong and readily evaluated with competing\u2011risk methods."
-        },
-        {
-          "mechanism_type": "biological: albuminuria/low eGFR as markers of generalized endothelial damage reducing glycemic leverage",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Plausible marker concept but quantitative impact on treatment effect heterogeneity is uncertain."
-        },
-        {
-          "mechanism_type": "behavioral: regimen complexity in CKD leading to errors",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Behaviorally plausible but weakly evidenced and hard to measure."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Correct interpretation of eGFR and CKD staging, including their impact on drug handling and CV risk.",
-        "Key mechanisms (pharmacokinetics of hypoglycemic agents, impaired counterregulation, competing risks) are strong and testable.",
-        "Validation suggestions appropriately emphasize continuous and categorical eGFR, severe hypoglycemia, competing risks, and external validation in more advanced CKD cohorts."
-      ],
-      "weaknesses": [
-        "Evidence for attenuated macrovascular benefit of intensive glycemic control specifically by CKD stage is not as robust as for hypoglycemia risk; conclusions may overreach.",
-        "Patients with eGFR <30 are often excluded from trials, so proposed subgroups at low eGFR are weakly supported empirically.",
-        "Some proposed mechanisms (drug\u2013drug interactions, regimen complexity) are speculative and likely small contributors relative to the major pharmacokinetic and competing\u2011risk channels."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "eGFR is highly relevant mechanistically and clinically for hypoglycemia harms, and interactions with treatment should be evaluated. However, trial data for very low eGFR are limited, and macrovascular effect heterogeneity is less well documented than for ASCVD, duration, or age."
-    },
-    {
-      "feature_name": "baseline_severity_of_microvascular_complications",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: early vs advanced microvascular damage (modifiability vs irreversibility)",
+          "mechanism_type": "biological",
           "plausibility": 9,
           "evidence_support": 9,
           "specificity": 8,
           "testability": 8,
           "overall_score": 9,
-          "comments": "Strongly supported by DCCT/UKPDS and related microvascular literature, especially for retinopathy and nephropathy; severity gradations are often available."
+          "comments": "The biological mechanism is strongly backed by the role of CKD in cardiovascular risk, affecting glucose control benefits."
         },
         {
-          "mechanism_type": "biological: autonomic neuropathy \u2192 impaired reflexes and awareness, \u2191 risk of fatal hypoglycemia/arrhythmias",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Mechanistically clear with moderate evidence; underdiagnosis and crude measurement limit testability."
-        },
-        {
-          "mechanism_type": "physiological: early worsening of retinopathy with rapid glucose improvement",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Well documented phenomenon; linking it to CV outcomes is indirect but microvascular outcomes can be assessed where recorded."
-        },
-        {
-          "mechanism_type": "biological: advanced nephropathy signals high CV risk where non\u2011glycemic factors dominate",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Overlaps with eGFR arguments; supported but confounded with duration and CKD stage."
-        },
-        {
-          "mechanism_type": "statistical: complications as surrogates for duration/prior control",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Important acknowledgment that \u2018effect modification\u2019 by complications may reflect upstream factors; testable via multivariable models including duration and HbA1c history."
-        },
-        {
-          "mechanism_type": "behavioral: visual/neuropathic impairment hampers complex regimen management",
+          "mechanism_type": "physiological",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but evidence is limited; functional assessments are rarely available."
-        },
-        {
-          "mechanism_type": "biological: generalized endothelial dysfunction reduces marginal benefit but increases vulnerability to acute stressors",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Conceptually coherent but evidence that this specifically alters intensive vs standard effects is thin."
-        },
-        {
-          "mechanism_type": "pharmacological: interacting treatments for complications (diuretics, beta\u2011blockers) amplify risk",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Some plausibility (e.g., beta\u2011blockers masking hypoglycemia), but this is better treated under specific medication modifiers than under microvascular severity per se."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Strong mechanistic basis that early microvascular disease is more amenable to benefit from intensive control, with advanced disease less so; aligns closely with trial evidence on microvascular endpoints.",
-        "Captures a potentially important hypoglycemia\u2011harm channel via autonomic neuropathy and functional limitations.",
-        "Validation plan (burden categories, component\u2011specific analyses, mediation of CV benefit by microvascular progression) is thoughtful."
-      ],
-      "weaknesses": [
-        "Composite \u2018microvascular severity\u2019 is often poorly measured and conflates disparate processes (retinopathy vs neuropathy vs nephropathy).",
-        "Subgroup implications for macrovascular outcomes are more inferential; most robust evidence relates to microvascular progression, not major CV events.",
-        "Heavy confounding with duration and baseline glycemic exposure may make independent effect modification by microvascular status difficult to demonstrate."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Microvascular complication status is a biologically and clinically meaningful marker of disease stage and hypoglycemia vulnerability. It should be evaluated, particularly for microvascular outcomes and severe hypoglycemia, though macrovascular effect modification may be modest and hard to disentangle from duration and CKD."
-    },
-    {
-      "feature_name": "baseline_insulin_use",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological: impaired endogenous secretion, need for higher exogenous insulin, greater glucose excursions and hypoglycemia risk under intensive targets",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong and consistent with clinical practice; directly testable via treatment\u2013insulin\u2013hypoglycemia interactions."
-        },
-        {
-          "mechanism_type": "pharmacological: narrow therapeutic window and dosing complexity of insulin",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well supported; the role of aggressive titration protocols in intensive arms can be examined in relation to outcomes."
-        },
-        {
-          "mechanism_type": "biological: insulin\u2011induced weight gain/fluid retention worsening HF/BP",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported for certain regimens (e.g., higher HF risk in some insulin/TZD contexts); HF outcomes and weight trajectories can be assessed."
-        },
-        {
-          "mechanism_type": "statistical: insulin as a marker of advanced disease, complications, and high risk",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Important confounding channel; directly addressable with adjusted models and sensitivity analyses."
-        },
-        {
-          "mechanism_type": "behavioral: difficulty managing complex regimens leading to glycemic variability",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible though evidence is thin; detailed self\u2011management data often missing."
-        },
-        {
-          "mechanism_type": "biological: possible pro\u2011atherogenic/pro\u2011arrhythmic effects of hyperinsulinemia",
-          "plausibility": 5,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Controversial and not clearly established in contemporary literature; low support and difficult to isolate from glycemic control itself."
-        },
-        {
-          "mechanism_type": "physiological: insulin users often have neuropathy and unawareness, making severe events more dangerous",
-          "plausibility": 8,
           "evidence_support": 6,
           "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Consistent with clinical observation; neuropathy often under\u2011measured, limiting strong tests."
-        },
-        {
-          "mechanism_type": "pharmacological: adding agents like TZDs in insulin users introduces extra CV risk",
-          "plausibility": 6,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Context\u2011specific (e.g., pioglitazone); treatable via regimen\u2011specific subgroup analyses but not a core, general mechanism."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Correctly interprets baseline insulin use as a proxy for advanced disease and hypoglycemia susceptibility.",
-        "Mechanisms around insulin\u2019s pharmacology, hypoglycemia, weight gain, and fluid retention are specific and aligned with ACCORD and similar data linking hypoglycemia and mortality.",
-        "Validation plan is strong (interaction terms, regimen complexity, HF and weight outcomes, mediation via hypoglycemia)."
-      ],
-      "weaknesses": [
-        "Confounding by indication is substantial; some hypothesized \u2018effect modification\u2019 may be due to unmeasured severity, not insulin per se.",
-        "Some biological speculation about pro\u2011atherogenic hyperinsulinemia is not well supported in modern contexts.",
-        "Overlap with other modifiers (duration, CKD, ASCVD) means independent contribution of baseline insulin status may be smaller than implied."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Baseline insulin use is a pragmatic and mechanistically justified marker for increased harm from very intensive targets. It should be evaluated, but results must be interpreted cautiously due to strong confounding by disease severity and concomitant risk factors."
-    },
-    {
-      "feature_name": "history_of_severe_hypoglycemia",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological: prior severe hypoglycemia \u2192 defective counterregulation & awareness, raising risk of future severe/fatal episodes under intensification",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Very strong mechanistic and clinical trial support; prior severe events are among the best predictors of future severe hypoglycemia."
-        },
-        {
-          "mechanism_type": "biological: recurrent hypoglycemia causing electrical instability, inflammation, thrombosis",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 8,
           "testability": 7,
-          "overall_score": 8,
-          "comments": "Supported by experimental and some observational data; direct causal contribution to CV events remains debated but is plausible."
-        },
-        {
-          "mechanism_type": "physiological: severe hypoglycemia leading to falls, trauma, cognitive decline, indirectly raising CV risk",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
           "overall_score": 7,
-          "comments": "Plausible and partially supported; indirect pathways to CV events are harder to quantify in glycemic trials."
-        },
-        {
-          "mechanism_type": "pharmacological: prior severe hypoglycemia usually occurs under high\u2011risk regimens; further intensification magnifies that environment",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Consistent with regimen\u2011linked risks in ACCORD and other studies; very testable via regimen and dose stratification."
-        },
-        {
-          "mechanism_type": "behavioral: fear\u2011driven dose/meal adjustments increasing variability",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Clinically familiar narrative but empiric data are sparse; difficult to capture in standard datasets."
-        },
-        {
-          "mechanism_type": "statistical: prior severe hypoglycemia as marker of frailty/comorbidity confounding treatment effects",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Important alternative explanation; can be partly addressed by multivariable adjustment and sensitivity analyses."
-        },
-        {
-          "mechanism_type": "biological: cerebral ischemia and vascular cognitive impairment from hypoglycemia",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Some mechanistic rationale but limited strong human evidence; datasets often lack sensitive neurocognitive outcomes."
-        },
-        {
-          "mechanism_type": "physiological: repeated hypoglycemia blunting adrenergic responses (hypoglycemia\u2011associated autonomic failure)",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Well established physiologically; its impact on trial outcomes is inferable by examining recurrence patterns and severity."
+          "comments": "The physiological mechanism is moderate in specificity but aligns with known comorbid conditions in diabetic patients."
         }
       ],
       "mechanism_plausibility": 9,
       "clinical_interpretation": 9,
-      "evidence_alignment": 9,
+      "evidence_alignment": 8,
       "subgroup_implications": 9,
       "validation_plan_quality": 9,
-      "caveat_awareness": 9,
+      "caveat_awareness": 8,
       "overall_score": 9,
       "strengths": [
-        "Accurate and clinically sophisticated interpretation of prior severe hypoglycemia as both a risk marker and mechanistic driver of future harm under intensive therapy.",
-        "Mechanistic channels (counterregulatory failure, regimen risk, HAAF, arrhythmogenesis) are strong and well supported.",
-        "Subgroup message (avoid very intensive targets in patients with prior severe hypoglycemia) is clear, actionable, and aligned with guidelines.",
-        "Validation plan is rigorous (interaction tests on mortality/CV events/recurrence, mediation by recurrent hypoglycemia, real\u2011world replication, dose\u2013response)."
+        "Clearly supported mechanisms with strong evidence, especially in pharmacological and biological spheres.",
+        "Well-defined subgroups based on eGFR align with clinical guidelines."
       ],
       "weaknesses": [
-        "Measurement issues (underreporting, misclassification) may attenuate observed effect modification.",
-        "Confounding by frailty and comorbidity is substantial; distinguishing causation from risk\u2011marker status will be challenging.",
-        "Some peripheral mechanisms (cognitive decline, indirect CV risk) are speculative and not easily testable in most trials."
+        "Potential confounding by diabetes medications not fully addressed."
       ],
       "recommendation": "high_priority",
-      "justification": "Among all features, history of severe hypoglycemia is one of the most direct and powerful indicators of harm from intensive glycemic regimens. The hypothesis is well supported and clinically actionable, warranting high\u2011priority evaluation."
+      "justification": "eGFR mechanisms are highly plausible and strongly supported, with clinically actionable subgroup implications supported by clear validation strategies."
     },
     {
-      "feature_name": "body_mass_index",
+      "feature_name": "Duration of Diabetes",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: higher BMI \u2192 insulin resistance with relatively preserved beta\u2011cell function; intensive control possible with sensitizers and lifestyle",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 6,
-          "comments": "Plausible for some phenotypes but not universal; evidence that this leads to differential macrovascular response to intensive control is limited."
-        },
-        {
-          "mechanism_type": "physiological: lean T2D more prone to hypoglycemia under intensive regimens",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 6,
-          "comments": "Reasonable inference but direct data limited; many lean T2D patients are actually LADA/Type 1.5 and may be excluded from trials."
-        },
-        {
-          "mechanism_type": "biological: adiposity\u2011driven CV risk overshadowing glycemic impact in very obese",
-          "plausibility": 6,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Conceptually intuitive but macrovascular outcomes depend on multiple factors; incremental effect of glycemic control by BMI is uncertain."
-        },
-        {
-          "mechanism_type": "pharmacological: insulin dosing scales with weight, increasing weight gain/fluid retention & HF risk in obese patients",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported for some regimens; HF and weight gain can be analyzed by BMI and treatment arm, but causal impact on macrovascular outcomes is not well established."
-        },
-        {
-          "mechanism_type": "statistical: obesity paradox complicating BMI interpretation",
-          "plausibility": 6,
-          "evidence_support": 5,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "\u2018Obesity paradox\u2019 is largely confounded; its role as a mechanism of heterogeneous treatment effect is unclear and mostly methodological."
-        },
-        {
-          "mechanism_type": "behavioral: lifestyle interventions more effective in higher BMI",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but data on sustained weight loss and its interaction with intensive glycemic arms in high\u2011risk T2D are limited."
-        },
-        {
-          "mechanism_type": "biological: ectopic fat vs BMI mismatch",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "More of a critique of BMI as a measure than a concrete mechanism of effect modification; difficult to test without imaging or waist data."
-        },
-        {
-          "mechanism_type": "physiological: obesity\u2011related sleep apnea interacting with nocturnal hypoglycemia",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative and not strongly supported as a major determinant of differential macrovascular effect of intensive control."
-        }
-      ],
-      "mechanism_plausibility": 6,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 5,
-      "subgroup_implications": 6,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 6,
-      "strengths": [
-        "Correct interpretation of BMI and recognition of its imperfect nature as a risk marker.",
-        "Some plausible mechanisms around regimen composition, insulin dosing/weight gain, and hypoglycemia risk in lean vs obese phenotypes.",
-        "Validation plan is methodologically sound (continuous and categorical BMI, hypoglycemia, weight change, HF)."
-      ],
-      "weaknesses": [
-        "Evidence specifically linking BMI to heterogeneity of macrovascular benefit/harm from intensive glycemic control is weak; many mechanisms are extrapolated from broader obesity literature.",
-        "BMI confounds with many factors (age, ethnicity, disease phenotype), and lack of precise adiposity/visceral fat measures limits specificity.",
-        "Subgroup implications (lean patients being worse candidates, etc.) are plausible but not strongly trial\u2011based and risk overinterpretation."
-      ],
-      "recommendation": "reconsider",
-      "justification": "While BMI is easy to measure and mechanistically relevant to metabolic status, the specific hypothesis that it meaningfully modifies the macrovascular benefit\u2013harm balance of intensive glycemic control is weakly evidenced and conceptually muddled by confounding and measurement limitations. It might be examined exploratorily but should not be a primary focus relative to stronger modifiers like ASCVD, duration, age, CKD, and hypoglycemia history."
-    },
-    {
-      "feature_name": "concurrent_use_of_cardioprotective_therapies",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: statins/ACEI/ARBs/antiplatelets overshadow small incremental benefit of glycemic intensification",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Consistent with comparative effectiveness (BP/lipids vs glucose lowering); difficult to quantify precisely but directionally sound."
-        },
-        {
-          "mechanism_type": "statistical: high background therapy use compresses absolute risk differences, reducing observable effects",
+          "mechanism_type": "biological",
           "plausibility": 9,
           "evidence_support": 8,
           "specificity": 8,
           "testability": 9,
           "overall_score": 9,
-          "comments": "Strong, straightforward statistical mechanism; easy to explore by stratifying on therapy count/use."
+          "comments": "Strong evidence supports the concept of biological damage accruing with longer diabetes duration, affecting treatment outcomes."
         },
         {
-          "mechanism_type": "biological: absence of cardioprotective therapy \u2192 higher absolute risk where any relative glycemic benefit yields larger absolute gains",
+          "mechanism_type": "physiological",
           "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Logically sound but also reflects suboptimal care; clinical interpretation must stress that optimizing these therapies should precede glycemic intensification."
-        },
-        {
-          "mechanism_type": "behavioral: adherence clustering\u2014medication\u2011adherent patients may better implement intensive regimens",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible; adherence data are often too crude to support strong inferences."
-        },
-        {
-          "mechanism_type": "pharmacological: beta\u2011blockers masking hypoglycemia symptoms under intensive control",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Biologically sound; specific interaction between beta\u2011blockers, hypoglycemia, and mortality is testable but evidence to date is mixed."
-        },
-        {
-          "mechanism_type": "pharmacological: ACEI/ARB/diuretics interacting with osmotic diuresis changes",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative and likely a minor contributor relative to major CV effects of these drugs themselves."
-        },
-        {
-          "mechanism_type": "statistical: therapy use as marker of more severe CVD, confounding effect modification",
-          "plausibility": 9,
           "evidence_support": 7,
           "specificity": 8,
-          "testability": 8,
+          "testability": 7,
           "overall_score": 8,
-          "comments": "Important alternative explanation plausible in secondary prevention cohorts; can be partly addressed with indication adjustment."
+          "comments": "The physiological mechanism regarding beta-cell function decline is well acknowledged but less explored in detail."
         },
         {
-          "mechanism_type": "biological: GLP\u20111RA/SGLT2i with intrinsic CV benefit reducing marginal value of further HbA1c lowering",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Strongly supported for these drug classes; not applicable to older trials but critical for modern cohorts."
+          "mechanism_type": "behavioral",
+          "plausibility": 6,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "The behavioral mechanism is less well-defined and supported but plausible regarding lifestyle changes over time."
         }
       ],
       "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 8,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
       "overall_score": 8,
       "strengths": [
-        "Correctly identifies that background cardioprotective therapy changes the absolute and relative importance of glycemic control for CV outcomes.",
-        "Mechanisms are largely grounded in well\u2011established comparative benefits of statins/ACEI/ARBs vs glucose lowering and in simple risk arithmetic.",
-        "Validation plan uses sensible constructs (medication counts, specific drug classes, adherence proxies, and modern GLP\u20111/SGLT2i contexts)."
+        "Biological mechanisms are solidly grounded in existing clinical knowledge.",
+        "Validation through direct analysis of RCTs is feasible."
       ],
       "weaknesses": [
-        "Strong confounding by indication (sicker patients more likely to receive cardioprotective therapies) makes causal interpretation of \u2018effect modification\u2019 challenging.",
-        "Most intensive\u2011control legacy trials predate widespread GLP\u20111RA/SGLT2i use, so inferences about those agents are largely extrapolations.",
-        "Subgroup implications risk being interpreted as a rationale to prioritize glycemic intensification in under\u2011treated patients, when optimizing cardioprotective therapy is generally more impactful."
+        "Behavioral mechanisms are speculative and not thoroughly substantiated in literature."
       ],
       "recommendation": "medium_priority",
-      "justification": "This feature is mechanistically and clinically important for understanding the marginal gain from glycemic intensification. It deserves analysis, especially in modern datasets, but results must be interpreted through the lens of confounding by indication and the primacy of optimizing cardioprotective therapies themselves."
+      "justification": "The duration of diabetes is supported by strong biological plausibility, but requires further exploration, particularly regarding behavioral impacts."
+    },
+    {
+      "feature_name": "Prior Cardiovascular Events",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 8,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "Biological mechanisms are logical and align with established data on vascular damage."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 7,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Physiological mechanisms are plausible but moderately developed."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Behavioral mechanisms are speculative and poorly supported by concrete evidence."
+        }
+      ],
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 7,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
+      "overall_score": 8,
+      "strengths": [
+        "Strong biological foundation for considering prior events in treatment effects.",
+        "Well-articulated validation strategies."
+      ],
+      "weaknesses": [
+        "Behavioral mechanisms lack clear evidence, creating uncertainty in interpretation."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "While biological implications are sound, there is ambivalence in behavioral mechanisms which demerits full priority."
+    },
+    {
+      "feature_name": "Age",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 9,
+          "evidence_support": 8,
+          "specificity": 9,
+          "testability": 9,
+          "overall_score": 9,
+          "comments": "The physiological implications of age on metabolic flexibility are strongly supported and well-specified."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "plausibility": 7,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "The behavioral mechanism is plausible and moderately supported, especially in differing patient priorities."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 8,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 8,
+          "comments": "The pharmacological mechanism is convincingly supported with evidence on risk and drug interactions."
+        }
+      ],
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 7,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 7,
+      "overall_score": 8,
+      "strengths": [
+        "Strong physiological basis for considering age in intervention outcomes.",
+        "Clear validation path to follow existing trial data."
+      ],
+      "weaknesses": [
+        "Age-specific evidence needs better clarification to avoid overgeneralization."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is a critical factor with strong physiological basis, but behavioral interpretations require careful consideration."
     }
   ],
   "top_features": [
-    "baseline_history_of_major_atherosclerotic_cardiovascular_disease",
-    "duration_of_diabetes_years",
-    "age_years",
-    "history_of_severe_hypoglycemia"
+    "Baseline HbA1c",
+    "Renal Function (eGFR)"
   ],
   "methodological_concerns": [
-    "Many proposed modifiers (age, duration, ASCVD, CKD, microvascular complications, insulin use) are highly correlated, so isolated interaction tests may ascribe effect modification to one factor that is partly due to another. Joint modeling and careful causal diagrams will be important.",
-    "Testing numerous treatment\u2013feature interactions and multiple cut\u2011points raises risk of multiplicity and overfitting. Prespecification, shrinkage methods, or hierarchical modeling should be considered.",
-    "Measurement error and under\u2011ascertainment (especially for hypoglycemia, neuropathy, microvascular severity, and medication adherence) may bias interaction estimates toward the null or create spurious findings.",
-    "Most evidence and reasoning are anchored in older insulin/sulfonylurea\u2011based trials (ACCORD/ADVANCE/VADT). Generalizing to modern regimens featuring GLP\u20111RAs and SGLT2 inhibitors requires caution and, where possible, contemporary validation."
+    "Some mechanisms are speculative, particularly in the behavioral domain, demonstrating a need for more precise evidence and specification."
   ]
 }

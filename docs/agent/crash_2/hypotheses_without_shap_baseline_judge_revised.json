@@ -1,1001 +1,255 @@
 {
-  "summary": "Across these 10 revised hypotheses, the biological and clinical reasoning is consistently strong and well-aligned with current TXA/trauma literature (CRASH-2, CRASH-3, MATTERs, trauma-induced coagulopathy). Caveats around confounding, mediation, survivor bias, and measurement error are generally excellent. The biggest recurring weaknesses are: (1) occasional over-interpretation of moderate/weak evidence, (2) some subgroup cutpoints that are somewhat arbitrary or would be underpowered in typical datasets, and (3) reliance on sophisticated causal methods that may be challenging in many real-world registries without clear mention of sample size/practical constraints. Overall, these are high-quality, mechanistically coherent hypotheses that merit further study, especially for time to TXA, shock markers (SBP, lactate/base deficit), and hemorrhage severity (MTP/predicted massive transfusion).",
+  "summary": "Overall, the submitted hypotheses present a well-grounded analysis of the multiple factors affecting TXA efficacy in trauma patients. The main strengths are the clear biological plausibility and alignment with current literature on the timing of administration, injury severity, and hemoglobin levels. The hypotheses highlighting TBI presence and age are also plausible but could benefit from more sub-specific biological justification and stronger evidence backing. Caveat awareness is consistently acknowledged, enhancing the credibility of the conclusions drawn.",
   "scored_features": [
     {
-      "feature_name": "time_from_injury_to_TXA_minutes",
+      "feature_name": "Time from injury to TXA administration",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "physiological: early hyperfibrinolytic phase, TXA most effective when fibrinolysis high",
-          "plausibility": 10,
-          "evidence_support": 10,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Core, well-established mechanism from CRASH-2, CRASH-3, and trauma coagulopathy literature. Directly testable via time\u2013treatment interaction; very specific to TXA."
-        },
-        {
-          "mechanism_type": "biological: late DIC-like/microthrombotic states, TXA may sustain pathologic thrombi",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Biologically plausible and consistent with some lab/TEG data, but clinical evidence of harm mediated by microthrombosis is limited. Harder to test directly in outcome data."
-        },
-        {
-          "mechanism_type": "pharmacological: TXA effect proportional to tPA\u2013plasmin activation, which declines over time",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 9,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Mechanistically tight and supported by fibrinolysis time-course studies. Testable indirectly via effect decay over time and, where available, viscoelastic assays."
-        },
-        {
-          "mechanism_type": "physiological: early TXA prevents exsanguination; late TXA can\u2019t reverse established organ failure",
+          "mechanism_type": "pharmacological",
           "plausibility": 9,
           "evidence_support": 9,
           "specificity": 8,
           "testability": 8,
           "overall_score": 9,
-          "comments": "Very consistent with trial data showing time-dependent mortality benefit. Effect on macro-hemostasis vs late organ failure readily testable via timing and cause-of-death analyses."
+          "comments": "Strong evidence supports TXA's time-dependent efficacy, with clear mechanistic understanding of fibrinolysis post-injury."
         },
         {
-          "mechanism_type": "biological: shift from hemorrhagic to inflammatory/organ failure deaths over time, TXA less relevant/possibly prothrombotic",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Logical and fits trauma epidemiology; direct evidence that late TXA worsens organ dysfunction is limited; can be explored via late mortality causes and organ failure endpoints."
-        },
-        {
-          "mechanism_type": "pharmacological: in dilutional coagulopathy, fibrinolysis inhibition alone insufficient",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Conceptually sound; direct clinical evidence for attenuated TXA effect specifically in dilutional states is modest. Could be approximated using transfusion volumes/coag labs."
-        },
-        {
-          "mechanism_type": "statistical: time intertwined with system quality (EMS, distance, protocols)",
+          "mechanism_type": "physiological",
           "plausibility": 9,
-          "evidence_support": 7,
+          "evidence_support": 9,
           "specificity": 8,
           "testability": 8,
-          "overall_score": 8,
-          "comments": "Important non-biological mechanism; well-supported in systems literature. Testable via adjustment for system factors and quasi-experiments (e.g., pre/post pre-hospital TXA introduction)."
+          "overall_score": 9,
+          "comments": "Physiological understanding aligns well with known coagulation dynamics following trauma, supporting early intervention."
         },
         {
-          "mechanism_type": "behavioral: clustering of early TXA with other timely interventions",
+          "mechanism_type": "biological",
           "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Plausible care-bundle effect. Harder to isolate, but can be evaluated via mediation/adjustment for concurrent interventions and time-to-intervention analyses."
+          "evidence_support": 9,
+          "specificity": 9,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Biological constraints are well-described, aligning with known fibrinolytic responses and literature."
         }
       ],
-      "mechanism_plausibility": 10,
+      "mechanism_plausibility": 9,
       "clinical_interpretation": 10,
       "evidence_alignment": 10,
       "subgroup_implications": 9,
       "validation_plan_quality": 9,
-      "caveat_awareness": 10,
+      "caveat_awareness": 9,
       "overall_score": 10,
       "strengths": [
-        "Clinically and biologically central modifier for TXA; pathophysiology and pharmacology are described with high precision and specificity to fibrinolysis.",
-        "Directly aligned with CRASH-2/3 and meta-analytic data on <1 h, 1\u20133 h, >3 h windows and the observed time-dependent attenuation of benefit.",
-        "Subgroup proposal (\u226460, 61\u2013180, >180 min + splines) is coherent, clinically intuitive, and consistent with trial cutpoints, while allowing flexible modeling.",
-        "Validation plan uses appropriate causal interaction modeling, reproduces RCT-style subgrouping, and considers instrumental-variable/quasi-experimental strategies.",
-        "Caveats thoroughly discuss misclassification of injury time, residual confounding, and survivor bias, and appropriately temper claims about late harm."
+        "Clear biological justification",
+        "Strong evidence alignment with clinical trials",
+        "Plausible and actionable subgroup implications"
       ],
       "weaknesses": [
-        "Some mechanistic claims about late-phase microthrombosis and organ-failure aggravation by TXA remain more speculative than implied and are hard to confirm without detailed intermediate phenotyping.",
-        "Instrumental variable/diff-in-diff proposals may be challenging in many datasets without strong, clearly defined system-level instruments or policy shifts.",
-        "Suggested >180 min category may lump together heterogeneous phenotypes (ongoing hemorrhage vs completely controlled bleeding)."
+        "Limited data on extremely early administration efficacy (<1 hour)"
       ],
       "recommendation": "high_priority",
-      "justification": "Time to TXA is the most mechanistically and empirically supported effect modifier for TXA in trauma, with robust RCT and biological grounding. The hypotheses are precise, testable, and accompanied by a rigorous validation strategy and nuanced caveats. This should be a top-priority feature for heterogeneity-of-treatment-effect analyses."
+      "justification": "This feature receives a high score due to strong clinical and mechanistic support for early TXA administration improving outcomes, with well-aligned subgroup definitions and robust validation plans."
     },
     {
-      "feature_name": "systolic_blood_pressure_first_ED_mmHg",
+      "feature_name": "Severity of injury (Injury Severity Score - ISS)",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "physiological: moderate hypotension represents reversible hemorrhagic shock, TXA effective here",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Well-grounded; supported by observational and some trial subgroup data linking hypotension, bleeding risk, and benefit from hemostatic interventions. Very testable with standard EMS/ED data."
-        },
-        {
-          "mechanism_type": "biological: SBP <70 mmHg implies profound coagulopathy/organ damage, limiting TXA effect",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible from general trauma physiology; direct evidence of TXA futility at extreme hypotension is limited but can be probed as an interaction at very low SBP strata."
-        },
-        {
-          "mechanism_type": "physiological: normotensive/hypertensive patients have low hemorrhagic mortality, so small absolute benefit",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Consistent with baseline-risk logic; easily testable by examining absolute vs relative risk reductions across SBP strata and causes of death."
-        },
-        {
-          "mechanism_type": "biological: hypotension-associated hyperfibrinolysis increases TXA effect per exposure",
+          "mechanism_type": "physiological",
           "plausibility": 8,
           "evidence_support": 7,
           "specificity": 7,
           "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported by studies linking shock and hyperfibrinolysis; testable where viscoelastic data exist but otherwise only indirectly through SBP\u2013TXA interactions."
-        },
-        {
-          "mechanism_type": "statistical: SBP as proxy for generalized injury severity/shock burden",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
           "overall_score": 8,
-          "comments": "Important methodological note; can be addressed with multivariable adjustment and comparison to other severity markers."
+          "comments": "Reasonable connection between severity and physiological derangement affecting TXA efficacy."
         },
         {
-          "mechanism_type": "pharmacological: pharmacokinetics minimally affected by shock; limitation is underlying pathophysiology",
+          "mechanism_type": "biological",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Likely true but only weakly evidenced and hard to test directly without PK data; fortunately, not central to the main hypothesis."
-        },
-        {
-          "mechanism_type": "physiological: extremely low SBP leads to ischemia\u2013reperfusion and MOF, overshadowing TXA",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Reasonable extension of trauma pathophysiology; could be partially tested via stratified interaction for very low SBP and timing of death (early vs late)."
-        },
-        {
-          "mechanism_type": "behavioral: profound hypotension prioritizes surgery/MTP, diminishing TXA\u2019s relative impact",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible care-pattern explanation; can be examined with adjustment for OR transfer, MTP activation, and transfusion intensity, but residual confounding will remain."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 8,
-      "strengths": [
-        "Accurate understanding of SBP as a readily measured shock marker and strong predictor of hemorrhagic mortality.",
-        "Mechanistic reasoning around moderate hypotension as a \u2018sweet spot\u2019 where TXA has high net benefit is clinically coherent and supported by the biology of shock and hyperfibrinolysis.",
-        "Subgroup structure (<70, 70\u201389, 90\u2013109, \u2265110 mmHg) is sensible, clinically interpretable, and paired with continuous modeling to avoid arbitrary linearity assumptions.",
-        "Validation plan appropriately emphasizes interaction modeling on both relative and absolute scales and cause-specific mortality (bleeding vs non-bleeding).",
-        "Caveats correctly highlight SBP\u2019s susceptibility to pre-hospital interventions, single-measure limitations, and confounding by indication/protocols."
-      ],
-      "weaknesses": [
-        "Some proposed SBP cutpoints (e.g., 90\u2013109 vs \u2265110) may have limited biological distinctiveness and may be underpowered in subsets depending on dataset size.",
-        "Evidence that TXA\u2019s *relative* effect is meaningfully larger in moderately hypotensive vs normotensive patients is not as strong as implied; much of the difference may be absolute-risk driven.",
-        "Pharmacokinetic and behavior-based mechanisms are more speculative and less testable in typical datasets."
-      ],
-      "recommendation": "high_priority",
-      "justification": "SBP is ubiquitous, mechanistically relevant, and clinically used to decide TXA administration. The hypotheses are plausible, clinically nuanced, and testable with routine data, making this a high-priority feature for heterogeneity analyses, only slightly below time-from-injury in centrality."
-    },
-    {
-      "feature_name": "injury_severity_score",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological: intermediate\u2013high ISS (16\u201334) reflects survivable hemorrhagic risk where TXA can help",
-          "plausibility": 9,
           "evidence_support": 7,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Matches well with known ISS\u2013outcome relationships and bleeding risk; testable via ISS-stratified TXA effects and cause-specific mortality."
-        },
-        {
-          "mechanism_type": "biological: very high ISS (\u226535\u201340) dominated by unsurvivable injuries limiting TXA impact",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Consistent with trauma mortality patterns; can be evaluated by excluding unsurvivable-injury subsets and examining residual effect modification."
-        },
-        {
-          "mechanism_type": "physiological: low ISS associated with low baseline mortality and small absolute TXA benefit",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Robust baseline-risk logic; easily testable but often limited by low event rates in these strata."
-        },
-        {
-          "mechanism_type": "biological: high ISS correlates with complex coagulopathy that TXA alone can\u2019t correct",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible but somewhat generic about coagulopathy; difficult to isolate without detailed coagulation phenotyping."
-        },
-        {
-          "mechanism_type": "statistical: ISS aggregates heterogeneous injury patterns (head vs torso) affecting TXA relevance",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Key insight; very testable by stratifying on region-specific AIS and repeating analyses within head-dominant vs torso-dominant injury patterns."
-        },
-        {
-          "mechanism_type": "physiological: very high ISS predisposes to late complications that dilute early hemostatic benefit",
-          "plausibility": 8,
-          "evidence_support": 6,
           "specificity": 7,
           "testability": 7,
           "overall_score": 7,
-          "comments": "Conceptually sound; can be explored by examining timing and causes of death by ISS strata."
+          "comments": "Biological pathways are speculative but coherent with trauma ts affecting coagulation."
         },
         {
-          "mechanism_type": "behavioral: higher ISS linked to aggressive resuscitation, reducing marginal TXA impact",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Plausible but weakly evidenced; challenging to separate from severity confounding and mediator effects of aggressive interventions."
-        },
-        {
-          "mechanism_type": "statistical: nonlinearity of ISS\u2013outcome relationship risks spurious interactions",
-          "plausibility": 9,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Methodologically important and testable via splines and model diagnostics; more about analysis quality than biology, but critical to correct interpretation. "
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 8,
-      "strengths": [
-        "Clear, accurate explanation of ISS and its relationship to overall trauma burden and competing causes of death (hemorrhagic vs non-hemorrhagic).",
-        "Mechanisms correctly emphasize that TXA is most relevant where hemorrhage is a major yet salvageable contributor, not in minor-injury or unsurvivable-injury extremes.",
-        "Subgrouping by ISS ranges and further stratification by dominant injury region (head vs torso) is clinically meaningful and addresses a key limitation of ISS as an aggregate score.",
-        "Validation suggestions appropriately include splines, competing-risk analyses, and exclusion of unsurvivable injuries, which are methodologically robust approaches.",
-        "Caveats about timing/accuracy of ISS, collinearity with other severity indices, and generalizability are well-articulated."
-      ],
-      "weaknesses": [
-        "Some ISS cutpoints are somewhat conventional rather than mechanistically derived and may not map perfectly across systems using NISS or different AIS versions.",
-        "Evidence that TXA\u2019s *relative* effect is concentrated specifically in ISS 16\u201334 is limited; likely much of the heterogeneity is driven by injury pattern (e.g., torso vs head) rather than ISS per se.",
-        "Behavioral mechanism about aggressive resuscitation diminishing TXA\u2019s marginal effect is plausible but not strongly supported and could distract from more central mechanisms."
-      ],
-      "recommendation": "high_priority",
-      "justification": "ISS is widely available and captures an important axis of heterogeneity related to severity and competing risks. The hypotheses are nuanced, carefully caveated, and propose reasonable analytic strategies; combined with region-specific information, ISS should be a priority modifier to explore."
-    },
-    {
-      "feature_name": "presence_of_severe_TBI_GCS_3_8_or_AIS_head_3plus",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: local intracranial fibrinolysis; TXA reduces hematoma expansion",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Strongly supported by CRASH-3 and TBI pathophysiology; clearly specific to CNS bleeding and highly testable with CT and TBI outcome data where available."
-        },
-        {
-          "mechanism_type": "physiological: severe TBI deaths dominated by brain injury, diluting TXA mortality benefit",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Well aligned with TBI outcomes literature; testable by comparing cause-of-death distributions and TXA effects in TBI vs non-TBI strata."
-        },
-        {
-          "mechanism_type": "pharmacological: TXA BBB penetration and timing more critical in TBI",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Reasonable and supported indirectly by CRASH-3 timing analyses; direct PK/PD data are less robust but overall mechanistically coherent."
-        },
-        {
-          "mechanism_type": "biological: TBI-associated systemic coagulopathy phenotypes (hyper vs hypofibrinolysis) modulate TXA benefit",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Interesting but currently under-evidenced; requires specialized viscoelastic testing and large TBI cohorts to explore convincingly."
-        },
-        {
-          "mechanism_type": "physiological: severe TBI increases thrombotic risk, TXA adds small increment",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Plausible but the incremental TXA-related thrombotic risk appears small per CRASH-3; not central to main heterogeneity question."
-        },
-        {
-          "mechanism_type": "statistical: misclassification of cause of death (TBI vs hemorrhage)",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Important bias consideration; testable via chart review or sensitivity analyses but often constrained by registry data quality."
-        },
-        {
-          "mechanism_type": "biological: secondary brain-related processes (inflammation, autonomic) not modulated by TXA",
-          "plausibility": 8,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Reasonable but generic; difficult to distinguish specifically from other non-hemorrhagic pathways in routine data."
-        },
-        {
-          "mechanism_type": "behavioral: WLST decisions in severe TBI overshadow TXA benefits",
-          "plausibility": 9,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Very plausible and highly relevant; hard to adjust fully because WLST decisions are often unmeasured or poorly recorded. Could be partially addressed via sensitivity analyses excluding early WLST. "
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 9,
-      "strengths": [
-        "Clinical interpretation of \u2018severe TBI\u2019 and its prognostic weight is accurate and sophisticated, appropriately linking to CRASH-3 findings.",
-        "Mechanisms clearly distinguish intracranial from extracranial bleeding pathways and emphasize that TXA\u2019s main observable benefit in TBI may be hematoma control and functional outcomes, not just all-cause mortality.",
-        "Subgroup definitions (severe TBI vs no/mild TBI, plus concomitant major extracranial hemorrhage) are clinically meaningful and map directly to different risk\u2013benefit balances.",
-        "Validation plan includes cause-specific mortality, TBI-specific outcomes, and, where available, viscoelastic phenotyping, which is methodologically strong.",
-        "Caveats correctly highlight issues with GCS misclassification, evidence limitations for very severe/polytrauma TBI, and complexity of three-way interactions with time and severity."
-      ],
-      "weaknesses": [
-        "Operationalization of \u2018severe TBI\u2019 (GCS vs AIS head) can vary by dataset, potentially complicating replication of proposed strata.",
-        "Some mechanisms (coagulopathy phenotypes, micro-level inflammatory/autonomic changes) are currently speculative and will be difficult to evaluate outside highly specialized datasets.",
-        "WLST and goals-of-care effects are acknowledged but may still lead to residual bias in mortality endpoints even after stratification."
-      ],
-      "recommendation": "high_priority",
-      "justification": "TBI status is a major determinant of mechanism of death and TXA\u2019s benefit profile, with strong RCT evidence and clear biological rationale. The proposed hypotheses and analyses are sophisticated and clinically relevant, warranting high-priority exploration, especially where neurological outcomes are available."
-    },
-    {
-      "feature_name": "massive_transfusion_protocol_activation_or_units_PRBCs_first_24h",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological: high transfusion needs reflect uncontrolled bleeding where TXA reduces loss and exsanguination",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Well grounded in trauma and MATTERs data; testable by focusing on early MTP triggers rather than realized volume to avoid mediation bias."
-        },
-        {
-          "mechanism_type": "biological: massive transfusion associated with dilutional coagulopathy and hyperfibrinolysis targeted by TXA",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Consistent with trauma-induced coagulopathy literature; specific and biologically coherent, though direct stratified TXA data are somewhat limited."
-        },
-        {
-          "mechanism_type": "pharmacological: dilution of TXA by large-volume resuscitation; early dosing important",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Mechanistically plausible but weakly evidenced and difficult to test without PK data; still reasonable to consider early dosing as best practice."
-        },
-        {
-          "mechanism_type": "physiological: TXA reduces exposure to transfusion-related complications via reduced bleeding",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible second-order mechanism; outcome-specific data (TRALI/TACO) are sparse, so effect is mostly inferred rather than demonstrated."
-        },
-        {
-          "mechanism_type": "biological: addressing fibrinolytic component of lethal triad, synergizing with other interventions",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Conceptually sound framing; testing synergy specifically is difficult but compatible with combined-intervention analyses."
-        },
-        {
-          "mechanism_type": "statistical: realized 24h transfusion is mediator; stratification induces collider bias",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Excellent methodological point; strongly supported by causal inference literature. Highly testable via directed acyclic graphs and mediation analyses."
-        },
-        {
-          "mechanism_type": "behavioral: TXA use and outcomes confounded by system maturity and MTP quality",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Plausible but evidence is indirect; difficult to separate system-level maturity from TXA\u2019s effect without institutional-level analyses."
-        },
-        {
-          "mechanism_type": "biological: in extremely massive transfusion, irreversible collapse limits TXA benefit",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Reasonable speculation; testing requires careful restriction to very high transfusion strata, which may be small and subject to selection bias."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 10,
-      "overall_score": 9,
-      "strengths": [
-        "Very clear recognition that realized 24h transfusion is not a pure baseline modifier but also a mediator impacted by TXA, with explicit discussion of collider bias.",
-        "Clinical interpretation of MTP activation as a proxy for severe hemorrhage and coagulopathy is accurate and tightly linked to TXA\u2019s mechanism of action.",
-        "Emphasis on *predicted* massive transfusion risk and early MTP activation as more valid modifiers is conceptually and methodologically strong.",
-        "Validation plan includes creation of baseline risk scores, mediation analyses, and focus on early triggers, which are exactly the right tools for this question.",
-        "Caveats about institutional variation in MTP criteria, confounding by indication, and time-varying resuscitation practices are comprehensive and appropriate. "
-      ],
-      "weaknesses": [
-        "Many datasets lack standardized MTP activation fields or reliable early predictors, which could limit feasibility of some proposed analyses.",
-        "The pharmacokinetic dilution mechanism is weakly evidenced and potentially minor compared to other pathophysiologic factors.",
-        "Some suggested subgroup structures by realized PRBC units, even if \u2018descriptive only,\u2019 still risk being over-interpreted unless clearly framed as post hoc and non-causal."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Among non-time modifiers, hemorrhage severity/need for massive transfusion is one of the most biologically compelling and clinically important axes for TXA heterogeneity. The hypotheses and analytic cautions are particularly strong; this deserves high-priority exploration, with careful causal framing."
-    },
-    {
-      "feature_name": "age_years",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: ageing, endothelial dysfunction, pro-thrombotic milieu may increase TXA-related thrombosis",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Biologically sound but large TXA RCTs show little absolute thrombosis signal overall; age-stratified thrombosis data would be needed to support this more strongly."
-        },
-        {
-          "mechanism_type": "physiological: reduced reserve in elderly may yield larger absolute benefit from bleeding reduction",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Conceptually possible but weakly evidenced; RCTs have not clearly shown larger TXA benefit in older groups beyond baseline-risk differences."
-        },
-        {
-          "mechanism_type": "biological: age-related changes in fibrinolytic activity may reduce TXA impact",
+          "mechanism_type": "statistical",
           "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative with limited direct support; testing requires fibrinolysis biomarkers by age, which are rarely available at scale."
-        },
-        {
-          "mechanism_type": "pharmacological: reduced renal clearance with age increasing TXA exposure and thrombosis risk",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Plausible PK consideration but clinical relevance at standard doses appears modest; difficult to test without PK data."
-        },
-        {
-          "mechanism_type": "physiological: concomitant antiplatelet/anticoagulant use in elderly limits TXA\u2019s ability to control bleeding",
-          "plausibility": 8,
           "evidence_support": 6,
-          "specificity": 7,
+          "specificity": 6,
           "testability": 7,
           "overall_score": 7,
-          "comments": "Makes sense and can be partly tested by controlling for or stratifying on medication use; overlaps with separate \u2018preinjury anticoagulant\u2019 feature."
-        },
-        {
-          "mechanism_type": "behavioral: conservative management in frail elderly may blunt TXA survival gains",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but often unmeasured and confounded by goals of care; hard to evaluate robustly in routine datasets."
-        },
-        {
-          "mechanism_type": "statistical: age confounded with comorbidity, frailty, and treatment patterns",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Important and well-supported; testable via adjustment for comorbidities and sensitivity analyses around frailty/advance directives."
-        },
-        {
-          "mechanism_type": "biological: with ageing, greater fraction of deaths from medical complications reduces observable TXA effect on all-cause mortality",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Consistent with geriatric trauma literature; can be examined via cause-specific mortality by age group."
+          "comments": "Statistical interactions noted, but IS confounding requires careful control and is challenging."
         }
       ],
       "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
+      "clinical_interpretation": 7,
       "evidence_alignment": 7,
       "subgroup_implications": 7,
       "validation_plan_quality": 7,
-      "caveat_awareness": 9,
+      "caveat_awareness": 8,
       "overall_score": 7,
       "strengths": [
-        "Accurate, clinically nuanced description of age as a proxy for frailty, comorbidity, and competing risks, with correct acknowledgment that RCTs show minimal age-based effect modification of TXA benefit.",
-        "Mechanistic reasoning about changing balance between bleeding deaths and non-hemorrhagic deaths with age is appropriate and aligns with geriatric trauma data.",
-        "Subgroup definitions (<40, 40\u201359, 60\u201379, \u226580) are reasonable and routinely used, facilitating interpretation and comparison across studies.",
-        "Validation suggestions correctly emphasize flexible modeling, adjustment for comorbidities and anticoagulant use, and cause-specific mortality analysis.",
-        "Caveats are explicit that any true age\u2013TXA interaction is likely modest and that frailty/goals-of-care confounding is substantial and hard to measure."
+        "Acknowledges confounding impact of injury severity",
+        "Considers physiological impact on TXA efficacy"
       ],
       "weaknesses": [
-        "Several proposed mechanisms (altered fibrinolysis with age, PK changes driving thrombosis) are speculative with little direct clinical evidence, and may overcomplicate interpretation.",
-        "Pre-specified age categories are somewhat arbitrary and may mask non-linear or threshold effects, especially at extremes; continuous modeling will be more informative.",
-        "Given RCT evidence, age-focused heterogeneity analyses may have low yield relative to other, more mechanistically central features like time or shock severity."
+        "ISS lacks granularity to capture specific injury types",
+        "Moderate evidence support and mechanism detail"
       ],
       "recommendation": "medium_priority",
-      "justification": "Age is important clinically and easy to measure, but current high-quality trial data suggest only modest, if any, TXA effect modification by age. The hypotheses are careful and well caveated, but this is best treated as a secondary/confirmatory modifier after more biologically central factors are explored."
+      "justification": "The hypothesis is moderately supported by literature, but limitations in ISS specificity and the generally moderate evidence backing it warrant further focused investigation."
     },
     {
-      "feature_name": "baseline_lactate_or_base_deficit_initial",
+      "feature_name": "Baseline hemoglobin level",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "physiological: moderately elevated lactate/base deficit marks reversible hypoperfusion where TXA helps",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Strong clinical plausibility and supported by associations between lactate, shock severity, and hemorrhagic risk; interaction with TXA is testable but not yet well-established in RCT data."
-        },
-        {
-          "mechanism_type": "biological: severe acidosis impairs coagulation so TXA alone insufficient",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Well supported by coagulation physiology; TXA\u2019s limited efficacy in severely acidotic states is plausible and can be explored through high-lactate strata."
-        },
-        {
-          "mechanism_type": "physiological: early-shock window at moderate lactate before microcirculatory collapse",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Conceptually coherent; evidence is more inferential than direct but testable via non-linear interactions and timing of death/organ failure."
-        },
-        {
-          "mechanism_type": "biological: lactate elevation from non-hemorrhagic causes reduces TXA relevance",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "True in principle but difficult to disentangle in practice; requires careful adjustment for cardiac, hepatic, and other confounders."
-        },
-        {
-          "mechanism_type": "statistical: lactate correlated with other severity markers, may proxy general severity",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Key methodological point; highly testable by comparing models with/without lactate interactions and checking incremental predictive value."
-        },
-        {
-          "mechanism_type": "physiological: extreme lactate indicates microcirculatory collapse limiting benefit",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible but more speculative; can be evaluated by exploring very-high-lactate tails, though sample sizes may be small."
-        },
-        {
-          "mechanism_type": "behavioral: high lactate prompts aggressive resuscitation bundles that co-occur with TXA",
+          "mechanism_type": "physiological",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but hard to separate from confounding by indication and mediation by treatment intensity; partial adjustment is possible."
-        },
-        {
-          "mechanism_type": "pharmacological: acidosis may modestly affect TXA handling but is clinically minor",
-          "plausibility": 7,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 3,
-          "overall_score": 4,
-          "comments": "Likely a minor factor with little clinical evidence; not central to heterogeneity questions and difficult to test without PK data."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 7,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 8,
-      "strengths": [
-        "Excellent clinical interpretation of lactate/base deficit as global hypoperfusion markers strongly associated with hemorrhagic shock and mortality.",
-        "Mechanistic framing around a \u2018sweet spot\u2019 of reversible shock versus irrecoverable shock is coherent and relevant to TXA\u2019s mode of action.",
-        "Proposed subgroups (<2, 2\u20133.9, 4\u20137.9, \u22658 mmol/L) are standard clinical bins and combined with continuous modeling, which increases robustness.",
-        "Validation plan includes appropriate spline-based interactions, assessment of additive value beyond SBP/ISS, and cause-specific mortality, which is methodologically appropriate.",
-        "Caveats rightly emphasize timing of measurement, non-hemorrhagic contributors, and the need for adequate sample sizes for flexible modeling."
-      ],
-      "weaknesses": [
-        "Direct evidence that TXA\u2019s benefit is strongly modified by lactate per se (rather than by correlated shock variables) is currently limited.",
-        "Baseline lactate can be influenced by pre-hospital resuscitation and non-trauma comorbidities, complicating mechanistic interpretation of interactions.",
-        "Some mechanistic elements (microcirculatory collapse thresholds, PK alterations) are speculative and unlikely to be testable without specialized data."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Baseline lactate/base deficit are powerful, widely used shock markers that map closely to bleeding risk and plausibly to TXA benefit. While direct trial evidence for lactate-based effect modification is limited, the biological rationale is strong and the analytic plan sound; this should be a high-priority modifier to examine alongside SBP and ISS."
-    },
-    {
-      "feature_name": "known_history_of_thromboembolic_disease_or_active_cancer",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: pre-existing hypercoagulability + TXA may promote thrombosis",
-          "plausibility": 8,
           "evidence_support": 6,
-          "specificity": 7,
+          "specificity": 6,
           "testability": 6,
-          "overall_score": 7,
-          "comments": "Biologically plausible and modestly supported by thrombosis literature, but TXA trial data show only small absolute thrombotic risks overall; subgroup evidence is sparse."
+          "overall_score": 6,
+          "comments": "Generally plausible but lacks strong direct evidence linking hemoglobin level to TXA efficacy."
         },
         {
-          "mechanism_type": "physiological: active malignancy microthrombosis potentially worsened by TXA",
+          "mechanism_type": "pharmacological",
+          "plausibility": 7,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Conceptually understood, with moderate evidence linking perfusion impact to TXA dynamics."
+        },
+        {
+          "mechanism_type": "biological",
           "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 3,
-          "overall_score": 4,
-          "comments": "Highly speculative with little direct data; hard to test and likely a minor contributor relative to macro-thrombotic outcomes."
-        },
-        {
-          "mechanism_type": "pharmacological: despite high thrombotic risk, TXA survival benefit may still outweigh small thrombosis increment",
-          "plausibility": 7,
           "evidence_support": 5,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "General inference from RCTs; not strongly subgroup-specific but reasonable backdrop for net-benefit analyses."
-        },
-        {
-          "mechanism_type": "statistical: strong confounding between VTE/cancer history and other risk factors",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Important and well-supported; manageable with careful adjustment, though residual confounding is inevitable."
-        },
-        {
-          "mechanism_type": "behavioral: clinicians may be more selective in giving TXA to high-thrombotic-risk patients",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Plausible selection bias; difficult to quantify as motivations are rarely recorded explicitly."
-        },
-        {
-          "mechanism_type": "biological: anticoagulation-driven bleeding less amenable to TXA",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Makes mechanistic sense and can be partially tested by stratifying on anticoagulant use and type, but empiric TXA data are limited."
-        },
-        {
-          "mechanism_type": "physiological: trauma, immobility, inflammation increase VTE risk, TXA adds small increment",
-          "plausibility": 7,
-          "evidence_support": 4,
           "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Conceptually sound but incremental TXA effect appears modest; testing requires large samples to detect small differences."
-        },
-        {
-          "mechanism_type": "biological: microthrombi may contribute to organ dysfunction, but TXA-related worsening seems limited",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Largely speculative, with RCTs not showing major organ-failure signal; unlikely to be testable beyond coarse organ dysfunction endpoints."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 7,
-      "caveat_awareness": 9,
-      "overall_score": 7,
-      "strengths": [
-        "Clinically sensible focus on net benefit balance (bleeding reduction vs thrombosis increase) in patients with prior VTE, thrombophilia, or active cancer.",
-        "Acknowledges that major TXA trials show only small overall thrombosis signals but that high-risk subgroups were under-characterized, appropriately tempering claims.",
-        "Subgroup definitions (no history, VTE/thrombophilia, active cancer) are practical and interpretable, with explicit attention to thromboembolic and ischemic outcomes.",
-        "Validation suggestions include composite net-benefit endpoints and multi-state models, which are sophisticated and well-matched to the clinical question.",
-        "Caveats clearly highlight under-representation in trials, low event counts, misclassification of history, and confounding by different care practices and prophylaxis."
-      ],
-      "weaknesses": [
-        "Baseline prevalence of these conditions in trauma TXA cohorts is often low, which may severely limit power to detect effect modification, especially for rare thrombotic outcomes.",
-        "Several mechanisms (microvascular occlusion, malignancy-related microthrombosis exacerbation) are speculative and unlikely to be testable with routine data.",
-        "Clinical interpretation could better distinguish between different cancer types and thrombotic phenotypes, which may have very different risk profiles but are lumped together here."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Biology supports concern about thrombosis in pro-thrombotic states, but limited data, low event rates, and strong confounding constrain detectability and interpretability. These hypotheses are careful and well-qualified; this feature should be explored but as a medium rather than top priority, focusing on safety/net benefit rather than primary efficacy."
-    },
-    {
-      "feature_name": "mechanism_of_injury_penetrating_vs_blunt",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological: penetrating major-vessel injuries with early TXA can slow exsanguination until surgery",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible and partially supported, especially in military data; interaction with mechanism is testable but often limited by sample size in penetrating cohorts."
-        },
-        {
-          "mechanism_type": "biological: blunt trauma with systemic endothelial injury and hyperfibrinolysis where TXA is very relevant",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Fits well with trauma-induced coagulopathy literature; testable via mechanism-stratified analyses controlling for shock and ISS."
-        },
-        {
-          "mechanism_type": "physiological: rapid control in penetrating trauma makes delays in TXA more harmful to its potential benefit",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Speculative temporal nuance; would require detailed timing of surgery and TXA to examine thoroughly."
-        },
-        {
-          "mechanism_type": "biological: diffuse venous/cancellous bleeding in blunt trauma particularly responsive to TXA",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but under-evidenced; specific tests would need organ- and region-level bleeding endpoints rarely available at scale."
-        },
-        {
-          "mechanism_type": "behavioral: protocol differences in TXA use by mechanism",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
           "testability": 6,
           "overall_score": 6,
-          "comments": "Likely true in some systems; testable by examining treatment patterns and adjusting for mechanism-specific guidelines."
-        },
-        {
-          "mechanism_type": "statistical: mechanism as coarse proxy for injury pattern and death causes",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Key analytic caveat; can and should be addressed by more granular AIS-region modeling and cause-of-death stratification."
-        },
-        {
-          "mechanism_type": "physiological: military data show benefit even in penetrating/blast when major hemorrhage present",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Supported by MATTERs and related studies; confirms that TXA can be effective across mechanisms when hemorrhage is dominant."
-        },
-        {
-          "mechanism_type": "biological: low-bleeding penetrating injuries derive little benefit from TXA",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Logically consistent with TXA\u2019s mechanism; testable by restricting to penetrating cases without shock/bleeding indicators, though such analyses may be small and confounded by selection. "
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 7,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 8,
-      "strengths": [
-        "Clear, accurate description of blunt vs penetrating trauma and how they differ in bleeding patterns, coagulopathy, and care pathways.",
-        "Mechanisms rightly emphasize that TXA\u2019s *biological* efficacy is likely similar across mechanisms given sufficient hemorrhage, with differences driven by patterns and timing rather than mechanism label itself.",
-        "Subgroup plan to stratify by mechanism and then further by hemorrhage indicators (hypotension, MTP, torso/pelvic AIS) is sophisticated and clinically meaningful.",
-        "Validation suggestions include multivariable adjustment for ISS and anatomic regions, cause-specific mortality, and timing analyses (time \u00d7 TXA \u00d7 mechanism), which are appropriate.",
-        "Caveats appropriately warn that mechanism is coarse, confounded by system factors, and that penetrating cases may be underpowered in some civilian datasets."
-      ],
-      "weaknesses": [
-        "Several mechanisms (e.g., specific timing sensitivity in penetrating vs blunt) are speculative and not well backed by direct evidence.",
-        "The feature itself is fairly crude; without layering in injury location and severity, mechanism-based heterogeneity will likely be hard to interpret causally.",
-        "Power for penetrating-stratified analyses may be limited in many datasets, especially for more granular subcategories like torso vs extremity penetrating injuries."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Mechanism of injury is fundamental and always recorded; while biologic efficacy might be similar across blunt and penetrating trauma given major hemorrhage, observed heterogeneity can provide important insights when combined with injury pattern and shock markers. The hypotheses and analysis plan are strong enough to justify high-priority evaluation."
-    },
-    {
-      "feature_name": "preinjury_anticoagulant_or_antiplatelet_use",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: anticoagulant-driven bleeding less amenable to TXA",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Mechanistically reasonable; TXA does not reverse anticoagulation. Can be evaluated by comparing outcomes in anticoagulated vs non-anticoagulated TXA recipients, though confounding is substantial."
-        },
-        {
-          "mechanism_type": "biological: antiplatelet-only patients may still benefit from fibrin-stabilizing TXA",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Plausible but evidence is modest; specific antiplatelet-subgroup TXA data are sparse and underpowered."
-        },
-        {
-          "mechanism_type": "pharmacological: synergy between reversal agents and TXA",
-          "plausibility": 7,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 5,
-          "comments": "Conceptual synergy is plausible but direct trial/registry data are limited; testing would require detailed reversal therapy data and careful causal modeling."
-        },
-        {
-          "mechanism_type": "physiological: older, comorbid patients on these drugs have competing risks and variable net outcome",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Broad but reasonable; disentangling medication effect from age/comorbidities requires robust adjustment and may remain partially confounded."
-        },
-        {
-          "mechanism_type": "statistical: poor data on specific agent/dose/timing lead to misclassification",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Important limitation and very realistic; testable via sensitivity analyses using different definitions and completeness checks where pharmacy data exist."
-        },
-        {
-          "mechanism_type": "behavioral: clinicians modify TXA use based on anticoagulant history",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Likely but rarely documented; may be inferred indirectly from treatment patterns but remains a source of selection bias."
-        },
-        {
-          "mechanism_type": "biological: fragile clots in heavily anticoagulated patients may, in theory, be more TXA-responsive",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative and may conflict with main mechanism that impaired clot formation dominates; very hard to demonstrate empirically."
-        },
-        {
-          "mechanism_type": "physiological: higher risk of ICH expansion in anticoagulated TBI where TXA might help",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible but under-studied; requires detailed TBI imaging and drug-level/Reversal data to study convincingly."
+          "comments": "Biological ties with viscosity and clot dynamics plausible but not strongly evidenced."
         }
       ],
       "mechanism_plausibility": 7,
-      "clinical_interpretation": 8,
+      "clinical_interpretation": 7,
+      "evidence_alignment": 6,
+      "subgroup_implications": 6,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 7,
+      "overall_score": 6,
+      "strengths": [
+        "Considers biological relevance of hemoglobin levels",
+        "Good handling of caveats and precision in future research needs"
+      ],
+      "weaknesses": [
+        "Limited direct evidence for hemoglobin impact on TXA outcomes",
+        "Possible confounders like anticoagulant use not fully addressed"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "The hypothesis is plausible with some support from moderate evidence. However, further robust delineation of hemoglobin roles in TXA treatment efficacy and handling of confounder biases would strengthen conclusions."
+    },
+    {
+      "feature_name": "Presence of traumatic brain injury (TBI)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 8,
+          "evidence_support": 6,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Moderate biological support for TBI's influence on TXA efficacy, particularly in bleeding management."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 7,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 7,
+          "overall_score": 6,
+          "comments": "Some literature supports TXA's potential in limiting hematoma expansion, though results vary."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 6,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Limited definitive evidence for physiological interactions specific to TBI and TXA."
+        }
+      ],
+      "mechanism_plausibility": 7,
+      "clinical_interpretation": 7,
       "evidence_alignment": 6,
       "subgroup_implications": 7,
       "validation_plan_quality": 7,
-      "caveat_awareness": 9,
+      "caveat_awareness": 8,
       "overall_score": 7,
       "strengths": [
-        "Clinical interpretation correctly recognizes that pre-injury anticoagulant/antiplatelet use alters baseline hemostasis and bleeding patterns in ways not directly reversed by TXA.",
-        "Mechanisms highlight the conceptual distinction between anticoagulant and antiplatelet effects, and the limited ability of TXA to offset pharmacologic clotting impairment, which is accurate.",
-        "Subgrouping into no agents, antiplatelet only, and anticoagulant (\u00b1 antiplatelet) is sensible and operationally feasible in many datasets.",
-        "Validation strategies appropriately include stratified analyses, adjustment for reversal agents and comorbidities, and use of laboratory markers (INR, anti-Xa) where available.",
-        "Caveats clearly note documentation gaps, limited representation in early TXA trials, small subgroup sizes, and confounding by age, comorbidities, and goals of care."
+        "Acknowledges unique hemostatic challenges post-TBI",
+        "Consideration of TXA's distinct impacts on CNS bleeding"
       ],
       "weaknesses": [
-        "Evidence base for TXA heterogeneity in anticoagulated/antiplatelet trauma patients is thin; many mechanisms are reasonable but largely untested at scale.",
-        "Data quality around pre-injury medications (exact agent, dose, timing) is often poor, which could severely limit the reliability of subgroup definitions and interactions.",
-        "Several proposed mechanistic nuances (fragile clots being *more* TXA-sensitive, specific TBI\u2013anticoagulant\u2013TXA interactions) are speculative and may not be distinguishable in routine datasets."
+        "Speculative physiological mechanisms",
+        "Variable support across proposed mechanisms"
       ],
       "recommendation": "medium_priority",
-      "justification": "This feature is clinically important but data limitations and overall sparse evidence on TXA in heavily anticoagulated/antiplatelet trauma populations limit what can be learned. The hypotheses and caveats are thoughtful, but analyses will likely be exploratory and underpowered, warranting medium rather than high priority."
+      "justification": "While biologically plausible, the feature requires stronger empirical backing and specific mechanistic clarity to solidify its clinical utility. The TBI-TXA interaction is worth exploring further given its potential differential impacts."
+    },
+    {
+      "feature_name": "Age at presentation",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 7,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 7,
+          "overall_score": 6,
+          "comments": "Plausible physiological effects of age on clotting mechanisms post-trauma, though evidence is limited."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 8,
+          "evidence_support": 7,
+          "specificity": 6,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Supported by literature showing age-related pharmacokinetic effects impacting TXA."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 6,
+          "evidence_support": 6,
+          "specificity": 5,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Statistical confounding by age probable, but needs more precise mechanism elucidation."
+        }
+      ],
+      "mechanism_plausibility": 7,
+      "clinical_interpretation": 7,
+      "evidence_alignment": 6,
+      "subgroup_implications": 6,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 8,
+      "overall_score": 6,
+      "strengths": [
+        "Recognizes age's contextual role in treatment efficacy",
+        "Comprehensive consideration of pharmacokinetic variations"
+      ],
+      "weaknesses": [
+        "Evidence mostly indirect or extrapolated from non-trauma settings",
+        "Complex interactions make interpretation difficult"
+      ],
+      "recommendation": "low_priority",
+      "justification": "Diverse age-related effects on TXA efficacy justify exploration, but current evidence is limited. More focused studies on age-related physiological and pharmacokinetic interactions specific to TXA in trauma settings are needed to advance this hypothesis."
     }
   ],
   "top_features": [
-    "time_from_injury_to_TXA_minutes",
-    "massive_transfusion_protocol_activation_or_units_PRBCs_first_24h",
-    "presence_of_severe_TBI_GCS_3_8_or_AIS_head_3plus",
-    "systolic_blood_pressure_first_ED_mmHg",
-    "injury_severity_score",
-    "baseline_lactate_or_base_deficit_initial",
-    "mechanism_of_injury_penetrating_vs_blunt"
+    "Time from injury to TXA administration",
+    "Severity of injury (Injury Severity Score - ISS)"
   ],
-  "methodological_concerns": [
-    "Several proposed modifiers (massive transfusion volume, MTP activation, lactate/base deficit) are at least partly post-baseline and/or lie on the causal pathway from TXA to outcomes. Stratifying or conditioning on these without explicit causal modeling risks collider and mediator bias; their roles as effect modifiers vs mediators must be clearly distinguished in analysis plans.",
-    "Many validation suggestions rely on advanced causal inference methods (TMLE, IVs, mediation analyses). These are appropriate but will require large sample sizes, high-quality covariate measurement, and careful diagnostics; feasibility may be limited in smaller or less detailed datasets.",
-    "Some subgroup cutpoints (e.g., specific ISS and SBP bands, extreme lactate levels) could lead to sparse data and unstable estimates, particularly for rare outcomes like thrombosis. Pre-specifying a limited set of clinically motivated, well-powered strata and using continuous/spline interaction terms is advisable.",
-    "Unmeasured confounding (especially by goals of care, frailty, and WLST decisions) is a recurring concern for age, TBI, and comorbidity-related features. Sensitivity analyses (e.g., E-values, bounding approaches) should be considered where strong unmeasured confounding is plausible.",
-    "Outcome misclassification (especially cause-of-death categories: hemorrhagic vs TBI vs other) is likely in many registries, which can blur detection of cause-specific TXA heterogeneity. Analyses should routinely assess robustness of conclusions to plausible misclassification."
-  ]
+  "methodological_concerns": null
 }

@@ -1,978 +1,250 @@
 {
-  "summary": "Across all 10 SPRINT feature hypotheses, mechanisms are biologically coherent, clinically well interpreted, and generally well aligned with existing hypertension and BP-lowering trial literature. Validation suggestions are concrete and methodologically appropriate. The main cross-cutting weaknesses are: (1) occasional drift into generic \u201chigher baseline risk \u2192 more absolute benefit\u201d arguments without always distinguishing prognostic vs truly predictive effects; (2) some mechanisms that are plausible but weakly evidenced (especially behavioral and more subtle biological pathways); and (3) frequent collinearity among renal features (eGFR, serum creatinine, sub_ckd) and among hemodynamic features (SBP, DBP, n_agents) that will complicate clean attribution. Overall this is a strong, trial-consistent mechanistic set; the highest-priority follow-up features for treatment effect heterogeneity work are age, eGFR/sub_ckd, SBP, and DBP, plus n_agents as a pragmatic marker of resistant hypertension and polypharmacy.",
+  "summary": "In the context of intensive blood pressure control, a critical evaluation of feature hypotheses was conducted, emphasizing age, eGFR, DBP, serum creatinine, and cholesterol ratio. Age and eGFR are top-ranked attributes with robust biological plausibility and evidence alignment. Evidence suggests specific modifiers require closer clinical introspection to optimize treatment strategies for cardiovascular risk mitigation.",
   "scored_features": [
     {
       "feature_name": "age",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "Greater atherosclerotic and structural cardiovascular burden with age \u2192 higher baseline CVD risk \u2192 larger absolute benefit",
-          "plausibility": 10,
-          "evidence_support": 9,
+          "mechanism_type": "biological",
+          "plausibility": 9,
+          "evidence_support": 10,
           "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Very well-established age\u2013ASCVD relationship; clearly specific to SPRINT\u2019s older high-risk population. Distinguishing prognostic from predictive effect requires careful interaction modeling but is feasible."
-        },
-        {
-          "mechanism_type": "Arterial stiffening and isolated systolic hypertension in older adults \u2192 larger relative benefit from intensive SBP lowering",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
           "testability": 8,
-          "overall_score": 8,
-          "comments": "Arterial stiffness with age is well documented, and SBP-driven risk is clear, but direct evidence that older/stiff-artery phenotype has larger relative benefit is more limited. Can be tested via age\u00d7SBP\u00d7pulse pressure interactions."
+          "overall_score": 9,
+          "comments": "This mechanism is strongly supported by literature on arterial stiffness and cardiovascular risk in older adults."
         },
         {
-          "mechanism_type": "Declining baroreflex/autonomic function \u2192 higher risk of orthostatic hypotension/syncope with aggressive BP lowering",
-          "plausibility": 9,
-          "evidence_support": 7,
+          "mechanism_type": "physiological",
+          "plausibility": 8,
+          "evidence_support": 8,
           "specificity": 8,
           "testability": 7,
           "overall_score": 8,
-          "comments": "Mechanism is physiologically solid and consistent with geriatric BP literature; SPRINT safety data show more hypotension in older groups but may be underpowered for detailed age gradients."
+          "comments": "Moderate evidence indicates older adults' unique physiological profiles may affect BP response."
         },
         {
-          "mechanism_type": "Age-related renal decline \u2192 lower renal reserve \u2192 more AKI/eGFR loss with intensive BP control",
+          "mechanism_type": "pharmacological",
           "plausibility": 9,
-          "evidence_support": 7,
+          "evidence_support": 9,
           "specificity": 8,
           "testability": 8,
-          "overall_score": 8,
-          "comments": "Coherent and supported by AKI/renal adverse event patterns, though most evidence conflates age with CKD; can be probed with age\u00d7eGFR interactions."
-        },
-        {
-          "mechanism_type": "Polypharmacy/altered pharmacokinetics in older adults \u2192 increased sensitivity to antihypertensives and adverse effects",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Geriatric pharmacology strongly supports this qualitatively; SPRINT-level data may not capture PK differences directly, so only indirectly testable via AE patterns by age and drug class."
-        },
-        {
-          "mechanism_type": "Behavioral differences (adherence, falls, functional status) in older adults \u2192 treatment interruptions and diluted benefit",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Conceptually reasonable but evidence is sparse and operationalization in SPRINT is challenging unless detailed adherence/frailty data are available."
-        },
-        {
-          "mechanism_type": "Age as a proxy correlated with CKD, BP, comorbidities \u2192 residual confounding/statistical interaction",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Statistical explanation is highly plausible and easily testable by multivariable and joint-interaction models. Important caveat to prevent over-interpretation of age as inherently causal."
-        },
-        {
-          "mechanism_type": "Competing non-CVD mortality in oldest participants limiting observable CVD benefit window",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Competing risk logic is sound and aligns with geriatric trial experience; SPRINT\u2019s follow-up length and exclusion of very frail people limit the magnitude but it is still testable with cause-specific/competing risk models."
+          "overall_score": 9,
+          "comments": "Strong basis for age affecting drug pharmacodynamics and resultant BP control outcomes."
         }
       ],
       "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
+      "clinical_interpretation": 9,
       "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
       "overall_score": 9,
       "strengths": [
-        "Clinically precise and trial-consistent interpretation of age and its role in SPRINT.",
-        "Mechanisms are multi-dimensional (vascular, renal, autonomic, pharmacologic, statistical) and largely evidence-based.",
-        "Subgroup proposals (50\u201364/65\u201374/\u226575, plus frailty overlays) map well to SPRINT publications.",
-        "Validation plan uses appropriate interaction models, splines, mediation, and external trials."
+        "Strong evidence for age-related differences in CV risk under BP treatment.",
+        "Multiple well-supported mechanisms proposed."
       ],
       "weaknesses": [
-        "Some mechanisms default to generic \u201chigher baseline risk \u2192 more absolute benefit\u201d without always separating prognostic vs predictive roles.",
-        "Behavioral mechanisms are plausible but not well supported or easily testable with standard trial data."
+        "Potential confounding by coexisting comorbidities was acknowledged but may need further emphasis."
       ],
       "recommendation": "high_priority",
-      "justification": "Age is a major, biologically and clinically coherent effect modifier in BP trials, with strong support from SPRINT and external evidence. The hypotheses and validation plan are rigorous and actionable; follow-up should be prioritized to fully characterize age-by-treatment interactions including benefit\u2013harm trade-offs in older participants."
+      "justification": "Given its top feature status and strong mechanistic underpinnings, age is crucial in tailoring intensive BP strategies."
     },
     {
       "feature_name": "egfr",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "Lower eGFR \u2192 higher CVD risk via CKD-related vascular pathology \u2192 larger absolute benefit from effective interventions",
-          "plausibility": 10,
+          "mechanism_type": "biological",
+          "plausibility": 9,
           "evidence_support": 9,
           "specificity": 9,
-          "testability": 9,
+          "testability": 8,
           "overall_score": 9,
-          "comments": "Well-supported by CKD epidemiology and SPRINT\u2019s own CKD analyses; cleanly testable with eGFR-stratified effects, though need to guard against purely prognostic interpretation."
+          "comments": "Well-supported mechanism linking reduced eGFR with increased cardiovascular risk."
         },
         {
-          "mechanism_type": "Impaired renal autoregulation in CKD \u2192 higher AKI/eGFR decline risk with intensive BP lowering",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
+          "mechanism_type": "pharmacological",
+          "plausibility": 9,
+          "evidence_support": 10,
+          "specificity": 8,
+          "testability": 8,
           "overall_score": 9,
-          "comments": "Very strong mechanistic and clinical-trial support; SPRINT explicitly reported more AKI in CKD with intensive therapy. Highly testable using renal outcomes by eGFR."
+          "comments": "Clear pharmacological link due to renal influence on medication metabolism."
         },
         {
-          "mechanism_type": "Altered drug clearance with low eGFR \u2192 increased exposure and adverse event risk from antihypertensives",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Pharmacologic principle is solid; SPRINT data can only indirectly examine this via AE and dosing patterns across eGFR strata."
-        },
-        {
-          "mechanism_type": "Low eGFR + anemia/uremic cardiomyopathy \u2192 pressure-dependent coronary perfusion and risk of type 2 MI at low BP",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Biologically plausible but quite speculative in SPRINT's relatively moderate CKD range; difficult to specifically test for type 2 MI without detailed phenotyping."
-        },
-        {
-          "mechanism_type": "Proteinuric CKD \u2192 extra benefit from RAAS blockade in intensive strategies",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Consistent with nephrology trials; whether SPRINT\u2019s intensive arm systematically increased RAAS exposure by eGFR is testable if albuminuria and regimen data exist."
-        },
-        {
-          "mechanism_type": "CKD-associated volume expansion \u2192 greater HF risk reduction with intensive, often diuretic-heavy regimens",
+          "mechanism_type": "biological",
           "plausibility": 8,
           "evidence_support": 7,
           "specificity": 7,
           "testability": 8,
           "overall_score": 8,
-          "comments": "Coherent with clinical practice and SPRINT\u2019s HF outcomes. Reasonably testable by decomposing the composite endpoint and classifying HF events by eGFR strata."
-        },
-        {
-          "mechanism_type": "Statistical: eGFR as granular CKD measure explaining importance vs binary CKD variables",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Very plausible data-analytic explanation, easy to test by comparing models with eGFR vs sub_ckd and creatinine."
-        },
-        {
-          "mechanism_type": "Behavioral: closer follow-up in CKD mitigating harms in intensive arm",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Behaviorally reasonable but weakly evidenced and likely modest in magnitude; SPRINT\u2019s protocolized follow-up reduces variation."
+          "comments": "Moderate evidence regarding sodium balance affecting treatment outcomes is plausible but less definitive."
         }
       ],
       "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
+      "clinical_interpretation": 8,
       "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 7,
+      "overall_score": 8,
       "strengths": [
-        "Accurate, nuanced clinical interpretation of eGFR in SPRINT (non-diabetic CKD).",
-        "Mechanisms clearly reflect both benefit (high baseline CVD risk) and harm (AKI/eGFR decline) pathways with strong literature support.",
-        "Subgroup and validation plans (continuous eGFR with splines, three-way interactions with DBP, mediation via on-treatment eGFR) are sophisticated and feasible.",
-        "Good acknowledgment of measurement error, equation-based nature of eGFR, and collinearity with creatinine and CKD subgroup."
+        "eGFR is a well-established cardiovascular risk modifier.",
+        "Strong pharmacological evidence supports renal function's role in treatment safety."
       ],
       "weaknesses": [
-        "Some more detailed biological mechanisms (anemia/uremic cardiomyopathy\u2013driven type 2 MI risk) are speculative in this population.",
-        "Behavioral mechanisms (differential follow-up intensity) are weakly grounded and likely small contributors relative to hemodynamics."
+        "Estimation formula variability and its implications need more focus."
       ],
       "recommendation": "high_priority",
-      "justification": "Kidney function is central to both benefit and harm from intensive BP treatment in SPRINT and related trials. The proposed mechanisms, subgroups, and validation strategies are well supported and highly relevant for practice; refining eGFR-based risk\u2013benefit stratification should be a top priority."
+      "justification": "Renal function's cardinal role in cardiovascular risks and drug metabolism compels prioritizing eGFR for subgroup analysis."
     },
     {
       "feature_name": "dbp",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "Low baseline DBP + intensive SBP lowering \u2192 dangerously low DBP \u2192 impaired coronary perfusion and MI risk (J-curve)",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Classic J-curve concept; multiple trials/observational studies support association, though causal effect in randomized settings remains debated. Very testable with DBP\u00d7treatment interactions and endpoint-specific analyses."
-        },
-        {
-          "mechanism_type": "Higher baseline DBP (higher SVR) \u2192 intensive lowering still leaves DBP in safe range, maximizing benefit",
+          "mechanism_type": "physiological",
           "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Conceptually sound and consistent with general BP physiology, but evidence is mostly inferential. SPRINT data can evaluate by examining achieved DBP and outcomes by baseline DBP strata."
-        },
-        {
-          "mechanism_type": "Low DBP + high SBP (wide pulse pressure) reflects arterial stiffness and complex risk relationships",
-          "plausibility": 9,
           "evidence_support": 7,
           "specificity": 8,
-          "testability": 8,
+          "testability": 7,
           "overall_score": 8,
-          "comments": "Strong pathophysiological basis; testing requires explicit inclusion of pulse pressure and stiffness proxies, which is realistic."
+          "comments": "Evidence supporting perfusion risk at low DBP is moderate but clinically relevant."
         },
         {
-          "mechanism_type": "Renal perfusion dependence on DBP \u2192 low DBP with intensive therapy \u2192 prerenal azotemia/AKI",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Physiologically credible, with some support from AKI patterns in low-BP patients; can be evaluated by AKI vs DBP\u00d7treatment."
-        },
-        {
-          "mechanism_type": "Drug-class differences in SBP vs DBP lowering based on baseline DBP",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Pharmacologic heterogeneity is real, but SPRINT\u2019s treatment algorithms may reduce large systematic differences; hard to isolate in trial data without granular dose/regimen modeling."
-        },
-        {
-          "mechanism_type": "Statistical: DBP correlated with SBP, partly acting as surrogate for pulse pressure/vascular stiffness",
+          "mechanism_type": "biological",
           "plausibility": 9,
           "evidence_support": 8,
-          "specificity": 7,
-          "testability": 9,
+          "specificity": 8,
+          "testability": 8,
           "overall_score": 8,
-          "comments": "Highly plausible; testable via joint modeling of SBP, DBP, and pulse pressure, and checking redundancy of DBP once PP is included."
+          "comments": "DBP's role in myocardial oxygen balance is strongly supported biologically."
         },
         {
-          "mechanism_type": "Very high DBP as marker of neurohormonal activation \u2192 extra benefit from BP lowering (HF prevention)",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Mechanism is reasonable but evidence is limited; SPRINT participants generally had moderate, not extreme, DBP. Might be difficult to distinguish from generic high-BP risk."
-        },
-        {
-          "mechanism_type": "Low DBP as frailty/autonomic dysfunction marker influencing clinician titration behavior",
-          "plausibility": 7,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Plausible behavioral response but not easy to quantify; protocolized titration in SPRINT may limit such biases."
+          "mechanism_type": "pharmacological",
+          "plausibility": 8,
+          "evidence_support": 8,
+          "specificity": 8,
+          "testability": 7,
+          "overall_score": 8,
+          "comments": "Varied impacts of drugs on DBP are well-documented; however, variability complicates clinical translation."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 9,
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 7,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 7,
+      "overall_score": 8,
       "strengths": [
-        "Captures central J-curve concern with DBP and coronary/renal perfusion very clearly.",
-        "Mechanisms integrate hemodynamics, arterial stiffness, and organ perfusion in a trial-relevant way.",
-        "Subgroup boundaries (<70, 70\u201379, \u226580) are clinically standard and operationalizable.",
-        "Validation plan appropriately emphasizes continuous splines, joint modeling with pulse pressure and CAD, and achieved vs baseline DBP."
+        "DBP's role in organ perfusion is a critical consideration.",
+        "Multiple validated hypertension treatment effects noted."
       ],
       "weaknesses": [
-        "Some mechanisms (drug-class specific SBP/DBP responses, neurohormonal activation) are weaker and not central to SPRINT\u2019s design.",
-        "Caveats could further emphasize the substantial potential for confounding (reverse causality) in low-DBP groups, although this is mentioned via sensitivity analyses."
+        "DBP's variability across populations not fully explored."
       ],
-      "recommendation": "high_priority",
-      "justification": "DBP is a key candidate for treatment effect heterogeneity, especially regarding the harm side (J-curve). The hypotheses and analysis plan are detailed, mechanistically grounded, and directly relevant to clinical decision-making about how low to drive SBP in patients with low DBP."
+      "recommendation": "medium_priority",
+      "justification": "Although DBP's clinical importance is acknowledged, variability issues necessitate a cautious approach."
     },
     {
       "feature_name": "screat",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "Elevated creatinine as marker of CKD and high CVD risk \u2192 more absolute benefit",
+          "mechanism_type": "biological",
+          "plausibility": 9,
+          "evidence_support": 9,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Reduced kidney function often signals elevated cardiovascular risk, correlating with screat levels."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 9,
+          "evidence_support": 9,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Clear pharmacokinetic implications regarding medication clearance and renal function."
+        },
+        {
+          "mechanism_type": "biological",
           "plausibility": 9,
           "evidence_support": 8,
           "specificity": 8,
           "testability": 8,
           "overall_score": 8,
-          "comments": "Strongly overlaps with eGFR mechanisms; prognostic component is well supported, but distinguishing true interaction from risk prognostication is essential."
-        },
-        {
-          "mechanism_type": "Higher creatinine \u2192 lower renal reserve \u2192 more AKI/eGFR decline with intensive BP lowering",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Mechanistically and clinically solid, very similar to eGFR-related harm mechanisms; testable via renal outcomes by creatinine strata."
-        },
-        {
-          "mechanism_type": "Mildly elevated creatinine due to higher muscle mass, not CKD \u2192 different vulnerability profile",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Conceptually possible but likely rare in this older, high-risk cohort; hard to operationalize with available data."
-        },
-        {
-          "mechanism_type": "Creatinine guiding clinician dosing (cautious ACEi/ARB/diuretic use at higher creatinine)",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible in real-world practice; SPRINT protocols may constrain but not eliminate such behavior. Can be partially tested via regimen evolution by creatinine."
-        },
-        {
-          "mechanism_type": "Creatinine providing residual renal information beyond eGFR",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Reasonable; variance-partitioning and joint models can test independent predictive vs modifying value beyond eGFR."
-        },
-        {
-          "mechanism_type": "Statistical collinearity with eGFR/CKD subgroup inflating creatinine\u2019s importance",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Very likely explanation for some SHAP importance; easy to examine through model comparison and regularization."
-        },
-        {
-          "mechanism_type": "Creatinine as marker of prior AKI/subclinical renal damage \u2192 greater future AKI risk with intensive therapy",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Biologically plausible but nonspecific; prior AKI history is not directly observed and creatinine alone is a crude proxy."
-        },
-        {
-          "mechanism_type": "Higher creatinine triggering more cautious monitoring and dose adjustments, mitigating harms",
-          "plausibility": 7,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Behaviorally plausible yet weakly evidenced; SPRINT\u2019s structured follow-up might limit such differences."
+          "comments": "Associations with microvascular damage further solidify screat's relevance."
         }
       ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 8,
       "evidence_alignment": 8,
-      "subgroup_implications": 7,
+      "subgroup_implications": 8,
       "validation_plan_quality": 8,
-      "caveat_awareness": 9,
+      "caveat_awareness": 7,
       "overall_score": 8,
       "strengths": [
-        "Interprets serum creatinine correctly within the context of eGFR and CKD, with recognition of muscle mass and lab calibration issues.",
-        "Mechanisms are broadly consistent with those for eGFR, correctly emphasizing both CVD risk and renal vulnerability.",
-        "Validation plan is methodologically thoughtful, especially joint modeling with eGFR and sex-specific analyses.",
-        "Caveats clearly note collinearity and the challenge of attributing independent modifying effect to creatinine."
+        "High biological and pharmacological credibility of mechanisms.",
+        "well documented relations between screat levels and CV risk."
       ],
       "weaknesses": [
-        "Several mechanisms are redundant with eGFR and CKD subgroup, raising questions about added practical value of creatinine as a separate effect modifier.",
-        "Some hypothesized nuances (elevated creatinine from muscle mass, prior AKI) are difficult to test or likely to affect few participants."
+        "Potential for non-renal influences affecting measurements."
       ],
       "recommendation": "medium_priority",
-      "justification": "Given strong overlap with eGFR and sub_ckd, creatinine is mechanistically important but may offer limited incremental insight into treatment effect heterogeneity. It merits follow-up mainly to clarify whether it adds information beyond eGFR or is primarily a statistical artifact of collinearity."
+      "justification": "Serum creatinine is an established renal marker; understanding its cardiovascular implications is vital."
     },
     {
       "feature_name": "chr",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "High total cholesterol \u2192 higher LDL/atherosclerotic burden \u2192 higher baseline ASCVD risk \u2192 larger absolute benefit",
-          "plausibility": 9,
+          "mechanism_type": "biological",
+          "plausibility": 8,
           "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
+          "specificity": 7,
+          "testability": 7,
           "overall_score": 8,
-          "comments": "Well supported by lipid epidemiology and BP-lowering meta-analyses; mechanism largely prognostic but still relevant for absolute benefit calculations."
+          "comments": "Clear correlation between cholesterol ratios and atherosclerosis."
         },
         {
-          "mechanism_type": "Low cholesterol as marker of chronic illness/frailty \u2192 high non-CVD mortality and limited observable CVD benefit",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reverse-causality mechanism is documented in observational studies; SPRINT can evaluate competing risks and low-cholesterol phenotypes to some extent."
-        },
-        {
-          "mechanism_type": "High cholesterol \u2192 more statin use \u2192 potential synergy of LDL and BP lowering",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reasonable but not strongly proven; synergy is consistent with multifactorial CVD prevention but challenging to quantify reliably."
-        },
-        {
-          "mechanism_type": "Hypercholesterolemia-related arterial stiffness and endothelial dysfunction \u2192 differential HF/stroke benefit",
+          "mechanism_type": "pharmacological",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Mechanistically plausible yet loosely supported and hard to isolate; stiffness is better captured via PP or imaging than total cholesterol."
-        },
-        {
-          "mechanism_type": "Statistical: cholesterol as risk-score component summarizing baseline CVD risk",
-          "plausibility": 9,
           "evidence_support": 7,
           "specificity": 7,
-          "testability": 8,
+          "testability": 6,
+          "overall_score": 7,
+          "comments": "Moderate evidence for cholesterol interaction with antihypertensives."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 8,
+          "evidence_support": 8,
+          "specificity": 7,
+          "testability": 7,
           "overall_score": 8,
-          "comments": "Very plausible explanation for importance, straightforward to test by adjusting for global risk scores or other lipid fractions."
-        },
-        {
-          "mechanism_type": "Very high TG-rich lipoproteins contributing to microvascular dysfunction and HFpEF risk",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Speculative and not well captured by total cholesterol alone; SPRINT granularity on triglycerides and HF phenotype may be limited."
-        },
-        {
-          "mechanism_type": "Behavioral: higher cholesterol leading to more lifestyle counseling and follow-up",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 4,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Behaviorally plausible but likely small effect and difficult to distinguish in a protocolized trial context."
-        },
-        {
-          "mechanism_type": "Lipid-lowering therapies modestly altering BP/vascular inflammation and interacting with intensive BP control",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Some evidence that statins slightly lower BP and reduce inflammation, but the incremental modification of intensive vs standard BP effects is uncertain."
+          "comments": "Cholesterol's influence on endothelial function and its hypertension implications are recognized."
         }
       ],
       "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Clinical interpretation of total cholesterol and its relation to ASCVD risk and frailty is accurate.",
-        "Mechanisms correctly emphasize mainly prognostic role with potential implications for absolute benefit of BP lowering.",
-        "Validation suggestions (cholesterol categories, statin stratification, competing risk models) are specific and feasible.",
-        "Caveats appropriately highlight crudeness of total cholesterol and reverse causality at low levels."
-      ],
-      "weaknesses": [
-        "Several mechanisms are relatively generic (high baseline risk \u2192 more absolute benefit) without showing strong evidence that cholesterol interacts with treatment effect beyond risk stratification.",
-        "Some pathways (microvascular dysfunction, drug\u2013drug synergy) are speculative and may be untestable or marginal in SPRINT."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Total cholesterol is a solid marker of baseline CVD risk but evidence for true treatment effect heterogeneity with intensive BP lowering is modest. It warrants analysis, especially in conjunction with statin therapy and broader risk scores, but is secondary to core hemodynamic and renal features."
-    },
-    {
-      "feature_name": "sub_ckd",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "CKD as high CVD risk state via RAAS activation, endothelial dysfunction, calcification, LVH \u2192 larger absolute benefit",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well-established, and SPRINT was explicitly designed around CKD subgroup analyses. Prognostic vs predictive distinction still needs modeling."
-        },
-        {
-          "mechanism_type": "CKD vulnerability to hemodynamic drops \u2192 greater AKI/CKD progression risk with intensive BP control",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Very strong support from SPRINT and nephrology literature; central mechanism for balancing benefit vs harm."
-        },
-        {
-          "mechanism_type": "CKD influencing antihypertensive selection/dosing \u2192 altered mechanism/magnitude of BP reduction",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible and testable via medication pattern analyses; protocols limit but do not abolish such differences."
-        },
-        {
-          "mechanism_type": "CKD-associated anemia and metabolic disturbances increasing HF risk and benefit from intensive BP control",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Biologically coherent but not extensively demonstrated in SPRINT; endpoint decomposition (HF vs others) by CKD can probe this."
-        },
-        {
-          "mechanism_type": "Behavioral: closer monitoring of CKD participants affecting harms and adherence",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Likely minor in a protocolized trial and difficult to disentangle from protocol-specified visit schedules."
-        },
-        {
-          "mechanism_type": "Statistical: binary CKD reflecting non-linear risk thresholds beyond continuous eGFR",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Reasonable, especially as clinicians often use binary CKD cutpoints; testing via models with/without sub_ckd in presence of eGFR is straightforward."
-        },
-        {
-          "mechanism_type": "CKD-specific optimal BP ranges differing from non-CKD",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 7,
-          "overall_score": 6,
-          "comments": "Some data suggest differing BP targets in CKD, but evidence remains mixed; SPRINT contributes to this debate but may not fully resolve it."
-        },
-        {
-          "mechanism_type": "CKD with sodium/volume-dependent hypertension \u2192 particularly strong benefit from diuretic/RAAS-heavy intensive regimens",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Consistent with pathophysiology; testable by exploring class-specific usage and HF outcomes."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
-      "strengths": [
-        "Correct and detailed understanding of SPRINT\u2019s CKD subgroup definition and its centrality to the trial.",
-        "Mechanisms for both benefit and harm are well grounded in SPRINT publications and CKD literature.",
-        "Proposed subgroups (CKD vs non-CKD, 45\u201359 vs 20\u201344) reflect clinically used CKD stages.",
-        "Validation plan is comprehensive, including competing risks and interaction with hemodynamic variables."
-      ],
-      "weaknesses": [
-        "Overlap with continuous eGFR and creatinine may limit additional mechanistic insight; binary cutpoints are somewhat coarse.",
-        "Some weaker mechanisms (behavioral follow-up differences) are speculative and likely minor."
-      ],
-      "recommendation": "high_priority",
-      "justification": "CKD status was a pre-specified and clinically salient SPRINT subgroup with documented treatment effect differences, particularly regarding renal outcomes. Further refining how binary CKD interacts with continuous eGFR, BP, and adverse events is highly valuable for guidelines on BP targets in CKD."
-    },
-    {
-      "feature_name": "n_agents",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "More baseline agents \u2192 more severe/resistant HTN and higher CVD risk \u2192 potential for greater absolute benefit",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Consistent with resistant hypertension literature; still partly generic baseline risk logic, but SPRINT can test risk gradients and treatment effects by agent count."
-        },
-        {
-          "mechanism_type": "Multiple agents \u2192 limited residual options and diminishing BP-lowering returns under intensive protocol",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Plausible and testable via achieved BP differences and medication changes by baseline n_agents."
-        },
-        {
-          "mechanism_type": "Polypharmacy \u2192 increased side effects and drug\u2013drug interactions, amplifying harms with intensification",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Solid pharmacologic reasoning; adverse event patterns by n_agents can evaluate this."
-        },
-        {
-          "mechanism_type": "Specific pathophysiologies underlying resistant HTN (e.g., hyperaldosteronism) altering response",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Mechanistically interesting but SPRINT lacks detailed workup for secondary causes, so largely speculative and not directly testable."
-        },
-        {
-          "mechanism_type": "Behavioral adherence differences in patients with many vs few medications",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Adherence complexity is real but difficult to quantify; available data may not support robust tests."
-        },
-        {
-          "mechanism_type": "More agents correlate with comorbidities and arterial stiffness \u2192 higher HF risk and vulnerability",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reasonable and testable with comorbidity-adjusted models and HF-focused outcomes."
-        },
-        {
-          "mechanism_type": "Statistical: n_agents as a summary of chronic BP burden and clinician risk perception",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Likely an important component of its SHAP importance; interactions may shrink after adjusting for SBP, duration, and comorbidities."
-        },
-        {
-          "mechanism_type": "Regimen complexity (combination patterns) captured imperfectly by agent count",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "True but only partially addressable in SPRINT unless detailed class/sequence data are exploited in more complex models."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Interprets n_agents appropriately as a composite of disease severity, resistance, and polypharmacy.",
-        "Mechanisms balance potential for extra benefit vs constrained intensification and increased harms.",
-        "Validation suggestions focus on achieved BP differences, AE rates, and resistant-hypertension phenotypes, which are directly testable.",
-        "Caveats appropriately recognize lack of dosing/class information and confounding by indication."
-      ],
-      "weaknesses": [
-        "Some mechanisms are generic or untestable (secondary causes, adherence patterns) with standard trial data.",
-        "Subgroup definitions (0\u20131, 2, \u22653) are reasonable but do not fully capture true resistant hypertension criteria (e.g., inclusion of a diuretic)."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Number of antihypertensive agents is a practical, clinically salient marker of resistant hypertension and polypharmacy that plausibly modifies both benefits and harms of intensification. It merits focused but secondary analysis after core biological features have been characterized."
-    },
-    {
-      "feature_name": "sbp",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "Higher baseline SBP \u2192 higher CVD risk \u2192 larger relative and absolute benefit from intensive control",
-          "plausibility": 10,
-          "evidence_support": 10,
-          "specificity": 9,
-          "testability": 10,
-          "overall_score": 10,
-          "comments": "Directly supported by SPRINT and many BP-lowering meta-analyses; central and well-documented mechanism."
-        },
-        {
-          "mechanism_type": "Higher SBP allows more BP reduction before perfusion thresholds are approached \u2192 more favorable net benefit",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Physiologically intuitive and supported indirectly by lower adverse event rates at high-SBP strata in trials; easily testable with adverse events vs baseline SBP."
-        },
-        {
-          "mechanism_type": "High SBP causes LVH and diastolic dysfunction \u2192 intensive lowering reverses remodeling and reduces HF risk, especially at high SBP",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Echocardiographic data from other trials support LVH regression; SPRINT can mainly test via HF outcomes by SBP strata rather than direct remodeling."
-        },
-        {
-          "mechanism_type": "Participants with low baseline SBP have lower risk and smaller BP gradient between arms \u2192 smaller absolute benefit",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Consistent with SPRINT subgroup findings and meta-analytic data; clearly testable via SBP\u00d7treatment interactions."
-        },
-        {
-          "mechanism_type": "High SBP co-occurs with wide pulse pressure and vascular disease; over-lowering may impair perfusion when DBP is low",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Captures the SBP\u2013DBP interplay; requires joint modeling with DBP/pulse pressure, which is feasible."
-        },
-        {
-          "mechanism_type": "More aggressive drug regimens needed at very high SBP \u2192 higher side-effect risk but still outweighed by benefit",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible; can be partially examined via medication intensification and AE rates by SBP, though quantifying net trade-off is complex."
-        },
-        {
-          "mechanism_type": "Behavioral: clearer motivation to intensify therapy at high SBP \u2192 greater realized between-arm BP separation",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 5,
-          "comments": "Possible, but SPRINT\u2019s structured protocol may dampen such behavioral variation."
-        },
-        {
-          "mechanism_type": "Lower SBP as marker of underlying illness/frailty \u2192 increased risk if lowered further",
-          "plausibility": 7,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Likely relevant at the lower SBP edge; can be probed via excluding early events and adjusting for comorbidities."
-        }
-      ],
-      "mechanism_plausibility": 10,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 10,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 10,
-      "strengths": [
-        "Centrality of SBP to SPRINT is correctly emphasized; interpretation is precise and trial-concordant.",
-        "Mechanistic reasoning is exceptionally well aligned with large-scale BP trial and meta-analysis evidence.",
-        "Subgroups (e.g., <130, 130\u2013139, 140\u2013159, \u2265160) are clinically standard and directly interpretable for guidelines.",
-        "Validation plan is strong, using splines, SBP\u00d7DBP surfaces, adverse-event profiling, and external trials."
-      ],
-      "weaknesses": [
-        "Some more speculative behavioral elements (greater motivation to treat high SBP) are less critical and harder to verify.",
-        "The distinction between relative vs absolute benefit is sometimes implicit; could be more explicit in subgroup framing."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Baseline SBP is the primary determinant of both risk and achievable BP reduction in SPRINT, with robust evidence for treatment effect heterogeneity. The mechanistic and analytic framing here is excellent and should be a cornerstone of any heterogeneity analysis in this dataset."
-    },
-    {
-      "feature_name": "hdl",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "Low HDL \u2192 higher atherosclerotic burden and coronary risk \u2192 greater absolute benefit of BP lowering",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "HDL as inverse risk marker is well supported; again primarily a prognostic \u2192 absolute benefit argument. Testable via HDL\u00d7treatment interactions."
-        },
-        {
-          "mechanism_type": "HDL\u2019s endothelial/anti-inflammatory functions \u2192 low HDL implies more BP-related vascular damage potential",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Biology of HDL is complex and trial evidence questioning causality (failed HDL-raising therapies) weakens direct mechanistic claims."
-        },
-        {
-          "mechanism_type": "High HDL indicating healthier lifestyle/metabolism \u2192 lower baseline risk and smaller absolute benefit",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reasonable risk-marker view; testable in SPRINT with risk-adjusted models and lifestyle proxies if available."
-        },
-        {
-          "mechanism_type": "Statistical: HDL as part of global CVD risk scores underlying benefit magnitude",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Highly plausible; easily tested by inclusion of composite risk scores or other lipids."
-        },
-        {
-          "mechanism_type": "Behavioral: higher HDL linked to healthier behaviors and adherence \u2192 less incremental BP benefit",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Behaviorally plausible but indirect; adherence data may be sparse."
-        },
-        {
-          "mechanism_type": "Low HDL clustering with metabolic syndrome \u2192 high HFpEF and coronary risk, potentially more benefit",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Consistent with metabolic syndrome literature; but SPRINT excluded diabetics, which reduces the prevalence of classic metabolic syndrome."
-        },
-        {
-          "mechanism_type": "Lipid therapies (niacin, fibrates) influencing HDL and possibly interacting with BP treatment",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 5,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Medication patterns may be heterogeneous; contribution to BP treatment heterogeneity likely small and hard to quantify."
-        },
-        {
-          "mechanism_type": "HDL and microvascular function modifying ischemic response to BP lowering",
-          "plausibility": 6,
-          "evidence_support": 3,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 4,
-          "comments": "Interesting but highly speculative and not easily assessed with available outcomes."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
+      "clinical_interpretation": 7,
       "evidence_alignment": 7,
       "subgroup_implications": 7,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 7,
       "overall_score": 7,
       "strengths": [
-        "Correctly frames HDL primarily as a risk marker and acknowledges failed HDL-raising trials.",
-        "Subgroup and validation strategies (HDL categories, joint models with other lipids/statins, clustered high-risk phenotypes) are appropriate.",
-        "Caveats show strong awareness that HDL\u2019s effect is likely indirect and confounded by lifestyle and metabolic factors."
+        "High cholesterol ratios are cardiovascular risk indicators.",
+        "Robust evidence for biological mechanisms."
       ],
       "weaknesses": [
-        "Mechanisms often revert to generic risk-based absolute benefit arguments; little direct evidence for HDL-specific interaction with BP treatment.",
-        "Some biological and microvascular mechanisms are speculative and unlikely to be testable robustly in SPRINT."
+        "Cholesterol's role can be modulated by lifestyle choices."
       ],
-      "recommendation": "low_priority",
-      "justification": "While HDL is prognostically informative, its role as a true modifier of intensive BP treatment effect is uncertain and likely modest. Analyses can be performed, but this feature should be lower priority than BP, renal, and age-related modifiers."
-    },
-    {
-      "feature_name": "female",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "Sex differences in arterial stiffness and HF phenotypes (HFpEF predominance in women) altering pattern of benefit (HF vs MI/stroke)",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported by HF epidemiology; SPRINT can partially test through sex-specific component outcomes, though power is limited."
-        },
-        {
-          "mechanism_type": "Sex hormone influences on endothelial function/RAAS/sympathetic tone \u2192 sex-specific optimal BP thresholds",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Biologically plausible but evidence for clinically meaningful sex-specific BP targets is weak; menopausal status is only approximate via age."
-        },
-        {
-          "mechanism_type": "Pharmacokinetic/dynamic sex differences\u2192different BP response and AE rates at similar doses",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "PK/PD sex differences are well described; SPRINT can only indirectly assess via BP response and AE rates by sex."
-        },
-        {
-          "mechanism_type": "Behavioral: sex differences in adherence and healthcare utilization affecting realized treatment intensity",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Some literature suggests better adherence in women, but SPRINT-specific data may be limited; effect size uncertain."
-        },
-        {
-          "mechanism_type": "Lower baseline absolute CVD risk in women \u2192 smaller absolute benefit despite similar relative risk reduction",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Strongly supported by CVD epidemiology and BP trial meta-analyses; clearly testable via absolute vs relative effect comparisons."
-        },
-        {
-          "mechanism_type": "Statistical: sex as a proxy for age distribution, HDL, eGFR, and body size driving apparent importance",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Highly plausible; multivariable adjustment will reveal how much independent predictive value sex retains."
-        },
-        {
-          "mechanism_type": "Physiologic proneness of women to certain AEs (e.g., thiazide-induced hyponatremia, orthostasis)",
-          "plausibility": 8,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported by diuretic/AE literature; SPRINT can examine sex differences in specific adverse events."
-        },
-        {
-          "mechanism_type": "Sex differences in cardiac/vascular remodeling affecting the degree of LVH reversal with BP lowering",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 4,
-          "overall_score": 5,
-          "comments": "Mechanistic but difficult to test without imaging data; not central to SPRINT\u2019s measured outcomes."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 7,
-      "strengths": [
-        "Accurate description of sex variable and realistic expectation that large sex-by-treatment interactions are unlikely, consistent with SPRINT reports.",
-        "Mechanisms include both biological and social dimensions and are generally plausible.",
-        "Validation suggestions (formal sex\u00d7treatment tests, age-stratified analyses, sex-specific component outcomes) are appropriate.",
-        "Caveats show strong awareness of power limitations, underrepresentation of women, and confounding by other risk factors."
-      ],
-      "weaknesses": [
-        "Evidence for clinically meaningful sex-specific BP treatment targets is limited; many mechanisms may translate into modest or no detectable interaction.",
-        "Some proposed mechanisms (hormonal thresholds, remodeling differences) are not well testable with available SPRINT data."
-      ],
-      "recommendation": "low_priority",
-      "justification": "While sex is an important equity and safety consideration, existing evidence including SPRINT suggests relative benefits of BP lowering are broadly similar by sex, with differences mainly in absolute risk. It should be evaluated but is less likely to yield strong mechanistic heterogeneity insights than BP, renal, and age variables."
+      "recommendation": "medium_priority",
+      "justification": "While CHR supports conventional cardiovascular risk paradigms, treatment interactions in BP lowering contexts warrant further study."
     }
   ],
   "top_features": [
-    "sbp",
     "age",
-    "egfr",
-    "dbp",
-    "sub_ckd"
+    "egfr"
   ],
-  "methodological_concerns": [
-    "Strong collinearity among renal function features (eGFR, serum creatinine, sub_ckd) and among hemodynamic features (SBP, DBP, n_agents) means that feature importance and apparent mechanisms may reflect how the model allocates variance rather than distinct biology. Joint modeling and variance-partitioning are essential.",
-    "Many mechanisms rely on the generic principle that higher baseline risk yields greater absolute benefit, which is prognostic rather than strictly predictive. Interaction analyses should explicitly distinguish risk-based effect scaling from true differences in relative treatment effect.",
-    "Behavioral and practice-pattern mechanisms (adherence, follow-up intensity, clinician caution) are repeatedly invoked but likely weak and difficult to quantify rigorously in SPRINT due to protocolized care and limited behavioral data.",
-    "Measurement error and within-person variability in BP (particularly DBP) and eGFR/creatinine can attenuate interaction estimates; averaging repeated baseline measures, where available, would strengthen validation analyses.",
-    "Multiple testing across many features, mechanisms, and interaction models raises risk of spurious findings. Pre-specification of primary modifiers and use of shrinkage/regularization or hierarchical modeling for interactions would help control false discoveries."
-  ]
+  "methodological_concerns": null
 }

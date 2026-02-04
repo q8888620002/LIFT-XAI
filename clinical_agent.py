@@ -411,7 +411,7 @@ class FeatureHypothesisScore(BaseModel):
         ...,
         ge=1,
         le=10,
-        description="Evidence alignment (1-10): how well SHAP values support the interpretation",
+        description="Alignment with existing literature (1-10): how well grounded in published clinical evidence",
     )
     subgroup_implications: int = Field(
         ...,
@@ -499,7 +499,7 @@ class FeatureHypothesisScoreWithMechanisms(BaseModel):
         ...,
         ge=1,
         le=10,
-        description="Evidence alignment (1-10): how well SHAP values support the interpretation",
+        description="Alignment with existing literature (1-10): how well grounded in published clinical evidence",
     )
     subgroup_implications: int = Field(
         ...,
@@ -830,6 +830,12 @@ def score_feature_hypotheses(
         "Evaluate each hypothesis on multiple dimensions using a 1-10 scale.\n"
         "Be objective, fair, and constructive.\n"
         "\n"
+        "IMPORTANT: Each hypothesis includes an 'importance_rank' field (1=most important feature).\n"
+        "When evaluating Evidence Alignment, consider whether the RELATIVE RANKING aligns with\n"
+        "clinical knowledge. Features ranked higher should be more established effect modifiers\n"
+        "according to literature. A mismatch between model ranking and clinical knowledge should\n"
+        "lower the Evidence Alignment score.\n"
+        "\n"
         "SCORING CRITERIA:\n"
         "\n"
         "1. Mechanism Plausibility (1-10):\n"
@@ -841,25 +847,23 @@ def score_feature_hypotheses(
         "   Score 5-7: Reasonable but speculative, some supporting literature, moderately specific\n"
         "   Score 1-3: Implausible, contradicts known biology, purely generic\n"
         "\n"
-        "2. Clinical Interpretation (1-10):\n"
-        "   - Accuracy of what the feature represents clinically\n"
-        "   - Clarity and precision of clinical description\n"
-        "   - Appropriate understanding of how feature is measured/coded\n"
-        "   - Recognition of clinical relevance and decision-making context\n"
-        "   Score 9-10: Accurate, precise, clinically sophisticated\n"
-        "   Score 5-7: Generally correct but lacks nuance or has minor inaccuracies\n"
-        "   Score 1-3: Misinterprets feature meaning, clinically naive\n"
-        "\n"
-        "3. Evidence Alignment (1-10):\n"
-        "   - Grounding in published clinical trials and systematic reviews\n"
-        "   - Citations or references to established treatment effect heterogeneity\n"
+        "2. Evidence Alignment (1-10):\n"
+        "   - Feature importance: Whether identified features are known effect modifiers from published trials\n"
+        "   - Ranking accuracy: Does the feature's importance_rank align with clinical literature?\n"
+        "     * Higher-ranked features (rank 1, 2, 3) should be well-established modifiers\n"
+        "     * Lower-ranked features may be plausible but less critical\n"
+        "     * Penalize if a weakly-supported feature ranks above a well-established one\n"
+        "     * Penalize if proposed features were not measured/available in the original trial\n"
+        "   - Correctness of feature selection/ranking based on existing clinical literature\n"
+        "   - Consistency with meta-analyses and systematic reviews on treatment heterogeneity\n"
+        "   - Mechanistic grounding: Citations and references to established treatment effect heterogeneity\n"
         "   - Connection to known biological markers and risk stratification literature\n"
         "   - Appropriate recognition when evidence is sparse or speculative\n"
-        "   Score 9-10: Strong grounding in literature, well-documented heterogeneity\n"
-        "   Score 5-7: Some literature support, but gaps or weak evidence base\n"
-        "   Score 1-3: Unsupported speculation, contradicts literature, no cited basis\n"
+        "   Score 9-10: Feature is a well-established modifier AND ranking position matches clinical importance\n"
+        "   Score 5-7: Plausible modifier with some literature support, OR ranking doesn't match expected clinical priority\n"
+        "   Score 1-3: Unlikely modifier, contradicts literature, OR inappropriate ranking (weak feature ranked too high)\n"
         "\n"
-        "4. Subgroup Implications (1-10):\n"
+        "3. Subgroup Implications (1-10):\n"
         "   - Clarity and actionability of proposed subgroups\n"
         "   - Feasibility of defining subgroups in practice (available data, clear cutpoints)\n"
         "   - Clinical utility - would these subgroups inform treatment decisions?\n"
@@ -868,16 +872,7 @@ def score_feature_hypotheses(
         "   Score 5-7: Reasonable but vague or difficult to operationalize\n"
         "   Score 1-3: Unclear, arbitrary, or clinically meaningless\n"
         "\n"
-        "5. Validation Plan Quality (1-10):\n"
-        "   - Concreteness and specificity of proposed validation analyses\n"
-        "   - Methodological appropriateness (correct statistical approaches)\n"
-        "   - Awareness of confounding and bias in proposed validation\n"
-        "   - Feasibility given typical data availability\n"
-        "   Score 9-10: Specific, rigorous, methodologically sound validation plan\n"
-        "   Score 5-7: General suggestions, some methodological gaps\n"
-        "   Score 1-3: Vague, methodologically flawed, or unfeasible\n"
-        "\n"
-        "6. Caveat Awareness (1-10):\n"
+        "4. Caveat Awareness (1-10):\n"
         "   - Thoroughness in acknowledging limitations and alternative explanations\n"
         "   - Recognition of potential confounding, bias, measurement error\n"
         "   - Appropriate epistemic humility (avoiding overclaiming)\n"

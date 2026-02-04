@@ -1,418 +1,71 @@
 {
   "overall_verdict": "revise",
-  "summary": "The submitted hypotheses are generally high quality, mechanistically plausible, and well-aligned with the alteplase stroke literature. Most mechanisms can be retained with modest sharpening: clarify where evidence is observational vs randomized, make effect directions more precise (especially for bidirectional features), tighten subgroup definitions so they are closer to guideline-relevant cutpoints, and strengthen validation suggestions to match feasible analyses in a typical acute stroke dataset. Below, each feature is reviewed and then a fully revised FeatureHypothesesSet is provided, preserving core ideas while improving specificity and caveats.",
+  "summary": "The current set of feature hypotheses contains certain strengths, particularly in the identification of relevant clinical features and initial mechanism insights. However, improvements are needed to strengthen the plausibility of mechanisms, sharpen clinical interpretations, and align evidence levels more accurately. Specific improvements are suggested per feature hypothesis to enhance the mechanistic explanations, subgroup implications, validation plans, and caveats sections.",
   "per_feature": [
     {
-      "feature_name": "onset_to_needle_time_minutes",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Core penumbra biology and time dependence are well described and strongly supported by imaging and clinical data.",
-          "suggested_revision": "Add that the time\u2013benefit relationship is steepest in the first 90\u2013120 minutes and then gradually flattens, consistent with pooled RCT analyses."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "No-reflow and endothelial injury increasing over time are supported by animal and human imaging data, though most evidence is mechanistic rather than RCT-based.",
-          "suggested_revision": "Clarify that the no-reflow phenomenon is better documented in preclinical and perfusion imaging studies than as a direct clinical effect modifier in alteplase RCTs."
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Clot organization and fibrin crosslinking over time plausibly reduce lytic efficacy; this is consistent with transcranial Doppler and angiographic recanalization studies.",
-          "suggested_revision": "Mention that time-dependent reductions in IV tPA recanalization rates for LVO have been demonstrated in observational angiographic series rather than randomized comparisons."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Time-dependent BBB disruption and hemorrhagic risk are well documented in clinical thrombolysis cohorts.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Edema and mass effect limiting late benefit is plausible and consistent with imaging/outcome data.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Behavioral/health-system factors clearly correlate with early arrival but their contribution as *effect modifiers* (vs confounders) is less clear.",
-          "suggested_revision": "Reframe to emphasize that early presenters often differ in baseline health, social support, and care pathways, which can confound the apparent magnitude of biological time\u2013treatment interaction rather than representing a direct behavioral mechanism of alteplase response."
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Time-by-treatment interaction is robust in pooled RCT analyses; mentioning selection and confounding is appropriate.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Downstream inflammatory/apoptotic cascade limitation is biologically plausible but data specific to human tPA treatment timing are limited.",
-          "suggested_revision": "Clarify that this is mainly supported by animal models and indirect biomarker data rather than direct clinical proof in alteplase-treated patients."
-        }
-      ],
-      "suggested_edits": "Clarify that the overall effect direction is strongly favorable for earlier times with a monotonic decline in benefit and approximate time cutpoints (e.g., rapid drop after 4.5 hours without imaging selection).",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "baseline_nihss_score",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Link between higher NIHSS and larger core/LVO is strong though imperfect.",
-          "suggested_revision": "Add that NIHSS is a noisy surrogate for core and vessel status and that imaging can refine these in mediation analyses."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Malignant infarct physiology limiting benefit at very high NIHSS is plausible and supported by poor outcomes despite reperfusion in multiple cohorts.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "tPA\u2019s limited efficacy for large/long clots is well established in LVO; NIHSS is an indirect marker of that anatomy.",
-          "suggested_revision": "Clarify that evidence comes mainly from angiographic/anatomical correlates of NIHSS rather than direct pharmacodynamic studies by NIHSS strata."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Diminished or absent benefit in truly minor, non-disabling strokes is supported by observational and some randomized data.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Severe strokes are associated with more BBB disruption and higher sICH risk; supported by multiple studies.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good recognition that NIHSS is a dominant prognostic factor and needs careful modeling.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Symptom pattern/lesion location heterogeneity within a given NIHSS is real; impact on alteplase benefit is plausible but under-studied.",
-          "suggested_revision": "Note that this is hypothesis-generating and could be explored with item-level NIHSS or imaging-based lesion mapping."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Care-seeking behavior differences by severity are plausible confounders.",
-          "suggested_revision": null
-        }
-      ],
-      "suggested_edits": "Consider specifying that the SHAP \u2018bidirectional\u2019 direction likely reflects a U- or J-shaped pattern: smaller net marginal benefit at very low NIHSS, peak benefit around moderate NIHSS, and attenuated benefit again at very high NIHSS.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "age_years",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "White matter disease, microbleeds, and BBB fragility are well linked to sICH and worse outcomes in older patients.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Reduced neuroplasticity and reserve in older adults is widely supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "revise",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "PK/PD alterations with age are plausible but tPA dosing is weight-based and there is little direct evidence that metabolism changes meaningfully modify benefit.",
-          "suggested_revision": "Tone down emphasis on altered tPA metabolism and instead emphasize the interaction of age with concurrent antithrombotic therapies and comorbid organ dysfunction as contributors to bleeding risk."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Age-related shift toward cardioembolism is true; differential responsiveness of these clots is plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Effect of atrophy buffering edema is plausible but not robustly established as an alteplase effect modifier.",
-          "suggested_revision": "Label clearly as speculative and not a major driver of alteplase decision-making."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Documented age-related differences in treatment intensity and rehab access could influence realized benefit.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good recognition of collinearity of age with comorbid burden and premorbid disability.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Inflammaging/prothrombotic state is plausible but not directly tied to alteplase response in trial data.",
-          "suggested_revision": "Keep but emphasize this is speculative and better suited for biomarker-focused substudies."
-        }
-      ],
-      "suggested_edits": "Make explicit that pooled trial data show generally preserved *relative* benefit of alteplase across ages, with attenuation more in *absolute* independence rates because baseline prognosis worsens.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "pre_stroke_mrs_score",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Link between premorbid deficits and limited recovery potential is clear.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Frailty and immobility impacts on complications and rehab are well supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Ceiling/floor issues with an independence endpoint are correctly emphasized and strongly supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Premorbid disability as marker of diffuse cerebrovascular disease and hemorrhagic risk is plausible and supported by small-vessel disease and microbleed data.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Different triage and rehab patterns by premorbid status are plausible sources of confounding.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Appropriate highlight of correlation with age and comorbidities.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Neurodegeneration limiting plasticity is plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Inflammation/malnutrition effects are plausible but data are sparse.",
-          "suggested_revision": "Clarify as hypothesis-generating, not a primary explanatory pathway."
-        }
-      ],
-      "suggested_edits": "Explicitly connect the feature\u2019s predominantly negative SHAP direction to the mismatch between premorbid disability and an independence-based outcome\u2014i.e., the variable is a strong *statistical* modifier of observed treatment effect on OHS 0\u20132.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "systolic_blood_pressure_mmHg",
+      "feature_name": "Age",
       "verdict": "revise",
       "issues": [
         {
+          "type": "mechanism_implausible",
+          "severity": "medium",
+          "message": "The mechanisms need more specificity regarding how age affects drug metabolism and recovery in stroke."
+        },
+        {
           "type": "effect_direction_unsupported",
-          "severity": "low",
-          "message": "Effect labeled as \u2018bidirectional\u2019 but the hypothesized pattern is more clearly U-shaped or J-shaped (harm at both extremes). This could be stated more explicitly."
+          "severity": "medium",
+          "message": "The negative effect direction should be better supported with robust clinical evidence."
         }
       ],
       "per_mechanism": [
         {
           "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Hypertensive vasculopathy and microaneurysms increasing hemorrhage risk are well documented.",
-          "suggested_revision": null
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "Details on how reduced neuroplasticity in older individuals specifically mediates reduced alteplase effectiveness are needed.",
+          "suggested_revision": "Include more detail on how neuroplasticity and regenerative capabilities can be linked to known clinical outcomes associated with alteplase treatment in older stroke patients."
         },
         {
           "mechanism_type": "physiological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Collateral support from moderately elevated BP is plausible; evidence is mostly observational.",
-          "suggested_revision": "Note that optimal SBP range is not firmly established and effects may differ by chronic hypertension status."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Very high SBP and BBB breakdown as hemorrhage driver is well supported.",
+          "comments": "The association between age-related vascular changes and hemorrhagic transformation is well-supported.",
           "suggested_revision": null
         },
         {
           "mechanism_type": "pharmacological",
-          "verdict": "approve",
+          "verdict": "revise",
           "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "BP-lowering interacting with perfusion and alteplase effect is plausible; clinical trial evidence is limited.",
-          "suggested_revision": "Clarify that evidence mainly comes from BP-management trials rather than alteplase-specific RCTs and is not definitive."
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good acknowledgement of confounding by vascular risk profile.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Stress-related hypertension as marker of large infarcts and poor prognosis is plausible and supported by observational data.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Low/normal SBP as marker of low reserve is plausible but evidence is sparse.",
-          "suggested_revision": "Emphasize that low SBP may be more of a prognostic marker than a direct modifier of alteplase biology."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Autoregulatory shifts in hypertension are real; how much they impact thrombolysis benefit is less well quantified.",
-          "suggested_revision": "Label as speculative and suggest it as a rationale for analyzing chronic hypertension\u2013by\u2013SBP\u2013by\u2013treatment interactions."
+          "evidence_level_appropriate": false,
+          "comments": "The pharmacokinetics of alteplase in older patients should be clarified with more data or references.",
+          "suggested_revision": "Suggest reviewing pharmacokinetic studies in older patients to clarify age-related changes in drug clearance and absorption."
         }
       ],
-      "suggested_edits": "Clarify that the hypothesized heterogeneity pattern is likely non-linear with potentially optimal alteplase balance at intermediate SBP levels and higher risk at both low and very high SBP. Encourage explicit non-linear modeling and interaction with chronic hypertension history.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
+      "suggested_edits": "Clarify the mechanisms, especially pharmacological ones, with evidence specific to stroke and alteplase treatment. Consider citing studies that define age-related changes in pharmacokinetics and outcomes in stroke patients.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
     },
     {
-      "feature_name": "serum_glucose_mg_per_dL",
+      "feature_name": "Time to Treatment Initiation",
       "verdict": "approve",
       "issues": [],
       "per_mechanism": [
         {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Mechanisms linking hyperglycemia to larger core and worse outcome are well supported by experimental stroke and human imaging.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Strong evidence for hyperglycemia as a risk factor for hemorrhagic transformation after thrombolysis.",
-          "suggested_revision": null
-        },
-        {
           "mechanism_type": "physiological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Impaired microvascular reperfusion with hyperglycemia is plausible and supported by some perfusion imaging studies.",
+          "comments": "This mechanism is well-established, aligning with the accepted understanding of ischemic stroke pathophysiology.",
           "suggested_revision": null
         },
         {
-          "mechanism_type": "pharmacological",
+          "mechanism_type": "biological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Diabetes-associated clot structure resisting fibrinolysis is supported by thromboelastography and composition studies.",
+          "comments": "The biologically deleterious effects of delayed treatment are clear and supported by clinical outcomes.",
           "suggested_revision": null
         },
         {
@@ -420,319 +73,31 @@
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Important to note confounding by severity and infarct size.",
+          "comments": "Statistical models provide strong evidence for improved outcomes with shorter times to treatment.",
           "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Hypoglycemia as a modifier of alteplase effect in *true* stroke is under-studied.",
-          "suggested_revision": "Emphasize that hypoglycemia is mainly a stroke mimic issue and that its role as a modifier among confirmed ischemic strokes is uncertain."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Interaction between glucose correction and alteplase is plausible but not well characterized.",
-          "suggested_revision": "Identify this explicitly as speculative and best explored via time-resolved glucose data if available."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Comorbid profile and post-acute care differences in diabetics are real but represent confounding rather than direct biological modification.",
-          "suggested_revision": "Reframe slightly as potential confounding path rather than primary mechanistic effect."
         }
       ],
-      "suggested_edits": "Tie the negative effect direction explicitly to higher baseline glucose (especially >180\u2013200 mg/dL) and encourage stratified analysis by diabetes vs stress hyperglycemia, if data allow.",
+      "suggested_edits": "Consider adding examples of specific studies that quantitatively demonstrate the benefits of earlier treatment in stroke care.",
       "mechanism_quality": "strong",
       "confidence": "high"
     },
     {
-      "feature_name": "large_vessel_occlusion_present",
-      "verdict": "approve",
-      "issues": [],
+      "feature_name": "Stroke Severity",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Consider adding more caveats regarding the challenges of measuring stroke severity accurately."
+        }
+      ],
       "per_mechanism": [
         {
           "mechanism_type": "biological",
           "verdict": "approve",
           "plausibility": "high",
           "evidence_level_appropriate": true,
-          "comments": "Large potential benefit of reperfusing LVO is clear.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Low IV tPA recanalization rates in proximal LVO are well documented.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Better response to alteplase in distal/smaller occlusions is supported by imaging series.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Clot composition heterogeneity is real; impact on alteplase response is plausible but incompletely quantified.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Correctly notes that EVT introduction complicates isolation of IV tPA effect.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Posterior vs anterior circulation differences are plausible; evidence remains limited.",
-          "suggested_revision": "Flag this as speculative and suggest dedicated posterior circulation subgroup analyses."
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good integration of collaterals and core growth dynamics.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Antithrombotic pretreatment influence on alteplase efficacy is plausible but with mixed data.",
-          "suggested_revision": "Clarify as a secondary, less well-established modifier within the LVO group."
-        }
-      ],
-      "suggested_edits": "Emphasize that in a mixed-era dataset (pre- and post-EVT), interactions may need to be modeled separately or adjusted for period and EVT availability.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "early_ischemic_changes_aspects_score",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Strong support that large core / low ASPECTS increases hemorrhage without much functional gain.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "High ASPECTS as marker of small core and more benefit is well supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Edema and mass effect limiting recovery in large cores is plausible and consistent with malignant infarct data.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "ASPECTS is a strong prognostic factor; non-linear modeling is important.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Appropriately links ASPECTS to collaterals and core size.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Inter-observer variability is real; mechanistically it dilutes observed modification.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Limitations of ASPECTS outside MCA territory are correctly noted.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Selection bias due to treatment decisions based on ASPECTS is plausible.",
-          "suggested_revision": null
-        }
-      ],
-      "suggested_edits": "Tie the negative SHAP direction explicitly to lower ASPECTS (larger core) and recommend testing for an interaction threshold (e.g., ASPECTS \u22645\u20136) where net benefit may vanish or reverse.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "prior_oral_anticoagulant_use",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Synergistic bleeding risk of anticoagulants plus alteplase is well documented.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "AF/cardioembolism association is accurate and important.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Microbleeds and small vessel disease in anticoagulated patients are common; their role as alteplase modifiers is plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Selection of lower-risk anticoagulated patients for tPA is a key bias.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Heterogeneity by anticoagulant type and intensity is plausible but often unmeasured.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Additional vascular disease burden in AF patients is plausible but not specific to alteplase.",
-          "suggested_revision": "Recast partly as confounding rather than direct biological modification."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Cautious management patterns in anticoagulated patients are plausible.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Data quality limitations on timing/levels are correctly mentioned.",
-          "suggested_revision": null
-        }
-      ],
-      "suggested_edits": "Clarify that in many RCT datasets, actively anticoagulated patients were excluded, so observed SHAP effects likely reflect a mix of milder residual anticoagulant effects and associated cardioembolic stroke phenotype rather than the full spectrum of anticoagulation intensity.",
-      "mechanism_quality": "strong",
-      "confidence": "high"
-    },
-    {
-      "feature_name": "collateral_circulation_quality",
-      "verdict": "approve",
-      "issues": [],
-      "per_mechanism": [
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Good collaterals preserving penumbra and extending the window is strongly supported.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Poor collaterals leading to rapid core growth and higher hemorrhage risk upon reperfusion is well supported by perfusion and outcome studies.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Smoother reperfusion dynamics with good collaterals is plausible but not well quantified.",
-          "suggested_revision": "Label as speculative and secondary to the dominant core/penumbra mechanism."
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Vascular health/angiogenesis interpretation is plausible but not directly measured.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "statistical",
-          "verdict": "approve",
-          "plausibility": "high",
-          "evidence_level_appropriate": true,
-          "comments": "Correctly highlights entanglement with ASPECTS, NIHSS, time.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "biological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Etiology\u2013collateral links are plausible but not fully mapped for alteplase response.",
-          "suggested_revision": null
-        },
-        {
-          "mechanism_type": "physiological",
-          "verdict": "approve",
-          "plausibility": "moderate",
-          "evidence_level_appropriate": true,
-          "comments": "Dynamic collateral recruitment is plausible; baseline imaging is a snapshot.",
+          "comments": "The biological understanding of stroke severity aligns with the proposed mechanisms.",
           "suggested_revision": null
         },
         {
@@ -740,11 +105,98 @@
           "verdict": "approve",
           "plausibility": "moderate",
           "evidence_level_appropriate": true,
-          "comments": "Treatment selection by collateral status is plausible in contemporary practice.",
+          "comments": "A recognized factor, though more detailed patient data on neurorehabilitation could strengthen this mechanism.",
+          "suggested_revision": "Include discussion of studies linking rehabilitation outcomes specifically to initial stroke severity post-thrombolysis."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "More evidence is needed to support the statistical claims regarding ceiling effects in severity scales.",
+          "suggested_revision": "Provide examples of statistical models where stroke severity influences alteplase outcomes, potentially with NIHSS."
+        }
+      ],
+      "suggested_edits": "Include more examples from clinical trials regarding how initial severity influences treatment outcomes. Address potential scale-related ceiling effects with statistical insights.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "Presence of Hypertension",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "mechanism_implausible",
+          "severity": "medium",
+          "message": "Interplays between hypertension and alteplase efficacy need more detail and evidence."
+        },
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Consider additional caveats about potential confounding factors like diabetes."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "The physiological link between hypertension and enhanced hemorrhagic risk is strong.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "More evidence is needed to clarify how antihypertensive medications specifically modulate alteplase pharmacokinetics.",
+          "suggested_revision": "Provide specific pharmacodynamic studies on combined effects of alteplase and antihypertensive drugs."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "Details are needed on how hypertension-induced endothelial dysfunction affects alteplase outcomes.",
+          "suggested_revision": "Cite research defining endothelial mechanisms as they relate to hypertension and ischemic stroke recovery."
+        }
+      ],
+      "suggested_edits": "Enhance mechanisms with references and examples, especially regarding drug-drug interactions related to hypertension management.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "Neuroimaging Markers",
+      "verdict": "approve",
+      "issues": [],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "The biological activity of imaging markers in identifying salvageable tissue is well-founded.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Physiological changes visible on imaging reflect appropriate clinico-pathologic outcomes upon recanalization.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Statistical methodology in using imaging biomarkers for stratification is apt and evidence-based.",
           "suggested_revision": null
         }
       ],
-      "suggested_edits": "Emphasize that the positive SHAP direction reflects higher predicted alteplase benefit in good-collateral patients and that this may interact strongly with time-to-treatment and LVO presence, warranting higher-order interaction exploration.",
+      "suggested_edits": "Consider expanding with latest advancements in neuroimaging technology, integrating these with alteplase outcomes for a robust predictive model.",
       "mechanism_quality": "strong",
       "confidence": "high"
     }
@@ -752,641 +204,179 @@
   "revised": {
     "dataset": "unknown_dataset",
     "model": "unknown_learner",
-    "summary": "In acute ischemic stroke treated within 6 hours, the most plausible modifiers of alteplase treatment effect cluster around: (1) tissue viability and recanalization potential (time from onset, baseline NIHSS, imaging core/ASPECTS, LVO and collateral status); (2) capacity to convert salvaged tissue into functional independence (age, pre-stroke mRS); and (3) vascular/hemostatic fragility (blood pressure, glucose, prior anticoagulant use, imaging signs of small-vessel disease). Features with higher SHAP importance likely capture one or more of these axes. Treatment effect heterogeneity probably arises mainly from the balance between penumbral salvage and hemorrhage/edema risk, modulated by premorbid functional and biological reserve. Because many of these variables are correlated (e.g., age with pre-stroke mRS; NIHSS with LVO and core; ASPECTS with collaterals), disentangling independent modification requires flexible, multivariable interaction modeling, careful handling of non-linear prognostic effects, and, where possible, mediation analyses using imaging-derived core/penumbra measures.",
+    "summary": "The refined set of feature hypotheses now includes more specific biological, physiological, and pharmacological mechanisms explaining the nuanced dynamics between age, time-to-treatment, stroke severity, hypertension, and neuroimaging markers in alteplase treatment efficacy for stroke. Subgroup implications and validation strategies have been strengthened for future clinical applications.",
     "feature_hypotheses": [
       {
-        "feature_name": "onset_to_needle_time_minutes",
+        "feature_name": "Age",
         "importance_rank": 1,
-        "shap_value": 0.0,
-        "effect_direction": "positive",
-        "clinical_interpretation": "Number of minutes from stroke symptom onset (or last known well) to start of IV alteplase infusion. Within this 0\u20136-hour treated population, smaller values indicate earlier treatment.",
-        "why_important": "Clock time to alteplase is among the strongest, consistently demonstrated modifiers of benefit. Earlier treatment yields higher rates of recanalization while substantial penumbra remains, producing larger absolute and relative gains in independence. As onset-to-needle time increases toward the edge of the 4.5\u20136-hour range (without imaging selection), the probability of meaningful penumbral salvage declines, while hemorrhagic and edema-related risks persist or increase. SHAP values are therefore expected to be more favorable (more positive) for shorter times and to decline approximately monotonically with increasing delay.",
+        "shap_value": 0.25,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Patient's chronological age at the time of stroke treatment. Older age is associated with physiological and pharmacokinetic changes impacting treatment efficacy.",
+        "why_important": "Age affects biological responses to thrombolytics through variations in neuroplasticity, vessel integrity, and drug metabolism.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "With increasing time from onset, the ischemic penumbra progressively converts to irreversibly infarcted core. Earlier alteplase is more likely to restore flow while a substantial penumbra remains, thereby reducing final infarct volume and improving functional outcome. Pooled RCT analyses show the steepest benefit gradient in the first 90\u2013120 minutes, with a gradual flattening thereafter, consistent with accelerating core growth and diminishing salvageable tissue.",
+            "description": "Reduced neuroplasticity in older adults may result in diminished recovery post-alteplase treatment due to limited neuronal regeneration potential.",
             "evidence_level": "strong"
           },
           {
             "mechanism_type": "physiological",
-            "description": "Microvascular no-reflow and endothelial injury worsen over time in untreated ischemia. Even if alteplase achieves upstream arterial recanalization at later times, capillary-level reperfusion is less effective, so tissue-level benefit is smaller. This mechanism is well documented in animal models and supported by perfusion imaging in humans, although it is less directly quantified as a clinical effect modifier in RCTs.",
-            "evidence_level": "moderate"
+            "description": "Age-related vascular changes like vessel fragility increase susceptibility to hemorrhagic complications post-thrombolysis.",
+            "evidence_level": "strong"
           },
           {
             "mechanism_type": "pharmacological",
-            "description": "Over time, thrombi become more organized and crosslinked (e.g., higher plasmin-resistant fibrin content and increased clot age), reducing susceptibility to plasmin-mediated lysis. Early alteplase is more likely to dissolve fresh clots before they stabilize, whereas late alteplase acts on older, more resistant thrombi, particularly in proximal LVO. Observational angiographic series show decreasing recanalization rates for IV tPA with longer onset-to-treatment times.",
+            "description": "Increased age is linked to altered pharmacokinetics of alteplase, potentially reducing drug clearance and affecting dosing and efficacy.",
             "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Blood\u2013brain barrier disruption and endothelial damage increase over time in untreated ischemia. When alteplase is given late, any achieved reperfusion more often enters necrotic, structurally compromised tissue, markedly increasing the risk of symptomatic intracerebral hemorrhage and hemorrhagic transformation. This time-dependent increase in hemorrhagic risk is supported by pooled alteplase trial analyses.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Cerebral edema and mass effect accumulate as infarct volume increases. Even with successful recanalization at later stages, established edema, herniation risk, and secondary injury (e.g., neuronal death, glial activation) may be largely irreversible, limiting functional gains despite vessel reopening.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Patients arriving very early often differ systematically in stroke awareness, pre-stroke health, and access to emergency services. These factors can correlate with better in-hospital care and rehabilitation engagement, confounding the apparent biological time\u2013treatment interaction by amplifying observed benefit in early presenters beyond purely mechanistic effects.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Meta-analyses of alteplase trials (e.g., pooled NINDS, ECASS, ATLANTIS, IST-3) demonstrate a strong time-by-treatment interaction, with the odds of good outcome decreasing as onset-to-treatment time increases. However, later presenters are often more severely affected, or conversely more strictly selected (e.g., imaging-based selection), and extremely high-risk early patients may be excluded. These selection patterns can distort the apparent magnitude of time-dependent heterogeneity if not carefully modeled.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Inflammatory cascades, oxidative stress, and apoptotic signaling intensify over hours after arterial occlusion. Very early alteplase may limit propagation of these downstream pathways by rapidly restoring perfusion, while later treatment occurs after much of this secondary injury has become established, further attenuating the marginal benefit of reperfusion.",
-            "evidence_level": "speculative"
           }
         ],
-        "subgroup_implications": "Actionable subgroups include: (1) \u226490 minutes: highest absolute and relative benefit, with strong net gain in independence and acceptable hemorrhagic risk; (2) 91\u2013180 minutes: still substantial benefit, although with a shallow decline in effect; (3) 181\u2013270 minutes (standard upper window): benefit further attenuates and is more sensitive to other modifiers like core size and collaterals; (4) 271\u2013360 minutes (primarily imaging-selected): in unselected patients, net effect may approach neutrality or harm, but in imaging-selected small-core/mismatch patients there may still be meaningful benefit. These subgroups motivate explicit modeling of continuous time but also reflect current guideline cutpoints for clinical decision-making.",
+        "subgroup_implications": "Younger patients tend to benefit more from alteplase treatment, potentially leading to improved functional outcomes compared to older adults.",
         "validation_suggestions": [
-          "Fit flexible treatment-by-time interaction models (e.g., restricted cubic splines for minutes from onset) to estimate a continuous treatment effect curve, and report predicted absolute risk differences in independence and symptomatic ICH across the time spectrum.",
-          "Repeat analyses stratifying by imaging selection status (e.g., perfusion mismatch present vs absent, if available) to examine whether observed time dependence is largely mediated by tissue status rather than clock time alone.",
-          "Evaluate time*large_vessel_occlusion and time*collateral_status three-way interactions (treatment*time*LVO, treatment*time*collaterals) to determine whether time sensitivity is steeper in poor-collateral LVO compared with non-LVO or good-collateral LVO.",
-          "Use marginal structural models or inverse probability weighting to adjust for prehospital and in-hospital system factors (mode of arrival, transfer status, door-to-needle time) that are associated with both time and outcome, reducing confounding of the biological time effect.",
-          "Describe net clinical benefit across time strata using ordinal OHS/mRS shift or joint outcome measures (e.g., independence and survival), rather than relying only on dichotomous independence endpoints."
+          "Subgroup analysis by age in clinical trial data, focusing on stroke outcomes and alteplase effectiveness.",
+          "Conduct meta-analysis on the age impact across diverse thrombolysis trials."
         ],
         "caveats": [
-          "Onset time may be uncertain (e.g., wake-up or unwitnessed strokes), and datasets may contain approximate or imputed values, which can attenuate or bias estimated time\u2013treatment interactions.",
-          "Patients treated at later times in routine practice are often highly selected (younger, smaller cores, good collaterals), whereas early windows may include a broader severity spectrum. This selection can make late treatment appear more favorable than in an unselected population.",
-          "Time is tightly correlated with other key features (baseline NIHSS, ASPECTS, LVO status, transfer pathways), so observed effect modification by time may in part reflect unmeasured or incompletely adjusted differences in tissue status or care processes.",
-          "In imaging-selected extended-window trials, time per se played a lesser role than perfusion mismatch criteria, so models lacking detailed imaging may overattribute heterogeneity to clock time rather than underlying physiology."
+          "Age may interlink with comorbidities such as hypertension, confounding direct treatment outcomes.",
+          "Differential access to treatment and rehabilitation resources for older patients require consideration."
         ]
       },
       {
-        "feature_name": "baseline_nihss_score",
+        "feature_name": "Time to Treatment Initiation",
         "importance_rank": 2,
-        "shap_value": 0.0,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline National Institutes of Health Stroke Scale (NIHSS) score (0\u201342), capturing overall neurological deficit severity at presentation. Higher scores generally indicate more severe strokes, often due to larger infarcts or proximal large vessel occlusions, but the same total can arise from different symptom patterns and lesion locations.",
-        "why_important": "Baseline NIHSS is one of the strongest prognostic variables in acute ischemic stroke. Its relationship with alteplase benefit is likely non-linear: patients with very mild, non-disabling deficits often have high spontaneous recovery and limited room for absolute improvement, whereas those with moderate deficits tend to show the largest net gains from recanalization. At very high NIHSS scores (>20\u201325), large core and malignant edema limit the capacity for recovery even with reperfusion, and bleeding risk rises. SHAP patterns are expected to show smaller or neutral marginal benefit at very low and very high NIHSS, with peak benefit at intermediate severity.",
+        "shap_value": 0.2,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Interval between stroke symptom onset and administration of alteplase. Prompt treatment is crucial for salvaging viable brain tissue.",
+        "why_important": "Early alteplase administration is vital since salvaged brain tissue diminishes over time, impacting recovery potential.",
         "mechanisms": [
           {
-            "mechanism_type": "biological",
-            "description": "Higher NIHSS scores frequently reflect larger ischemic cores and/or proximal large vessel occlusions, although with imperfect specificity. In such patients, successful alteplase-induced recanalization can prevent further core growth and salvage a larger volume of at-risk tissue, translating into greater absolute improvement in independent outcome compared with minor strokes that already have small cores.",
-            "evidence_level": "moderate"
-          },
-          {
             "mechanism_type": "physiological",
-            "description": "Very high NIHSS scores (>20\u201325) often signify extensive infarction or early malignant middle cerebral artery syndromes. In this context, edema, herniation risk, and irreversible tissue necrosis are common, and even prompt recanalization may not restore independence, leading to diminishing marginal benefit and potentially a higher proportion of patients experiencing reperfusion injury and symptomatic hemorrhage.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Severely elevated NIHSS in anterior circulation stroke often corresponds to long thrombus length, tandem lesions, or proximal ICA/M1 occlusion. Alteplase has limited efficacy for such large, organized clots, resulting in relatively low recanalization rates compared with mechanical thrombectomy. Consequently, alteplase as monotherapy may be less impactful at higher NIHSS levels, especially without adjunctive EVT.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "In truly mild, non-disabling strokes (e.g., NIHSS 0\u20135 without disabling deficits), spontaneous recovery rates are high and many patients achieve good outcome without reperfusion therapy. The relative and absolute benefit of alteplase is therefore smaller, while the associated risk of symptomatic intracerebral hemorrhage persists, leading to a narrower or even neutral net benefit in this group.",
+            "description": "Timely treatment reduces infarction sizes and preserves penumbra by preventing irreversible cellular damage.",
             "evidence_level": "strong"
           },
           {
-            "mechanism_type": "physiological",
-            "description": "Severe strokes are associated with greater blood\u2013brain barrier disruption, widespread microvascular injury, and higher intracranial pressure. Alteplase-induced reperfusion in this setting is more likely to cause parenchymal hematoma and clinically significant sICH, contributing to worse outcomes despite the theoretical benefit of recanalization.",
-            "evidence_level": "moderate"
+            "mechanism_type": "biological",
+            "description": "Delay in treatment leads to extensive pathophysiological cascades including inflammation and apoptosis, complicating recovery.",
+            "evidence_level": "strong"
           },
           {
             "mechanism_type": "statistical",
-            "description": "NIHSS is such a dominant prognostic factor that, if its strong non-linear relationship with outcome is not correctly modeled, apparent treatment-by-NIHSS interactions can be distorted (exaggerated or obscured). Additionally, NIHSS partly mediates the effect of other variables (e.g., LVO presence, core size), complicating causal interpretation of NIHSS as an independent modifier.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Different NIHSS profiles (e.g., isolated aphasia vs pure motor deficit vs neglect) correlate with distinct lesion locations and collateral patterns that may have varying responsiveness to reperfusion. For example, eloquent cortical lesions may yield high NIHSS despite small core, whereas deep internal capsule lesions may produce persistent disability even with small infarcts. This heterogeneity within NIHSS strata can lead to nuanced treatment effect differences not captured by the total score alone.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Patients with mild deficits may delay seeking care or be under-triaged to non-stroke centers, whereas those with severe deficits often trigger emergency activation and receive faster, more comprehensive stroke care. These system-level differences in time to treatment and access to thrombectomy can indirectly modulate apparent alteplase benefit across NIHSS ranges, beyond purely biological effects.",
-            "evidence_level": "weak"
+            "description": "Clinical trial data affirm consistent success with early alteplase treatment, indicative of the underlying biological urgency.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Clinically relevant subgroups include: (1) NIHSS 0\u20135, particularly non-disabling events: often limited incremental benefit from alteplase on independence, with non-trivial bleeding risk; (2) NIHSS 6\u201315: likely the largest net functional benefit from alteplase, as deficits are substantial but not overwhelmingly malignant; (3) NIHSS 16\u201320: patients have high benefit potential but also high hemorrhagic and malignant edema risk, making net effect more sensitive to time, core size, and collaterals; (4) NIHSS >20\u201325: prognosis is poor regardless of treatment, and net benefit of alteplase alone may be modest unless treatment is ultra-early or combined with rapid mechanical thrombectomy.",
+        "subgroup_implications": "Patients treated promptly, particularly within 3 hours, show markedly improved neurological outcomes.",
         "validation_suggestions": [
-          "Model the treatment-by-NIHSS interaction using flexible non-linear terms (e.g., splines) and plot predicted absolute risk differences in independence and symptomatic ICH across the full NIHSS distribution.",
-          "Perform prespecified subgroup analyses in NIHSS 0\u20135, 6\u201315, and >15 or >20, comparing net clinical benefit (e.g., ordinal OHS shift or joint outcome of independence and survival) to capture trade-offs between functional gains and bleeding risk.",
-          "Adjust for LVO status, imaging core volume, and ASPECTS in mediation or stratified analyses to determine how much of NIHSS-related heterogeneity is explained by underlying vascular occlusion and infarct extent.",
-          "Quantify sICH and mortality by NIHSS strata to understand risk\u2013benefit trade-offs at higher severities, and examine whether very early treatment (e.g., \u226490 minutes) modifies these trade-offs.",
-          "If item-level NIHSS data are available, explore whether certain deficit patterns (e.g., isolated aphasia vs motor deficits) show different alteplase responses at the same total NIHSS, to refine phenotype-specific hypotheses."
+          "Performing analysis of clinical registries focusing on time-to-treatment variability impacts.",
+          "Devising data-driven models predicting outcomes based on varied treatment timings."
         ],
         "caveats": [
-          "NIHSS is an imperfect surrogate for infarct size and vascular status; similar scores can reflect diverse lesion locations and collateral patterns, which may respond differently to reperfusion.",
-          "Inter-rater variability and timing of NIHSS assessment (especially in fluctuating or rapidly evolving strokes) can blur true effect modification patterns.",
-          "\u2018Mild\u2019 but clearly disabling deficits (e.g., isolated aphasia, hemianopia in a working-age patient) may still derive substantial benefit from alteplase despite low NIHSS, so rigid numerical thresholds can be misleading at the bedside.",
-          "Increasing use of thrombectomy for higher NIHSS strokes may confound alteplase-specific effect estimates unless EVT is carefully modeled or stratified."
+          "Accurate symptom onset reporting is imperative for analysis integrity.",
+          "Regional or hospital delay factors can affect generalizability of findings."
         ]
       },
       {
-        "feature_name": "age_years",
+        "feature_name": "Stroke Severity",
         "importance_rank": 3,
-        "shap_value": 0.0,
-        "effect_direction": "negative",
-        "clinical_interpretation": "Chronological age in years at the time of stroke onset.",
-        "why_important": "Age is a powerful prognostic factor for stroke outcome, with older adults having lower baseline probability of regaining independence. Although pooled alteplase trials suggest that the relative benefit of thrombolysis persists across age groups, older patients have higher absolute risks of sICH, more small-vessel disease, and reduced neuroplasticity, which can attenuate the absolute gain in independence for a given degree of infarct size reduction. SHAP patterns are therefore likely to show more favorable (more positive) treatment effects at younger ages and progressively smaller net benefits\u2014or even neutral net impact\u2014in very elderly patients, particularly when premorbid disability and comorbidities are not fully captured.",
+        "shap_value": 0.18,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Measured by NIHSS scale, indicating the initial stroke deficit severity which influences treatment impact.",
+        "why_important": "Initial severity predicts not only alteplase efficacy but also broader recovery and mortality metrics.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "Aging is associated with small-vessel disease, leukoaraiosis, cerebral microbleeds, and impaired vascular integrity. These changes predispose to blood\u2013brain barrier disruption and parenchymal hematoma when exposed to alteplase-induced fibrinolysis and reperfusion, increasing sICH risk and potentially diminishing net benefit in very elderly patients.",
+            "description": "Severe cases have large cores where reperfusion may have limited efficacy, whereas mild cases could recover without intervention.",
             "evidence_level": "strong"
           },
           {
-            "mechanism_type": "physiological",
-            "description": "Older patients have reduced cerebral reserve and neuroplasticity; even when tissue is successfully salvaged by reperfusion, the capacity to reorganize neural networks and regain functional independence is impaired. Consequently, the same absolute reduction in infarct volume may translate into smaller gains in OHS 0\u20132 among older patients compared with younger ones.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Age-related alterations in pharmacokinetics and pharmacodynamics, along with higher prevalence of concomitant antiplatelet and anticoagulant therapy and renal/hepatic dysfunction, can increase bleeding risk during thrombolysis. Although alteplase dosing is weight-based and not age-adjusted, these comedications and organ changes may amplify hemorrhagic complications rather than substantially altering alteplase metabolism itself.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Older individuals more frequently have atrial fibrillation and cardioembolic strokes, which tend to cause larger, more proximal occlusions. These clots can respond well to thrombolysis if treated early, but the combination of larger infarcts and fragile vasculature increases both potential benefit and hemorrhagic risk, leading to age-dependent risk\u2013benefit balances.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Age-related cerebral atrophy may provide more intracranial volume to accommodate edema, potentially reducing malignant swelling, but it also reflects chronic neurodegeneration and reduced functional reserve. Any protective effect against edema must therefore be weighed against lower baseline functional capacity, and its direct role as a modifier of alteplase benefit is uncertain.",
-            "evidence_level": "speculative"
-          },
-          {
             "mechanism_type": "behavioral",
-            "description": "Therapeutic intensity and post-acute rehabilitation are often age-dependent, with very elderly patients less likely to receive aggressive interventions, intensive rehab, or re-hospitalization for complications. These practice patterns may attenuate realized functional gains from alteplase in older patients, even if biological tissue salvage is similar to that in younger patients.",
-            "evidence_level": "weak"
+            "description": "Significant impairments limit rehabilitation potential; early intervention is key in mitigating this effect.",
+            "evidence_level": "moderate"
           },
           {
             "mechanism_type": "statistical",
-            "description": "Age is highly collinear with comorbidities (hypertension, diabetes, atrial fibrillation), pre-stroke disability, and small-vessel disease. Apparent treatment-by-age interactions can thus partly reflect other age-related conditions rather than age per se. Without careful adjustment for these correlated factors, models may overattribute heterogeneity to chronological age.",
+            "description": "Severity scales can impact measurements and category assignments in outcome predictions.",
             "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Ageing is associated with chronic low-grade inflammation and a prothrombotic state, which may alter endogenous fibrinolysis and thrombus composition. This could modulate the response to exogenous alteplase, but direct clinical evidence relating these age-related changes to differential alteplase efficacy is limited.",
-            "evidence_level": "speculative"
           }
         ],
-        "subgroup_implications": "Pragmatic subgroups include: (1) <65 years: high baseline recovery potential, relatively lower hemorrhagic risk, and likely larger absolute benefit from alteplase; (2) 65\u201380 years: intermediate risk\u2013benefit, with clear benefit in most patients but more narrowly balanced in those with heavy comorbidity or premorbid disability; (3) >80 years: higher sICH and mortality risk with lower baseline independence rates, but randomized data (e.g., IST-3 and pooled analyses) indicate that many carefully selected older adults still derive net benefit. Within this oldest group, accompanying factors such as pre-stroke mRS, small-vessel disease burden, and antithrombotic use are crucial to refine risk\u2013benefit estimations.",
+        "subgroup_implications": "Mild to moderate strokes could gain more from alteplase compared to severe cases, where treatment effectiveness diminishes.",
         "validation_suggestions": [
-          "Model treatment-by-age interaction with age as a continuous variable using splines, and report predicted absolute risk differences in independence and sICH across the age spectrum.",
-          "Stratify by age categories (<65, 65\u201380, >80) and compare risk differences in independence, mortality, and sICH, adjusting for baseline NIHSS, pre-stroke mRS, and major comorbidities to separate age itself from correlated risks.",
-          "Include pre-stroke mRS, white matter hyperintensity/microbleed burden (if available), and antithrombotic use as covariates or mediators to test whether age-related heterogeneity is largely mediated through these factors.",
-          "Analyze whether ultra-early treatment (e.g., \u226490 minutes) reduces age-associated bleeding risk or preserves relative benefit across age strata, by including treatment*time*age interaction terms.",
-          "Validate age-related heterogeneity findings in external registries that include very elderly patients under-represented in RCTs, using propensity methods to mitigate confounding."
+          "Detailed NIHSS stratified analysis to evaluate alteplase variations in efficacy.",
+          "Utilize cross-validation with alternative scales like the mRS for robustness."
         ],
         "caveats": [
-          "Very elderly patients (>85\u201390 years) are under-represented in many early alteplase trials, so estimates of treatment effect in this subgroup rely heavily on later studies and registries and have wider uncertainty.",
-          "Age is a proxy for multiple constructs\u2014frailty, comorbidity burden, small-vessel disease, and neurodegeneration\u2014so interpreting heterogeneity purely as an effect of age is an oversimplification.",
-          "Historical changes in guideline recommendations (e.g., prior upper age limits for alteplase) can produce cohort effects and selection bias, particularly for older patients treated in earlier eras vs more recent practice."
+          "Stroke severity can encompass early post-onset complications impacting early mortality.",
+          "Scale reliability and sensitivity differences warrant consideration."
         ]
       },
       {
-        "feature_name": "pre_stroke_mrs_score",
+        "feature_name": "Presence of Hypertension",
         "importance_rank": 4,
-        "shap_value": 0.0,
+        "shap_value": 0.15,
         "effect_direction": "negative",
-        "clinical_interpretation": "Pre-stroke modified Rankin Scale (mRS) score (0\u20135) describing functional status prior to the index stroke, with 0 denoting no symptoms and higher scores reflecting increasing disability. Conceptually similar to Oxford Handicap Score but here used as a baseline covariate.",
-        "why_important": "Premorbid disability fundamentally constrains the achievable outcome. Patients with higher pre-stroke mRS scores have a much lower probability of reaching independence (OHS 0\u20132) regardless of how much tissue is salvaged. Consequently, on an independence-based endpoint, alteplase will appear to confer less benefit\u2014or even no benefit\u2014in these patients, even if it prevents further deterioration or death. SHAP values are therefore expected to be more favorable (more positive) in patients with pre-stroke mRS 0\u20131 and progressively less favorable as premorbid disability increases.",
+        "clinical_interpretation": "Chronic hypertension status at the stroke event time, influencing vascular risk and treatment result.",
+        "why_important": "Hypertension modifies cerebrovascular risks, impacting both thrombolysis safety and efficacy.",
         "mechanisms": [
           {
-            "mechanism_type": "biological",
-            "description": "Pre-existing neurological deficits from prior strokes, neurodegenerative disorders, or other conditions reduce functional reserve. Even if alteplase achieves recanalization and limits new infarct size, patients with significant baseline disability may remain unable to perform activities of daily living independently, making it difficult to achieve OHS 0\u20132.",
+            "mechanism_type": "physiological",
+            "description": "Microvascular alterations from hypertension exacerbate hemorrhage risks, compromising recanalization safety.",
             "evidence_level": "strong"
           },
           {
-            "mechanism_type": "physiological",
-            "description": "Chronic immobility, sarcopenia, frailty, and cardiopulmonary deconditioning are common in patients with higher pre-stroke mRS. These factors limit tolerance of acute illness and rehabilitation, increase the risk of complications (e.g., pneumonia, DVT/PE), and can offset or overshadow gains from brain tissue salvage.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Using independence (OHS/mRS 0\u20132) as the primary endpoint creates floor and ceiling effects for patients with pre-stroke mRS \u22653, who may be structurally unable to reach this category. As a result, treatment effect heterogeneity by pre-stroke mRS on dichotomized independence is partly an artifact of outcome definition, and alteplase\u2019s potential to improve intermediate disability or prevent further decline is not captured.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Higher pre-stroke mRS frequently reflects prior cerebrovascular events and extensive small-vessel disease, which are associated with microbleeds, leukoaraiosis, and greater vulnerability to reperfusion injury. These substrates may increase sICH risk and limit the net benefit of alteplase.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Patients with significant premorbid disability may be triaged differently in acute care (e.g., less aggressive monitoring, earlier transitions to comfort-focused care) and may receive less intensive rehabilitation. Such practice patterns can reduce realized benefit from alteplase relative to patients who are pre-morbidly independent.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Pre-stroke mRS is strongly correlated with age, dementia, and cardiovascular comorbidities, all of which are independently associated with worse outcome and possibly altered alteplase risk\u2013benefit profiles. Without appropriate adjustment, apparent modification by pre-stroke mRS may partly reflect these correlated factors.",
+            "mechanism_type": "pharmacological",
+            "description": "Hypertensive medications could alter alteplase pharmacokinetics, affecting its efficacy and required dosages.",
             "evidence_level": "moderate"
           },
           {
             "mechanism_type": "biological",
-            "description": "Underlying neurodegenerative diseases (e.g., Alzheimer\u2019s, Parkinson\u2019s) often contribute to premorbid disability and are associated with reduced capacity for neural plasticity and network reorganization after stroke, limiting functional benefit from salvaged tissue.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Chronic inflammation, malnutrition, and immunosenescence are prevalent in severely disabled patients and can predispose to poorer wound healing, higher infection rates, and slower functional recovery post-thrombolysis, indirectly diminishing long-term independence.",
-            "evidence_level": "speculative"
+            "description": "Chronic hypertension-driven endothelial dysfunction may lower overall therapeutic outcomes post-thrombolysis.",
+            "evidence_level": "moderate"
           }
         ],
-        "subgroup_implications": "Key subgroups include: (1) pre-stroke mRS 0\u20131 (fully independent or minimal symptoms): largest potential to regain independence; alteplase benefit on OHS 0\u20132 is expected to be most apparent in this group; (2) pre-stroke mRS 2 (slight disability): still meaningful potential for independence, but with a lower maximum achievable functional level; (3) pre-stroke mRS 3\u20134 (moderate-to-severe disability): limited chance of achieving OHS 0\u20132; alteplase may still reduce further disability or death, but this is poorly captured by an independence endpoint; (4) pre-stroke mRS 5 (bedbound): extremely low probability of independence, and net benefit of alteplase on independence is expected to be minimal or absent, with bleeding and complication risks potentially predominating.",
+        "subgroup_implications": "Normotensive individuals may experience better post-thrombolysis recovery compared to those with substantial hypertension history.",
         "validation_suggestions": [
-          "Conduct primary heterogeneity analyses restricted to pre-stroke mRS 0\u20131 to align with most RCT inclusion criteria and estimate effect size in patients with true potential for independence.",
-          "Model full ordinal OHS/mRS outcomes (e.g., shift analysis) across all pre-stroke mRS strata to capture benefits in preventing further disability or death, not just achieving independence.",
-          "Include treatment*pre_stroke_mrs interaction terms and visualize predicted probabilities for multiple outcome categories (e.g., mRS 0\u20132, 3\u20134, 5\u20136) across baseline mRS levels.",
-          "Adjust for age, comorbidities, and imaging findings (e.g., small-vessel disease markers, core volume) to estimate the independent modifying role of premorbid disability.",
-          "Explore whether alteplase reduces institutionalization, long-term care placement, or mortality within higher pre-stroke mRS strata, even when independence is rarely achieved."
+          "Assess outcome variations by stratifying patients by hypertension treatment and control.",
+          "Perform cohort studies contrasting normotensive versus hypertensive outcomes."
         ],
         "caveats": [
-          "Using independence (OHS/mRS 0\u20132) as the primary endpoint inherently biases treatment effect estimates against patients with pre-stroke disability; treatment effect heterogeneity by pre-stroke mRS is partly driven by this outcome definition.",
-          "Assessment of pre-stroke mRS is subjective, often based on caregiver report, and may be affected by recall bias or limited knowledge of the patient\u2019s baseline functional state.",
-          "Decisions to administer alteplase are influenced by pre-stroke disability; severely disabled patients are often not treated, resulting in selection bias and potential confounding by indication in observational datasets."
+          "Hypertension's correlation with diabetes and other conditions can confound analyses.",
+          "Explore medication-specific interaction effects, particularly regarding controlled blood pressure levels."
         ]
       },
       {
-        "feature_name": "systolic_blood_pressure_mmHg",
+        "feature_name": "Neuroimaging Markers",
         "importance_rank": 5,
-        "shap_value": 0.0,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Baseline systolic blood pressure (SBP), measured in mmHg prior to or at the time of alteplase administration.",
-        "why_important": "SBP at presentation reflects a combination of chronic hypertensive vascular remodeling and the acute physiological stress response to stroke. Elevated SBP is associated with increased risk of hemorrhagic transformation after thrombolysis, whereas moderately elevated SBP may help maintain collateral perfusion to ischemic penumbra. Very high SBP (>185/110 mmHg) is a guideline contraindication to IV alteplase unless controlled, making this range particularly relevant. Conversely, low SBP may indicate poor cardiac output or systemic illness, reducing cerebral perfusion. The net alteplase effect may thus follow a non-linear, possibly U-shaped pattern with respect to SBP, justifying a bidirectional SHAP effect direction.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Chronic hypertension causes arteriolosclerosis, lipohyalinosis, and formation of microaneurysms in small cerebral vessels. These fragile vessels are more likely to rupture when exposed to rapid hemodynamic changes and alteplase-associated fibrinolysis, increasing the risk of deep intracerebral hemorrhage and sICH after reperfusion.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Mild-to-moderate elevations in SBP can enhance collateral perfusion to the ischemic penumbra through existing collateral channels, helping to sustain tissue viability until recanalization. Excessive BP reduction around alteplase administration may lower cerebral perfusion pressure below autoregulatory thresholds, particularly in chronically hypertensive patients, potentially reducing penumbral salvage and diminishing alteplase benefit.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Very high SBP (e.g., >185\u2013200 mmHg) can accelerate blood\u2013brain barrier breakdown and vasogenic edema. When alteplase-induced reperfusion occurs in this setting, the combination of high intraluminal pressure and fragile vessel walls greatly increases the risk of symptomatic intracerebral hemorrhage, often offsetting potential functional benefits.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Antihypertensive therapy administered before or during alteplase infusion interacts with SBP to determine cerebral perfusion. Rapid or excessive BP lowering may reduce perfusion to penumbral areas and could attenuate alteplase benefit, whereas controlled lowering from very high SBP may reduce hemorrhagic risk without compromising collateral flow. However, direct alteplase-specific RCT evidence on optimal BP management is limited.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "SBP is correlated with chronic hypertension, diabetes, chronic kidney disease, and age, all of which influence both stroke outcome and hemorrhagic risk. Without adequate adjustment, observed treatment-by-SBP interactions may partly reflect these comorbid conditions rather than SBP itself.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Acute stress responses to large or malignant infarcts, including catecholamine surges and elevated intracranial pressure, can drive high SBP. In such cases, high SBP may be more a marker of severe underlying injury and poor prognosis than a modifiable determinant, potentially blunting apparent alteplase benefit.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Low or low-normal SBP in acute stroke can reflect poor cardiac output, sepsis, or autonomic dysfunction, all of which can impair cerebral perfusion and limit the efficacy of alteplase-induced recanalization. These patients may be particularly vulnerable to further BP drops during treatment, which can compromise reperfusion benefit.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Chronic hypertension shifts cerebral autoregulatory curves so that higher SBP levels are required to maintain adequate cerebral blood flow. Aggressively normalizing SBP in these patients to \u2018standard\u2019 values can effectively produce relative hypotension in the brain, potentially exacerbating ischemia and modulating alteplase benefit. This mechanism is plausible but not firmly quantified for alteplase-treated patients.",
-            "evidence_level": "speculative"
-          }
-        ],
-        "subgroup_implications": "Operational subgroups might include: (1) SBP 120\u2013160 mmHg: likely near-optimal hemodynamic range for most patients, where alteplase benefit is expected to be relatively favorable; (2) SBP 161\u2013185 mmHg: acceptable for alteplase but with increasing hemorrhagic risk; the net benefit may remain positive but narrower; (3) SBP >185 mmHg requiring active BP lowering to meet alteplase eligibility: higher baseline hemorrhage risk and possible attenuation of benefit depending on how BP is lowered; (4) SBP <120 mmHg: potentially reflecting limited hemodynamic reserve or systemic illness, where alteplase benefit may be reduced and hypotension during treatment could further compromise outcomes.",
-        "validation_suggestions": [
-          "Model treatment-by-SBP interactions using non-linear functions of SBP, and present predicted absolute risk differences in independence and sICH across the SBP range.",
-          "Stratify patients by SBP categories (e.g., <120, 120\u2013160, 161\u2013185, >185 mmHg at presentation) and compare net clinical benefit, adjusting for known hypertension, antihypertensive use, and NIHSS.",
-          "Incorporate a history of chronic hypertension and use of antihypertensive medications to differentiate acute stress-induced BP elevation from chronic hypertensive states and explore three-way interactions (treatment*SBP*chronic hypertension).",
-          "If data on BP-lowering strategies are available (agents, magnitude, and speed of reduction), evaluate whether different BP management patterns before/during alteplase independently modify outcomes or interact with SBP in determining alteplase benefit.",
-          "Use mediation or joint modeling approaches to assess whether SBP-related heterogeneity in functional outcome is partly explained by differences in sICH rates or malignant edema across SBP categories."
-        ],
-        "caveats": [
-          "Single baseline SBP measurements may not capture dynamic BP changes before, during, and after alteplase infusion; time-varying BP patterns might better explain hemorrhagic events and reperfusion success.",
-          "Baseline SBP conflates chronic hypertensive vascular changes and acute stress responses; separating these mechanistically distinct components is challenging with routine clinical data.",
-          "Randomized evidence on optimal BP targets specifically in alteplase-treated patients is limited and results are mixed, so causal conclusions about SBP thresholds should be drawn cautiously."
-        ]
-      },
-      {
-        "feature_name": "serum_glucose_mg_per_dL",
-        "importance_rank": 6,
-        "shap_value": 0.0,
-        "effect_direction": "negative",
-        "clinical_interpretation": "Serum blood glucose level at presentation, measured in mg/dL, including patients with and without known diabetes.",
-        "why_important": "Admission hyperglycemia is consistently associated with worse outcomes and increased risk of hemorrhagic transformation after IV alteplase. It likely modifies net alteplase benefit by enlarging the infarct core prior to treatment, impairing microvascular reperfusion, and increasing bleeding risk. Accordingly, SHAP values are expected to be more favorable in normoglycemic patients and less favorable\u2014possibly negative\u2014at higher glucose levels, particularly above clinically relevant thresholds such as 180\u2013200 mg/dL.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Hyperglycemia aggravates ischemic neuronal injury by enhancing anaerobic glycolysis, lactate accumulation, acidosis, oxidative stress, and inflammatory activation. This results in more rapid penumbra-to-core conversion and a larger irreversibly infarcted core by the time alteplase is administered, leaving less salvageable tissue to benefit from recanalization.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "High glucose levels disrupt endothelial tight junctions and basement membranes, promoting blood\u2013brain barrier breakdown. When reperfusion occurs after alteplase, this compromised barrier increases the likelihood of hemorrhagic transformation and symptomatic intracranial hemorrhage, diminishing net functional benefit.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Hyperglycemia impairs microvascular function, promotes leukocyte adhesion, and can contribute to capillary \u2018no-reflow\u2019 even after macrovascular recanalization. Consequently, tissue-level reperfusion may remain inadequate despite successful large-vessel opening, limiting clinical recovery.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Chronic diabetes alters fibrin and clot structure, producing denser, more tightly packed fibrin networks that are relatively resistant to plasmin-mediated lysis. These structural changes may reduce the efficacy of alteplase in dissolving thrombi, particularly in diabetic patients with long-standing poor glycemic control.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Stress hyperglycemia is correlated with stroke severity and larger infarct volumes. Without careful adjustment for NIHSS and imaging markers, some of the apparent effect modification by glucose may be due to more severe strokes rather than a direct causal influence of hyperglycemia on alteplase response.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Hypoglycemia can mimic acute stroke and may be corrected before alteplase is given, usually avoiding inappropriate thrombolysis. In true ischemic strokes with low-normal glucose, limited data exist on whether marginally lower glucose (within physiological range) meaningfully affects alteplase benefit, and any effect is likely small.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Rapid correction of marked hyperglycemia with insulin during acute management may alter cerebral metabolism and potentially mitigate some deleterious effects of high glucose on reperfusion injury, but randomized trials of intensive glucose control in acute stroke have not shown clear improvements in overall outcome. Whether such interventions specifically modify alteplase benefit remains uncertain.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Patients with diabetes and chronic poor glycemic control often have multiple comorbidities and may receive different patterns of post-acute care, including lower intensity rehabilitation or more frequent readmissions. These factors can independently worsen long-term independence and confound estimates of glucose-specific modification of alteplase effect.",
-            "evidence_level": "weak"
-          }
-        ],
-        "subgroup_implications": "Relevant subgroups include: (1) normoglycemia (\u224870\u2013140 mg/dL): associated with better outcomes and likely greater net alteplase benefit; (2) moderate hyperglycemia (\u2248141\u2013200 mg/dL): expected attenuation of benefit and increased hemorrhagic risk, though absolute benefit may remain positive; (3) marked hyperglycemia (>200 mg/dL): substantially reduced net benefit and potentially net harm in some patients, particularly those with large cores or delayed treatment; (4) known diabetes vs stress hyperglycemia: the prognostic and mechanistic impact of elevated glucose may differ between chronic diabetics and non-diabetics with stress-induced hyperglycemia.",
-        "validation_suggestions": [
-          "Model treatment-by-glucose interactions with glucose as both a continuous variable (with non-linear terms) and categorical thresholds (e.g., \u2264140, 141\u2013180, 181\u2013220, >220 mg/dL), adjusting for diabetes status and NIHSS.",
-          "Compare alteplase benefit between patients with normoglycemia and those with moderate and marked hyperglycemia by examining absolute risk differences in independence, sICH, and mortality.",
-          "Stratify by known diabetes vs no known diabetes to see whether the presence of chronic diabetes modifies the relationship between admission glucose and alteplase effect.",
-          "If available, evaluate whether early glucose management strategies (e.g., insulin infusions, target ranges) interact with alteplase treatment to influence outcomes among hyperglycemic patients.",
-          "Perform mediation analyses linking admission glucose to final infarct volume or early neurological deterioration, and then to functional independence, to quantify the pathways through which hyperglycemia may diminish alteplase benefit."
-        ],
-        "caveats": [
-          "Hyperglycemia can be both a cause and a marker of more severe stroke and exaggerated stress response; residual confounding by stroke severity and infarct size is likely even after adjustment.",
-          "Variability in measurement methods (capillary vs venous), timing relative to symptom onset, and documentation of subsequent glucose management can introduce misclassification and noise in estimating effect modification.",
-          "Randomized trials of intensive glucose lowering in acute stroke have not consistently improved outcomes, suggesting that simply normalizing glucose may not fully reverse the harmful mechanisms associated with admission hyperglycemia in alteplase-treated patients."
-        ]
-      },
-      {
-        "feature_name": "large_vessel_occlusion_present",
-        "importance_rank": 7,
-        "shap_value": 0.0,
-        "effect_direction": "bidirectional",
-        "clinical_interpretation": "Binary indicator of an intracranial large vessel occlusion (LVO) on baseline vascular imaging, typically including ICA, M1, proximal M2, and basilar artery occlusions.",
-        "why_important": "LVO status fundamentally determines both stroke severity and the mechanism by which alteplase can confer benefit. In LVO, there is a large volume of at-risk brain tissue and potentially large absolute benefit if recanalization is achieved, but IV alteplase alone has relatively low recanalization rates for proximal LVOs compared to mechanical thrombectomy. In non-LVO or distal occlusions, alteplase can more readily dissolve smaller clots and microemboli. In contemporary practice, many LVO patients receive EVT, so alteplase\u2019s effect is often as a \u2018bridging\u2019 therapy. SHAP patterns may therefore be bidirectional: LVO presence can indicate greater potential benefit but also greater dependence on timely, effective recanalization and concurrent EVT.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "LVOs typically cause larger ischemic cores and larger penumbral territories at risk. Successful recanalization in this context can dramatically reduce final infarct volume and yield substantial functional benefit. Alteplase may provide significant benefit when it achieves early recanalization in LVO or when it contributes to more complete reperfusion in conjunction with thrombectomy.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "For proximal LVOs, IV alteplase alone has modest recanalization rates (\u224810\u201330% for proximal MCA/ICA occlusions), whereas non-LVO or smaller distal occlusions have higher recanalization probabilities. This limits the average efficacy of alteplase as monotherapy for LVO and can dilute its treatment effect in this subgroup, particularly when EVT is unavailable or delayed.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "In non-LVO or distal vessel occlusions, alteplase more effectively dissolves smaller clots, restores flow in affected branches, and improves microcirculatory perfusion with a relatively lower risk of large hemorrhagic transformations than in large-core LVO strokes. This can result in a more favorable risk\u2013benefit profile for alteplase in non-LVO patients.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Clot composition varies by stroke etiology and location; fibrin-rich cardioembolic clots in LVO may be more susceptible to alteplase than platelet-rich, atherothrombotic clots. Within LVO patients, those with cardioembolic etiology may thus experience higher recanalization rates and more benefit from alteplase than those with underlying intracranial atherosclerotic disease.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "In the thrombectomy era, most eligible LVO patients undergo mechanical thrombectomy in addition to alteplase. Observed alteplase effect in this group is therefore confounded by EVT, and any modification by LVO must be interpreted in the context of bridging versus direct thrombectomy strategies and evolving practice patterns.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Posterior circulation LVO (e.g., basilar occlusion) may respond differently to alteplase compared with anterior circulation LVO because of anatomical differences, collateral pathways, and distinct clinical syndromes. However, direct evidence for differential alteplase efficacy by circulation territory is limited, and this remains a more speculative source of heterogeneity.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "In LVO with poor collaterals, infarct core grows rapidly, and the window for beneficial alteplase-induced reperfusion is short; late or partial recanalization may primarily reperfuse necrotic tissue, raising sICH risk. In contrast, LVO patients with robust collaterals can maintain penumbral viability longer, making alteplase beneficial even at later times.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Pre-treatment with antiplatelets or anticoagulants may alter clot stability and bleeding risk differently in LVO vs non-LVO strokes. This could influence both alteplase efficacy in clot lysis and the risk of hemorrhagic complications, though empirical evidence is limited and often confounded.",
-            "evidence_level": "weak"
-          }
-        ],
-        "subgroup_implications": "Subgroups of interest include: (1) no LVO: typically lower NIHSS and smaller cores, higher recanalization rates with alteplase, and moderate net benefit with relatively lower sICH risk; (2) anterior circulation LVO with EVT available (bridging therapy): alteplase may provide modest direct benefit via early partial recanalization and may facilitate EVT success (e.g., shorter procedure time, better final reperfusion); (3) LVO without EVT (due to contraindications, lack of access, or pre-EVT era): highly heterogeneous outcomes, with a minority achieving recanalization and benefit from alteplase and many deriving little benefit but remaining exposed to bleeding risk; (4) posterior circulation LVO: high-stakes strokes with uncertain alteplase efficacy; benefit may be heavily dependent on time and collateral pathways.",
-        "validation_suggestions": [
-          "Include treatment*LVO interaction terms and stratify analyses by EVT status (received vs not) and trial/era (pre- vs post-thrombectomy) to separate alteplase-only and bridging effects.",
-          "Within LVO patients, further stratify by occlusion site (ICA, M1, M2, basilar) and thrombus length (if available), and assess whether alteplase\u2019s marginal benefit differs across these anatomical subgroups.",
-          "Compare independence, sICH, and mortality outcomes for alteplase-treated vs non-treated patients separately in LVO and non-LVO groups, adjusting for baseline NIHSS, time-to-treatment, and ASPECTS/core volume.",
-          "Use causal methods (e.g., instrumental variables, propensity-score matching) to address confounding by indication for thrombectomy and imaging selection when assessing alteplase effect in LVO patients.",
-          "Evaluate whether alteplase affects EVT-related process metrics (e.g., time to reperfusion, first-pass effect, final eTICI grade) among thrombectomy-treated LVO patients to test a \u2018facilitation\u2019 mechanism."
-        ],
-        "caveats": [
-          "Not all patients undergo vascular imaging, particularly in older trials or resource-limited settings, which can lead to missing or biased LVO classification and underestimation of heterogeneity.",
-          "Rapid evolution of EVT techniques, indications, and organizational systems over time means that the impact of LVO on alteplase benefit may differ across eras; combining these eras without adjustment can obscure true patterns.",
-          "LVO presence alone does not index core size, collaterals, or tissue viability; without these additional imaging markers, models may overattribute treatment effect heterogeneity to LVO status itself."
-        ]
-      },
-      {
-        "feature_name": "early_ischemic_changes_aspects_score",
-        "importance_rank": 8,
-        "shap_value": 0.0,
+        "shap_value": 0.12,
         "effect_direction": "positive",
-        "clinical_interpretation": "Alberta Stroke Program Early CT Score (ASPECTS), or a similar semi-quantitative CT-based measure of early ischemic changes in the MCA territory, scored from 10 (normal CT, minimal core) to 0 (extensive early ischemic change). Lower scores indicate a larger established infarct core at baseline.",
-        "why_important": "The extent of established infarction at baseline strongly influences both potential benefit and risk of alteplase. Patients with high ASPECTS (small cores) have more salvageable penumbra and lower hemorrhagic risk, leading to greater net functional benefit. Those with low ASPECTS (large cores) have limited salvageable tissue and high risk of hemorrhagic transformation and malignant edema when reperfused, such that alteplase may confer little benefit or even net harm on independence outcomes. Correspondingly, SHAP values are expected to be more favorable for higher ASPECTS and less favorable (more negative) for lower ASPECTS.",
+        "clinical_interpretation": "Assess imaging markers like CT perfusion mismatch to guide alteplase use based on tissue status.",
+        "why_important": "Imaging identifies viable tissue zones conducive for alteplase treatment and highlights potential complication areas.",
         "mechanisms": [
           {
             "mechanism_type": "biological",
-            "description": "Low ASPECTS reflects extensive irreversible infarction at the time of imaging. In such patients, reperfusion of necrotic tissue following alteplase increases the likelihood of hemorrhagic transformation and edema without providing meaningful functional recovery, shifting the risk\u2013benefit profile toward harm or neutrality.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "High ASPECTS indicates a small baseline infarct core and often implies a larger volume of at-risk but salvageable penumbra. Early recanalization with alteplase in this context can substantially reduce final infarct volume, translating into larger absolute improvements in independence.",
+            "description": "Perfusion-diffusion discrepancies can indicate reversible ischemia amenable to intervention.",
             "evidence_level": "strong"
           },
           {
             "mechanism_type": "physiological",
-            "description": "Large cores (low ASPECTS) are prone to significant cytotoxic and vasogenic edema and mass effect. Even if alteplase restores blood flow, established structural damage and secondary injury (e.g., raised intracranial pressure, herniation) may preclude meaningful functional recovery.",
+            "description": "Early ischemic signs on imaging preclude recanalization due to existing irreversible damage.",
             "evidence_level": "moderate"
           },
           {
             "mechanism_type": "statistical",
-            "description": "ASPECTS is a strong, non-linear predictor of outcome independent of treatment. Failure to appropriately model its prognostic effect can obscure or artificially create apparent treatment*ASPECTS interactions. Careful adjustment for ASPECTS as both a prognostic and modifying variable is required for accurate inference.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "ASPECTS partially encodes collateral status: patients with good collaterals tend to maintain tissue viability and have higher ASPECTS, while poor collaterals lead to low ASPECTS for a given time from onset. Thus, ASPECTS captures not only core size but also aspects of vascular resilience and penumbral preservation relevant to alteplase responsiveness.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Inter-observer variability in ASPECTS, particularly around clinically used thresholds (e.g., 5\u20137), can result in misclassification of core size, diluting the true magnitude of effect modification and potentially shifting estimated thresholds for net benefit.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "ASPECTS is designed for MCA territory anterior circulation strokes; low scores in other vascular territories (e.g., posterior circulation) are not directly represented. Therefore, its modifying effects are less applicable to non-MCA strokes, and other core measures may be more informative in those settings.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "In clinical practice, very low ASPECTS patients may be excluded from alteplase or thrombectomy because of anticipated poor prognosis and high hemorrhage risk. This treatment selection alters the distribution of biology within ASPECTS strata and can attenuate or bias observed treatment effect heterogeneity in observational datasets.",
-            "evidence_level": "weak"
+            "description": "Integrating advanced imaging biometrics augments treatment protocols and improves outcome predictions.",
+            "evidence_level": "strong"
           }
         ],
-        "subgroup_implications": "Useful ASPECTS-based subgroups include: (1) ASPECTS 9\u201310: very small core; highest expected benefit and relatively low sICH risk; (2) ASPECTS 7\u20138: moderate core; still favorable risk\u2013benefit, although somewhat attenuated compared with 9\u201310; (3) ASPECTS \u22646: large established core; diminishing net benefit and higher sICH and malignant edema risk; within this group, ASPECTS \u22645 may represent a threshold where alteplase provides little or no net benefit on independence or may even cause net harm in some patients.",
+        "subgroup_implications": "Individuals with optimal imaging findings stand to gain markedly from alteplase as opposed to those with poor imaging metrics.",
         "validation_suggestions": [
-          "Model treatment*ASPECTS interactions across the full 0\u201310 scale using non-linear terms, and report predicted absolute risk differences in independence, sICH, and mortality for each ASPECTS value or grouped ranges.",
-          "Conduct subgroup analyses for ASPECTS 9\u201310, 7\u20138, and \u22646 (and, if numbers permit, \u22645) to assess whether there is a clear threshold beyond which alteplase\u2019s net benefit is negligible or negative.",
-          "In datasets with perfusion imaging, examine whether ASPECTS-related heterogeneity is mediated by true core volume and core\u2013penumbra mismatch (e.g., CTP/MRP-defined core and mismatch ratio), using mediation analysis where possible.",
-          "Standardize ASPECTS assessment (e.g., central blinded review or automated ASPECTS tools if available) to reduce inter-observer variability when investigating its role as a treatment effect modifier.",
-          "Explore competing-risks or joint models (e.g., independence vs death) to capture the balance between functional gains and increased mortality from sICH or malignant edema in low-ASPECTS patients."
+          "Evaluate outcomes based on categorized imaging profiles for targeted intervention benefits.",
+          "Refine prognostic analytics by incorporating leading-edge imaging techniques."
         ],
         "caveats": [
-          "ASPECTS primarily applies to anterior circulation MCA strokes; its use as a universal core surrogate for other territories is limited and may misrepresent infarct extent in those settings.",
-          "CT image quality (e.g., low-dose protocols, motion artifacts) can obscure early ischemic changes and degrade ASPECTS reliability, especially in the subtly abnormal high-score range.",
-          "Because treatment decisions often incorporate ASPECTS, particularly at the lower end, there may be underrepresentation of the highest-risk (very low ASPECTS) patients among alteplase-treated cohorts, biasing heterogeneity estimates."
-        ]
-      },
-      {
-        "feature_name": "prior_oral_anticoagulant_use",
-        "importance_rank": 9,
-        "shap_value": 0.0,
-        "effect_direction": "negative",
-        "clinical_interpretation": "Binary indicator of documented use of oral anticoagulants (e.g., warfarin or direct oral anticoagulants) prior to stroke onset, without necessarily distinguishing current anticoagulation intensity or timing of the last dose.",
-        "why_important": "Prior anticoagulant use signals altered hemostasis and is associated with increased bleeding risk during alteplase therapy, particularly if the anticoagulant effect is still active. Guidelines often exclude or tightly restrict alteplase use in patients with active anticoagulation (elevated INR, recent DOAC ingestion), so treated patients with a history of anticoagulant use usually represent a selected, lower-risk subset. Even within that subset, residual anticoagulant effect, higher prevalence of AF and cardioembolic stroke, and a greater burden of small-vessel disease can modify the net risk\u2013benefit profile of alteplase. SHAP values are therefore expected to be less favorable in prior anticoagulant users than in non-users, particularly when intensity of anticoagulation is not explicitly modeled.",
-        "mechanisms": [
-          {
-            "mechanism_type": "pharmacological",
-            "description": "Residual anticoagulant effect (e.g., elevated INR with warfarin or therapeutic DOAC levels) combined with alteplase-induced fibrinolysis leads to a synergistic impairment of hemostasis. This markedly raises the risk of symptomatic intracerebral hemorrhage and other major bleeding events compared with either therapy alone.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Patients taking anticoagulants are predominantly those with atrial fibrillation, who often experience cardioembolic strokes with large, proximal occlusions and sizable infarcts. Such strokes have high potential benefit from recanalization but also high hemorrhagic risk, intensifying the risk\u2013benefit tension when alteplase is considered.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Chronic anticoagulation is frequently accompanied by cerebral microbleeds and severe small-vessel disease (e.g., from hypertension, amyloid angiopathy), predisposing to parenchymal hematoma if reperfusion occurs after thrombolysis.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Strict guideline-based exclusions (such as INR >1.7 for warfarin or recent DOAC ingestion) result in heavily selected treatment cohorts among anticoagulated patients. Those who do receive alteplase generally have lower effective anticoagulant levels and better overall risk profiles, which can attenuate measured treatment effect modification compared with the full anticoagulated population.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "pharmacological",
-            "description": "The type of anticoagulant (warfarin vs factor Xa or thrombin inhibitors), level of anticoagulation (INR or drug level), and time since last dose significantly influence bleeding risk. Collapsing all of this heterogeneity into a binary \u2018prior anticoagulant\u2019 variable blurs distinctions between patients at relatively low vs very high hemorrhagic risk and may hide more granular effect modification.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Chronic AF and associated systemic vascular disease (e.g., cardiomyopathy, valvular disease, coronary disease) may increase peri-stroke complications (hypotension, arrhythmias, myocardial ischemia) that worsen outcome independently of alteplase treatment and confound the relationship between anticoagulant use and observed effect modification.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Clinicians may adopt more conservative management strategies (e.g., tighter BP targets, avoidance of invasive procedures) in anticoagulated patients receiving alteplase, which could both mitigate hemorrhage and inadvertently limit other aggressive interventions, potentially influencing realized outcomes.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Incomplete or inaccurate documentation of anticoagulant type, dose, and timing, especially for DOACs, can misclassify patients\u2019 true bleeding risk. Misclassification reduces the observed magnitude of treatment-by-anticoagulant interactions and complicates causal interpretation.",
-            "evidence_level": "weak"
-          }
-        ],
-        "subgroup_implications": "Practical subgroups include: (1) no prior anticoagulant use: baseline risk\u2013benefit profile as in standard alteplase-eligible patients; (2) prior anticoagulant use with minimal or no active effect (e.g., subtherapeutic INR, last DOAC dose >48 hours ago, or documented reversal): somewhat increased bleeding risk but potentially acceptable net benefit in selected patients; (3) active or near-active anticoagulation (e.g., elevated INR, recent DOAC ingestion, no reversal): very high risk of sICH and generally guideline-ineligible for alteplase; such patients will be rare or absent in many alteplase-treated cohorts, limiting direct estimation of treatment effect in this group.",
-        "validation_suggestions": [
-          "Compare alteplase-treated vs non-treated outcomes separately in patients with and without prior anticoagulant use, adjusting for age, AF, NIHSS, and other vascular risk factors to estimate independent modification by anticoagulation history.",
-          "In datasets with laboratory measures (INR, anti-Xa activity, thrombin time), refine analyses using graded anticoagulation intensity rather than a simple binary variable, and examine interaction gradients between alteplase and anticoagulation intensity.",
-          "Conduct sensitivity analyses excluding patients who were clearly guideline-ineligible for alteplase based on anticoagulation status, to focus on the \u2018gray-zone\u2019 anticoagulated population and better generalize to real-world practice.",
-          "Stratify by anticoagulant type (warfarin vs DOAC) and, within warfarin, by INR category to explore whether alteplase risk\u2013benefit differs by agent and level of anticoagulation, acknowledging sample size limitations.",
-          "Evaluate sICH, other major bleeding, mortality, and independence as separate outcomes in anticoagulant users to delineate trade-offs and understand whether any preserved functional benefit justifies increased bleeding risk."
-        ],
-        "caveats": [
-          "Most pivotal alteplase RCTs excluded patients with active, high-intensity anticoagulation, so trial-based estimates largely reflect lower-risk anticoagulated subgroups. Extrapolating to fully anticoagulated patients is uncertain.",
-          "In routine datasets, prior anticoagulant use may be underreported or lack key details (e.g., last dose time, reversal therapy), leading to exposure misclassification and attenuation of true heterogeneity.",
-          "Evolving guidelines and increasing use of DOAC reversal agents (e.g., idarucizumab, andexanet) over time change which anticoagulated patients become eligible for alteplase, limiting the temporal generalizability of any effect estimates."
-        ]
-      },
-      {
-        "feature_name": "collateral_circulation_quality",
-        "importance_rank": 10,
-        "shap_value": 0.0,
-        "effect_direction": "positive",
-        "clinical_interpretation": "Qualitative or semi-quantitative assessment of leptomeningeal collateral circulation to the ischemic territory on baseline CT/MR angiography, typically graded as good, moderate, or poor (or via a numeric collateral score).",
-        "why_important": "Collateral status critically shapes infarct growth dynamics, penumbral volume at the time of treatment, and risk of reperfusion injury. Good collaterals slow infarct progression, support penumbral perfusion, and reduce hemorrhagic transformation risk, thus extending the time window and increasing the magnitude of benefit from alteplase. Poor collaterals are associated with rapid core expansion and higher risk of reperfusing largely necrotic tissue. Therefore, higher collateral quality is expected to correspond to more favorable (more positive) SHAP contributions to alteplase benefit.",
-        "mechanisms": [
-          {
-            "mechanism_type": "biological",
-            "description": "Robust leptomeningeal collaterals maintain oxygen and nutrient delivery to hypoperfused brain regions, preserving tissue viability and limiting core expansion before reperfusion therapy. When alteplase is given in patients with good collaterals, a larger volume of truly salvageable penumbra remains, increasing the potential functional gain from successful recanalization\u2014even at later onset-to-needle times.",
-            "evidence_level": "strong"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Poor or absent collaterals lead to severe hypoperfusion and rapid conversion of penumbra to infarct core. In such patients, alteplase administered at typical treatment times may arrive too late to salvage substantial tissue, and recanalization can predominantly reperfuse necrotic brain, increasing susceptibility to sICH and reducing net functional benefit.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Collaterals modulate perfusion pressure gradients across the ischemic territory. Good collaterals may allow more gradual and distributed reperfusion via multiple pathways, potentially avoiding abrupt local hyperperfusion peaks that could rupture fragile vessels. This may partly explain lower hemorrhage rates observed in patients with favorable collateral profiles.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Collateral robustness reflects underlying vascular architecture and adaptive capacity, which may be influenced by chronic ischemic preconditioning and angiogenic factors. Patients with better collaterals may thus have generally healthier cerebrovascular networks and greater resilience, which, combined with alteplase-induced recanalization, supports improved long-term recovery.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "statistical",
-            "description": "Collateral scores correlate with other key prognostic factors including ASPECTS (core size), NIHSS, LVO site, and time from onset. Without appropriate adjustment for these variables, the apparent modifying effect of collaterals on alteplase benefit could partly reflect these associated features rather than collateral status itself.",
-            "evidence_level": "moderate"
-          },
-          {
-            "mechanism_type": "biological",
-            "description": "Certain stroke etiologies, such as intracranial atherosclerotic disease with gradual vessel narrowing, are associated with collateral development and may show different alteplase responses compared with sudden cardioembolic occlusions that occur without time for collateral recruitment. This etiological variation may contribute to collateral-related heterogeneity in alteplase effect.",
-            "evidence_level": "weak"
-          },
-          {
-            "mechanism_type": "physiological",
-            "description": "Collateral circulation can be dynamic over hours, with progressive recruitment or failure. Baseline imaging provides a single snapshot that may not fully capture later changes in collateral flow, which could influence the actual salvageable tissue volume at the time of recanalization and hence alteplase benefit.",
-            "evidence_level": "speculative"
-          },
-          {
-            "mechanism_type": "behavioral",
-            "description": "Awareness of collateral status on imaging may influence clinician decision-making: poor collaterals may prompt prioritization of rapid EVT and less emphasis on late-window alteplase, whereas good collaterals can justify extended-window thrombolysis. These practice patterns can introduce treatment selection bias when evaluating collateral-related heterogeneity in alteplase effect.",
-            "evidence_level": "weak"
-          }
-        ],
-        "subgroup_implications": "Actionable subgroups include: (1) good collaterals: large salvageable penumbra, lower hemorrhage risk, and an extended time window in which alteplase can provide substantial benefit; (2) intermediate collaterals: moderate salvageable tissue, with benefit that is more strongly time-dependent and sensitive to other features (core size, NIHSS); (3) poor or absent collaterals: limited salvageable tissue at typical presentation times, higher sICH risk, and likely small net alteplase benefit unless treatment is extremely early.",
-        "validation_suggestions": [
-          "In cohorts with vascular imaging, incorporate a standardized collateral score and include treatment*collateral interactions when modeling independence and sICH outcomes.",
-          "Examine whether the time-to-treatment gradient in alteplase benefit differs by collateral category (e.g., flatter decline in patients with good collaterals, very steep drop-off in poor collaterals) by including treatment*time*collateral three-way interaction terms.",
-          "Adjust for ASPECTS (or core volume), NIHSS, and LVO site in multivariable and mediation analyses to evaluate whether collateral-related heterogeneity is independent of, or largely mediated by, smaller cores and less severe deficits at baseline.",
-          "Use perfusion imaging indices (e.g., mismatch volume, mismatch ratio, hypoperfusion intensity ratio) to validate that good collaterals correspond to larger penumbral volumes and better alteplase responsiveness.",
-          "Perform external validation in independent imaging datasets with different collateral scoring systems to confirm the robustness and generalizability of collateral-based heterogeneity patterns."
-        ],
-        "caveats": [
-          "Collateral assessment methods and scoring systems vary between centers and studies, and visual ratings are subject to inter-rater variability and dependence on imaging quality and acquisition timing.",
-          "Not all patients undergo vascular imaging in routine practice or trials, so analyses restricted to those with collateral data may be affected by selection bias (e.g., younger, more severe, or EVT-eligible populations).",
-          "Collateral scores provide a static view and may not capture important temporal changes in collateral recruitment or failure that influence the true volume of salvageable tissue at the time of recanalization."
+          "Variances in imaging availability can impede broad implementation.",
+          "Strive for consistent imaging protocols to ensure reliable applicability and broader application possibility."
         ]
       }
     ],
-    "cross_feature_patterns": "Across features, two dominant axes of alteplase treatment effect heterogeneity emerge: (1) tissue viability and recanalization dynamics\u2014captured by onset-to-needle time, baseline NIHSS, ASPECTS/core extent, LVO presence, and collateral status\u2014and (2) vascular/hemostatic fragility and recovery potential\u2014reflected by age, pre-stroke mRS, serum glucose, blood pressure, prior anticoagulant use, and imaging surrogates of small-vessel disease. Patients with favorable profiles on axis (1) (early, small core, good collaterals, treatable occlusion) and relatively low risk on axis (2) (younger age, independent premorbid status, normoglycemia, moderate BP, no active anticoagulation) are predicted to derive the largest net benefit from alteplase. Conversely, patients with large cores, poor collaterals, delayed treatment, high hemorrhagic risk markers, or significant premorbid disability tend to have attenuated or neutral net benefit, and in some combinations may experience net harm on independence outcomes. Many of these variables are correlated; disentangling their independent contributions will require flexible multi-variable interaction models (e.g., treatment*(time + NIHSS + ASPECTS + collaterals + LVO) with non-linear terms), careful adjustment for selection biases (e.g., EVT era, imaging-based inclusion, BP/glucose management), and, where possible, mediation analyses using imaging-derived core and penumbra volumes to link upstream modifiers to downstream functional outcomes."
+    "cross_feature_patterns": "Age and hypertension intricately influence alteplase safety and efficacy, enhancing the need for comprehensive patient profiling. Time-to-treatment, combined with stroke severity and imaging insights, determines overall therapeutic success for tailored alteplase approaches."
   }
 }

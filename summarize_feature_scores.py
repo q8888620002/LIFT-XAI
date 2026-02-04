@@ -6,18 +6,42 @@ Compute average scores comparing hypotheses WITH SHAP vs WITHOUT SHAP.
 Usage:
     # Compare WITH SHAP vs WITHOUT SHAP for a single cohort
     python summarize_feature_scores.py \
-        --judge_with_shap results/crash_2/hypotheses_with_shap_XLearner_judge_original.json \
-        --judge_without_shap results/crash_2/hypotheses_without_shap_baseline_judge_original.json \
-        --out_csv results/crash_2/shap_comparison.csv \
+        --judge_with_shap docs/agent/crash_2/hypotheses_with_shap_XLearner_judge_revised.json \
+        --judge_without_shap docs/agent/crash_2/hypotheses_without_shap_baseline_judge_revised.json \
+        --version revised \
+        --out_csv docs/crash_2_shap_comparison.csv \
         --plot
 
-    # Compare multiple cohorts
+    # Compare all cohorts (ORIGINAL versions)
     python summarize_feature_scores.py \
-        --judge_with_shap results/crash_2/hypotheses_with_shap_XLearner_judge_original.json \
-                          results/ist3/hypotheses_with_shap_XLearner_judge_original.json \
-        --judge_without_shap results/crash_2/hypotheses_without_shap_baseline_judge_original.json \
-                             results/ist3/hypotheses_without_shap_baseline_judge_original.json \
-        --out_csv results/multi_cohort_shap_comparison.csv \
+        --judge_with_shap \
+            docs/agent/crash_2/hypotheses_with_shap_XLearner_judge_original.json \
+            docs/agent/ist3/hypotheses_with_shap_XLearner_judge_original.json \
+            docs/agent/sprint/hypotheses_with_shap_XLearner_judge_original.json \
+            docs/agent/accord/hypotheses_with_shap_XLearner_judge_original.json \
+        --judge_without_shap \
+            docs/agent/crash_2/hypotheses_without_shap_baseline_judge_original.json \
+            docs/agent/ist3/hypotheses_without_shap_baseline_judge_original.json \
+            docs/agent/sprint/hypotheses_without_shap_baseline_judge_original.json \
+            docs/agent/accord/hypotheses_without_shap_baseline_judge_original.json \
+        --version original \
+        --out_csv docs/shap_comparison_all_cohorts_original.csv \
+        --plot
+
+    # Compare all cohorts (REVISED versions)
+    python summarize_feature_scores.py \
+        --judge_with_shap \
+            docs/agent/crash_2/hypotheses_with_shap_XLearner_judge_revised.json \
+            docs/agent/ist3/hypotheses_with_shap_XLearner_judge_revised.json \
+            docs/agent/sprint/hypotheses_with_shap_XLearner_judge_revised.json \
+            docs/agent/accord/hypotheses_with_shap_XLearner_judge_revised.json \
+        --judge_without_shap \
+            docs/agent/crash_2/hypotheses_without_shap_baseline_judge_revised.json \
+            docs/agent/ist3/hypotheses_without_shap_baseline_judge_revised.json \
+            docs/agent/sprint/hypotheses_without_shap_baseline_judge_revised.json \
+            docs/agent/accord/hypotheses_without_shap_baseline_judge_revised.json \
+        --version revised \
+        --out_csv docs/shap_comparison_all_cohorts_revised.csv \
         --plot
 """
 
@@ -44,37 +68,38 @@ def extract_hypothesis_scores(judge_json_path: str) -> Dict:
     # Extract scores from scored_features (these represent hypotheses about features)
     feature_scores = []
     for feat in data.get('scored_features', []):
+        # Compute overall_score as average of 4 criteria
+        mechanism = feat.get('mechanism_plausibility', 0)
+        evidence = feat.get('evidence_alignment', 0)
+        subgroup = feat.get('subgroup_implications', 0)
+        caveat = feat.get('caveat_awareness', 0)
+        computed_overall = (mechanism + evidence + subgroup + caveat) / 4.0
+        
         feature_scores.append({
             'feature_name': feat.get('feature_name', ''),
-            'mechanism_plausibility': feat.get('mechanism_plausibility', 0),
-            'clinical_interpretation': feat.get('clinical_interpretation', 0),
-            'evidence_alignment': feat.get('evidence_alignment', 0),
-            'subgroup_implications': feat.get('subgroup_implications', 0),
-            'validation_plan_quality': feat.get('validation_plan_quality', 0),
-            'caveat_awareness': feat.get('caveat_awareness', 0),
-            'overall_score': feat.get('overall_score', 0),
+            'mechanism_plausibility': mechanism,
+            'evidence_alignment': evidence,
+            'subgroup_implications': subgroup,
+            'caveat_awareness': caveat,
+            'overall_score': computed_overall,
             'recommendation': feat.get('recommendation', ''),
         })
     
     # Compute average scores across all features
     if feature_scores:
         avg_scores = {
-            'biological_plausibility': np.mean([h['mechanism_plausibility'] for h in feature_scores]),
-            'clinical_relevance': np.mean([h['clinical_interpretation'] for h in feature_scores]),
-            'evidence_quality': np.mean([h['evidence_alignment'] for h in feature_scores]),
-            'subgroup_definition_clarity': np.mean([h['subgroup_implications'] for h in feature_scores]),
-            'validation_plan_quality': np.mean([h['validation_plan_quality'] for h in feature_scores]),
+            'mechanism_plausibility': np.mean([h['mechanism_plausibility'] for h in feature_scores]),
+            'evidence_alignment': np.mean([h['evidence_alignment'] for h in feature_scores]),
+            'subgroup_implications': np.mean([h['subgroup_implications'] for h in feature_scores]),
             'caveat_awareness': np.mean([h['caveat_awareness'] for h in feature_scores]),
             'overall_score': np.mean([h['overall_score'] for h in feature_scores]),
             'num_hypotheses': len(feature_scores),
         }
     else:
         avg_scores = {
-            'biological_plausibility': 0,
-            'clinical_relevance': 0,
-            'evidence_quality': 0,
-            'subgroup_definition_clarity': 0,
-            'validation_plan_quality': 0,
+            'mechanism_plausibility': 0,
+            'evidence_alignment': 0,
+            'subgroup_implications': 0,
             'caveat_awareness': 0,
             'overall_score': 0,
             'num_hypotheses': 0,
@@ -105,10 +130,8 @@ def extract_feature_scores(judge_json_path: str) -> pd.DataFrame:
         record = {
             'feature_name': feature['feature_name'],
             'mechanism_plausibility': feature['mechanism_plausibility'],
-            'clinical_interpretation': feature['clinical_interpretation'],
             'evidence_alignment': feature['evidence_alignment'],
             'subgroup_implications': feature['subgroup_implications'],
-            'validation_plan_quality': feature['validation_plan_quality'],
             'caveat_awareness': feature['caveat_awareness'],
             'overall_score': feature['overall_score'],
             'recommendation': feature['recommendation'],
@@ -149,11 +172,9 @@ def compare_shap_vs_baseline(with_shap_paths: List[str], without_shap_paths: Lis
     
     # Aggregate scores
     score_metrics = [
-        'biological_plausibility',
-        'clinical_relevance', 
-        'evidence_quality',
-        'subgroup_definition_clarity',
-        'validation_plan_quality',
+        'mechanism_plausibility',
+        'evidence_alignment',
+        'subgroup_implications',
         'caveat_awareness',
         'overall_score'
     ]
@@ -213,9 +234,9 @@ def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comp
     ax.axvline(x=0, color='black', linestyle='-', linewidth=1)
     ax.grid(axis='x', alpha=0.3)
     
-    # Add percentage labels
-    for i, (diff, pct) in enumerate(zip(comparison_df['difference'], comparison_df['percent_improvement'])):
-        label = f'{diff:+.2f} ({pct:+.1f}%)'
+    # Add difference labels
+    for i, diff in enumerate(comparison_df['difference']):
+        label = f'{diff:+.2f}'
         x_pos = diff + (0.1 if diff > 0 else -0.1)
         ha = 'left' if diff > 0 else 'right'
         ax.text(x_pos, i, label, va='center', ha=ha, fontsize=9)
@@ -230,10 +251,8 @@ def compute_summary_stats(df: pd.DataFrame) -> pd.DataFrame:
     """Compute summary statistics across all features."""
     score_cols = [
         'mechanism_plausibility',
-        'clinical_interpretation',
         'evidence_alignment',
         'subgroup_implications',
-        'validation_plan_quality',
         'caveat_awareness',
         'overall_score'
     ]
@@ -255,10 +274,8 @@ def plot_feature_scores(df: pd.DataFrame, df_revised: Optional[pd.DataFrame] = N
     """Plot feature scores with optional comparison to revised scores."""
     score_cols = [
         'mechanism_plausibility',
-        'clinical_interpretation',
         'evidence_alignment',
         'subgroup_implications',
-        'validation_plan_quality',
         'caveat_awareness',
         'overall_score'
     ]
@@ -466,13 +483,19 @@ def main():
         help='Generate visualization plots'
     )
     parser.add_argument(
+        '--version',
+        choices=['original', 'revised'],
+        default='revised',
+        help='Whether comparing original or revised judge outputs (affects output filename)'
+    )
+    parser.add_argument(
         '--out_plot',
-        default='shap_comparison.png',
-        help='Path to save comparison plot'
+        default=None,
+        help='Path to save comparison plot (default: docs/shap_comparison_{version}.png)'
     )
     parser.add_argument(
         '--out_mechanism_plot',
-        default='mechanism_scores.png',
+        default='docs/mechanism_scores.png',
         help='Path to save mechanism scores plot'
     )
     args = parser.parse_args()
@@ -511,7 +534,12 @@ def main():
         # Generate comparison plot
         if args.plot:
             print("\nGenerating comparison plot...")
-            plot_shap_comparison(comparison_df, args.out_plot)
+            # Use version in filename if not explicitly specified
+            if args.out_plot is None:
+                plot_path = f'docs/shap_comparison_{args.version}.png'
+            else:
+                plot_path = args.out_plot
+            plot_shap_comparison(comparison_df, plot_path)
         
         return
     
@@ -565,7 +593,9 @@ def main():
         # Generate plots
         if args.plot:
             print("\nGenerating plots...")
-            plot_feature_scores(df, df_revised, args.out_plot)
+            # Use different default filename for legacy mode
+            legacy_plot_path = args.out_plot if args.out_plot != 'docs/shap_comparison.png' else 'docs/feature_scores_original_vs_revised.png'
+            plot_feature_scores(df, df_revised, legacy_plot_path)
             plot_mechanism_scores(df, args.judge_json, args.out_mechanism_plot)
     else:
         parser.error("Must provide either (--judge_with_shap and --judge_without_shap) OR --judge_json")

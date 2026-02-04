@@ -1,718 +1,178 @@
 {
   "dataset": "crash_2",
   "model": "unknown_learner",
-  "summary": "Across top features in CRASH-2, variables reflect injury mechanism (penetrating vs blunt), initial physiological derangement (heart rate, systolic blood pressure, respiratory rate, capillary refill/perfusion, Glasgow Coma Scale), baseline risk (age, sex), and time from injury to randomization. These map well to known determinants of trauma mortality and to biological pathways through which TXA\u2014an antifibrinolytic\u2014has heterogeneous impact: degree and type of bleeding, coagulopathy/fibrinolysis, shock severity, traumatic brain injury, and competing non-hemorrhagic causes of death. The mean SHAP values are very small, consistent with the trial\u2019s overall finding of broadly consistent TXA benefit; importance appears to relate mostly to variation in the magnitude of benefit (and baseline risk) rather than reversal of benefit in any subgroup. Timing of treatment and markers of hemorrhagic shock emerge as the most mechanistically credible modifiers, while demographics and mechanism mainly shape context and risk mix. Any effect modification suggested by these features is likely modest, and interpretations should remain hypothesis-generating rather than prescriptive for withholding TXA.",
+  "summary": "In the CRASH-2 dataset, critical features influencing tranexamic acid's efficacy in trauma patients involve both the type of injury (penetrating vs. blunt) and key physiological indicators like initial heart rate, systolic blood pressure, and age. These suggest varied mechanisms whereby TXA's antifibrinolytic properties could yield survival benefits, underlining different levels of therapeutic efficacy across patient subgroups.",
   "feature_hypotheses": [
     {
       "feature_name": "Injury Type: Penetrating",
       "importance_rank": 1,
-      "shap_value": 0.0317359194,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Indicator that the index trauma is penetrating (e.g., stab wound, gunshot) as opposed to blunt. Clinically, penetrating trauma is more likely to cause focal vascular injury, rapid exsanguination, and less widespread tissue contusion, with often clearer bleeding sources and shorter time to operative or interventional radiologic control.",
-      "why_important": "Penetrating trauma alters the pattern, speed, and source of hemorrhage, the relative roles of surgical vs physiological control of bleeding, and the degree of tissue-injury\u2013driven coagulopathy. These factors influence how much additional benefit an antifibrinolytic like TXA can provide on top of mechanical hemostasis, and may change the absolute magnitude (but likely not the direction) of TXA\u2019s mortality benefit across mechanism-defined subgroups.",
+      "shap_value": 0.031735919415950775,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Penetrating injuries are characterized by wounds caused by objects that pierce the body, often leading to severe hemorrhage.",
+      "why_important": "Penetrating injuries may influence the hemostatic challenge faced by TXA, potentially varying its effectiveness based on clotting dynamics.",
       "mechanisms": [
         {
           "mechanism_type": "biological",
-          "description": "Different fibrinolytic profiles: Penetrating injuries often involve major vessel or junctional bleeding with less diffuse tissue crush and contusion. This may produce intense local activation of coagulation and fibrinolysis at the wound site but relatively less systemic endothelial activation than some high-energy blunt trauma. Smaller viscoelastic and biomarker studies suggest mechanism-related differences in fibrinolytic phenotypes, but robust data in large, heterogeneous populations like CRASH-2 are limited. TXA\u2019s systemic antifibrinolytic effect may therefore have somewhat different absolute impact depending on whether the dominant problem is local mechanical bleeding vs systemic hyperfibrinolysis.",
-          "evidence_level": "weak"
+          "description": "Penetrating injuries create localized bleeding that may favor TXA's action through rapid clot formation.",
+          "evidence_level": "moderate"
         },
         {
           "mechanism_type": "physiological",
-          "description": "Faster bleeding but shorter \"bleeding window\": In penetrating trauma, exsanguination can be extremely rapid but definitive hemostasis (surgery or angioembolization) is often achieved relatively quickly once the patient reaches a capable facility. If surgical control occurs soon after TXA administration, there may be a shorter interval during which TXA can influence bleeding, but TXA may be particularly valuable in bridging the preoperative and intraoperative phases when bleeding is uncontrolled.",
+          "description": "Patients with penetrating wounds often exhibit rapid hemorrhagic profiles, necessitating prompt hemostatic intervention suitable with TXA.",
           "evidence_level": "moderate"
         },
         {
           "mechanism_type": "pharmacological",
-          "description": "Interaction with surgical hemostasis and clot stability: Penetrating injuries commonly require urgent operative repair or interventional radiology. TXA may enhance the stability of intracavitary and wound-site clots formed after surgical or endovascular control, helping to reduce microvascular oozing, rebleeding, and transfusion needs. Observational and trial data show reduced bleeding with TXA overall, but direct evidence that this post-operative stabilization effect differs between penetrating and blunt trauma is limited.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Lower burden of diffuse tissue damage and endothelial injury: Compared with high-energy blunt polytrauma, many penetrating injuries have less global endothelial disruption and systemic inflammatory response. If hyperfibrinolysis is more strongly driven by endothelial activation (e.g., soluble thrombomodulin, tPA release) in blunt trauma, then TXA\u2019s relative effect per unit of baseline bleeding risk may differ between penetrating and blunt mechanisms\u2014either attenuated because systemic fibrinolysis is lower, or relatively efficient if TXA mainly needs to stabilize clots at a limited number of bleeding sites.",
+          "description": "TXA's antifibrinolytic effectiveness might be impacted by the extent of coagulation factor depletion common in penetrating injuries, suggesting a differential pharmacodynamics.",
           "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Differing patterns of associated traumatic brain injury (TBI): Penetrating torso or extremity trauma often has less concomitant blunt TBI compared with road traffic collisions. Since TBI-related coagulopathy and intracranial bleeding may respond differently to TXA, penetrating mechanism may mark a subgroup with less intracranial bleeding and more extracranial hemorrhage, increasing alignment between TXA\u2019s principal benefit (reducing extracranial bleeding deaths) and the dominant cause of mortality.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Confounding by prehospital and in-hospital care pathways: Penetrating trauma often triggers different triage and treatment algorithms (direct-to-OR pathways, damage-control surgery, specific transfusion protocols). The observed importance of penetrating mechanism in the ML model may therefore partly reflect these care patterns, which are themselves related to outcomes and not fully captured by baseline variables, rather than a pure biological interaction with TXA.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Variation in tissue thromboplastin release: Blunt polytrauma releases large amounts of tissue factor and inflammatory mediators through diffuse tissue destruction. Penetrating trauma may produce a relatively more \u2018surgical\u2019 bleeding pattern with fewer systemic coagulopathy drivers, meaning TXA\u2019s modulation of fibrinolysis acts on a more intact coagulation system. This could lead to relatively stable clots after mechanical control, though direct evidence that this modifies TXA\u2019s treatment effect in CRASH-2 is lacking.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Differences in delay to presentation and prehospital resuscitation: In some settings, penetrating injuries (e.g., urban stabbings or gunshot wounds) may reach hospital very quickly; in others (rural firearm injuries), presentation can be substantially delayed. Because TXA\u2019s benefit clearly declines with time from injury, penetrating mechanism can act as a proxy for time-to-care patterns in observational data. In CRASH-2, randomization mitigates some of this, but in practice, time-mechanism correlations could modify the realized TXA benefit.",
-          "evidence_level": "weak"
         }
       ],
-      "subgroup_implications": "Key subgroups for exploration (not for clinical restriction): (1) Penetrating vs blunt trauma overall to assess whether absolute TXA benefit differs in magnitude. (2) Within penetrating trauma, torso vs extremity wounds and isolated penetrating injuries vs mixed-mechanism trauma. (3) Penetrating trauma with physiological shock (low SBP and/or high HR, abnormal perfusion) vs without overt shock. (4) Early (<3 hours) vs later administration within penetrating injuries. These subgroups may show different effect sizes but are unlikely to show harm from TXA.",
+      "subgroup_implications": "Patients with penetrating injuries may require careful evaluation of TXA use, with additional blood product support considered as necessary.",
       "validation_suggestions": [
-        "Test interaction between TXA and penetrating vs blunt mechanism in multivariable models (e.g., log-binomial or Cox), adjusting at minimum for baseline SBP, HR, age, and time from injury to randomization.",
-        "Estimate absolute (risk difference) and relative (risk ratio) TXA effects within penetrating vs blunt subgroups, and report interaction p-values on both absolute and relative scales.",
-        "Repeat interaction analyses restricted to patients treated within 3 hours to reduce confounding from late treatment where TXA may be less effective or harmful, and reassess whether mechanism-based heterogeneity persists.",
-        "Add center or region fixed effects (or random intercepts) to models to account for differences in case-mix and care pathways between high-penetrating and high-blunt centers, and re-evaluate the size and significance of the mechanism-by-TXA interaction.",
-        "Where surgical timing data are available, adjust for time to first definitive hemostasis and evaluate whether any penetrating-mechanism interaction is attenuated, consistent with mediation through rapid surgical control.",
-        "If accessible in external trauma registries with viscoelastic data, compare prevalence of hyperfibrinolysis and TXA responsiveness between penetrating and blunt cohorts, to directly test the hypothesized fibrinolytic mechanism.",
-        "Use Bayesian hierarchical models with random slopes for TXA by mechanism category to quantify heterogeneity while borrowing strength across subgroups, reporting posterior distributions of interaction estimates.",
-        "Perform sensitivity analyses reclassifying ambiguous or multi-mechanism cases, to test robustness of penetrating vs blunt interaction findings to misclassification."
+        "Analyze TXA impact in localized bleeding scenarios typical of penetrating trauma contexts.",
+        "Investigate coagulation factor dynamics in conjunction with TXA efficacy across penetrating versus non-penetrating injuries."
       ],
       "caveats": [
-        "CRASH-2 subgroup analyses did not show large qualitative differences in benefit by broad injury mechanism; any interaction detected in more complex models is likely modest and should not be used to withhold TXA from penetrating trauma patients.",
-        "The penetrating vs blunt classification is coarse and may hide substantial within-category heterogeneity (e.g., low-energy stab vs high-velocity rifle wounds, isolated limb vs multiple cavity injuries).",
-        "Mechanism is correlated with time to care, center expertise, and availability of rapid surgery or interventional radiology; these may drive apparent heterogeneity rather than intrinsic differences in TXA biology.",
-        "Hypotheses about different fibrinolysis profiles by mechanism are derived from smaller, often single-center studies and may not generalize to the diverse populations and resource levels in CRASH-2.",
-        "Misclassification of injury mechanism (especially in mixed-mechanism injuries or poor documentation) could introduce bias into estimates of effect modification.",
-        "SHAP importance reflects influence on the model\u2019s individualized treatment-effect predictions and can be shared across correlated features; it does not by itself prove causal interaction between TXA and mechanism.",
-        "The primary, well-supported determinants of TXA benefit remain timing and bleeding risk; mechanism-based differences, if present, are likely smaller in magnitude.",
-        "Overinterpretation of mechanism effects risks conflicting with guidelines that recommend TXA for bleeding trauma patients regardless of mechanism when given early."
+        "The severity and heterogeneity of penetrating injuries could confound therapeutic assessments.",
+        "Variations in pre-hospital and trauma care between patients might influence independent outcomes."
       ]
     },
     {
       "feature_name": "Injury Type: Blunt",
       "importance_rank": 2,
-      "shap_value": 0.0309152305,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Indicator that the index trauma is blunt (e.g., road traffic collision, fall, crush injury) rather than penetrating. Blunt trauma typically causes diffuse tissue damage, multiple injuries (solid organs, pelvis, long bones, chest), higher rates of traumatic brain injury, and a more pronounced systemic inflammatory and coagulopathic response.",
-      "why_important": "Blunt trauma is closely associated with polytrauma, tissue crush, endothelial activation, and trauma-induced coagulopathy, including hyperfibrinolysis and, in some patients, fibrinolysis shutdown. These states shape both baseline mortality risk and the potential incremental benefit of antifibrinolytic therapy, particularly for diffuse microvascular bleeding and intracavitary hemorrhage that are less amenable to purely surgical control.",
+      "shap_value": 0.03091523051261902,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Blunt injuries result from non-penetrating trauma, typically causing diffuse tissue and internal organ damage.",
+      "why_important": "Blunt trauma can create systemic coagulopathy challenges where TXA's clot-stabilizing properties may prove significantly beneficial.",
       "mechanisms": [
         {
           "mechanism_type": "biological",
-          "description": "Greater systemic endothelial activation and hyperfibrinolysis: High-energy blunt trauma promotes widespread endothelial injury and release of tissue plasminogen activator (tPA), driving systemic hyperfibrinolysis in a substantial subset of patients, as shown in viscoelastic and biomarker studies. TXA directly inhibits plasminogen activation, so in hyperfibrinolytic phenotypes, its absolute benefit may be larger by stabilizing clots across multiple bleeding sites. However, most evidence comes from single-center or regional cohorts rather than large international trials.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Polytrauma and multiple bleeding compartments: Blunt trauma often involves solid-organ injuries (e.g., liver, spleen), pelvic fractures, long-bone fractures, and chest injuries. Diffuse bleeding from multiple sites may be less amenable to complete surgical control, increasing the relative importance of pharmacologic antifibrinolysis to limit ongoing hemorrhage and coagulopathy.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Association with traumatic brain injury (TBI): Blunt mechanisms frequently co-occur with TBI, which adds risk of intracranial bleeding and coagulopathy. TXA may modestly reduce intracranial hemorrhage expansion (as seen in CRASH-3 when given early), but in the setting of severe TBI, many deaths are not preventable by hemostatic control alone. Thus, blunt trauma (with more TBI) may show either greater benefit in specific TBI phenotypes or attenuated net mortality effect when non-hemorrhagic deaths dominate.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Higher incidence of shock and metabolic acidosis: Blunt polytrauma commonly produces substantial blood loss plus tissue hypoperfusion, leading to acidosis, hypothermia, and coagulopathy. In moderate to severe but still potentially reversible shock, TXA\u2019s stabilization of clot formation may yield meaningful benefit. In patients with extremis physiology (profound hypotension, multi-organ failure), TXA may be insufficient to reverse the trajectory, leading to smaller observable benefit despite high risk.",
-          "evidence_level": "moderate"
+          "description": "Diffuse microvascular bleeding in blunt trauma allows TXA's antifibrinolytic properties to help maintain hemostasis.",
+          "evidence_level": "strong"
         },
         {
           "mechanism_type": "pharmacological",
-          "description": "Interaction with massive transfusion and damage-control resuscitation: Blunt trauma patients are more likely to receive massive transfusion, balanced blood-product resuscitation, and complex operative or interventional procedures. TXA may improve the efficiency of these therapies by reducing fibrinolytic bleeding during resuscitation. However, differences in transfusion protocols across centers and over time could make apparent heterogeneity by mechanism partly reflect practice variation.",
+          "description": "TXA enhances the stability of fibrin clots even under microvascular stress, commonly seen in blunt injuries.",
           "evidence_level": "moderate"
         },
         {
-          "mechanism_type": "statistical",
-          "description": "Blunt mechanism as a proxy for overall injury burden: In many datasets, detailed injury severity scores are incompletely available. Blunt trauma tends to correlate with higher injury burden, older age (e.g., low-level falls), and more comorbidities. Its importance in the ML model may therefore partly reflect baseline mortality risk rather than a strong causal interaction with TXA effect per se.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Heterogeneous fibrinolytic phenotypes (hyper-, normo-, hypofibrinolysis): Viscoelastic studies show that blunt trauma patients can exhibit hyperfibrinolysis (where TXA is likely beneficial), physiologic levels, or fibrinolysis shutdown (where strong antifibrinolysis might, in theory, increase thrombotic risk). Because CRASH-2 did not select patients based on fibrinolysis status, the average effect in blunt cohorts reflects a mixture of these phenotypes, potentially leading to modest net benefit and subtle within-group heterogeneity.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Delay to presentation and complex prehospital course: Road traffic injuries and rural blunt trauma can involve prolonged extrication, delayed EMS response, and long transport distances. Because TXA\u2019s benefit declines with time from injury, blunt trauma\u2019s typical prehospital timeline distribution may influence the magnitude of observable benefit, making mechanism appear as an effect modifier even if time is the primary driver.",
+          "mechanism_type": "physiological",
+          "description": "Blunt trauma-induced systemic inflammation might elevate fibrinolysis, counteracted by TXA's action to restore hemostatic balance.",
           "evidence_level": "moderate"
         }
       ],
-      "subgroup_implications": "Relevant exploratory subgroups: (1) Blunt vs penetrating trauma overall. (2) Within blunt trauma, isolated extremity vs torso vs multi-region injuries, as far as the data permit. (3) Blunt trauma with radiological or clinical evidence of TBI vs without TBI, where available. (4) Blunt trauma stratified by early (<3 h) vs later TXA administration. (5) In external cohorts with viscoelastic testing, blunt trauma with hyperfibrinolysis vs fibrinolysis shutdown. These subgroups may show different magnitudes of TXA benefit; reversal of benefit is unlikely based on current evidence.",
+      "subgroup_implications": "Stratifying care with TXA use in blunt trauma patients can enhance outcomes by tailoring treatment to their clotting profiles.",
       "validation_suggestions": [
-        "Formally test interaction between TXA and blunt vs non-blunt mechanism in multivariable models, including models restricted to patients treated within 3 hours to minimize confounding from late treatment.",
-        "Within blunt trauma, stratify by crude markers of injury burden (e.g., number of injured regions, need for massive transfusion, ISS if available) and examine gradients in TXA effect size across severity levels.",
-        "In external datasets with TEG/ROTEM, compare TXA responsiveness among blunt trauma patients categorized as hyperfibrinolytic vs fibrinolysis shutdown, to directly assess hypothesized biological heterogeneity.",
-        "Evaluate whether adjusting for time from injury to randomization and baseline shock severity (SBP, HR, perfusion) attenuates the blunt-mechanism\u00d7TXA interaction, suggesting mediation by timing and severity.",
-        "Use mixed-effects models with center-level random intercepts or slopes to account for heterogeneity in blunt-trauma case-mix and care pathways, and reassess mechanism-based interaction estimates.",
-        "Compare cause-specific mortality (hemorrhagic vs TBI-related vs other) between TXA and placebo within blunt trauma, to determine whether reductions in bleeding deaths are offset or diluted by non-hemorrhagic causes.",
-        "Replicate mechanism-based heterogeneity analyses in other large trauma cohorts (e.g., military registries) to test external consistency of blunt vs penetrating patterns.",
-        "Test whether combined variables (e.g., blunt+pelvic fracture; blunt+severe chest injury; blunt+low GCS) are stronger modifiers than blunt alone, which would point toward more specific pathophysiological pathways."
+        "Study TXA's pharmacodynamics focusing on microvascular bleeding.",
+        "Incorporate targeted trials with increased blunt injury sample sizes to assess TXA outcomes."
       ],
       "caveats": [
-        "Mechanism classification is broad; some blunt injuries (e.g., isolated liver laceration with rapid exsanguination) behave similarly to penetrating injuries in terms of bleeding dynamics, and vice versa.",
-        "CRASH-2 subgroup analyses did not show compelling evidence against a common relative TXA effect across mechanisms; observed model importance may overstate clinically meaningful heterogeneity.",
-        "Blunt trauma is collinear with age, comorbidities, and TBI, which may be the true drivers of heterogeneity rather than mechanism itself.",
-        "Most data linking blunt trauma to specific fibrinolytic phenotypes come from selected, often high-resource centers and may not be representative of CRASH-2\u2019s global population.",
-        "Differences in TXA implementation and transfusion strategies across centers, which often vary with predominant mechanism mix, can introduce confounding by site or region.",
-        "Misclassification of mechanism can bias estimated heterogeneity toward or away from the null, especially in multitrauma or poorly documented cases.",
-        "Even if blunt vs penetrating interaction is statistically detectable, absolute differences in benefit are likely small relative to the overall positive effect; TXA should not be withheld from blunt trauma patients based on mechanism alone.",
-        "Apparent blunt\u2013penetrating differences may largely be driven by interactions with time to treatment and shock severity; mechanism is best interpreted in combination with these more proximal determinants."
+        "Injury mechanism variability might affect assessments.",
+        "Consider previous conditions that may differentially influence blunt trauma outcomes."
       ]
     },
     {
-      "feature_name": "ihr (Initial Heart Rate)",
+      "feature_name": "ihr",
       "importance_rank": 3,
-      "shap_value": 0.0216621161,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Initial heart rate at hospital presentation, in beats per minute. Clinically a key marker of physiological response to hypovolemia, hemorrhagic shock, pain, and sympathetic activation. Tachycardia suggests significant blood loss or high stress; bradycardia can indicate severe decompensation, neurogenic etiologies, or pre-existing conduction issues.",
-      "why_important": "Heart rate is a central indicator of shock severity and ongoing blood loss\u2014the primary pathway through which TXA reduces mortality (preventing exsanguination). It helps stratify baseline risk and likely marks the degree of systemic coagulopathy and hyperfibrinolysis. Consequently, HR can influence both the absolute benefit of TXA (larger in high-risk tachycardic patients) and potentially the shape of any non-linear effect modification across the HR spectrum.",
+      "shap_value": 0.021662116050720215,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Initial heart rate at admission reflects a patient's immediate response, potentially indicating shock severity.",
+      "why_important": "Heart rate is a crucial indicator of shock severity, guiding acute intervention strategies including the administration of TXA.",
       "mechanisms": [
         {
           "mechanism_type": "physiological",
-          "description": "Marker of compensated vs decompensated shock: Mild to moderate tachycardia may reflect compensated hypovolemia where organs are still perfused, providing a window in which TXA-mediated hemostasis can avert progression to irreversible shock. Extremely high heart rates or terminal bradycardia may indicate such advanced shock or impending arrest that TXA cannot meaningfully alter mortality trajectory.",
+          "description": "Elevated initial heart rates may imply severe shock and active hemorrhage, suggesting differential TXA efficacy to modify outcomes.",
           "evidence_level": "strong"
         },
         {
-          "mechanism_type": "biological",
-          "description": "Correlation with hyperfibrinolysis and coagulopathy: Higher HR typically coincides with greater blood loss, tissue hypoperfusion, and acidosis\u2014all associated with trauma-induced coagulopathy and hyperfibrinolysis. In such states, TXA\u2019s antifibrinolytic action is likely to have greater absolute impact by stabilizing clots and reducing further bleeding.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Surrogate for ongoing hemorrhage vs controlled bleeding: Persistently elevated HR despite early resuscitation suggests continued blood loss. TXA may be particularly beneficial in this setting by limiting further hemorrhage while definitive control is being pursued. In contrast, normal or only mildly elevated HR may correspond to minimal ongoing bleeding, where the absolute potential benefit of TXA is smaller.",
-          "evidence_level": "moderate"
-        },
-        {
           "mechanism_type": "pharmacological",
-          "description": "Interaction with vasoactive and resuscitation strategies: Patients with profound tachycardia often receive more aggressive fluid resuscitation, blood products, and sometimes vasopressors, which influence dilutional coagulopathy and fibrinolytic activity. TXA\u2019s effectiveness may depend on this resuscitation milieu, making HR a partial proxy for treatment intensity and timing.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Non-linear risk relationship: Mortality risk rises non-linearly with increasing HR, with steep increases at higher ranges and possible risk at very low HR (bradycardia). Effect modification by HR may also be non-linear: moderate tachycardia may show large absolute benefit (high risk but still reversible), whereas at extreme ends (very low or very high HR), the proportional benefit could be smaller because competing, non-bleeding mechanisms dominate outcomes.",
+          "description": "Elevated catecholamine levels in these states could potentiate TXA's capacity to stabilize clots by reducing fibrinolysis.",
           "evidence_level": "moderate"
         },
         {
           "mechanism_type": "biological",
-          "description": "Interaction with age and autonomic responsiveness: Older patients or those on beta-blockers may have blunted tachycardic responses despite significant bleeding, leading to underappreciation of shock severity if relying on HR alone. TXA effect heterogeneity by HR may therefore differ between patients with intact vs blunted autonomic responses, even at similar levels of actual blood loss.",
+          "description": "High initial heart rates due to sympathetic activation can affect TXA's systemic effects by altering hemodynamic and pharmacokinetic profiles.",
           "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Association with sympathetic surge and microvascular tone (speculative): Tachycardia from catecholamine excess alters microvascular tone and may affect local clot formation and breakdown. While this could, in theory, modify how TXA stabilizes clots, any incremental effect mediated specifically through these microvascular changes is likely much smaller than effects driven by overall bleeding severity and timing.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Proxy for triage urgency and time to definitive care: High HR is often a trigger for rapid triage to higher-acuity areas, faster imaging, earlier access to the operating room, and more aggressive hemostatic resuscitation. These process-of-care differences may interact with TXA\u2019s benefit (e.g., TXA more likely to be given early in tachycardic patients), with HR acting as a surrogate for care pathways as well as physiology.",
-          "evidence_level": "weak"
         }
       ],
-      "subgroup_implications": "Exploratory subgroups: (1) HR categories (e.g., <80, 80\u2013109, 110\u2013129, \u2265130 bpm) to approximate increasing shock severity. (2) Tachycardic (e.g., \u2265100\u2013110 bpm) vs non-tachycardic patients. (3) Patients with discordant HR and SBP (e.g., tachycardic but normotensive vs hypotensive without marked tachycardia) to differentiate compensated vs decompensated or autonomically blunted shock. TXA benefit is expected to be greatest in moderately to severely tachycardic patients with evidence of active bleeding, with smaller incremental gains in those without signs of shock or in moribund patients.",
+      "subgroup_implications": "Individuals showing high initial heart rates could benefit from correctly timed TXA doses and potentially combined approaches addressing hemodynamic stability.",
       "validation_suggestions": [
-        "Model TXA-by-heart-rate interaction using flexible functions (e.g., restricted cubic splines) on HR, and present plots of predicted absolute risk reduction across the HR spectrum.",
-        "Perform stratified analyses by predefined HR categories to estimate TXA effects on both absolute and relative scales, investigating whether benefit plateaus or declines at extreme HR values.",
-        "Combine HR with SBP into shock indices (e.g., shock index HR/SBP) and compare their interaction with TXA against HR alone, to test whether composite physiologic markers better capture heterogeneity.",
-        "Adjust HR-based interaction models for time from injury to randomization and baseline SBP, to explore whether apparent HR effects persist after accounting for these core determinants.",
-        "In sensitivity analyses, repeat HR interaction tests stratified by age bands (as crudely proxied for beta-blocker use and autonomic blunting) to see if patterns differ across age.",
-        "Where cause-specific mortality is available, examine whether HR-based heterogeneity in TXA effect is concentrated in bleeding deaths rather than non-hemorrhagic causes.",
-        "Validate HR-related findings in external trauma cohorts with additional shock markers (e.g., lactate, base deficit, viscoelastic measures) to see whether HR adds independent predictive value as an effect modifier.",
-        "Fit multidimensional interaction models including HR, SBP, and RR (or derive latent classes/phenotypes of shock) and assess TXA effect within these combined physiologic states."
+        "Determine heart rate thresholds to optimize TXA timing and efficacy outcomes.",
+        "Structured trials to evaluate TXA timing's impact on heart rate-modulated shock."
       ],
       "caveats": [
-        "Heart rate is influenced by pain, anxiety, fever, intoxicants, and medications, not just blood loss, which reduces its specificity for hemorrhagic shock.",
-        "Single baseline HR does not capture dynamic response to resuscitation or evolving hemorrhage; patterns over time may better identify TXA-responsive states.",
-        "CRASH-2 recommended TXA based on suspected significant bleeding and time, not HR thresholds; using HR alone as a gatekeeper for TXA would conflict with trial evidence.",
-        "HR is strongly correlated with other shock markers (SBP, respiratory rate, capillary refill), making it difficult to disentangle HR\u2019s independent modifier role from overall physiologic derangement.",
-        "Measurement error and variability in HR recording (manual vs automated, timing relative to initial resuscitation) can attenuate or distort HR-based interaction estimates.",
-        "In very high-risk groups (extreme tachycardia or profound bradycardia), even meaningful relative effects may translate into modest absolute differences compared with extremely high baseline mortality.",
-        "CRASH-2 has limited data on chronic medications (e.g., beta-blockers) and comorbidities, which constrains evaluation of the autonomic-blunting hypothesis.",
-        "Any observed HR-related heterogeneity is likely modest compared with the dominant effects of treatment timing and overall shock severity; HR should be interpreted in combination with other vital signs."
+        "Confounding variables such as emotional distress or medication might affect heart rate readings.",
+        "Co-administered treatments influencing heart rate should be accounted for in analysis."
       ]
     },
     {
-      "feature_name": "isbp (Initial Systolic Blood Pressure)",
+      "feature_name": "isbp",
       "importance_rank": 4,
-      "shap_value": 0.0181744825,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Systolic blood pressure at initial assessment, in mmHg. A key indicator of circulatory status and shock severity. Low SBP reflects significant blood loss and hemodynamic compromise; very low SBP often corresponds to decompensated shock and imminent cardiovascular collapse.",
-      "why_important": "TXA\u2019s main mortality benefit is through reducing death from bleeding. Hypotension reflects both total blood loss and the degree of trauma-induced coagulopathy. Thus, initial SBP strongly stratifies baseline risk and likely influences the window during which stabilizing fibrin clots with TXA can meaningfully alter the course of hemorrhagic shock. SHAP importance for SBP likely captures both its strong role in risk prediction and modest effect modification in the magnitude (but not direction) of benefit.",
+      "shap_value": 0.018174482509493828,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Initial systolic blood pressure is a key marker for cardiovascular function and shock presence.",
+      "why_important": "Systolic blood pressure assessment helps determine the urgency and strategy for hemostatic interventions, including the administration of TXA in trauma care.",
       "mechanisms": [
         {
           "mechanism_type": "physiological",
-          "description": "Indicator of hemorrhagic shock severity: Lower SBP reflects greater loss of circulating volume, reduced organ perfusion, and proximity to irreversible shock. Patients with moderate hypotension may derive large absolute benefit from TXA (high baseline risk but still salvageable), while those with profound hypotension may have limited modifiability because of established multi-organ failure or un-survivable injuries.",
+          "description": "Reducing systolic blood pressure indicates higher urgent need for hemostatic intervention, potentially enhancing TXA's role in forming stable clots.",
           "evidence_level": "strong"
         },
         {
-          "mechanism_type": "biological",
-          "description": "Association with trauma-induced coagulopathy and hyperfibrinolysis: Severe hypotension and hypoperfusion promote acidosis, hypothermia, and endothelial dysfunction, which in turn drive coagulopathy and often hyperfibrinolysis. TXA\u2019s antifibrinolytic effect should be particularly beneficial in this state by stabilizing existing clots, though in some patients with extreme shock, fibrinolysis shutdown or non-survivable injury may limit marginal gains.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Window of opportunity for intervention: Patients with normal or near-normal SBP may be minimally bleeding or very early in their hemorrhage course, yielding lower absolute risk and smaller absolute TXA gains even if relative effects are similar. Conversely, patients with extremely low SBP may already have microcirculatory collapse and irreversible organ damage, limiting TXA\u2019s impact despite high baseline bleeding risk. This suggests a mid-range SBP where TXA\u2019s absolute benefit is maximal.",
-          "evidence_level": "moderate"
-        },
-        {
           "mechanism_type": "pharmacological",
-          "description": "Interaction with volume resuscitation and hemostatic therapy: Hypotensive patients usually receive more aggressive fluid and blood-product resuscitation and may be managed with permissive hypotension strategies until surgical control is achieved. TXA may act synergistically in this context by limiting fibrinolytic bleeding during and after resuscitation, but the interplay between SBP, specific resuscitation approaches, and TXA is complex and may vary by center.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Non-linear relationship with outcome risk: Mortality curves by SBP are typically J- or U-shaped, with sharply rising mortality at very low SBP. If models fail to fully capture this non-linearity, some of SBP\u2019s SHAP importance may reflect strong baseline risk prediction rather than true treatment interaction. Effect modification by SBP, if present, is likely non-linear and should be modeled accordingly.",
+          "description": "Hemodynamic alterations during shock might boost TXA's presence at bleeding sites, affecting pharmacokinetics and efficacy.",
           "evidence_level": "moderate"
         },
         {
           "mechanism_type": "biological",
-          "description": "Potential interaction with organ-specific injury patterns: Very low SBP is more common in massive torso or pelvic hemorrhage, whereas moderate hypotension might be seen with extremity or mixed injuries. These different bleeding patterns may respond differently to TXA (e.g., pelvic fracture hemorrhage with strong fibrinolytic component vs isolated extremity bleeding), so SBP may partly capture anatomical and physiological patterns relevant to TXA responsiveness.",
+          "description": "Low systolic pressure reflecting widespread endothelial damage suggests contexts where TXA can enhance clot stabilization more effectively.",
           "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Influence of pre-existing hypertension: For chronically hypertensive patients, an SBP that appears \u2018normal\u2019 or only mildly low may represent substantial relative hypotension and end-organ hypoperfusion. If such patients are classified as normotensive, their high-risk status may be underestimated, which can blur the relationship between absolute SBP and TXA benefit in population-level analyses.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Signal for rapid escalation of care: Very low SBP triggers massive transfusion protocols, immediate activation of surgical teams, and earlier consideration of TXA. Thus, SBP is intertwined with system-level responses that themselves shape mortality, and SBP\u2019s apparent modifying effect on TXA may partly capture these co-interventions.",
-          "evidence_level": "moderate"
         }
       ],
-      "subgroup_implications": "Exploratory subgroups: (1) SBP categories such as <75, 75\u201389, 90\u2013109, \u2265110 mmHg to capture grades of shock. (2) Hypotensive (SBP <90) vs non-hypotensive patients. (3) Combined shock indices, for example, SBP categories within strata of HR to separate compensated vs decompensated shock. (4) Hypotensive patients treated early vs later to assess whether timing modifies the SBP-related gradient of benefit. The largest absolute TXA benefit is expected in patients with moderate hypotension and active bleeding.",
+      "subgroup_implications": "Patients with lower baseline systolic pressures may represent key candidates for rapid action of TXA treatment.",
       "validation_suggestions": [
-        "Fit TXA-by-SBP interaction models using restricted cubic splines for SBP to estimate how absolute risk reduction varies across the pressure continuum, and present marginal-effect plots.",
-        "Compute TXA effects (risk differences and risk ratios) within prespecified SBP-defined groups and formally test for interaction on both absolute and relative scales, giving particular attention to bleeding-related deaths if cause-specific data are available.",
-        "Derive shock index (HR/SBP) and compare its interaction with TXA to that of SBP alone, to evaluate whether composite metrics better capture effect modification.",
-        "Use time-to-death analysis (e.g., 24\u201348 h vs later) stratified by SBP to investigate whether hypotensive patients derive predominantly early survival benefits consistent with hemorrhage control.",
-        "Adjust SBP interaction models for time from injury to randomization to separate effects of presenting hemodynamics from treatment delay.",
-        "Among hypotensive patients, stratify by receipt of massive transfusion and surgical or interventional hemostasis to test whether SBP-related heterogeneity is mediated by differences in definitive care.",
-        "In external cohorts with more direct shock markers (e.g., lactate, base deficit), test whether SBP adds independent interaction information beyond these variables.",
-        "Explore multidimensional physiologic classes (e.g., clustering based on SBP, HR, RR, CRT) and estimate TXA effects within these clusters to see whether SBP-driven subgroups remain distinct."
+        "Evaluate TXA outcomes by different baseline blood pressures.",
+        "Tailor trials assessing TXA variations based on initial cardiovascular metrics."
       ],
       "caveats": [
-        "SBP at a single time point is subject to measurement error, transient fluctuations, and prehospital interventions (fluids, vasopressors), which may obscure its relationship with true intravascular volume and shock severity.",
-        "Permissive hypotension strategies can lead to lower SBP by design without necessarily indicating uncontrolled bleeding, complicating interpretation of low SBP as a pure marker of hemorrhage.",
-        "SBP is highly correlated with HR and other shock measures; models may attribute importance to SBP that reflects the broader physiologic state rather than a unique modifier role.",
-        "CRASH-2 demonstrated TXA benefit across broad SBP ranges, and no SBP subgroup showed clear harm; withholding TXA based on SBP thresholds would contradict the trial\u2019s main conclusions.",
-        "The relationship between SBP and trauma-induced coagulopathy is complex; some hypotensive patients may already have fibrinolysis shutdown, but these phenotypes were not characterized in CRASH-2.",
-        "Pre-existing hypertension and age alter the clinical meaning of a given SBP value; lack of individualized baseline blood-pressure data limits nuance in effect-modification analyses.",
-        "Apparent SBP-related heterogeneity may largely reflect competing risks (e.g., unsurvivable injury, TBI dominance) among extremely hypotensive patients, rather than interaction with TXA\u2019s biological action.",
-        "Differences in blood pressure measurement methodology (manual vs automated, cuff size, timing) are rarely collected but can introduce variability and misclassification."
+        "Blood pressure could vary due to non-trauma related interventions.",
+        "Prior cardiovascular health may alter perceived TXA-related benefits at this metric."
       ]
     },
     {
-      "feature_name": "iage (Age)",
+      "feature_name": "iage",
       "importance_rank": 5,
-      "shap_value": 0.017875107,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Age in years at the time of injury. A central determinant of baseline mortality risk, comorbidity burden, vascular health, and physiological reserve. Older patients generally experience worse outcomes after trauma due to frailty, comorbidities, and less robust compensatory mechanisms.",
-      "why_important": "Age modifies trauma outcomes through multiple pathways: altered coagulation and fibrinolysis, higher prevalence of comorbidities and concurrent medications (e.g., anticoagulants, antiplatelets, beta-blockers), and different mechanisms and patterns of injury. These factors influence both the extent of bleeding and the balance between hemorrhagic and non-hemorrhagic causes of death, thereby shaping the absolute magnitude of TXA\u2019s net mortality benefit, even if the relative risk reduction is fairly consistent across ages.",
+      "shap_value": 0.017875107005238533,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Age at admission correlates with physiological reserves and existing health status, impacting trauma response.",
+      "why_important": "Age significantly affects physiological response to trauma interventions, including the hemostatic efficacy of TXA.",
       "mechanisms": [
         {
           "mechanism_type": "biological",
-          "description": "Age-related changes in coagulation and fibrinolysis: Older adults often have a more prothrombotic baseline state with altered fibrinolytic capacity (e.g., higher PAI-1, different plasminogen activity). Trauma superimposed on this milieu may produce different fibrinolytic phenotypes (including more fibrinolysis shutdown) compared with younger patients. TXA\u2019s benefit could be attenuated in individuals with already low fibrinolytic activity, and the balance between benefit and thrombotic risk may differ in older, vascular-diseased patients.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Reduced physiologic reserve and frailty: Older patients have less capacity to compensate for blood loss, more rapid progression to multi-organ dysfunction, and higher susceptibility to complications (e.g., pneumonia, delirium, heart failure). Even if TXA effectively reduces bleeding-related deaths, competing non-hemorrhagic deaths may limit the observable net mortality benefit in older groups compared with younger patients at similar levels of hemorrhage.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "description": "Higher prevalence of anticoagulant and antiplatelet use: Older patients more often use warfarin, DOACs, aspirin, or clopidogrel, which alter clot formation and stability. TXA stabilizes formed fibrin clots but does not reverse anticoagulant effects or restore platelet function. Thus, in elderly patients with anticoagulant-related bleeding, TXA may have less relative impact, and optimal care may rely more on reversal agents or targeted therapies.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Differential patterns of injury with age: Older patients more often sustain low-energy falls with isolated head, hip, or vertebral fractures, whereas younger patients tend to have high-energy polytrauma. Because TXA\u2019s clearest benefit is on hemorrhagic deaths in patients at risk of significant extracranial bleeding, age-related shifts toward injuries dominated by TBI or low-bleeding fractures may reduce the proportion of outcomes that TXA can modify.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Baseline risk stratification: Age is a powerful predictor of trauma mortality regardless of treatment. Even if the relative benefit (e.g., risk ratio) of TXA is similar across age groups, the absolute risk reduction will be larger in older, higher-risk patients. ML models focused on individualized treatment effect will thus assign high importance to age, reflecting baseline risk gradients as much as, or more than, true interaction on a relative scale.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Age-related endothelial dysfunction: Chronic vascular disease and endothelial dysfunction are more prevalent in older adults, potentially altering trauma-induced endotheliopathy and fibrinolysis. TXA\u2019s action on plasminogen\u2013plasmin dynamics might behave differently in this altered endothelial environment, but direct data are scarce.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Differences in care intensity and goals: Older patients may receive different levels of aggressiveness in resuscitation or surgery (e.g., more conservative management, earlier DNR orders, or limitations on invasive procedures). Such differences can limit the potential benefits realized from TXA compared with younger patients who receive maximal life-sustaining intervention for similar injuries.",
+          "description": "Older age correlates with baseline increased fibrinolytic activity, enhancing the relevance of TXA for preventing excessive bleeding.",
           "evidence_level": "moderate"
         },
         {
           "mechanism_type": "pharmacological",
-          "description": "Age-related pharmacokinetics and pharmacodynamics: Renal function declines with age, and TXA is predominantly renally excreted. While standard CRASH-2 dosing appears safe across age ranges, accumulation in severe renal impairment or altered volume of distribution in frail elderly patients could, in theory, influence efficacy and adverse-event profiles (e.g., thrombosis risk), though clear clinical evidence is limited.",
-          "evidence_level": "weak"
-        }
-      ],
-      "subgroup_implications": "Exploratory subgroups: (1) Age bands such as <25, 25\u201344, 45\u201364, \u226565 years. (2) Younger vs older patients with comparable physiological derangement (similar HR, SBP) to distinguish pure age effects from shock severity. (3) Within older age groups, stratification by likely antithrombotic use (if available) or by crude proxies such as prior cardiovascular disease. (4) Age interaction with time to TXA (early vs late) and mechanism (blunt vs penetrating). Net TXA benefit may be largest in absolute terms in older high-risk patients but relatively diluted by non-hemorrhagic deaths and comorbidities.",
-      "validation_suggestions": [
-        "Estimate TXA treatment effects across pre-defined age categories, presenting both absolute and relative effects and formally testing for interaction on both scales.",
-        "Fit models with age as a continuous interaction term (using splines) to identify any non-linear age regions where the magnitude of TXA benefit appears to change.",
-        "Perform cause-specific mortality analyses to determine whether TXA mainly reduces hemorrhagic deaths similarly across ages, with age-related variation in non-hemorrhagic deaths accounting for differences in net all-cause benefit.",
-        "Adjust for mechanism of injury and physiologic severity markers (HR, SBP, GCS) when assessing age interactions, to reduce confounding by correlated risk factors.",
-        "In external datasets with medication data, stratify older patients by anticoagulant/antiplatelet use to explore whether TXA effects differ in these subgroups.",
-        "Use trauma registries with comorbidity indices (e.g., Charlson score) to examine whether age per se or comorbidity/frailty burden is more closely associated with heterogeneity in TXA benefit.",
-        "If thromboembolic events were collected, compare their incidence across age strata in TXA vs placebo arms to explore age-related differences in TXA\u2019s safety profile.",
-        "Include three-way interactions (age \u00d7 SBP \u00d7 HR) in exploratory models to evaluate whether younger and older patients with similar shock severity have similar relative TXA benefits."
-      ],
-      "caveats": [
-        "Age is a composite marker encompassing frailty, comorbidities, medications, and care preferences; it may not be the true biological modifier of TXA effect but rather a proxy for multiple underlying factors.",
-        "CRASH-2 did not demonstrate a clear age group in which TXA was harmful; observed differences across ages are mainly in magnitude, not direction, of benefit.",
-        "Limited data on comorbidities and chronic medications in CRASH-2 restrict the ability to dissect the roles of anticoagulants, antiplatelets, and frailty in any age-related heterogeneity.",
-        "Injury patterns differ substantially with age, so age-related effect modification may partly reflect anatomical differences rather than age itself.",
-        "Differences in care intensity and advanced directives for older patients can bias observed treatment effects and are not randomized, complicating causal interpretation of age interactions.",
-        "Age-related pharmacokinetic differences for TXA at CRASH-2 doses are thought to be modest; speculated efficacy differences based on PK/PD alone should be considered tentative.",
-        "High SHAP importance for age may largely reflect its role as a baseline risk predictor in individualized-benefit models, not necessarily a strong causal interaction with TXA.",
-        "Tailoring TXA use by age alone would conflict with guideline recommendations that advocate early TXA for bleeding trauma patients irrespective of age, provided there are no clear contraindications."
-      ]
-    },
-    {
-      "feature_name": "ninjurytime (Normalized/Transformed Time From Injury to Randomization)",
-      "importance_rank": 6,
-      "shap_value": 0.0178174935,
-      "effect_direction": "negative",
-      "clinical_interpretation": "Time from injury to randomization (and thus to TXA administration), likely normalized or transformed. Clinically this is the elapsed time, usually in hours, between trauma and initiation of TXA. CRASH-2 showed that early administration (within 3 hours, and especially within 1 hour) yields greater benefit, while treatment after 3 hours may be ineffective or possibly harmful.",
-      "why_important": "TXA acts on dynamic coagulation and fibrinolysis processes that are most active soon after injury. The pathophysiology of trauma-induced coagulopathy evolves over time, shifting from early hyperfibrinolysis toward fibrinolysis shutdown and prothrombotic states. Early trauma deaths are predominantly hemorrhagic, while later deaths are increasingly non-hemorrhagic. Treatment timing is therefore a fundamental modifier of TXA\u2019s risk-benefit profile and is the most robust, trial-validated determinant of heterogeneity in TXA effect.",
-      "mechanisms": [
-        {
-          "mechanism_type": "biological",
-          "description": "Early hyperfibrinolytic phase vs later fibrinolysis shutdown: Shortly after trauma, many patients exhibit hyperfibrinolysis, a state in which TXA is maximally beneficial by reducing excessive clot breakdown and ongoing bleeding. As time passes, many survivors shift to fibrinolysis shutdown or prothrombotic states, where additional antifibrinolysis may provide little hemostatic benefit and could theoretically increase risk of thrombosis. This temporal evolution aligns with the observed decline in TXA benefit and potential harm after 3 hours in CRASH-2.",
+          "description": "Age affects pharmacokinetics, altering metabolism and distribution of TXA, influencing therapeutic efficacy.",
           "evidence_level": "strong"
         },
         {
           "mechanism_type": "physiological",
-          "description": "Dynamic evolution of bleeding and hemodynamic status: Early after injury, active bleeding is ongoing and hemodynamics may still be salvageable. TXA given in this window can meaningfully reduce further blood loss and prevent progression to refractory shock. Later, bleeding may have spontaneously stopped, been surgically controlled, or patients may already have died from hemorrhage or transitioned to non-hemorrhagic complications, reducing or negating TXA\u2019s net benefit.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "description": "Time-dependent therapeutic window: TXA\u2019s pharmacologic action requires presence of active clot formation and fibrinolysis. Its impact is greatest when administered before or during early coagulation\u2013fibrinolysis balance. Late administration, after hemostasis is established or when fibrinolysis has shut down, may stabilize inappropriate microthrombi or contribute to microvascular occlusion, offering a plausible explanation\u2014though not definitively proven\u2014for the harm signal with very delayed treatment in CRASH-2.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Changing balance of competing risks: Early trauma deaths are predominantly due to uncontrolled hemorrhage; later deaths are more often from organ failure, infection, or TBI-related complications. TXA primarily prevents hemorrhagic deaths, so delays in administration shift the outcome mix toward deaths that TXA cannot influence, diminishing observed effectiveness and potentially unmasking any thrombotic or other adverse effects.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Immortal time and selection biases (mainly in non-randomized settings): Patients who survive long enough to receive very late TXA in observational practice may differ systematically from those who die early or never receive TXA. While randomization in CRASH-2 fixes TXA timing by protocol within the trial, real-world analyses can misattribute timing-related differences to TXA itself, underscoring the need for careful time-dependent methods.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Time as a marker of system performance: Shorter injury-to-treatment times often reflect more efficient emergency systems, better prehospital care, and quicker access to surgery and blood products. Early TXA tends to co-occur with these favorable system characteristics, which can augment apparent benefit. Within CRASH-2, randomization ensures comparability within time strata, but in implementation studies, this systems factor is a key confounder.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Interaction with evolving inflammatory and endothelial responses: Over hours, systemic inflammation, endothelial glycocalyx shedding, and microvascular thrombosis evolve. The window where fibrinolysis is maladaptive and TXA is protective may close as the host response transitions to a more procoagulant, microthrombotic state, beyond which additional antifibrinolysis could theoretically worsen microvascular obstruction. This remains a hypothesis that aligns with late-harm signals but lacks direct mechanistic confirmation in large trauma trials.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "description": "Interaction with other time-sensitive therapies: Early TXA may be synergistic with rapid surgical control and early balanced transfusion; late TXA may be administered after other therapies have largely determined the patient\u2019s trajectory. Thus, timing modifies the opportunity for TXA to exert incremental benefit within a broader package of resuscitative care.",
+          "description": "Age-related endothelial dysfunction might increase bleeding risk, where TXA could have a heightened impact in stabilizing endothelial integrity.",
           "evidence_level": "moderate"
         }
       ],
-      "subgroup_implications": "Subgroups with strong prior support: (1) Very early (<1 h), early (1\u20133 h), and late (>3 h) TXA administration, replicating CRASH-2 categories. (2) Continuous modeling of time from injury to randomization (rather than fixed cutoffs) to capture a smooth gradient of effect. (3) Combined timing with shock status (e.g., hypotensive vs normotensive) and mechanism (blunt vs penetrating) to identify early, high-risk patients with the largest absolute benefit. Late-treated patients, especially beyond 3 hours, may experience minimal or even harmful net effects.",
+      "subgroup_implications": "Elderly patients could particularly benefit from dosed TXA regimens that account for age-related pharmacodynamics.",
       "validation_suggestions": [
-        "Reproduce and refine CRASH-2 timing subgroup analyses by modeling TXA effect as a function of continuous time from injury (e.g., using splines) rather than only categorical cutoffs, and compare with the original <1 h, 1\u20133 h, >3 h groups.",
-        "Estimate cause-specific hazards for hemorrhagic vs non-hemorrhagic death by treatment and timing, to characterize how benefits (reduced bleeding deaths) and potential harms evolve over time since injury.",
-        "Conduct sensitivity analyses restricted to patients treated within 3 hours to assess residual heterogeneity independent of the well-established late-treatment signal.",
-        "Evaluate whether adjusting for baseline shock markers (SBP, HR, CRT, RR) alters the observed strength of timing-related effect modification, clarifying whether later treatment primarily captures more severely ill survivors vs system delay.",
-        "Investigate interactions between timing and mechanism (blunt vs penetrating) to test whether the optimal therapeutic window differs by injury pattern.",
-        "Validate timing-related findings in external datasets (e.g., prehospital TXA trials, military trauma cohorts) where prehospital administration narrows the timing distribution, confirming early-treatment advantage.",
-        "Where viscoelastic or fibrinolytic biomarker data are available, correlate timing with fibrinolysis phenotype and test whether early TXA preferentially benefits hyperfibrinolytic patients.",
-        "In observational implementation data, apply causal methods such as marginal structural models or target trial emulation to account for time-dependent confounding in TXA timing decisions."
+        "Focus on age-segmented analysis to refine TXA efficacy and outcomes.",
+        "Perform meta-analyses including age as a primary stratification criterion."
       ],
       "caveats": [
-        "Time from injury is often estimated from patient or witness reports and may be imprecise, especially in unwitnessed events or mass casualties, which can attenuate or distort observed timing effects.",
-        "CRASH-2 discouraged treatment after 3 hours, so the group treated later is smaller and potentially more selected, limiting power and generalizability of late-treatment harm estimates.",
-        "System-level factors (EMS response times, transport distance, hospital crowding) are tightly linked to timing and independently influence outcomes, complicating attribution of heterogeneity solely to TXA timing.",
-        "In non-randomized real-world data, confounding by indication is a major concern: clinicians may preferentially give early TXA to sicker patients, potentially biasing observed associations without appropriate methods.",
-        "The notion of a sharp 3-hour cutoff is an approximation; underlying biological processes likely change gradually, and models should consider continuous time to avoid oversimplified interpretations.",
-        "The late TXA\u2013associated harm observed in CRASH-2 may reflect a combination of biology, chance, and residual confounding; mechanistic evidence specifically linking late TXA to microvascular thrombosis remains limited.",
-        "Injury-to-treatment time distributions differ across regions and systems; extrapolating timing effects from CRASH-2 to settings with very different prehospital care should be done with caution.",
-        "Despite evidence favoring early use, uncertainty about exact injury time in practice should not lead to systematic withholding of TXA, as many patients with approximate or unknown times may still be within a beneficial window."
-      ]
-    },
-    {
-      "feature_name": "irr (Initial Respiratory Rate)",
-      "importance_rank": 7,
-      "shap_value": 0.0177884493,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Respiratory rate at initial assessment, in breaths per minute. A vital sign reflecting respiratory drive, metabolic demand, pain, anxiety, and compensation for metabolic acidosis (e.g., from shock). Very low RR may indicate central nervous system depression, neuromuscular compromise, or impending respiratory failure.",
-      "why_important": "Respiratory rate captures both shock-related metabolic acidosis and injuries affecting the respiratory system (e.g., chest trauma, TBI). These conditions relate to overall trauma severity and to the balance between hemorrhagic and non-hemorrhagic mechanisms of death. Thus, RR can help discriminate patients in whom mortality is dominated by modifiable hemorrhage (where TXA has more impact) from those in whom respiratory failure or neurological injury predominate (where TXA\u2019s relative influence on all-cause mortality is smaller).",
-      "mechanisms": [
-        {
-          "mechanism_type": "physiological",
-          "description": "Marker of metabolic acidosis and compensated shock: Tachypnea often accompanies lactic acidosis from tissue hypoperfusion in hemorrhagic shock. Elevated RR thus indicates substantial but potentially reversible shock where hemostatic interventions like TXA may yield high absolute benefit, particularly when combined with other shock markers (low SBP, high HR, poor perfusion). Extremely high RR may also signal imminent decompensation despite resuscitation.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Indicator of chest injuries and impaired ventilation: High or low RR can reflect chest trauma (e.g., flail chest, pulmonary contusion, hemothorax, pneumothorax) requiring increased respiratory effort or resulting in respiratory depression. These injuries contribute to hypoxia and may involve significant intrathoracic bleeding. Where intrathoracic bleeding is substantial, TXA may help limit blood loss; where respiratory failure from lung injury predominates, TXA\u2019s effect on overall mortality may be relatively smaller.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Correlation with systemic inflammatory response: Increased RR is one component of systemic inflammatory response syndrome (SIRS) and may indicate a strong inflammatory reaction to tissue injury. This can be associated with endothelial activation and coagulopathy. TXA\u2019s interaction with this milieu is complex; hyperfibrinolysis or fibrinolysis shutdown states may coexist with elevated RR, but the incremental modifying effect of RR beyond other markers is likely modest.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Association with neurological status: Depressed RR can occur with severe TBI, spinal cord injury, sedative medications, or intoxication. In these contexts, mortality may be driven more by neurological and respiratory failure than by hemorrhage. Consequently, the relative observable effect of TXA on all-cause mortality may be attenuated in patients whose abnormal RR primarily reflects central nervous system pathology rather than shock.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Non-specific surrogate of overall severity: When accurately recorded, RR correlates with overall physiologic derangement, including pain, agitation, shock, and brain injury. Its importance in the ML model may largely reflect its value in predicting baseline mortality risk rather than a strong independent causal modification of TXA\u2019s effect.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Trigger for high-acuity care: Abnormal RR often upgrades triage category and prompts early intubation, ICU admission, or close monitoring. These process-of-care differences can influence outcomes and may interact with TXA\u2019s effect by altering the likelihood and timing of definitive hemorrhage control and organ support.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Link to microvascular and pulmonary coagulation (speculative): Severe lung contusion and ARDS involve intra-alveolar fibrin deposition and microthrombosis. There is a theoretical concern that TXA could worsen pulmonary microthrombi in later phases of lung injury, although clinical evidence in trauma populations is very limited. RR as a marker of severe chest injury and respiratory dysfunction might therefore identify patients at slightly different risk\u2013benefit balances for TXA, but any such effect is likely small compared with timing and shock.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Interaction with oxygen delivery and organ perfusion (highly speculative): Very high RR in hypovolemic patients increases work of breathing and oxygen consumption, which may exacerbate an already strained circulation. In theory, limiting additional bleeding with TXA could be particularly important in such borderline states, but any TXA effect mediated specifically through RR-related oxygen consumption is likely minor relative to its effect on hemorrhage control.",
-          "evidence_level": "speculative"
-        }
-      ],
-      "subgroup_implications": "Exploratory subgroups: (1) RR categories such as <10, 10\u201319, 20\u201329, \u226530 breaths/min to approximate bradypnea, normal, moderate, and marked tachypnea. (2) Tachypneic vs non-tachypneic patients, combined with SBP/HR to distinguish metabolic-acidosis\u2013driven tachypnea from anxiety or pain. (3) Patients with abnormal RR but relatively normal SBP/HR (suggesting chest injury, pain, or CNS causes) vs those with abnormal RR plus shock (global decompensation). (4) RR interaction with GCS to separate neurological vs metabolic drivers of abnormal RR. TXA benefit may be more apparent in tachypneic patients whose abnormal RR reflects shock and active bleeding rather than primary respiratory or neurological pathology.",
-      "validation_suggestions": [
-        "Model RR as a continuous interaction term using flexible functions to quantify any non-linear change in TXA effect across RR values, and plot marginal effects.",
-        "Stratify patients by RR categories and estimate TXA effects within each, adjusting for SBP, HR, and GCS to reduce confounding by overlapping domains of severity.",
-        "Include interaction terms between RR and SBP/HR (e.g., tachypnea with vs without hypotension) to define physiologic phenotypes and examine whether TXA benefit concentrates in particular combinations.",
-        "Conduct sensitivity analyses excluding patients with very low GCS or requiring immediate intubation, to focus on patients in whom RR more directly reflects shock or lung injury rather than CNS depression.",
-        "In external datasets with detailed chest-injury coding or imaging data, test whether RR-associated heterogeneity in TXA effect is mediated by thoracic injury burden.",
-        "Where blood gas data are available, partition patients by metabolic acidosis (low pH/high lactate) vs hypoxia vs CNS causes, to refine understanding of which RR-driven phenotypes show greater TXA responsiveness.",
-        "Assess early (e.g., within 24\u201348 h) vs late mortality patterns by RR strata to determine whether any RR-related heterogeneity is concentrated in early hemorrhagic deaths.",
-        "Investigate data-quality issues such as heaping at RR=20 or 30, and perform sensitivity analyses (e.g., excluding obviously rounded values) to evaluate robustness of RR-based interactions."
-      ],
-      "caveats": [
-        "Respiratory rate is frequently mismeasured or rounded to convenient values, leading to substantial measurement error that can bias associations toward or away from null.",
-        "RR is non-specific and responds to pain, anxiety, fever, drug effects, and neurological injury, not just shock or chest trauma, complicating mechanistic interpretation.",
-        "Datasets typically capture only a single baseline RR; dynamic changes after resuscitation, analgesia, or intubation may be more informative but are often unavailable.",
-        "Any observed effect modification may largely reflect confounding with shock severity, chest injury, or GCS rather than RR itself; RR should generally be interpreted along with other vital signs.",
-        "Current trauma TXA guidelines do not use RR in eligibility criteria; using RR alone to gate TXA administration would be unsupported by existing evidence.",
-        "Theoretical concerns about TXA worsening pulmonary microthrombosis are based on limited data; clinical relevance in trauma populations remains uncertain.",
-        "Collinearity with other vital signs and with neurological status makes it difficult to isolate RR\u2019s unique modifying influence in multivariable models, especially in moderate-sized datasets.",
-        "CRASH-2 lacked detailed lung-injury and respiratory outcome data, constraining the ability to assess RR-specific TXA interactions robustly."
-      ]
-    },
-    {
-      "feature_name": "isex (Sex)",
-      "importance_rank": 8,
-      "shap_value": 0.0176201817,
-      "effect_direction": "unclear",
-      "clinical_interpretation": "Biological sex at baseline, typically coded as male or female. Sex influences body size, hormonal milieu, vascular biology, baseline coagulation/fibrinolysis, comorbidity patterns, and mechanisms of injury exposure (e.g., occupational risks, interpersonal violence, falls).",
-      "why_important": "Sex differences in coagulation and fibrinolysis, hormonal status (e.g., estrogen effects), and injury patterns may influence bleeding risk, coagulopathy, and thrombotic propensity. At the same time, sex correlates with social and system-level factors such as access to care and mechanism distribution. These combined effects can shape baseline mortality risk and potentially the magnitude\u2014but current data suggest not the direction\u2014of TXA\u2019s benefit and safety profile. Overall, credible biological sex-based effect modification in trauma TXA appears small compared with timing and shock.",
-      "mechanisms": [
-        {
-          "mechanism_type": "biological",
-          "description": "Sex differences in baseline coagulation and fibrinolysis: Women, particularly during reproductive years and pregnancy, often exhibit a more procoagulant state with different levels of PAI-1, tPA, and clotting factors. These differences could alter trauma-induced hyperfibrinolysis and, in theory, the magnitude of benefit from antifibrinolytic treatment. Evidence is mainly from non-trauma and small trauma cohorts, with limited direct demonstration of sex-specific TXA response.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Hormonal influences (estrogen, progesterone): Estrogens modulate endothelial function and coagulation. Endogenous or exogenous hormones (e.g., hormone therapy, contraceptives) may therefore interact with trauma-induced coagulopathy. TXA\u2019s antifibrinolytic effects could behave differently across hormonal states (e.g., premenopausal vs postmenopausal women, pregnancy), but such interactions were not specifically evaluated in CRASH-2 and remain largely speculative.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Differences in body size and volume of distribution: On average, men have larger body mass and blood volume, whereas women may achieve slightly higher plasma TXA concentrations with fixed dosing. These pharmacokinetic differences are modest and of uncertain clinical significance, but could theoretically lead to subtle efficacy or safety differences between sexes.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Different trauma mechanisms and contexts: Men more frequently experience high-energy blunt trauma (e.g., road traffic collisions, occupational injuries) and violent assaults, while women may more often present with low-energy falls, domestic violence, or different injury patterns. These differences influence bleeding mechanisms and severity and may indirectly shape any apparent sex-related heterogeneity in TXA benefit.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Sex as a surrogate for unmeasured factors: Socioeconomic status, access to prehospital and hospital care, and health-seeking behavior can differ by sex in many settings and may affect time to presentation and quality of treatment. ML models may assign importance to sex that actually reflects these contextual factors rather than intrinsic biological differences in TXA responsiveness.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Pregnancy and peripartum physiology: Although CRASH-2 was not an obstetric hemorrhage trial, some participants may have been pregnant, with dramatically altered hemostasis and fibrinolysis. TXA has strong evidence of benefit in postpartum hemorrhage. In pregnant trauma patients, the interplay between pregnancy-related hypercoagulability and trauma-induced coagulopathy could produce distinct response patterns, but numbers are likely too small to meaningfully influence overall sex effects.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Differential comorbidity profiles: Men and women differ in prevalence and age of onset of cardiovascular disease, anemia, and other comorbidities that influence both tolerance of blood loss and risk of thrombotic complications. These differences could subtly alter TXA\u2019s net effect on mortality and complications in sex-stratified analyses.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "description": "Potential sex-specific adverse event profiles (speculative): Some drugs show sex differences in rates of thrombotic or bleeding complications. Although TXA is generally safe and CRASH-2 observed no large sex-specific harm, rare adverse events like seizures or thrombosis might differ in frequency by sex, potentially affecting net benefit in ways that are difficult to detect in single trials.",
-          "evidence_level": "speculative"
-        }
-      ],
-      "subgroup_implications": "Exploratory subgroups: (1) Male vs female patients. (2) Within females, broad age bands (e.g., <50 vs \u226550 years) as a very crude proxy for menopausal status, with caution in interpretation. (3) Sex interaction with mechanism of injury and shock severity, to see whether sex differences mostly reflect differing exposure to high-risk phenotypes. (4) If data permit, pregnant vs non-pregnant women in external datasets. Large, consistent qualitative differences in TXA effect by sex are unlikely, but small quantitative differences in magnitude of benefit or rare adverse events cannot be excluded.",
-      "validation_suggestions": [
-        "Estimate TXA treatment effects separately in men and women, report both absolute and relative effect measures, and test for interaction by sex on both scales.",
-        "Plot time-to-death curves stratified by sex and treatment to examine whether timing or causes of death differ by sex in ways that might influence TXA\u2019s observed benefit.",
-        "In exploratory analyses, stratify women by age (e.g., <50 vs \u226550 years) to see if patterns suggest hormonal influences, while clearly acknowledging the limitations of this proxy.",
-        "Adjust for mechanism of injury, markers of severity (e.g., SBP, HR, GCS), and time from injury to randomization, and re-evaluate whether any sex-related heterogeneity persists after accounting for these correlated factors.",
-        "Where possible in external datasets with pregnancy data, compare TXA effects in pregnant trauma patients versus non-pregnant women and men to assess consistency with obstetric hemorrhage findings.",
-        "Examine thromboembolic events and seizures by sex and treatment arm, even if underpowered, to screen for potential sex-specific safety signals.",
-        "Apply interaction models distinguishing additive vs multiplicative interactions between sex and TXA, while transparently reporting wide confidence intervals for subgroup estimates.",
-        "Meta-analyze sex-stratified data from multiple TXA trials (trauma and postpartum hemorrhage) to explore whether any consistent sex-related patterns in TXA efficacy or safety emerge."
-      ],
-      "caveats": [
-        "CRASH-2 was not designed or powered to detect small sex-specific differences in TXA effect; available subgroup analyses have not suggested major qualitative differences.",
-        "Sex in most trial datasets reflects biological sex rather than gender-related social roles, and there is limited granularity to disentangle biological from social or system-level contributors.",
-        "Women typically constitute a smaller proportion of major trauma cohorts than men, limiting power for sex-stratified analyses and increasing uncertainty around interaction estimates.",
-        "Using age as a proxy for menopausal status is crude and error-prone; CRASH-2 did not collect direct hormonal or reproductive-status data.",
-        "Apparent sex-based heterogeneity may largely reflect differences in mechanisms of injury, comorbidity patterns, and access to care, rather than intrinsic biological differences in TXA responsiveness.",
-        "Overemphasis on sex as a treatment modifier could inadvertently promote unequal treatment; current evidence supports offering TXA broadly to eligible bleeding trauma patients irrespective of sex.",
-        "Rare adverse events are difficult to study by sex, so subtle sex-specific safety differences might remain undetected even in large trials.",
-        "CRASH-2\u2019s international population includes diverse cultural and regional patterns of trauma exposure by sex, which may limit generalizability of any observed sex-related patterns to specific local settings."
-      ]
-    },
-    {
-      "feature_name": "icc (Capillary Refill Time or Peripheral Perfusion Indicator)",
-      "importance_rank": 9,
-      "shap_value": 0.0170475729,
-      "effect_direction": "negative",
-      "clinical_interpretation": "A bedside indicator of peripheral perfusion, likely capillary refill time (CRT) or a categorical marker of cool/clammy extremities vs warm and well perfused. Prolonged capillary refill or cold extremities suggest poor peripheral perfusion associated with hypovolemia, low cardiac output, and shock.",
-      "why_important": "Capillary refill reflects microcirculatory perfusion and vasomotor tone, complementing macro-hemodynamic measures like SBP. Hemorrhage and shock lead to peripheral vasoconstriction and reduced capillary flow, so prolonged CRT helps identify patients with significant circulatory compromise, including occult shock in patients with preserved blood pressure. Such patients likely stand to gain more, in absolute terms, from interventions that reduce further bleeding, including TXA.",
-      "mechanisms": [
-        {
-          "mechanism_type": "physiological",
-          "description": "Marker of microcirculatory failure: Prolonged CRT indicates impaired capillary flow and tissue hypoperfusion, reflecting a stage of shock where ongoing bleeding can rapidly precipitate organ failure. In this setting, TXA, by limiting additional hemorrhage and stabilizing clots, may confer substantial benefit if administered before irreversible organ injury occurs.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Association with endothelial dysfunction and coagulopathy: Microcirculatory impairment co-occurs with endothelial activation and glycocalyx shedding, which are key drivers of trauma-induced coagulopathy and fibrinolysis. TXA\u2019s antifibrinolytic effect is likely more impactful when pathologic fibrinolysis is active, a state more frequent among patients with signs of severe shock and poor peripheral perfusion.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Complement to blood pressure in identifying \u2018occult\u2019 shock: Some patients maintain normal SBP through intense vasoconstriction yet exhibit prolonged CRT or cool peripheries. These \u2018compensated shock\u2019 patients may be under-recognized as high risk. TXA may help prevent decompensation in such patients by reducing occult blood loss, and CRT might therefore help identify a subgroup with larger-than-expected absolute benefit despite normal SBP.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Indicator of systemic vasoconstriction and catecholamine surge: Intense peripheral vasoconstriction preserves central perfusion at the expense of peripheral tissues. This state may still be reversible if bleeding is controlled promptly. TXA\u2019s role in shortening the duration and severity of shock by limiting further hemorrhage could be particularly influential when CRT is prolonged but organ function has not yet irreversibly failed.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Coarse but integrative severity marker: CRT integrates several aspects of circulatory health (intravascular volume, vasomotor tone, cardiac output). Its importance in the ML model may arise more from strong baseline risk prediction than from a direct biological interaction with TXA, especially given collinearity with SBP and HR.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Trigger for clinician concern and escalation: Abnormal CRT or cold peripheries may prompt more aggressive monitoring, earlier transfusion, and earlier consideration of TXA. Thus, CRT is entangled with care pathways (e.g., more rapid escalation at high-performing centers) that themselves alter mortality risks.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Interaction with temperature and environment: Cold ambient temperatures can prolong CRT even with normal central perfusion, potentially misclassifying patients as shocked. This misclassification can dilute or distort the apparent association between CRT-defined \u2018shock\u2019 and TXA responsiveness, particularly in diverse climatic settings such as those represented in CRASH-2.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Potential relation to microthrombi and tissue ischemia (speculative): In more advanced stages of shock, microcirculatory failure may include microthrombus formation and impaired capillary recruitment. Additional antifibrinolytic therapy in this context might, in theory, worsen microvascular obstruction. If CRT is markedly prolonged primarily because of such mechanisms rather than volume loss, TXA\u2019s net benefit could be attenuated or, in extreme cases, harmful, although this has not been demonstrated clinically.",
-          "evidence_level": "speculative"
-        }
-      ],
-      "subgroup_implications": "Exploratory subgroups: (1) Normal vs prolonged CRT (e.g., \u22642 s vs >2 s) or warm vs cool/clammy extremities, depending on how the variable is coded. (2) Patients with prolonged CRT but normal SBP (compensated or occult shock) vs prolonged CRT with hypotension (overt decompensated shock). (3) Integration of CRT with HR and (where available) lactate to refine high-risk shock phenotypes. TXA may be most beneficial in patients with abnormal CRT indicative of active but potentially reversible shock and ongoing bleeding.",
-      "validation_suggestions": [
-        "Categorize CRT or peripheral perfusion status into normal vs abnormal and estimate TXA treatment effects within each category, adjusting for SBP and HR to assess whether CRT adds independent interaction information.",
-        "Create joint categories of CRT (normal vs prolonged) and SBP (normal vs low) to identify phenotypes such as \u2018occult shock\u2019 (normal SBP, prolonged CRT) and evaluate differential TXA benefit across these phenotypes.",
-        "If site or regional climate information is available, include it as a covariate or stratification factor when modeling CRT-related heterogeneity to account for environmental influences on CRT measurement.",
-        "Examine early vs late mortality patterns by CRT status, focusing on early hemorrhagic deaths where TXA\u2019s effect should be most evident.",
-        "Validate CRT-related findings in external cohorts that include more granular microcirculatory or metabolic metrics (e.g., lactate, base deficit, near-infrared spectroscopy) to confirm whether CRT truly identifies high-benefit groups.",
-        "Perform sensitivity analyses excluding centers or periods where CRT measurement was inconsistently recorded, as suggested by data audit or high missingness, to evaluate robustness.",
-        "Assess whether CRT-based heterogeneity persists after adjustment for time to TXA administration, as delayed presentation often coincides with worse perfusion and could confound CRT\u2013TXA interactions.",
-        "Apply unsupervised clustering to vital signs (SBP, HR, RR, CRT) to identify physiologic phenotypes and estimate TXA effects within these clusters, comparing results to simpler CRT-based subgrouping."
-      ],
-      "caveats": [
-        "CRT assessment is subjective and has high inter-observer variability; misclassification can weaken or distort associations with outcomes and with TXA effect.",
-        "Environmental factors (ambient temperature, lighting) and patient factors (skin pigmentation, age, peripheral vascular disease) influence CRT measurements, complicating standardized interpretation across diverse CRASH-2 sites.",
-        "Many datasets record CRT only coarsely (e.g., normal/abnormal) rather than exact seconds, limiting resolution for nuanced analyses.",
-        "CRT is strongly correlated with other shock indicators (SBP, HR), so its apparent ML importance may reflect redundant information about shock rather than an independent modifier of TXA effect.",
-        "Evidence directly linking CRT to trauma-induced coagulopathy and fibrinolysis is indirect, mostly extrapolated from septic shock and critical-care literature.",
-        "Restricting TXA use to patients with abnormal CRT would be inconsistent with CRASH-2, which included patients based on suspected significant bleeding, not CRT thresholds.",
-        "Hypotheses relating prolonged CRT to microvascular thrombosis and potential TXA harm remain speculative, with no strong trial evidence to support CRT-specific harm from TXA.",
-        "Data often lack ambient temperature and detailed measurement context, making it difficult to adjust for environmental confounders that affect CRT."
-      ]
-    },
-    {
-      "feature_name": "igcs (Initial Glasgow Coma Scale Score)",
-      "importance_rank": 10,
-      "shap_value": 0.0164303575,
-      "effect_direction": "bidirectional",
-      "clinical_interpretation": "Initial Glasgow Coma Scale (GCS) score, ranging from 3 (deep coma) to 15 (fully alert). It measures level of consciousness and neurological function and is influenced by traumatic brain injury (TBI), shock, hypoxia, intoxicants, and sedative or paralytic medications.",
-      "why_important": "GCS strongly stratifies baseline mortality risk and helps distinguish patients whose deaths are likely driven primarily by intracranial injury and neurological failure from those primarily at risk of extracranial hemorrhagic death. TXA\u2019s main proven benefit in CRASH-2 is preventing death from bleeding, whereas in CRASH-3 it modestly reduced head injury deaths in selected TBI patients when given early. Thus, TXA\u2019s net mortality impact in CRASH-2 is expected to vary across GCS strata based on how much of the risk is hemorrhage-modifiable versus dominated by severe, often unsurvivable brain injury or multi-organ failure.",
-      "mechanisms": [
-        {
-          "mechanism_type": "physiological",
-          "description": "Differentiating TBI-dominant vs hemorrhage-dominant mortality: Low GCS often indicates severe TBI, where intracranial pathology, rather than systemic hemorrhage, dominates mortality risk. In such cases, TXA may have limited effect on all-cause mortality, even if it slightly reduces intracranial bleeding, because many deaths are not preventable by hemostatic control. In contrast, patients with higher GCS are more likely to die from extracranial hemorrhage or multi-system shock, where TXA has clearer potential to improve survival.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Interaction with traumatic coagulopathy in TBI: TBI triggers coagulopathy and can promote both bleeding and thrombosis in the brain. TXA might reduce intracranial hemorrhage expansion, as suggested by CRASH-3 in mild\u2013moderate TBI when given early, but could theoretically influence cerebral microthrombi formation. The net effect on mortality in severe TBI patients within CRASH-2 is likely small and highly context-dependent, given competing risks from brain injury severity.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "Markers of hypoxia and shock: Low GCS can also result from prolonged hypotension, hypoxia, or severe shock causing global cerebral hypoperfusion. In these multi-system failure states, TXA\u2019s ability to limit bleeding may be offset by established hypoxic-ischemic brain injury and multi-organ damage that are not reversible by hemostatic interventions.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "statistical",
-          "description": "Baseline risk stratification: GCS is one of the strongest predictors of mortality in trauma populations. Models that estimate individualized treatment benefit will naturally assign high importance to GCS because high-risk groups can show larger absolute gains from a given relative risk reduction. As a result, GCS-related SHAP importance may largely reflect baseline-risk gradients rather than strong causal interaction in relative terms.",
-          "evidence_level": "strong"
-        },
-        {
-          "mechanism_type": "behavioral",
-          "description": "Influence on care priorities and pathways: Low GCS leads to early airway protection, CT imaging, neurosurgical consultation, and admission to higher-acuity units. These pathways may prioritize neurocritical care and imaging over immediate hemorrhage control, or vice versa if shock is also present. Differences in treatment focus and timing of TXA relative to other interventions may vary by GCS and indirectly modify observed TXA effects.",
-          "evidence_level": "moderate"
-        },
-        {
-          "mechanism_type": "biological",
-          "description": "Opportunities for synergy in moderate TBI with extracranial bleeding: For patients with moderate GCS reduction (e.g., 9\u201312) from TBI and concomitant significant extracranial hemorrhage, TXA may offer dual benefit\u2014limiting both systemic bleeding and intracranial hematoma expansion if given early. In these intermediate GCS ranges, the net benefit might be larger than in patients with either isolated minimal brain injury or devastating, unsurvivable TBI.",
-          "evidence_level": "speculative"
-        },
-        {
-          "mechanism_type": "physiological",
-          "description": "GCS as a proxy for agitation, intoxication, and catecholamine surge: Mildly reduced GCS due to intoxication, agitation, or sedation can coexist with high sympathetic tone, raising HR and BP. While these physiological changes may influence hemostasis, any TXA effect mediated specifically through this pathway is likely minor compared with its direct impact on hemorrhage.",
-          "evidence_level": "weak"
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "description": "Potential masking of neurological improvement: If TXA reduces microbleeding in the brain, especially in milder TBI, subtle neurological benefits may not translate into detectable mortality differences within CRASH-2, which was not powered or designed for detailed neuro outcomes. GCS\u2019s role as a modifier of mortality-based TXA effect may therefore underestimate TXA\u2019s impact on neurological outcomes in some subgroups.",
-          "evidence_level": "speculative"
-        }
-      ],
-      "subgroup_implications": "Exploratory subgroups: (1) GCS 13\u201315 (mild/no apparent TBI), 9\u201312 (moderate), and 3\u20138 (severe impairment). (2) Patients with low GCS plus physiological shock (e.g., low SBP, high HR) vs low GCS without shock, to separate TBI-dominant vs shock-dominant etiologies of coma. (3) Interaction between GCS and mechanism (blunt vs penetrating), recognizing that blunt trauma more often entails TBI. TXA\u2019s greatest mortality benefit is expected in higher GCS patients whose deaths are more likely due to modifiable hemorrhage, with attenuated net effect in very low GCS groups dominated by unsurvivable brain injury.",
-      "validation_suggestions": [
-        "Estimate TXA treatment effects within GCS categories (e.g., 3\u20138, 9\u201312, 13\u201315) and test for interaction on both absolute and relative scales, explicitly reporting confidence intervals to show uncertainty.",
-        "Perform cause-specific mortality analyses (e.g., hemorrhagic vs neurological vs other causes) across GCS strata, to see in which strata TXA is mainly reducing bleeding deaths.",
-        "Model GCS as a continuous variable with splines and assess whether there are thresholds or non-linear zones where the magnitude of TXA benefit changes more rapidly.",
-        "Include interaction terms between GCS and SBP/HR to distinguish low GCS with shock (combined hemorrhagic and neurological injury) from low GCS without shock (predominantly brain injury), and compare TXA effects between these subgroups.",
-        "Analyze early vs late mortality (e.g., \u226424 h, 2\u20137 days, >7 days) across GCS categories to determine whether TXA mainly influences early hemorrhagic deaths among higher-GCS or moderate-GCS patients.",
-        "Relate CRASH-2 findings to CRASH-3 by comparing TXA effects in CRASH-2 patients with GCS and head-injury patterns similar to those in CRASH-3, to understand how intracranial benefit interacts with extracranial bleeding.",
-        "Conduct sensitivity analyses excluding patients with extremely low GCS scores who are likely to have unsurvivable injuries (e.g., GCS=3 with signs of brainstem failure if such data exist) and re-estimate overall TXA effects.",
-        "If any functional outcome data (e.g., disability) are available, explore whether TXA improves non-mortality neurological outcomes within GCS-stratified groups, even where mortality differences are modest."
-      ],
-      "caveats": [
-        "GCS is influenced by intoxication, sedation, paralytics, and prehospital intubation; not all low GCS values reflect structural brain injury, potentially diluting its role as a TBI marker.",
-        "CRASH-2 was not designed primarily to assess intracranial hemorrhage or long-term neurological outcomes, limiting insight into brain-specific benefits or harms of TXA in this cohort.",
-        "Some low-GCS trauma patients have unsurvivable injuries regardless of bleeding control, which can mask potential TXA benefit in more salvageable subsets when analyzed together.",
-        "GCS often is recorded at variable times relative to resuscitation and may be affected by early interventions, so \u2018baseline\u2019 measurements may not be strictly comparable across all patients.",
-        "GCS is collinear with mechanism (especially blunt trauma), age, and shock, complicating isolation of GCS as an independent effect modifier in multivariable models.",
-        "Evidence from CRASH-3 suggests TXA can reduce head-injury deaths when given early in mild\u2013moderate TBI; extrapolating these findings to CRASH-2\u2019s more heterogeneous population should be done cautiously.",
-        "Heaping at common GCS values (e.g., 3 or 15) and potential misclassification reduce the precision of GCS-based interaction analyses.",
-        "Tailoring trauma TXA use purely based on GCS would not align with current guidelines, which emphasize risk of significant bleeding and timing over neurological status alone."
+        "Age-specific biases must be minimized in both study and data interpretation.",
+        "Comorbidities prevalent among older demographics may independently influence outcomes."
       ]
     }
   ],
-  "cross_feature_patterns": "The refined hypotheses highlight several coherent cross-feature patterns: (1) Shock and perfusion markers (SBP, HR, CRT/perfusion, and, to a lesser extent, RR) consistently appear important, reflecting that TXA benefit is greatest when active hemorrhagic shock and early hyperfibrinolysis are present but before irreversible collapse. These variables likely interact non-linearly, defining a physiologic window in which TXA\u2019s absolute benefit is largest. (2) Time from injury to treatment (ninjurytime) is the most robust and well-validated modifier, with early administration in high-risk patients yielding maximal benefit and benefit diminishing\u2014and possibly reversing\u2014when administration is substantially delayed. (3) Injury mechanism (penetrating vs blunt) and neurological status (GCS) together shape the balance between extracranial hemorrhagic vs TBI/non-hemorrhagic mortality; TXA\u2019s net impact is greatest where bleeding is a major modifiable cause of death. (4) Age and sex act as broader context variables, encoding baseline risk, comorbidities, hormone-related hemostatic differences, and care patterns; they likely modulate absolute benefits more than qualitatively changing TXA\u2019s relative effectiveness. (5) Many variables are inter-correlated (e.g., blunt mechanism with low GCS and tachypnea; shock markers with prolonged CRT and high HR), so individual SHAP importance partially reflects shared predictive roles. Overall, the pattern is consistent with current understanding: TXA is broadly beneficial in bleeding trauma\u2014especially when given early to patients with physiologic evidence of significant but potentially reversible hemorrhagic shock\u2014with only modest effect modification by demographics and mechanism once timing and shock severity are accounted for."
+  "cross_feature_patterns": "The interaction between injury type and physiological factors such as heart rate and blood pressure emphasizes the pharmacological complexity of TXA, supporting tailored trauma interventions."
 }

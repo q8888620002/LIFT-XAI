@@ -1,989 +1,253 @@
 {
-  "summary": "Across all 10 feature hypotheses, the proposed mechanisms, subgroup structures, and validation plans are highly consistent with contemporary stroke neurology and thrombolysis literature. Mechanistic reasoning is generally specific, biologically and clinically coherent, and appropriately caveated. The main cross-cutting limitation is that much of the evidence for treatment effect heterogeneity is observational or post\u2011hoc rather than from trials powered for interactions, and several mechanisms mix prognostic and predictive effects. Nonetheless, these are among the most biologically plausible and clinically actionable modifiers of alteplase effect.",
+  "summary": "Overall, the hypotheses related to age, time to treatment initiation, and stroke severity align well with known clinical evidence on treatment effect modifiers in ischemic stroke. Hypertension and neuroimaging markers also present plausible hypotheses but are somewhat less critical compared to the top features. The feature 'Time to Treatment Initiation' shows the strongest alignment with clinical literature, underscoring its high priority for further validation. Additional attention should be given to refining subgroup delineations and addressing caveats such as confounding by comorbidity and variability in symptom onset reporting.",
   "scored_features": [
     {
-      "feature_name": "onset_to_needle_time_minutes",
+      "feature_name": "Age",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: penumbra \u2192 core over time",
+          "mechanism_type": "biological",
+          "plausibility": 9,
+          "evidence_support": 9,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Strong biological basis due to known age-related decline in neuroplasticity. Well-supported by literature."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 9,
+          "evidence_support": 9,
+          "specificity": 8,
+          "testability": 8,
+          "overall_score": 9,
+          "comments": "Highly plausible given increased hemorrhagic risk with age; backed by strong evidence."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 7,
+          "evidence_support": 7,
+          "specificity": 7,
+          "testability": 7,
+          "overall_score": 7,
+          "comments": "Moderate support for age affecting pharmacokinetics of thrombolytics. Less specific pathways."
+        }
+      ],
+      "mechanism_plausibility": 9,
+      "clinical_interpretation": 9,
+      "evidence_alignment": 10,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 9,
+      "caveat_awareness": 8,
+      "overall_score": 9,
+      "strengths": [
+        "Strong evidence supporting age as a modifier of thrombolysis outcomes",
+        "Well-documented biological and physiological mechanisms",
+        "Clear validation pathway through subgroup analysis"
+      ],
+      "weaknesses": [
+        "Potential confounding with comorbid conditions like hypertension"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age's clinical importance in stroke outcomes is well-documented and its high rank aligns with the literature, justifying a high priority for validation."
+    },
+    {
+      "feature_name": "Time to Treatment Initiation",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
           "plausibility": 10,
           "evidence_support": 10,
           "specificity": 9,
           "testability": 9,
           "overall_score": 10,
-          "comments": "Canonical pathophysiologic rationale for time-dependence of thrombolysis benefit; strongly supported by imaging and trial data and straightforward to test with interaction models and perfusion imaging."
+          "comments": "Physiological basis of time-critical thrombolysis is well-established; highly supported by evidence."
         },
         {
-          "mechanism_type": "physiological: no\u2011reflow/endothelial injury",
+          "mechanism_type": "biological",
           "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Coherent microvascular explanation with experimental and some clinical support; harder to measure directly but inferable from tissue\u2011level reperfusion metrics."
-        },
-        {
-          "mechanism_type": "pharmacological: clot organization over time",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Well-aligned with thrombus biology; indirectly testable via recanalization rates vs onset\u2011to\u2011treatment and clot imaging."
-        },
-        {
-          "mechanism_type": "biological: BBB disruption and sICH risk over time",
-          "plausibility": 10,
           "evidence_support": 9,
-          "specificity": 9,
+          "specificity": 8,
           "testability": 8,
           "overall_score": 9,
-          "comments": "Strongly consistent with observed increase in hemorrhage with late thrombolysis; supported by imaging and pathology studies."
+          "comments": "Delays in treatment leading to irreversible damage is biologically plausible with strong evidence backing."
         },
         {
-          "mechanism_type": "physiological: edema/mass effect limiting late gains",
+          "mechanism_type": "statistical",
           "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Makes sense clinically; somewhat more inferential but align with malignant infarct evolution; measurable via imaging and clinical course."
-        },
-        {
-          "mechanism_type": "behavioral: early arrivers differ systematically",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Reasonable source of confounding; supported by EMS and health\u2011system literature; can be partially addressed with causal models but data often incomplete."
-        },
-        {
-          "mechanism_type": "statistical: selection patterns in trials drive gradients",
-          "plausibility": 8,
-          "evidence_support": 8,
+          "evidence_support": 9,
           "specificity": 7,
           "testability": 8,
-          "overall_score": 8,
-          "comments": "Good recognition that design and eligibility may shape observed time\u2011by\u2011treatment interaction; testable via trial\u2011level meta\u2011regression and sensitivity analyses."
-        },
-        {
-          "mechanism_type": "biological: limiting inflammatory/excitotoxic cascades",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Biologically plausible from experimental models, but direct human evidence for alteplase modifying these cascades is limited; harder to test with routine clinical data."
+          "overall_score": 9,
+          "comments": "Statistical evidence from trials reinforces biological mechanisms, underlining strong support."
         }
       ],
       "mechanism_plausibility": 10,
       "clinical_interpretation": 10,
-      "evidence_alignment": 10,
+      "evidence_alignment": 9,
       "subgroup_implications": 9,
-      "validation_plan_quality": 9,
+      "validation_plan_quality": 10,
       "caveat_awareness": 9,
       "overall_score": 10,
       "strengths": [
-        "Mechanistic reasoning is tightly aligned with the core paradigm \u201ctime is brain\u201d and with extensive RCT and pooled\u2011analysis data on time\u2011dependent alteplase benefit.",
-        "Clinical interpretation of the feature and its role as a treatment effect modifier is precise and sophisticated, including both benefit attenuation and hemorrhage risk over time.",
-        "Subgroup structure (ultra\u2011early through borderline/extended windows) matches guideline windows and tissue\u2011based selection strategies used in modern practice.",
-        "Validation suggestions are concrete (cubic\u2011spline interactions, mediation via imaging, MSMs), statistically appropriate, and feasible with typical stroke trial/registry data.",
-        "Caveats correctly highlight onset\u2011time uncertainty, selection of late presenters, and correlation with other process\u2011of\u2011care variables."
+        "Strong backing by clinical trials and guideline recommendations",
+        "Immediate and actionable subgroup implication based on time windows",
+        "Robust validation plan focusing on real-world data"
       ],
       "weaknesses": [
-        "Behavioral and inflammatory/excitotoxic mechanisms, while plausible, are more speculative and not easily separable from core penumbra\u2011time biology in available datasets.",
-        "Does not explicitly distinguish prognostic vs predictive interaction (time is both a strong prognostic factor and a modifier of treatment effect), which complicates interpretation of some statistical interactions."
+        "Relies on patient-reported symptom onset which may introduce variability"
       ],
       "recommendation": "high_priority",
-      "justification": "Onset\u2011to\u2011needle time is the archetypal effect modifier for IV alteplase with an exceptionally strong mechanistic and empirical basis and clear, high\u2011impact subgroup implications for clinical decision\u2011making. The hypotheses are specific, literature\u2011concordant, and supported by a rigorous validation plan, making this a top\u2011priority feature for mechanistic and heterogeneity analyses."
+      "justification": "Time to treatment initiation is critical for outcomes, with clear evidence and high alignment with clinical practice, meriting high follow-up priority."
     },
     {
-      "feature_name": "baseline_nihss_score",
+      "feature_name": "Stroke Severity",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: higher NIHSS \u2192 larger core/LVO \u2192 more salvageable tissue",
-          "plausibility": 9,
+          "mechanism_type": "biological",
+          "plausibility": 8,
           "evidence_support": 8,
-          "specificity": 8,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Sound interpretation of NIHSS as a proxy for core and occlusion severity; supported by many imaging\u2011severity correlation studies; readily testable with vascular/core data."
-        },
-        {
-          "mechanism_type": "physiological: extreme severity \u2192 malignant infarcts with limited reversibility",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Clinically coherent and consistent with malignant MCA literature; testable via interaction of NIHSS with imaging\u2011defined core and edema."
-        },
-        {
-          "mechanism_type": "pharmacological: large/proximal clots less responsive to IVT",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Well grounded in recanalization studies; mechanistic link via clot length/location; can be empirically evaluated with angiography data."
-        },
-        {
-          "mechanism_type": "biological: mild strokes have high spontaneous recovery and limited net gain",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly supported by RCTs and meta\u2011analyses on minor/non\u2011disabling stroke; mechanism (limited room for improvement vs persistent hemorrhage risk) is clear."
-        },
-        {
-          "mechanism_type": "physiological: severe strokes \u2192 more BBB disruption and sICH",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Plausible, with some imaging/clinical support; explicit linkage between NIHSS, BBB injury and hemorrhage can be tested via sICH by severity strata."
-        },
-        {
-          "mechanism_type": "statistical: strong prognostic role creates complex interactions",
-          "plausibility": 9,
-          "evidence_support": 7,
           "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Accurately notes that non\u2011linear prognostic effects can distort perceived effect modification; highly testable with appropriate modelling."
-        },
-        {
-          "mechanism_type": "biological: NIHSS profile/location heterogeneity within same score",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Neurologically sound (e.g., aphasia vs motor), but empirical evidence that these patterns differentially alter alteplase benefit is limited; would require detailed phenotyping."
-        },
-        {
-          "mechanism_type": "behavioral: mild deficits delay seeking care",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Supported by prehospital literature; effect on alteplase heterogeneity is indirect and confounded by time; still testable via joint models of time, NIHSS, and arrival mode."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 8,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 9,
-      "strengths": [
-        "Feature is correctly interpreted as stroke severity with clear links to core size, occlusion type, and prognosis.",
-        "Mechanisms capture both low\u2011severity (small room for benefit) and high\u2011severity (large potential gain but large core and sICH risk) ends of the NIHSS spectrum.",
-        "Proposed subgroups (mild, moderate, moderately severe, very severe) are aligned with common clinical cutpoints and relevant guidelines about treating minor or very severe strokes.",
-        "Validation suggestions (non\u2011linear interactions, stratified analyses, three\u2011way interactions with time) are methodologically appropriate and feasible.",
-        "Acknowledges key caveats about location\u2011specific deficits, inter\u2011rater variability, and confounding by thrombectomy use."
-      ],
-      "weaknesses": [
-        "Evidence for a true predictive interaction (vs strong prognostic effect) is more mixed than implied; some large pooled analyses find relatively consistent proportional benefit across NIHSS levels.",
-        "Does not fully dissect interaction between NIHSS, LVO status, and thrombectomy, which can obscure alteplase\u2011specific modification."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Baseline NIHSS is a central determinant of both prognosis and suspected alteplase heterogeneity. The hypotheses are biologically and clinically rich, include realistic subgroup structures, and propose solid validation strategies; this feature warrants high\u2011priority investigation of effect modification, especially around mild and very severe strokes."
-    },
-    {
-      "feature_name": "age_years",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: small\u2011vessel disease/BBB fragility with age",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 8,
           "testability": 8,
-          "overall_score": 9,
-          "comments": "Well\u2011established association between age, SVD, leukoaraiosis, and bleeding risk; strongly supported by imaging and outcome data in thrombolysis cohorts."
-        },
-        {
-          "mechanism_type": "physiological: reduced reserve/neuroplasticity",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
           "overall_score": 8,
-          "comments": "Conceptually robust; supported by observational data showing less functional recovery at similar infarct sizes; somewhat harder to quantify directly."
+          "comments": "Biological rationale for severity affecting outcomes is reasonable; literature support is good."
         },
         {
-          "mechanism_type": "pharmacological: PK changes and polypharmacy",
+          "mechanism_type": "behavioral",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Plausible but evidence that alteplase PK/PD meaningfully changes with age at standard dosing is limited; confounded by comorbid medications."
-        },
-        {
-          "mechanism_type": "biological: age, AF, and cardioembolic large clots",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Supported by AF epidemiology; effect on alteplase benefit is complex (more severe but often fibrin\u2011rich clots); testable with etiologic and imaging data."
-        },
-        {
-          "mechanism_type": "physiological: atrophy buffering edema but limiting recovery",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "An interesting but speculative dual effect; some data on atrophy vs edema risk but limited direct evidence regarding alteplase\u2011specific benefit."
-        },
-        {
-          "mechanism_type": "behavioral: differences in care intensity by age",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Concordant with geriatric care literature; treatment ceilings and rehab intensity differ by age and could confound treatment effect estimates."
-        },
-        {
-          "mechanism_type": "statistical: collinearity with comorbidities/frailty",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Accurate portrayal of age as a proxy marker; highly testable by adjusting for comorbidity, frailty, and premorbid function in interaction models."
-        },
-        {
-          "mechanism_type": "biological: age\u2011related inflammation/prothrombotic state",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Biologically reasonable but with sparse, indirect evidence and difficult to isolate using routine clinical datasets."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Accurately captures age as a strong prognostic factor with plausible ways it might modulate the risk\u2013benefit balance of alteplase, especially via SVD and hemorrhage risk.",
-        "References trial evidence (e.g., IST\u20113) showing preserved but possibly attenuated benefit in older groups, aligning with current meta\u2011analytic findings.",
-        "Subgroup cutpoints (<65, 65\u201380, >80) reflect common clinical and guideline\u2011relevant distinctions.",
-        "Validation plan appropriately emphasizes continuous interaction modelling, adjustment for premorbid mRS and comorbidities, and registry comparisons to overcome trial under\u2011representation of the very old."
-      ],
-      "weaknesses": [
-        "Some mechanisms (PK/PD, atrophy buffering) remain speculative with limited direct evidence that they materially change alteplase effect at approved doses.",
-        "The discussion underplays that pooled analyses have generally not found age to negate proportional benefit; heterogeneity is more about absolute risk and sICH than clear effect reversal.",
-        "Caveats could more explicitly emphasize that much apparent age interaction may be mediated through frailty and premorbid disability, not age itself."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Age clearly shapes prognosis and bleeding risk, but evidence for strong predictive heterogeneity of alteplase effect is more modest and more heavily confounded than for time or imaging\u2011tissue status. The hypotheses are still mechanistically solid and clinically relevant, justifying focused but secondary priority analyses."
-    },
-    {
-      "feature_name": "pre_stroke_mrs_score",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: reduced functional reserve from prior deficits",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Very strong and straightforward; premorbid disability limits achievable independence even if acute tissue is salvaged; well supported by observational and trial subgroup data."
-        },
-        {
-          "mechanism_type": "physiological: frailty/immobility limiting rehab and increasing complications",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Clinically plausible and supported by frailty literature; mechanisms like infections, DVTs can be partially captured in datasets."
-        },
-        {
-          "mechanism_type": "statistical: ceiling/floor effects with independence endpoint",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 10,
-          "overall_score": 10,
-          "comments": "Excellent recognition that choice of dichotomous mRS/OHS 0\u20132 endpoint biases against those with baseline disability; easily testable via ordinal and shift analyses."
-        },
-        {
-          "mechanism_type": "biological: underlying cerebrovascular disease and hemorrhage risk",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Pre\u2011stroke disability often signals extensive SVD and prior strokes; consistent with higher hemorrhage and poor tolerance of reperfusion; partially testable via imaging markers."
-        },
-        {
-          "mechanism_type": "behavioral: different triage and rehab intensity",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible but data on treatment ceilings and rehab variation are often sparse; could be approximated by care\u2011intensity proxies."
-        },
-        {
-          "mechanism_type": "statistical: confounding by age/comorbidities",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Correctly notes collinearity; addressable with multivariable adjustment and sensitivity analyses."
-        },
-        {
-          "mechanism_type": "biological: neurodegeneration limiting reorganization",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Reasonable link between dementia, disability, and poorer recovery; evidence is growing but not yet definitive; hard to separate from age/frailty without dedicated measures."
-        },
-        {
-          "mechanism_type": "physiological: chronic inflammation/malnutrition worsening outcomes",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Conceptually plausible but more speculative, with limited alteplase\u2011specific data; some proxies (albumin, CRP) may enable partial testing."
-        }
-      ],
-      "mechanism_plausibility": 10,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
-      "strengths": [
-        "Excellent articulation of how premorbid mRS constrains achievable \u2018independence\u2019, highlighting the crucial distinction between true biological lack of benefit and artefacts of outcome definition.",
-        "Subgroup proposals (0\u20131, 2, 3\u20134, 5) are clinically meaningful and map to common decision\u2011making dilemmas in offering thrombolysis to disabled patients.",
-        "Validation plan rightly emphasizes analyses restricted to independent patients, use of ordinal outcome modelling, and exploration of mortality/institutionalization endpoints.",
-        "Caveats are appropriately nuanced about subjectivity of premorbid mRS, recall bias, and selection bias in offering alteplase to disabled patients."
-      ],
-      "weaknesses": [
-        "Most mechanisms and evidence concern prognostic constraints and measurement artefact rather than clear pharmacologic interaction; the distinction between prognostic modification and treatment effect heterogeneity could be made more explicit.",
-        "Speculative physiological pathways (chronic inflammation, malnutrition) are less central and weakly evidenced, though they do not detract significantly."
-      ],
-      "recommendation": "high_priority",
-      "justification": "Premorbid mRS is critical to interpreting alteplase benefit on independence outcomes and to avoiding misclassification of net effect in disabled patients. The proposed mechanisms and validation strategies are clear, specific, and strongly supported, making this a high\u2011priority feature for careful interaction and sensitivity analyses."
-    },
-    {
-      "feature_name": "systolic_blood_pressure_mmHg",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: chronic hypertension \u2192 fragile small vessels",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Strong pathologic and clinical basis linking chronic hypertension to microbleeds and hemorrhage after thrombolysis; testable via sICH vs SBP/hypertension history."
-        },
-        {
-          "mechanism_type": "physiological: elevated SBP supporting collaterals",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Well\u2011recognized concept that modestly higher BP may sustain penumbra; moderately supported; requires nuanced, non\u2011linear modelling."
-        },
-        {
-          "mechanism_type": "physiological: very high SBP worsening BBB/edema and sICH",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Consistent with guideline\u2011driven thresholds and observational associations with hemorrhage; robust mechanism."
-        },
-        {
-          "mechanism_type": "pharmacological: effects of antihypertensive treatment around alteplase",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Plausible but evidence is limited and confounded; requires detailed BP\u2011management data rarely available in full."
-        },
-        {
-          "mechanism_type": "statistical: confounding with vascular risk factors",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Correctly identifies confounding structure; straight\u2011forward to adjust for diabetes, CKD, etc. in models."
-        },
-        {
-          "mechanism_type": "biological: acute stress response and large infarcts",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Good interpretation of high SBP as marker of stroke severity and intracranial pressure; can be examined via NIHSS and imaging adjustment."
-        },
-        {
-          "mechanism_type": "biological: low SBP indicating cardiac dysfunction or sepsis",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Reasonable but less directly evidenced in thrombolysis cohorts; testable by interaction with cardiac/sepsis variables if available."
-        },
-        {
-          "mechanism_type": "physiological: shifted autoregulation in chronic hypertension",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Classical physiology, though direct data in acute stroke + alteplase context are limited; requires detailed BP trajectories and history of hypertension."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Captures the key tension between maintaining collateral perfusion vs avoiding hemorrhage, consistent with guideline BP thresholds around alteplase.",
-        "Subgroup ranges (e.g., <120, 120\u2013160, 161\u2013185, >185) are clinically intuitive and align with practice constraints.",
-        "Validation suggestions emphasize non\u2011linear interactions, stratified analyses, and mediation by sICH, which are methodologically appropriate.",
-        "Caveats appropriately note dynamic BP changes and limited randomized data on BP targets during thrombolysis."
-      ],
-      "weaknesses": [
-        "Some pathophysiological mechanisms (low SBP indicating sepsis/cardiac failure) have limited direct evidence in alteplase cohorts and may be over\u2011interpreted.",
-        "Most available evidence is prognostic rather than decisively predictive; a strong claim that SBP substantially alters relative alteplase benefit is still somewhat speculative.",
-        "The feature conflates chronic hypertension biology and acute BP state; without detailed history and longitudinal BP, causal dissection will be challenging."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Systolic BP is highly relevant to hemorrhagic risk and collateral flow, and the mechanisms are largely plausible and literature\u2011concordant. However, predictive heterogeneity of alteplase effect is less firmly established than for time and core size; moderate\u2011priority in-depth exploration is warranted, especially for extreme BP strata."
-    },
-    {
-      "feature_name": "serum_glucose_mg_per_dL",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: hyperglycemia worsening ischemic injury",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong experimental and clinical basis for hyperglycemia amplifying ischemic damage; directly testable via infarct size and outcome correlations."
-        },
-        {
-          "mechanism_type": "biological: hyperglycemia, BBB disruption, and hemorrhage",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well supported by both animal and clinical thrombolysis data linking high glucose to sICH; strong mechanism."
-        },
-        {
-          "mechanism_type": "physiological: impaired microvascular reperfusion/no\u2011reflow",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Plausible and supported by some imaging studies; indirect but reasonable tissue\u2011level explanation for reduced benefit."
-        },
-        {
-          "mechanism_type": "pharmacological: diabetes\u2011altered clot structure \u2192 lysis resistance",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Supported by coagulation research; empirically assessable via recanalization vs diabetes status and glucose levels."
-        },
-        {
-          "mechanism_type": "statistical: confounding by severity and core size",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Important recognition that hyperglycemia is partly a stress marker; well testable with adjustment for NIHSS and imaging."
-        },
-        {
-          "mechanism_type": "biological: hypoglycemia as stroke mimic/low substrate",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Less central; hypoglycemia is typically corrected before alteplase; limited impact on alteplase heterogeneity among true ischemic strokes."
-        },
-        {
-          "mechanism_type": "physiological: rapid glucose correction interacting with alteplase",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Speculative; intensive glucose control trials have been largely neutral; interactions with alteplase remain poorly characterized."
-        },
-        {
-          "mechanism_type": "behavioral: diabetes comorbidities and post\u2011acute care",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Reasonable but largely prognostic; care differences may confound but are not specific to alteplase."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Hyperglycemia is correctly identified as a strong predictor of worse outcomes and sICH after thrombolysis, with well\u2011described biological mechanisms.",
-        "Subgrouping by glucose ranges (e.g., normoglycemia, moderate, marked hyperglycemia) is clinically meaningful and corresponds to common thresholds (e.g., >180\u2013200 mg/dL).",
-        "Validation suggestions include interaction modelling, adjustment for diabetes and severity, threshold analyses, and mediation through hemorrhage and infarct size, which are appropriate and feasible.",
-        "Caveats acknowledge confounding (stress hyperglycemia vs chronic diabetes) and neutral trial results for intensive glucose control."
-      ],
-      "weaknesses": [
-        "While hyperglycemia clearly worsens prognosis and raises hemorrhage risk, direct evidence that it markedly changes relative alteplase benefit (rather than just overall risk) is more limited; this nuance could be clearer.",
-        "Some mechanisms (rapid correction effects) are speculative and currently lack solid human data in the alteplase context.",
-        "Glucose is dynamic; reliance on a single admission value oversimplifies complex metabolic trajectories."
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Serum glucose has strong mechanistic and observational links to sICH and poor outcomes, suggesting plausible effect modification of alteplase. However, the degree of predictive heterogeneity is less definitively established than prognostic effects, warranting well\u2011controlled but mid\u2011tier priority analyses."
-    },
-    {
-      "feature_name": "large_vessel_occlusion_present",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: LVO \u2192 larger core/penumbra and high potential gain",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly supported by imaging trials; LVOs cause more severe strokes but offer large benefit if recanalized; key for alteplase and EVT."
-        },
-        {
-          "mechanism_type": "pharmacological: low IVT recanalization rates in proximal LVOs",
-          "plausibility": 10,
-          "evidence_support": 10,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Well\u2011documented (e.g., 10\u201330% recanalization); central to understanding limited direct alteplase effect in LVO vs non\u2011LVO."
-        },
-        {
-          "mechanism_type": "physiological: non\u2011LVO/distal occlusions respond better and safer",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Plausible; smaller clots, lower core volumes; testable via distal\u2011vs\u2011proximal comparisons."
-        },
-        {
-          "mechanism_type": "biological: clot composition and etiology within LVOs",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Supported by clot histology studies; clinical effect is more subtle and requires detailed etiologic and imaging data."
-        },
-        {
-          "mechanism_type": "statistical: interaction with EVT (bridging vs direct)",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Accurate recognition of modern practice complexity; testable with stratification by EVT use and randomised bridging vs direct thrombectomy trials."
-        },
-        {
-          "mechanism_type": "biological: posterior vs anterior LVO differences",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Clinically suspected but evidence is more limited and heterogeneous; relatively small numbers in many datasets."
-        },
-        {
-          "mechanism_type": "physiological: collaterals within LVO modifying time window",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Well aligned with collateral literature; testable via collateral scoring within LVO subgroup."
-        },
-        {
-          "mechanism_type": "pharmacological: interaction with antithrombotics in LVO vs non\u2011LVO",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Plausible but poorly studied at the level of differential alteplase response by LVO status; requires rich medication data."
-        }
-      ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
-      "strengths": [
-        "Correctly positions LVO status as a fundamental modifier of both recanalization probability and potential disability reduction.",
-        "Mechanisms are anchored in well\u2011established data on IVT recanalization rates in proximal occlusions and the role of bridging therapy in the thrombectomy era.",
-        "Subgroup definitions (no LVO, anterior LVO with EVT, LVO without EVT, posterior LVO) match real\u2011world clinical strata and major RCT populations.",
-        "Validation suggestions (treatment*LVO*EVT interactions, site\u2011specific analyses, instrumental variables for EVT) show strong methodological sophistication.",
-        "Caveats about incomplete imaging, practice evolution, and missing tissue\u2011status variables are appropriate."
-      ],
-      "weaknesses": [
-        "Predictive heterogeneity attributable solely to IV alteplase (separate from EVT effects) is challenging to isolate in modern datasets and may be overstated if not carefully modelled.",
-        "Posterior circulation mechanisms and subgroups are underpinned by relatively sparse, heterogeneous evidence.",
-        "LVO presence conflates several dimensions (location, clot length, collaterals); the binary feature may oversimplify mechanistic heterogeneity."
-      ],
-      "recommendation": "high_priority",
-      "justification": "LVO status is central to current stroke reperfusion paradigms and meaningfully shapes alteplase\u2019s effectiveness and role as a bridge to EVT. The hypotheses are well supported and paired with rigorous validation plans, making this a high\u2011priority feature for mechanistic and heterogeneity assessment."
-    },
-    {
-      "feature_name": "early_ischemic_changes_aspects_score",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "biological: low ASPECTS = large irreversible core and higher hemorrhage risk",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strongly consistent with imaging and sICH data; central to extended\u2011window and large\u2011core treatment debates."
-        },
-        {
-          "mechanism_type": "biological: high ASPECTS = small core, large penumbra, high benefit",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well founded; high ASPECTS is routinely used to select patients for reperfusion with high expected benefit."
-        },
-        {
-          "mechanism_type": "physiological: large cores with edema/mass effect limit recovery",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Clinically sound; malignant edema is a major determinant of outcome even with recanalization; measurable via imaging follow\u2011up."
-        },
-        {
-          "mechanism_type": "statistical: strong prognostic effect masking/exaggerating modification",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
-          "overall_score": 8,
-          "comments": "Important to consider; straight\u2011forward to test using proper non\u2011linear models and interaction terms."
-        },
-        {
-          "mechanism_type": "biological: ASPECTS as proxy for collateral status and resilience",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Reasonable; high ASPECTS often co\u2011occurs with good collaterals; can be evaluated with collateral imaging and perfusion mismatch."
-        },
-        {
-          "mechanism_type": "physiological: inter\u2011rater variability attenuating heterogeneity",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 7,
-          "comments": "Recognizes measurement error as a limiting factor; testable via reliability studies and central reads."
-        },
-        {
-          "mechanism_type": "biological: limited generalizability beyond MCA territory",
-          "plausibility": 9,
           "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Correct limitation of ASPECTS scope; implies careful phenotype restriction in analyses."
+          "specificity": 6,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Behavioral aspects are less covered in literature, but provide a supplementary perspective."
         },
         {
-          "mechanism_type": "pharmacological: selection bias excluding low\u2011ASPECTS from IVT/EVT",
-          "plausibility": 8,
+          "mechanism_type": "statistical",
+          "plausibility": 7,
           "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Real\u2011world avoidance of very low ASPECTS in practice complicates estimation; assessable via temporal and centre\u2011level variations in practice."
+          "specificity": 6,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Statistical considerations are relevant but need stronger connections to biology."
         }
       ],
-      "mechanism_plausibility": 10,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
+      "evidence_alignment": 8,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 8,
+      "overall_score": 8,
       "strengths": [
-        "Accurately interprets ASPECTS as a surrogate for core size and, indirectly, collateral quality, with clear implications for alteplase risk\u2013benefit.",
-        "Subgroup cutpoints (9\u201310, 7\u20138, \u22646, especially \u22645) reflect common use in clinical trials and guidelines for both IVT and EVT selection.",
-        "Validation plan advocates continuous interaction modelling, categorical subgroup analyses, incorporation of advanced perfusion imaging, and competing\u2011risk models, which are all methodologically strong.",
-        "Caveats correctly limit inferences to MCA\u2011territory strokes, highlight imaging quality issues, and acknowledge practice\u2011driven selection bias in low\u2011ASPECTS patients."
+        "Established importance of severity metrics like NIHSS",
+        "Biological and statistical pathways for differential response highlighted"
       ],
       "weaknesses": [
-        "Treatment effect heterogeneity may be partly driven by co\u2011interventions (e.g., decompressive hemicraniectomy) that correlate with low ASPECTS; this is not explicitly discussed.",
-        "While large\u2011core trials exist, firm evidence on alteplase alone in very low ASPECTS is still limited; mechanistic \u2018net harm\u2019 predictions in this stratum, although plausible, remain somewhat extrapolative."
+        "Behavioral and statistical mechanisms could be more tightly linked to outcomes"
       ],
-      "recommendation": "high_priority",
-      "justification": "Baseline core extent/ASPECTS is a central imaging determinant of alteplase risk\u2013benefit balance. The mechanistic framing is robust and closely aligned with both trial evidence and current selection paradigms, and the validation plan is strong, making this a high\u2011priority feature."
+      "recommendation": "medium_priority",
+      "justification": "Stroke severity is known to modulate treatment effect, but some mechanisms require further distinguishment and validation."
     },
     {
-      "feature_name": "prior_oral_anticoagulant_use",
+      "feature_name": "Presence of Hypertension",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "pharmacological: combined anticoagulation + fibrinolysis \u2192 high bleeding risk",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Mechanistically straightforward and supported by observational data; basis for guideline contraindications."
-        },
-        {
-          "mechanism_type": "biological: AF/cardioembolic strokes with larger occlusions",
+          "mechanism_type": "physiological",
           "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Correctly notes association of anticoagulation with AF and cardioembolic LVO; testable via etiologic and imaging data."
-        },
-        {
-          "mechanism_type": "physiological: microbleeds and SVD predispose to hematoma",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Supported by MRI microbleed literature; more direct testing requires susceptibility\u2011weighted imaging data."
-        },
-        {
-          "mechanism_type": "statistical: guideline\u2011driven selection of lower\u2011risk anticoagulated patients",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Important and realistic; strongly shapes observed effect modification; testable by examining practice patterns and eligibility criteria over time."
-        },
-        {
-          "mechanism_type": "pharmacological: heterogeneity by anticoagulant type and intensity",
-          "plausibility": 8,
-          "evidence_support": 5,
+          "evidence_support": 8,
           "specificity": 7,
           "testability": 7,
-          "overall_score": 7,
-          "comments": "Plausible and clinically relevant; evidence is emerging but still limited; requires granular lab/timing data."
+          "overall_score": 8,
+          "comments": "Known physiological impacts of hypertension are strong, especially in stroke risk."
         },
         {
-          "mechanism_type": "biological: AF and vascular disease increasing peri\u2011procedural risk",
-          "plausibility": 8,
-          "evidence_support": 5,
+          "mechanism_type": "pharmacological",
+          "plausibility": 7,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 6,
+          "overall_score": 6,
+          "comments": "Pharmacological interactions are plausible but require more specific evidence."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 7,
+          "evidence_support": 7,
           "specificity": 6,
           "testability": 6,
           "overall_score": 7,
-          "comments": "Reasonable but more prognostic than predictive; confounded by age/comorbidity."
-        },
-        {
-          "mechanism_type": "behavioral: more conservative management in anticoagulated patients",
-          "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 6,
-          "testability": 5,
-          "overall_score": 6,
-          "comments": "Speculative; possible but variably implemented; data on intensity of monitoring and co\u2011interventions may be limited."
-        },
-        {
-          "mechanism_type": "statistical: misclassification of anticoagulant timing",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 6,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Realistic data\u2011quality concern; can be partially evaluated by cross\u2011checking medication lists and lab values."
+          "comments": "Biological rationale is sound, particularly with endothelial dysfunction concerns."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
+      "mechanism_plausibility": 8,
+      "clinical_interpretation": 8,
       "evidence_alignment": 7,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
+      "subgroup_implications": 7,
+      "validation_plan_quality": 7,
+      "caveat_awareness": 7,
       "overall_score": 8,
       "strengths": [
-        "Mechanistic link between prior anticoagulation and increased bleeding risk with alteplase is strong and clinically foundational to guideline contraindications.",
-        "Acknowledges that real\u2011world treated patients on anticoagulants are a highly selected lower\u2011risk subset, which is essential for correct interpretation of observed outcomes.",
-        "Subgroup proposal (no anticoagulant, remote/low\u2011intensity, active/intense anticoagulation) is clinically sensible and reflects guideline distinctions.",
-        "Validation suggestions appropriately emphasize separation by lab markers (INR, anti\u2011Xa), comparing treated vs non\u2011treated within anticoagulant users, and exploring bleeding and functional endpoints separately.",
-        "Caveats demonstrate strong awareness of selection bias, under\u2011reporting, and evolving practice (e.g., DOAC reversal)."
+        "Well-recognized as a vascular risk factor",
+        "Mechanisms align with known hypertension effects"
       ],
       "weaknesses": [
-        "Evidence alignment is limited by the fact that RCT data on alteplase in actively anticoagulated patients are extremely sparse; much is extrapolated from observational series and pathophysiology.",
-        "The binary feature \u2018prior anticoagulant use\u2019 inevitably conflates very heterogeneous risk states (e.g., DOAC 3 days ago vs warfarin with INR 3.5 at onset).",
-        "Some behavioral mechanisms (more conservative management) are plausible but weakly evidenced and likely minor relative to the pharmacologic bleeding risk."
+        "Potential confounding by additional comorbidities like diabetes"
       ],
       "recommendation": "medium_priority",
-      "justification": "Prior anticoagulant use is mechanistically important for hemorrhagic risk, but strong effect modification evidence is limited by guideline\u2011driven exclusion of the highest\u2011risk patients. The hypotheses and validation plan are sound, but analyses will be constrained by selection and variable granularity; thus, a moderate but not top priority."
+      "justification": "While hypertension is a relevant modifier, complexity in interactions and comorbid confounding necessitate cautious interpretation."
     },
     {
-      "feature_name": "collateral_circulation_quality",
+      "feature_name": "Neuroimaging Markers",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological: good collaterals preserve penumbra and extend window",
-          "plausibility": 10,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Well supported by perfusion and collateral imaging studies and central to tissue\u2011clock mismatch concepts; highly relevant to alteplase timing."
-        },
-        {
-          "mechanism_type": "physiological: poor collaterals \u2192 rapid core growth and sICH risk",
+          "mechanism_type": "biological",
           "plausibility": 9,
-          "evidence_support": 7,
+          "evidence_support": 8,
           "specificity": 8,
           "testability": 8,
           "overall_score": 8,
-          "comments": "Plausible and aligned with malignant core growth; can be tested with serial imaging and outcome analyses stratified by collateral grade."
+          "comments": "Strong rationale for biological imaging markers in guiding treatment; good supporting data."
         },
         {
-          "mechanism_type": "physiological: collaterals smoothing reperfusion hemodynamics",
+          "mechanism_type": "physiological",
           "plausibility": 7,
-          "evidence_support": 4,
-          "specificity": 7,
-          "testability": 5,
+          "evidence_support": 6,
+          "specificity": 6,
+          "testability": 6,
           "overall_score": 6,
-          "comments": "Interesting concept but speculative with limited direct human evidence regarding hemodynamic \u2018smoothing\u2019 and sICH risk."
+          "comments": "Physiological insights are feasible but require more robust clinical connections."
         },
         {
-          "mechanism_type": "biological: collaterals as marker of vascular health/angiogenesis",
+          "mechanism_type": "statistical",
           "plausibility": 8,
-          "evidence_support": 5,
+          "evidence_support": 8,
           "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Reasonable but more long\u2011term and prognostic; difficult to isolate acute alteplase\u2011specific effects."
-        },
-        {
-          "mechanism_type": "statistical: collinearity with ASPECTS, NIHSS, time",
-          "plausibility": 9,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 9,
+          "testability": 7,
           "overall_score": 8,
-          "comments": "Correctly anticipates modelling challenges; addressable with multivariable and mediation analyses."
-        },
-        {
-          "mechanism_type": "biological: etiology\u2011specific collateral patterns (e.g., ICAD vs cardioembolism)",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Supported by some observational data but still developing; may require detailed etiologic classification."
-        },
-        {
-          "mechanism_type": "physiological: dynamic collateral recruitment not captured on static imaging",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 5,
-          "overall_score": 7,
-          "comments": "Important conceptual limitation; more a caveat than a direct mechanism; hard to test in routine datasets."
-        },
-        {
-          "mechanism_type": "behavioral: collateral\u2011informed treatment selection",
-          "plausibility": 8,
-          "evidence_support": 5,
-          "specificity": 7,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Realistic in centres using collaterals to select for IVT/EVT in extended windows; introduces selection bias in observational studies."
+          "comments": "Statistical integration of imaging results is promising for personalized treatment."
         }
       ],
       "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
+      "clinical_interpretation": 8,
       "evidence_alignment": 8,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 9,
-      "overall_score": 9,
+      "subgroup_implications": 8,
+      "validation_plan_quality": 8,
+      "caveat_awareness": 7,
+      "overall_score": 8,
       "strengths": [
-        "Collateral status is properly recognized as a key determinant of tissue viability and time window, with strong biological and clinical grounding.",
-        "Subgroup categories (good, intermediate, poor collaterals) map to widely used angiographic scoring systems and clinical practice patterns.",
-        "Validation proposals\u2014treatment*collateral interactions, time\u2011gradient comparisons by collateral category, adjustment for ASPECTS/LVO, perfusion mismatch metrics, and external validation\u2014are robust and feasible in imaging\u2011rich datasets.",
-        "Caveats highlight subjective grading, limited imaging coverage, and the dynamic nature of collaterals, reflecting good awareness of measurement limitations."
+        "Significant potential for precise stratification and tailored treatment",
+        "Strong biological and statistical framework"
       ],
       "weaknesses": [
-        "Some mechanistic details (hemodynamic smoothing, long\u2011term angiogenesis) are speculative and not essential to the core hypothesis.",
-        "Evidence for truly different relative alteplase benefit (vs extended viable time window) across collateral classes is suggestive but not definitive; more causal inference will be needed.",
-        "Feature availability is restricted to patients with high\u2011quality vascular imaging, which may limit generalizability and introduce selection bias."
+        "Limited by resource availability and implementation variability"
       ],
-      "recommendation": "high_priority",
-      "justification": "Collateral quality is central to modern tissue\u2011based selection and likely interacts strongly with time and LVO status to shape alteplase benefit. The mechanistic framing is strong and the validation plan sophisticated, supporting high\u2011priority further analysis in datasets with vascular/perfusion imaging."
+      "recommendation": "medium_priority",
+      "justification": "Neuroimaging presents a promising tool for refined treatment strategies, though implementation challenges persist."
     }
   ],
   "top_features": [
-    "onset_to_needle_time_minutes",
-    "baseline_nihss_score",
-    "pre_stroke_mrs_score",
-    "large_vessel_occlusion_present",
-    "early_ischemic_changes_aspects_score",
-    "collateral_circulation_quality"
+    "Time to Treatment Initiation",
+    "Age",
+    "Stroke Severity"
   ],
-  "methodological_concerns": [
-    "Many hypothesized mechanisms intertwine prognostic and predictive effects; rigorous modelling (e.g., proper interaction terms, non\u2011linearities, and careful interpretation) is needed to distinguish baseline risk from true treatment effect modification.",
-    "Several features (onset time, ASPECTS, collaterals, anticoagulant status) are prone to measurement error or missingness that is not random; sensitivity analyses and multiple imputation will be important.",
-    "Modern stroke care includes mechanical thrombectomy and evolving BP/glucose management, which can confound alteplase\u2011specific heterogeneity; stratification by era and co\u2011interventions or use of causal methods should be prioritized.",
-    "Outcome dichotomization at OHS/mRS 0\u20132 can create artefactual heterogeneity, especially by pre\u2011stroke mRS and severity; ordinal or utility\u2011weighted analyses are recommended wherever possible."
-  ]
+  "methodological_concerns": null
 }

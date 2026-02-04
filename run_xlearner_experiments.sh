@@ -9,7 +9,7 @@
 NUM_TRIALS=30
 TOP_N_FEATURES=5
 RELATIVE_CHANGE_THRESHOLD=0.05
-N_HYPOTHESES=5
+N_HYPOTHESES=3
 # MODEL="gpt-5.1-2025-11-13"
 MODEL="gpt-4o-2024-08-06"
 # GPU configuration - specify which GPUs to use
@@ -71,9 +71,9 @@ run_cohort_pipeline() {
     if [[ " ${TRIAL_COHORTS[@]} " =~ " ${cohort} " ]]; then
         
         SHAP_JSON="results/${cohort}/shapley/${cohort}_shap_summary_False.json"
-        OUT_WITH_SHAP="results/agent/${cohort}/hypotheses_with_shap_XLearner.json"
-        OUT_WITHOUT_SHAP="results/agent/${cohort}/hypotheses_without_shap_baseline.json"
-        EMPTY_SHAP_JSON="results/agent/${cohort}/shapley/${cohort}_empty_shap.json"
+        OUT_WITH_SHAP="docs/agent/${cohort}/hypotheses_with_shap_XLearner.json"
+        OUT_WITHOUT_SHAP="docs/agent/${cohort}/hypotheses_without_shap_baseline.json"
+        EMPTY_SHAP_JSON="docs/agent/${cohort}/shapley/${cohort}_empty_shap.json"
         
         if [ -f "${SHAP_JSON}" ]; then
             # Step 2: Clinical agent WITH SHAP
