@@ -1,8 +1,23 @@
 // Condition mapping (blinded for raters)
-// This mapping should be randomized per cohort or kept secret
+// Randomized per cohort to prevent systematic bias
+// DO NOT SHARE THIS MAPPING WITH RATERS
 const conditionMapping = {
-    condition_a: 'with_shap',
-    condition_b: 'without_shap_baseline'
+    crash_2: {
+        condition_a: 'with_shap',           // A = SHAP
+        condition_b: 'without_shap_baseline' // B = Literature
+    },
+    ist3: {
+        condition_a: 'without_shap_baseline', // A = Literature
+        condition_b: 'with_shap'              // B = SHAP
+    },
+    sprint: {
+        condition_a: 'with_shap',           // A = SHAP
+        condition_b: 'without_shap_baseline' // B = Literature
+    },
+    accord: {
+        condition_a: 'without_shap_baseline', // A = Literature
+        condition_b: 'with_shap'              // B = SHAP
+    }
 };
 
 // Trial metadata
@@ -84,8 +99,8 @@ async function loadHypotheses() {
         return;
     }
 
-    // Map blinded condition to actual file path
-    const condition = conditionMapping[conditionBlind];
+    // Map blinded condition to actual file path based on cohort
+    const condition = conditionMapping[cohort][conditionBlind];
     const filePath = `agent/${cohort}/hypotheses_${condition}_XLearner.json`;
 
     try {
