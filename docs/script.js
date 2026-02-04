@@ -118,7 +118,7 @@ async function loadHypotheses() {
         container.innerHTML = `
             <div class="error">
                 <strong>Error loading hypotheses:</strong> ${error.message}<br>
-                <small>Make sure the JSON files are in the correct location: results/agent/${cohort}/</small>
+                <small>Make sure the JSON files are in the correct location: docs/agent/${cohort}/</small>
             </div>
         `;
     }
