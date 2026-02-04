@@ -760,8 +760,8 @@ def generate_feature_hypotheses(
         "- Alternative explanations and confounders\n"
         "\n"
         "When generating feature names, use concrete, specific names without "
-        "placeholder prefixes. For example, use 'time_from_injury_to_TXA' instead of "
-        "'PLACEHOLDER_FEATURE_1 (e.g., time_from_injury_to_TXA)'. Use actual clinical "
+        "placeholder prefixes. For example, use 'age' instead of "
+        "'PLACEHOLDER_FEATURE_1 (e.g., age)'. Use actual clinical "
         "variable names that would appear in a dataset."
     )
 
