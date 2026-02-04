@@ -8,13 +8,6 @@ Optionally verify and independently score hypotheses with separate LLM judges.
 Requires:
   pip install openai pydantic
 
-Auth:
-  Set OPENAI_API_KEY environment variable:
-    export OPENAI_API_KEY="your-key-here"
-
-  Or store in src/constants.py:
-    openai_api_key = "your-key-here"
-
 Example:
   python clinical_agent.py \
     --shap_json results/ist3/baseline_shapley_value_sampling_summary_shuffle_True_RLearner_zero_baseline_True.json \
