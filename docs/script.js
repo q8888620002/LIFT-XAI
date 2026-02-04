@@ -1,3 +1,10 @@
+// Condition mapping (blinded for raters)
+// This mapping should be randomized per cohort or kept secret
+const conditionMapping = {
+    condition_a: 'with_shap',
+    condition_b: 'without_shap_baseline'
+};
+
 // Trial metadata
 const trialInfo = {
     crash_2: {
@@ -64,7 +71,7 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
     const cohort = document.getElementById('cohort-select').value;
-    const condition = document.getElementById('condition-select').value;
+    const conditionBlind = document.getElementById('condition-select').value;
     const raterId = document.getElementById('rater-id').value.trim();
 
     if (!cohort) {
@@ -77,9 +84,9 @@ async function loadHypotheses() {
         return;
     }
 
-    // Construct file path
-    const conditionPath = condition === 'with_shap' ? 'with_shap' : 'without_shap_baseline';
-    const filePath = `agent/${cohort}/hypotheses_${conditionPath}_XLearner.json`;
+    // Map blinded condition to actual file path
+    const condition = conditionMapping[conditionBlind];
+    const filePath = `agent/${cohort}/hypotheses_${condition}_XLearner.json`;
 
     try {
         const response = await fetch(filePath);
@@ -89,7 +96,7 @@ async function loadHypotheses() {
         const data = await response.json();
         
         displayTrialInfo(cohort);
-        displayHypotheses(data.feature_hypotheses, cohort, condition, raterId);
+        displayHypotheses(data.feature_hypotheses, cohort, conditionBlind, raterId);
         
     } catch (error) {
         const container = document.getElementById('hypotheses-container');

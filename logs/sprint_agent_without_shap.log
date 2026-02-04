@@ -1,0 +1,15 @@
+Generating mechanistic hypotheses for individual features...
+Generated feature-level hypotheses for 5 features.
+Refining feature hypotheses with verifier (1 iteration(s))...
+Traceback (most recent call last):
+  File "/homes/gws/mingyulu/shap_IPW/clinical_agent.py", line 1274, in <module>
+    main()
+  File "/homes/gws/mingyulu/shap_IPW/clinical_agent.py", line 1179, in main
+    v = client.beta.chat.completions.parse(
+  File "/homes/gws/mingyulu/miniconda3/envs/shap_ipw/lib/python3.10/site-packages/openai/resources/chat/completions/completions.py", line 184, in parse
+    return self._post(
+  File "/homes/gws/mingyulu/miniconda3/envs/shap_ipw/lib/python3.10/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/homes/gws/mingyulu/miniconda3/envs/shap_ipw/lib/python3.10/site-packages/openai/_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-proj-********************************************************************************************************************************************************dkgA. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': 'invalid_api_key', 'param': None}, 'status': 401}

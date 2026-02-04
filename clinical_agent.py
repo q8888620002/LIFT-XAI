@@ -562,6 +562,9 @@ def load_top_features(shap_json_path: str, n_features: int) -> dict:
     # Prefer pre-sorted list by mean_abs if present
     features = data.get("features", [])
     
+    # Get all available feature names for WITHOUT SHAP condition
+    all_feature_names = [f.get("feature") for f in features if f.get("feature")]
+    
     # If features is empty, return baseline mode (no SHAP data available)
     # This allows baseline experiments where generator proposes features from literature
     if not features:
@@ -570,6 +573,7 @@ def load_top_features(shap_json_path: str, n_features: int) -> dict:
             "learner": learner,
             "explainer": "baseline_no_shap",
             "top_feature_evidence": [],
+            "available_features": [],
         }
 
     # Sort defensively by shap_mean_abs desc
@@ -597,6 +601,7 @@ def load_top_features(shap_json_path: str, n_features: int) -> dict:
         "learner": learner,
         "explainer": explainer,
         "top_feature_evidence": top_evidence,
+        "available_features": all_feature_names,
     }
 
 
@@ -725,75 +730,61 @@ def generate_feature_hypotheses(
     client: OpenAI,
     model_name: str = "gpt-4o-2024-08-06"
 ) -> Optional[FeatureHypothesesSet]:
-    """Generate mechanistic hypotheses for why top features are important.
-
-    Args:
-        top_features: List of feature evidence dicts with SHAP values
-        study_context: Dict with dataset, learner, treatment, outcome, population
-        client: OpenAI client
-        model_name: Model to use
-
-    Returns:
-        FeatureHypothesesSet with generated hypotheses, or None if error
-    """
-    system_instructions = (
-        "You are a clinical research expert generating mechanistic hypotheses for "
-        "treatment effect heterogeneity based on clinical knowledge and published literature. "
-        "Based on the trial context (treatment, outcome, population), propose features that "
-        "might be important effect modifiers and explain:\n"
-        "1. What the feature represents clinically\n"
-        "2. Why it might modify treatment effects (mechanisms)\n"
-        "3. What subgroups it implies\n"
-        "\n"
-        "Ground your hypotheses in:\n"
-        "- Known pathophysiology and pharmacology\n"
-        "- Published trial subgroup analyses\n"
-        "- Clinical guidelines and expert consensus\n"
-        "- Biological plausibility\n"
-        "\n"
-        "Use available information (e.g., SHAP feature importance values) if provided to "
-        "guide and support your hypotheses, but always ground reasoning in clinical literature.\n"
-        "\n"
-        "Be honest about:\n"
-        "- Which hypotheses are well-supported vs speculative\n"
-        "- Limitations of the reasoning approach\n"
-        "- Alternative explanations and confounders\n"
-        "\n"
-        "When generating feature names, use concrete, specific names without "
-        "placeholder prefixes. For example, use 'age' instead of "
-        "'PLACEHOLDER_FEATURE_1 (e.g., age)'. Use actual clinical "
-        "variable names that would appear in a dataset."
+    
+    # 1. SHARED KNOWLEDGE BASE (Literature access for both)
+    literature_grounding = (
+        "Your reasoning MUST be grounded in the latest clinical literature, including:\n"
+        "- Known pathophysiology and pharmacology (MoA)\n"
+        "- Published results from phase III trials and meta-analyses\n"
+        "- Standard-of-care clinical guidelines (e.g., ACC/AHA, ASCO, etc.)\n"
+        "- Biological plausibility and pharmacokinetic principles\n"
     )
 
-    n_mechanisms = study_context.get("n_hypotheses_per_feature", 3)
-    n_features_requested = study_context.get("n_features", len(top_features))
-    
-    # Adjust instructions based on whether SHAP features are provided
+    # 2. DIRECTIONAL LOGIC
     if len(top_features) > 0:
-        task_description = "Generate mechanistic hypotheses for feature importance"
-        feature_instructions = [
-            "For each provided feature, explain why it's important for treatment heterogeneity",
-            f"Propose up to {n_mechanisms} biological/clinical mechanisms per feature",
-            "Suggest validation approaches",
-            "Acknowledge limitations and alternative explanations",
-            "Consider interactions and patterns across features",
-        ]
+        # THE INTERPRETER: Data -> Literature
+        role_type = "Forensic Clinical Interpreter"
+        directive = (
+            "You have been provided with SHAP values from a machine learning model. "
+            "Your task is to use the literature to EXPLAIN why these specific features "
+            "were found to be important. Do not ignore the data in favor of generic "
+            "mechanisms; justify the observed signal using science."
+        )
     else:
-        task_description = "Generate mechanistic hypotheses for expected treatment effect modifiers"
-        feature_instructions = [
-            f"Propose {n_features_requested} features you expect to be important effect modifiers based on clinical literature",
-            "For each proposed feature, explain why it might be important for treatment heterogeneity",
-            f"Propose up to {n_mechanisms} biological/clinical mechanisms per feature",
-            "Suggest validation approaches",
-            "Acknowledge limitations and alternative explanations",
-        ]
+        # THE PREDICTOR: Literature -> Nomination
+        role_type = "Theoretical Clinical Expert"
+        available_cols = study_context.get("available_features", "the study population")
+        directive = (
+            f"You are blinded to the model results. Based on the study context and the "
+            f"available features ({available_cols}), use the literature to PREDICT which "
+            "characteristics are most likely to modify treatment effects. Select the "
+            "most biologically plausible candidates."
+        )
+
+    # 3. ASSEMBLE SYSTEM PROMPT
+    system_instructions = (
+        f"You are a {role_type}.\n\n"
+        f"{directive}\n\n"
+        f"{literature_grounding}\n"
+        "For each characteristic, provide:\n"
+        "1. Clinical definition\n"
+        "2. Biological mechanism (up to 3)\n"
+        "3. Implied subgroups\n"
+        "\nUse concrete names. Be honest about speculative vs. established links."
+    )
+
+    # 4. TASK PARAMETERS
+    n_mechanisms = study_context.get("n_hypotheses_per_feature", 3)
+    n_features = study_context.get("n_features", len(top_features) if top_features else 5)
     
     user_prompt = {
-        "task": task_description,
         "study_context": study_context,
-        "top_features": top_features,
-        "n_mechanisms_per_feature": n_mechanisms,
-        "instructions": feature_instructions,
+        "observed_data": top_features if top_features else "NONE (Blinded Mode)",
+        "instructions": [
+            f"Generate hypotheses for {n_features} features.",
+            f"Propose {n_mechanisms} mechanisms each.",
+            "Cite common clinical trials or physiological laws where applicable."
+        ]
     }
 
     try:
@@ -807,9 +798,8 @@ def generate_feature_hypotheses(
         )
         return completion.choices[0].message.parsed
     except Exception as e:
-        print(f"Error generating feature hypotheses: {e}")
+        print(f"Error: {e}")
         return None
-
 
 def score_feature_hypotheses(
     hypotheses: List[dict],
@@ -836,8 +826,8 @@ def score_feature_hypotheses(
     """
     # Use same judging criteria for both WITH and WITHOUT SHAP conditions
     judge_system = (
-        "You are an independent scientific judge for feature-level mechanistic hypotheses.\n"
-        "Evaluate each feature hypothesis on multiple dimensions using a 1-10 scale.\n"
+        "You are an independent scientific judge for mechanistic hypotheses.\n"
+        "Evaluate each hypothesis on multiple dimensions using a 1-10 scale.\n"
         "Be objective, fair, and constructive.\n"
         "\n"
         "SCORING CRITERIA:\n"
@@ -1088,6 +1078,7 @@ def main():
         "source_explainer": evidence["explainer"],
         "n_hypotheses_per_feature": args.n_hypotheses,
         "n_features": args.n_features,  # Pass n_features so generator knows how many to propose if no SHAP
+        "available_features": evidence.get("available_features", []),
     }
 
     feature_hypotheses = generate_feature_hypotheses(

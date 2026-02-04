@@ -510,11 +510,7 @@ class Dataset:
         self.categorical_vars = []
 
         data["treatment"] = np.where(
-<<<<<<< HEAD
             data["treatment"].str.contains("Intensive BP", na=False), 1, 0
-=======
-            data["treatment"].str.contains("Intensive BP"), 1, 0
->>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         )
         data["raceclass"] = np.where(data["raceclass"] == "Black", 1, 0)
         data["x4smoke"] = np.where(data["x4smoke"] == 1, 1, 0)
@@ -578,11 +574,7 @@ class Dataset:
         self.categorical_vars = []
 
         data["treatment"] = np.where(
-<<<<<<< HEAD
             data["treatment"].str.contains("Intensive BP", na=False), 1, 0
-=======
-            data["treatment"].str.contains("Intensive BP"), 1, 0
->>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         )
         data["raceclass"] = np.where(data["raceclass"] == "Black", 1, 0)
         data["x4smoke"] = np.where(data["x4smoke"] == 1, 1, 0)
@@ -705,18 +697,10 @@ class Dataset:
         # Create a copy of x to avoid modifying the original array
 
         x_copy = x.copy()
-<<<<<<< HEAD
-=======
-        print(x_copy.shape)
->>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         # Apply inverse transform only on continuous variables
         x_copy[:, self.continuous_indices] = self.scaler.inverse_transform(
             x_copy[:, self.continuous_indices]
         )
-<<<<<<< HEAD
-=======
-        print(x_copy.shape)
->>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
         # Exclude treatment and outcome indices
         return x_copy[:]
 
