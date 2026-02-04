@@ -101,7 +101,13 @@ async function loadHypotheses() {
 
     // Map blinded condition to actual file path based on cohort
     const condition = conditionMapping[cohort][conditionBlind];
-    const filePath = `agent/${cohort}/hypotheses_${condition}_XLearner.json`;
+    
+    // WITHOUT SHAP files don't include learner name in filename
+    const fileName = condition === 'without_shap_baseline' 
+        ? `hypotheses_${condition}.json`
+        : `hypotheses_${condition}_XLearner.json`;
+    
+    const filePath = `agent/${cohort}/${fileName}`;
 
     try {
         const response = await fetch(filePath);
