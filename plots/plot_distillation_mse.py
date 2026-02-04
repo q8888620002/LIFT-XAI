@@ -56,10 +56,12 @@ def load_series_loco(files, split):
 
 
 def main():
+    """Main function"""
     ap = argparse.ArgumentParser(
         description="Plot distillation loss (MSE) vs #features (mix legacy + LOCO files)."
     )
-    ap.add_argument("--results_root", required=True, help="e.g., results/ist3")
+    ap.add_argument("--results_root", default="results/", help="e.g., results")
+    ap.add_argument("--dataset", required=True, help="e.g., ist3")
     ap.add_argument("--learner", required=True, help="e.g., CausalForest")
     ap.add_argument("--shuffle", default="True")
     ap.add_argument("--zero_baseline", default="True")
@@ -70,7 +72,7 @@ def main():
         help="Methods to plot; include 'loco' to read LOCO files by filename",
     )
     ap.add_argument("--split", choices=["train", "test"], default="test")
-    ap.add_argument("--out", default=None)
+    ap.add_argument("--out", default="plots/", help="Output directory")
     args = ap.parse_args()
 
     per_method = {}
@@ -78,12 +80,12 @@ def main():
     # legacy pattern (no method in filename)
     legacy_pat = os.path.join(
         args.results_root,
-        f"insertion_deletion_shuffle_{args.shuffle}_{args.learner}_zero_baseline_{args.zero_baseline}_seed_0.pkl",
+        args.dataset,
+        f"insertion_deletion_shuffle_{args.shuffle}_{args.learner}_zero_baseline_{args.zero_baseline}_seed_*.pkl",
     )
     legacy_files = sorted(glob.glob(legacy_pat))
 
     for m in args.methods:
-        print(m)
         series_list = load_series_from_legacy(legacy_files, m, args.split)
 
         if series_list:
@@ -95,20 +97,25 @@ def main():
     plt.figure(figsize=(7.5, 4.6))
     for mname, Y in sorted(per_method.items()):
         x = np.arange(1, Y.shape[1] + 1)  # 1..K features
-        mean, std = Y.mean(0), Y.std(0)
+
+        mean, std = Y.mean(0), Y.std(0)/(3*len(Y)**0.5)
         plt.plot(x, mean, lw=2, label=mname)
         plt.fill_between(x, mean - std, mean + std, alpha=0.15)
 
-    plt.title(f"Distillation loss vs #features · {args.learner} · {args.split}")
+
+    # plt.title(f"Distillation loss vs #features · {args.learner} · {args.split}")
     plt.xlabel("Number of features")
     plt.ylabel("Distillation loss (MSE)")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
-    if args.out:
-        plt.savefig(args.out, dpi=150)
-    else:
-        plt.show()
+
+    file_name = f"distillation_mse_{args.dataset}_{args.learner}_shuffle_{args.shuffle}_zero_baseline_{args.zero_baseline}_{args.split}.png"
+    plt.savefig(
+        os.path.join(
+            args.out, file_name
+        ), dpi=150
+    )
 
 
 if __name__ == "__main__":

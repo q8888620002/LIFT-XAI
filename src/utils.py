@@ -1,7 +1,7 @@
 """Explainability related utility function."""
 from __future__ import annotations
 
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -14,12 +14,7 @@ from src.model_utils import NuisanceFunctions
 
 
 class InvertableColumnTransformer(ColumnTransformer):
-    """
-    Adds an inverse transform method to the standard sklearn.compose.ColumnTransformer.
-
-    Warning this is flaky and use at your own risk.  Validation checks that the column count in
-    `transformers` are in your object `X` to be inverted.  Reordering of columns will break things!
-    """
+    """Inverse transform method to sklearn.compose.ColumnTransformer."""
 
     def inverse_transform(self, X):
         if isinstance(X, pd.DataFrame):
@@ -42,7 +37,8 @@ class InvertableColumnTransformer(ColumnTransformer):
 
         if retarr.shape[1] != X.shape[1]:
             raise ValueError(
-                f"Received {X.shape[1]} columns but transformer expected {retarr.shape[1]}"
+                f"Received {X.shape[1]} columns "
+                f"but transformer expected {retarr.shape[1]}"
             )
 
         return retarr
@@ -58,16 +54,18 @@ def normalize(values: np.ndarray) -> np.ndarray:
 
 
 def attribution_ranking(feature_attributions: np.ndarray) -> list:
-    """ "
+    """
     Compute the ranking of features according to atribution score
 
     Args:
+    ----
         feature_attributions: an n x d array of feature attribution scores
-    Return:
+    Returns
+    -------
         a d x n list of indices starting from the highest attribution score
     """
-
-    rank_indices = np.argsort(feature_attributions, axis=1)[:, ::-1]
+    scores = np.abs(feature_attributions)
+    rank_indices = np.argsort(scores, axis=1, kind="mergesort")[:, ::-1]
     rank_indices = list(map(list, zip(*rank_indices)))
 
     return rank_indices
@@ -85,7 +83,8 @@ def ablate(
     model_type: str = "CATENets",
 ):
     """
-    Arguments:
+    Args:
+    ----
     pred_fn  - prediction function for model being explained
     attr     - attribution corresponding to model and explicand
     x_explic - sample being explained
@@ -97,7 +96,8 @@ def ablate(
     is_loss  - if true, the prediction function should accept
                parameters x_explic and y_explic
 
-    Returns:
+    Returns
+    -------
     ablated_preds - predictions based on ablating
     """
 
@@ -113,18 +113,22 @@ def ablate(
     # Get feature rank
     if "pos" in impute:
         feat_rank = np.argsort(-attr)
-        condition = lambda x: x > 0
 
-    if "neg" in impute:
+        def condition(x):
+            return x > 0
+
+    elif "neg" in impute:
         feat_rank = np.argsort(attr)
-        condition = lambda x: x < 0
+
+        def condition(x):
+            return x < 0
 
     # Explicand to modify
     explicand = np.copy(x_explic)
 
     def predict_fn(X: np.ndarray) -> np.ndarray:
         if model_type == "CausalForest":
-            out = model.effect(X=X)                       # np.ndarray shape (n,)
+            out = model.effect(X=X)  # np.ndarray shape (n,)
             return np.asarray(out).reshape(-1)
         elif model_type == "CATENets":
             # CATENets .predict accepts numpy and returns torch.Tensor
@@ -137,7 +141,7 @@ def ablate(
         if isinstance(out, torch.Tensor):
             out = out.detach().cpu().numpy()
         return np.asarray(out).reshape(-1)
-    
+
     base_mean = predict_fn(explicand).mean()
     ablated_preds = [float(base_mean)]
 
@@ -172,20 +176,22 @@ def insertion_deletion_qini(
     model_type: str = "CATENets",
 ) -> tuple:
     """
-    Compute partial average treatment effect (PATE) with with proxy pehe and feature subsets by insertion and deletion
+    Compute insertion and deletion curves.
 
     Args:
+    ----
         test_data: testing data to calculate pehe
         rank_indices: local ranking from a given explanation method
         cate_model: trained cate model
         baseline: replacement values for insertion & deletion
         selection_types: approximation methods for estimating ground truth pehe
-        nuisance function: Nuisance functions to estimate proxy pehe.
+        nuisance_functions: Nuisance functions to estimate proxy pehe.
         model_type: model types for cate package
-    Returns:
+    Returns
+    -------
         results of insertion and deletion of PATE.
     """
-    ## training plugin estimator on
+    # training plugin estimator on
 
     x_test, _, _ = test_data
 
@@ -195,13 +201,22 @@ def insertion_deletion_qini(
     baseline = np.tile(baseline, (n, 1))
 
     original_cate_model = cate_model
+    insertion_results, deletion_results = {}, {}
 
     if model_type == "CATENets":
-        cate_model = lambda x: original_cate_model.predict(X=x)
+
+        def cate_model(x):
+            return original_cate_model.predict(X=x)
+
     elif model_type == "CausalForest":
-        cate_model = lambda x: original_cate_model.effect(X=x)
+
+        def cate_model(x):
+            return original_cate_model.effect(X=x)
+
     else:
-        cate_model = lambda x: original_cate_model.forward(X=x)
+
+        def cate_model(x):
+            return original_cate_model.forward(X=x)
 
     for rank_index in range(len(rank_indices) + 1):
         # Skip this on the first iteration
@@ -244,9 +259,10 @@ def insertion_deletion(
     model_type: str = "CATENets",
 ) -> tuple:
     """
-    Compute partial average treatment effect (PATE) with with proxy pehe and feature subsets by insertion and deletion
+    Compute insertion and deletion
 
     Args:
+    ----
         test_data: testing data to calculate pehe
         rank_indices: local ranking from a given explanation method
         cate_model: trained cate model
@@ -254,10 +270,12 @@ def insertion_deletion(
         selection_types: approximation methods for estimating ground truth pehe
         nuisance function: Nuisance functions to estimate proxy pehe.
         model_type: model types for cate package
-    Returns:
+
+    Returns
+    -------
         results of insertion and deletion of PATE.
     """
-    ## training plugin estimator on
+    # training plugin estimator on
 
     x_test, _, _ = test_data
 
@@ -269,11 +287,19 @@ def insertion_deletion(
     original_cate_model = cate_model
 
     if model_type == "CATENets":
-        cate_model = lambda x: original_cate_model.predict(X=x)
+
+        def cate_model(x):
+            return original_cate_model.predict(X=x)
+
     elif model_type == "CausalForest":
-        cate_model = lambda x: original_cate_model.effect(X=x)
+
+        def cate_model(x):
+            return original_cate_model.effect(X=x)
+
     else:
-        cate_model = lambda x: original_cate_model.forward(X=x)
+
+        def cate_model(x):
+            return original_cate_model.forward(X=x)
 
     deletion_results = {
         selection_type: np.zeros(d + 1) for selection_type in selection_types
@@ -312,22 +338,9 @@ def insertion_deletion(
     return insertion_results, deletion_results
 
 
-def generate_perturbations(
-    data: Dataset, examples: np.ndarray, feature: int, n_steps: int
-) -> np.ndarray:
-    """
-    Generating perturbed sample
+def generate_perturbations(data, examples, feature, n_steps) -> np.ndarray:
+    """Generating perturbed sample"""
 
-    Args:
-
-        data: background dataset of perturbed samples
-        example: sample to be perturbed
-        feature: feature index
-
-    Return:
-
-        Perturbed samples
-    """
     percent_perturb = 0.1
     value_range = data.get_feature_range(feature)
 
@@ -364,14 +377,14 @@ def generate_perturbations(
 
 
 def generate_perturbed_var(
-    data: Dataset,
-    x_test: np.ndarray,
-    feature_size: int,
-    categorical_indices: List,
-    n_steps: int,
-    model: nn.module,
+    data,
+    x_test,
+    feature_size,
+    categorical_indices,
+    n_steps,
+    model,
 ) -> np.ndarray:
-
+    """Generating perturbed variance for each feature"""
     perturbated_var = []
 
     for i in range(feature_size - len(categorical_indices)):
@@ -384,9 +397,6 @@ def generate_perturbed_var(
     return perturbated_var
 
 
-from typing import List, Tuple
-
-
 def perturbation(
     perturbed_output: np.ndarray,
     norm_explanation: np.ndarray,
@@ -396,17 +406,19 @@ def perturbation(
 ) -> Tuple[List[float], List[float]]:
     """
     Function that conducts perturbation experiments for both "resource" and "spurious"
-    and calculates true positive, true negative, false positive and false negative for each.
 
     Args:
+    ----
         perturbed_output: Perturbed model outputs.
         norm_explanation: Normalized explanations.
         threshold_vals: Threshold values for explanations.
         n_steps: Number of steps in perturbation.
         spurious_quantile: Quantile threshold for spurious explanations.
 
-    Returns:
-        Two tuples containing counts of TP, TN, FP, and FN for "resource" and "spurious" respectively.
+    Returns
+    -------
+        Two tuples containing counts of TP, TN, FP, and FN
+        for "resource" and "spurious" respectively.
     """
 
     sample_size = len(norm_explanation)

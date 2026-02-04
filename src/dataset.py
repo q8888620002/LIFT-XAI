@@ -1,9 +1,9 @@
+"""Dataset classes."""
 import numpy as np
 import pandas as pd
-from sklearn import model_selection
-from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
@@ -11,9 +11,7 @@ from src.utils import InvertableColumnTransformer
 
 
 class Dataset:
-    """
-    Data wrapper for clinical data.
-    """
+    """Data wrapper for clinical data."""
 
     def __init__(self, cohort_name, random_state=42, shuffle=False):
 
@@ -21,11 +19,11 @@ class Dataset:
         self.shuffle = shuffle
         self.random_state = random_state
 
-        self._load_data(cohort_name)
-        self._process_data()
+        self._load_data(cohort_name)  # Create self.data
+        self._split_data(self.data.copy())
 
     def _load_data(self, cohort_name):
-
+        """Load data"""
         if cohort_name in ["massive_trans", "responder"]:
             self.data = self._load_pickle_data(cohort_name)
         elif cohort_name == "ist3":
@@ -62,9 +60,9 @@ class Dataset:
     def _load_pickle_data(self, cohort_name):
 
         if cohort_name == "responder":
-            data = pd.read_pickle(f"data/trauma_responder.pkl")
+            data = pd.read_pickle("data/trauma_responder.pkl")
         elif cohort_name == "massive_trans":
-            data = pd.read_pickle(f"data/low_bp_survival.pkl")
+            data = pd.read_pickle("data/low_bp_survival.pkl")
         else:
             raise ValueError(f"Unsupported cohort: {cohort_name}")
 
@@ -141,7 +139,7 @@ class Dataset:
 
     def _load_txa_data(self):
 
-        data = pd.read_pickle(f"data/txa_cohort.pkl")
+        data = pd.read_pickle("data/txa_cohort.pkl")
 
         filter_regex = [
             "proc",
@@ -318,7 +316,9 @@ class Dataset:
         data["ninjurytime"] = np.where(
             data["ninjurytime"] == 0, np.nan, data["ninjurytime"]
         )
-        # data["ninjurytime"] = np.where(data["ninjurytime"] == 999, np.nan, data["ninjurytime"])
+        # data["ninjurytime"] = np.where(
+        #   data["ninjurytime"] == 999, np.nan, data["ninjurytime"]
+        # )
 
         data[self.treatment] = np.where(data[self.treatment] == "Active", 1, 0)
         data[self.outcome] = np.where(data["icause"].isna(), 1, 0)
@@ -591,16 +591,6 @@ class Dataset:
 
         return data
 
-    def _process_data(self):
-
-        self.data[self.continuous_vars] = self._normalize_data(
-            self.data[self.continuous_vars], "standard"
-        )
-
-        imp = SimpleImputer(missing_values=np.nan, strategy="mean")
-        imp.fit(self.data)
-        self._split_data(imp.transform(self.data))
-
     def _normalize_data(self, x: np.ndarray, type: str):
 
         if type == "minmax":
@@ -614,49 +604,74 @@ class Dataset:
 
         return x
 
-    def _split_data(self, x_train_scaled):
+    def _split_data(self, df_raw):
 
-        treatment_index = self.data.columns.get_loc(self.treatment)
-        outcome_index = self.data.columns.get_loc(self.outcome)
+        t_col = self.treatment
+        y_col = self.outcome
 
-        var_index = [
-            i
-            for i in range(x_train_scaled.shape[1])
-            if i not in [treatment_index, outcome_index]
-        ]
+        mask = df_raw.notna().all(axis=1)
+        df_raw = df_raw.loc[mask].reset_index(drop=True)
+
+        # build X (features only), W, Y (as arrays)
+        X_df = df_raw.drop(columns=[t_col, y_col])
+        W_all = df_raw[t_col].values.astype(int)
+        Y_all = df_raw[y_col].values.astype(int)
 
         if self.shuffle:
-            random_state = self.random_state
+            rs = self.random_state
         else:
-            random_state = 42
+            rs = 42
 
-        x_train, x_test, y_train, self.y_test = model_selection.train_test_split(
-            x_train_scaled,
-            self.data[self.outcome].values,
-            test_size=0.2,
-            random_state=random_state,
-            stratify=self.data[self.treatment],
+        idx = np.arange(len(df_raw))
+        tr_idx, te_idx = train_test_split(
+            idx, test_size=0.2, random_state=rs, stratify=W_all
+        )
+        tr_idx, va_idx = train_test_split(
+            tr_idx, test_size=0.2, random_state=rs, stratify=W_all[tr_idx]
         )
 
-        x_train, x_val, self.y_train, self.y_val = model_selection.train_test_split(
-            x_train,
-            y_train,
-            test_size=0.2,
-            random_state=random_state,
-            stratify=x_train[:, treatment_index],
+        # slice dataframes
+        X_tr_df, X_va_df, X_te_df = (
+            X_df.iloc[tr_idx],
+            X_df.iloc[va_idx],
+            X_df.iloc[te_idx],
+        )
+        W_tr, W_va, W_te = W_all[tr_idx], W_all[va_idx], W_all[te_idx]
+        Y_tr, Y_va, Y_te = Y_all[tr_idx], Y_all[va_idx], Y_all[te_idx]
+
+        # fit imputers/scaler on TRAIN continuous columns only
+        cont_idx_in_X = [X_df.columns.get_loc(c) for c in self.continuous_vars]
+
+        imp_cont = SimpleImputer(strategy="mean").fit(X_tr_df.iloc[:, cont_idx_in_X])
+        scl_cont = StandardScaler().fit(
+            imp_cont.transform(X_tr_df.iloc[:, cont_idx_in_X])
         )
 
-        self.x = x_train_scaled[:, var_index]
-        self.w = x_train_scaled[:, treatment_index]
-        self.y = self.data[self.outcome].values
+        self.scaler = scl_cont
+        self._imp_cont_ = imp_cont
+        self.continuous_indices = cont_idx_in_X  # used by get_unnorm_value()
 
-        self.w_train = x_train[:, treatment_index]
-        self.w_val = x_val[:, treatment_index]
-        self.w_test = x_test[:, treatment_index]
+        # helper: transform continuous slice, leave others untouched
+        def transform_split(X_block_df):
+            Xb = X_block_df.values.copy()
+            Xb_cont = scl_cont.transform(
+                imp_cont.transform(X_block_df.iloc[:, cont_idx_in_X])
+            )
+            Xb[:, cont_idx_in_X] = Xb_cont
+            return Xb
 
-        self.x_train = x_train[:, var_index]
-        self.x_val = x_val[:, var_index]
-        self.x_test = x_test[:, var_index]
+        X_tr = transform_split(X_tr_df)
+        X_va = transform_split(X_va_df)
+        X_te = transform_split(X_te_df)
+
+        # save per-split matrices (features only)
+        self.x_train, self.x_val, self.x_test = X_tr, X_va, X_te
+        self.w_train, self.w_val, self.w_test = W_tr, W_va, W_te
+        self.y_train, self.y_val, self.y_test = Y_tr, Y_va, Y_te
+
+        self.x = np.vstack([self.x_train, self.x_val, self.x_test])
+        self.w = np.concatenate([self.w_train, self.w_val, self.w_test])
+        self.y = np.concatenate([self.y_train, self.y_val, self.y_test])
 
     def get_data(self, set: str = None):
 
@@ -670,19 +685,15 @@ class Dataset:
             return self.x, self.w, self.y
 
     def get_feature_range(self, feature: int) -> np.ndarray:
-        """
-        return value range for a feature
-        """
+        """Return value range for a feature"""
 
-        x_original = self.scaler.inverse_transform(self.x[:, self.continuous_indices])
-
-        min = np.min(x_original[:, feature])
-        max = np.max(x_original[:, feature])
-
-        return max - min
+        x_train_cont = self.scaler.inverse_transform(
+            self.x_train[:, self.continuous_indices]
+        )
+        return float(x_train_cont[:, feature].max() - x_train_cont[:, feature].min())
 
     def get_unnorm_value(self, x: np.ndarray) -> np.ndarray:
-        """Returns the unnormalized (inverse-transformed) values of all features except treatment and outcome."""
+        """Returns the inverse-transformed values of all features."""
         # Create a copy of x to avoid modifying the original array
 
         x_copy = x.copy()
@@ -697,33 +708,19 @@ class Dataset:
         self,
         x: np.ndarray,
     ) -> np.ndarray:
-
+        """Get normalized values"""
         return self.scaler.transform(x[:, self.continuous_indices])
 
     def get_feature_names(self):
-        """
-        return feature names
-        """
+        """Return feature names"""
         return self.data.drop([self.treatment, self.outcome], axis=1).columns
 
     def get_cohort_name(self):
-
+        """Return cohort name"""
         return self.cohort_name
 
     def get_one_hot_column_indices(self, df, prefixes):
-        """
-        Get the indices for one-hot encoded columns for each specified prefix.
-        This function assumes that the DataFrame has been one-hot encoded using
-        pandas' get_dummies method.
-
-        Parameters:
-        df: pandas DataFrame
-        prefixes: list of strings, the prefixes used in the one-hot encoded columns
-
-        Returns:
-        indices_dict: dictionary where keys are the prefixes and values are lists of
-                    indices representing the position of each category column for that prefix
-        """
+        """Get the indices for one-hot encoded columns."""
         indices_dict = {}
 
         for prefix in prefixes:
@@ -737,7 +734,7 @@ class Dataset:
 
 
 def obtain_txa_baselines(unnorm=False) -> np.ndarray:
-
+    """Obtain baselines for TXA"""
     crash2 = pd.read_excel("data/crash_2.xlsx")
 
     outcome = "outcome"
@@ -776,7 +773,7 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
     ]
 
     # Load txa
-    txa = pd.read_pickle(f"data/txa_cohort.pkl")
+    txa = pd.read_pickle("data/txa_cohort.pkl")
     all_year = pd.read_csv("data/all_year.csv", index_col=0)
 
     txa["medatetime"] = pd.to_datetime(
@@ -944,7 +941,7 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
 
 
 def obtain_unnorm_txa_baselines() -> np.ndarray:
-
+    """Obtain unnormalzied txa baselines"""
     crash2 = pd.read_excel("data/crash_2.xlsx")
 
     outcome = "outcome"
@@ -987,7 +984,7 @@ def obtain_unnorm_txa_baselines() -> np.ndarray:
     ]
 
     # Load txa
-    txa = pd.read_pickle(f"data/txa_cohort.pkl")
+    txa = pd.read_pickle("data/txa_cohort.pkl")
 
     filter_regex = [
         "proc",
@@ -1080,7 +1077,8 @@ def obtain_accord_baselines() -> np.ndarray:
     """
     Return normalized baseline of ACCORD dataset with SPRINT value range.
 
-    Return:
+    Returns
+    -------
         Tuple containing:
         - Normalized baselines for SPRINT
         - Treatment for SPRINT
@@ -1211,7 +1209,8 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
     """
     Return normalized baseline of ACCORD dataset with SPRINT value range.
 
-    Return:
+    Returns
+    -------
         Tuple containing:
         - Normalized baselines for SPRINT
         - Treatment for SPRINT
@@ -1313,8 +1312,10 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
     #     )
     # )
 
-    # sprint[continuous_vars_sprint] = scaler.transform(sprint[continuous_vars_sprint].values)
-    # accord[continuous_vars_accord] = scaler.transform(accord[continuous_vars_accord].values)
+    # sprint[continuous_vars_sprint] = scaler.transform(
+    # sprint[continuous_vars_sprint].values)
+    # accord[continuous_vars_accord] = scaler.transform(
+    # accord[continuous_vars_accord].values)
 
     imp = SimpleImputer(missing_values=np.nan, strategy="mean")
     imp.fit(sprint)
