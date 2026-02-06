@@ -199,9 +199,12 @@ def compare_shap_vs_baseline(with_shap_paths: List[str], without_shap_paths: Lis
     return comparison_df
 
 
-def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comparison.png'):
+def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comparison.png', trial_name: str = None):
     """Plot comparison between WITH SHAP and WITHOUT SHAP conditions."""
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    
+    # Create title suffix with trial name if provided
+    title_suffix = f" ({trial_name.upper()})" if trial_name else ""
     
     # 1. Bar chart comparison
     ax = axes[0]
@@ -216,7 +219,7 @@ def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comp
            yerr=comparison_df['without_shap_std'], capsize=5)
     
     ax.set_ylabel('Average Score (1-5)')
-    ax.set_title('Hypothesis Quality: WITH SHAP vs WITHOUT SHAP')
+    ax.set_title(f'Hypothesis Quality: WITH SHAP vs WITHOUT SHAP{title_suffix}')
     ax.set_xticks(x)
     ax.set_xticklabels(comparison_df['metric'], rotation=45, ha='right')
     ax.legend()
@@ -230,16 +233,9 @@ def plot_shap_comparison(comparison_df: pd.DataFrame, out_path: str = 'shap_comp
     bars = ax.barh(comparison_df['metric'], comparison_df['difference'], color=colors, alpha=0.7)
     
     ax.set_xlabel('Score Difference (WITH SHAP - WITHOUT SHAP)')
-    ax.set_title('Improvement with SHAP Feature Guidance')
+    ax.set_title(f'Improvement with SHAP Feature Guidance{title_suffix}')
     ax.axvline(x=0, color='black', linestyle='-', linewidth=1)
     ax.grid(axis='x', alpha=0.3)
-    
-    # Add difference labels
-    for i, diff in enumerate(comparison_df['difference']):
-        label = f'{diff:+.2f}'
-        x_pos = diff + (0.1 if diff > 0 else -0.1)
-        ha = 'left' if diff > 0 else 'right'
-        ax.text(x_pos, i, label, va='center', ha=ha, fontsize=9)
     
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
@@ -534,12 +530,27 @@ def main():
         # Generate comparison plot
         if args.plot:
             print("\nGenerating comparison plot...")
-            # Use version in filename if not explicitly specified
+            
+            # Extract trial name from file path if single trial
+            trial_name = None
+            if len(args.judge_with_shap) == 1:
+                # Extract trial name from path like "docs/agent/crash_2/..."
+                path_parts = args.judge_with_shap[0].split('/')
+                if 'agent' in path_parts:
+                    trial_idx = path_parts.index('agent') + 1
+                    if trial_idx < len(path_parts):
+                        trial_name = path_parts[trial_idx]
+            
+            # Use version and trial name in filename if not explicitly specified
             if args.out_plot is None:
-                plot_path = f'docs/shap_comparison_{args.version}.png'
+                if trial_name:
+                    plot_path = f'docs/{trial_name.upper()}_shap_comparison_{args.version}.png'
+                else:
+                    plot_path = f'docs/ALL_TRIALS_shap_comparison_{args.version}.png'
             else:
                 plot_path = args.out_plot
-            plot_shap_comparison(comparison_df, plot_path)
+            
+            plot_shap_comparison(comparison_df, plot_path, trial_name)
         
         return
     

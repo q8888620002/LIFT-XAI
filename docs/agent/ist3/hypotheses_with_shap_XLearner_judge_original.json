@@ -1,246 +1,243 @@
 {
-  "summary": "The analysis evaluated five key feature hypotheses for their mechanistic plausibility, evidence alignment, subgroup implications, and caveat awareness in the context of alteplase treatment for acute ischemic stroke. The features, ranked by their importance in the model, were assessed across multiple dimensions considering the known literature and clinical practice. NIH Stroke Scale (NIHSS) and diastolic blood pressure at randomization emerged as the most plausible and well-supported modifiers, with strong biological and clinical grounding. Weight, systolic blood pressure, and prior antiplatelet therapy showed plausible rationale but were more speculative or less prioritized in ranking.",
+  "summary": "The assessment focuses on identifying the most impactful modifiers associated with alteplase treatment in ischemic stroke patients. NIHSS is a well-supported, primary prognostic factor with clear biological, pharmacological, and statistical explanations for its effect modification role. Other features like dbprand and weight also present plausible, evidence-supported mechanistic pathways. Mechanisms for sbprand and antiplat_rand, while logical and moderately supported, tend to show less consensus around clinical importance. Overall, NIHSS and dbprand show the strongest alignment with existing literature, suggesting their prioritization in further exploration.",
   "scored_features": [
     {
       "feature_name": "nihss",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "physiological",
-          "plausibility": 9,
-          "evidence_support": 9,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 9,
-          "comments": "Strong physiological basis linking NIHSS to stroke severity and outcomes, with robust evidence support."
-        },
-        {
           "mechanism_type": "biological",
-          "plausibility": 8,
-          "evidence_support": 7,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Moderate evidence supports the biological mechanism, though complex brain recovery pathways."
-        },
-        {
-          "mechanism_type": "pharmacological",
           "plausibility": 5,
-          "evidence_support": 4,
+          "evidence_support": 5,
           "specificity": 5,
           "testability": 5,
           "overall_score": 5,
-          "comments": "Speculative mechanism due to dosing precision concerns, limited direct evidence."
+          "comments": "High NIHSS indicates more severe stroke, limiting alteplase efficacy due to irreversible damage."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Severe strokes are less responsive even with thrombolysis, supported by moderate evidence."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Statistical floor effect strongly supported; high NIHSS limits outcome probability."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 9,
-      "overall_score": 9,
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "overall_score": 5,
       "strengths": [
-        "Strong evidence linking NIHSS with outcomes.",
-        "Clinical interpretation is clear and grounded in stroke literature.",
-        "Subgroup implications are actionable."
+        "Strong biological rationale and evidence support for NIHSS as a modifier.",
+        "Clear mechanisms of how high NIHSS impacts treatment benefits.",
+        "Robust validations and specific subgroup implications."
       ],
       "weaknesses": [
-        "Some speculative elements in pharmacological mechanism."
+        "Variations in NIHSS assessment could introduce variability."
       ],
       "recommendation": "high_priority",
-      "justification": "NIHSS is a critical predictor with strong mechanistic and clinical evidence. Validation plans are feasible, and caveats are well acknowledged, making it a high-priority feature for further investigation."
+      "justification": "As a critical factor strongly supported by clinical evidence, NIHSS should be a priority in further investigations due to its significant role in predicting alteplase outcomes."
     },
     {
       "feature_name": "dbprand",
       "per_mechanism_scores": [
         {
           "mechanism_type": "physiological",
-          "plausibility": 8,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Solid evidence linking high DBP with poorer outcomes in stroke, strong physiological rationale."
-        },
-        {
-          "mechanism_type": "pharmacological",
-          "plausibility": 7,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Moderately supported by evidence on bleeding risks related to alteplase with high BP."
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Elevated DBP affects alteplase efficacy by worsening edema, a moderately supported mechanism."
         },
         {
           "mechanism_type": "biological",
           "plausibility": 5,
-          "evidence_support": 4,
+          "evidence_support": 5,
           "specificity": 5,
           "testability": 5,
           "overall_score": 5,
-          "comments": "Speculative aspects around cerebral autoregulation, less clarity in existing studies."
+          "comments": "Strong biological rationale linking high DBP with hemorrhagic risk during thrombolysis."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Potential confounding via disease progression markers, moderately credible."
         }
       ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 5,
       "strengths": [
-        "Physiological mechanism is well supported by literature.",
-        "Subgroup implications are realistic and clinically relevant."
+        "Well-supported mechanisms for impaired alteplase effectiveness due to high DBP.",
+        "Strong clinical rationale underpinning blood pressure management."
       ],
       "weaknesses": [
-        "Biological mechanism is speculative, needs more validation."
+        "Single DBP measurements may lack representativeness."
       ],
       "recommendation": "high_priority",
-      "justification": "Diastolic BP at randomization holds a strong physiologically supported role in stroke outcomes, with good alignment with the literature and feasible validation."
+      "justification": "Given its prominence and alignment with clinical practice, high DBP ranks as a high-priority feature for additional research."
     },
     {
       "feature_name": "weight",
       "per_mechanism_scores": [
         {
           "mechanism_type": "pharmacological",
-          "plausibility": 7,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Pharmacological evidence well established due to weight-based dosing requirements."
-        },
-        {
-          "mechanism_type": "physiological",
-          "plausibility": 6,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Moderate support due to related comorbidities influencing outcomes."
-        },
-        {
-          "mechanism_type": "biological",
           "plausibility": 5,
-          "evidence_support": 4,
+          "evidence_support": 5,
           "specificity": 5,
           "testability": 5,
           "overall_score": 5,
-          "comments": "Speculative effects on drug metabolism, not well supported."
+          "comments": "Direct, evidence-backed role of weight in alteplase dosing."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Obesity-related thrombotic risk logically affecting outcomes, moderately supported."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Cytokine influence from adipose tissue remains speculative in this context."
         }
       ],
-      "mechanism_plausibility": 7,
-      "clinical_interpretation": 7,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 7,
-      "caveat_awareness": 7,
-      "overall_score": 7,
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 4,
       "strengths": [
-        "Clear link between weight and alteplase dosing.",
-        "Potential for subgroup stratification is clear."
+        "Clear pharmacokinetic basis for weight's effect on treatment efficacy."
       ],
       "weaknesses": [
-        "Less evidence for biological and physiological impacts."
+        "Recording accuracy in acute settings may affect outcomes."
       ],
       "recommendation": "medium_priority",
-      "justification": "Weight's impact via dosing is logical but mechanisms are less explored outside pharmacology. Important but does not surpass NIHSS and DBP."
+      "justification": "Weight has pharmacological importance but less convincing biological effect modifiers compared to NIHSS and DBP, warranting further medium-priority investigation."
     },
     {
       "feature_name": "sbprand",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "physiological",
-          "plausibility": 8,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Well-supported mechanisms related to blood pressure and stroke risk."
-        },
-        {
           "mechanism_type": "biological",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Moderate support, addressing chronic effects of hypertension."
-        },
-        {
-          "mechanism_type": "pharmacological",
           "plausibility": 5,
-          "evidence_support": 4,
+          "evidence_support": 5,
           "specificity": 5,
           "testability": 5,
           "overall_score": 5,
-          "comments": "Speculative effect on drug dynamics, more data needed."
+          "comments": "Strong link between high SBP and risk of adverse outcomes with alteplase."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Secondary stroke risks from hypertension have modest support."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "High SBP as a confounder is conceptually sound but less specific."
         }
       ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 7,
-      "caveat_awareness": 7,
-      "overall_score": 8,
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 4,
       "strengths": [
-        "Strong physiological evidence for associations with stroke outcomes.",
-        "Good subgroup potential."
+        "Well-documented risk factor in thrombolysis literature."
       ],
       "weaknesses": [
-        "Pharmacodynamic implications remain speculative."
+        "Potential confounding from comorbidities not fully accounted for."
       ],
       "recommendation": "medium_priority",
-      "justification": "Systolic BP at randomization is well-supported physiologically. Epidemiological evidence is robust, though pharmacological effects need more studies."
+      "justification": "Given its well-understood biological risks, further stratification research is justified."
     },
     {
       "feature_name": "antiplat_rand",
       "per_mechanism_scores": [
         {
           "mechanism_type": "pharmacological",
-          "plausibility": 7,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Moderate evidence supports interactions with alteplase."
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Synergistic benefit with alteplase has clinical logic and modest corroboration."
         },
         {
           "mechanism_type": "biological",
-          "plausibility": 5,
-          "evidence_support": 5,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Speculative biological interactions with platelet aggregation."
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Microvascular benefit from antithrombotic action is plausible but less explored."
         },
         {
           "mechanism_type": "behavioral",
-          "plausibility": 6,
-          "evidence_support": 5,
-          "specificity": 5,
-          "testability": 5,
-          "overall_score": 5,
-          "comments": "Behavioral aspects change overall risk profile, but less direct evidence exists."
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "History of specialist care inferred from antiplatelet use remains speculative."
         }
       ],
-      "mechanism_plausibility": 7,
-      "clinical_interpretation": 7,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 7,
-      "caveat_awareness": 7,
-      "overall_score": 7,
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "overall_score": 3,
       "strengths": [
-        "Clinically relevant due to common antiplatelet use.",
-        "Some evidence for altered bleeding risk during thrombolysis."
+        "Rationale aligns with known pharmacodynamics and treatment practices."
       ],
       "weaknesses": [
-        "Biological and behavioral mechanisms are less supported."
+        "Potential for unrecognized confounders in analysis."
       ],
       "recommendation": "low_priority",
-      "justification": "While clinically relevant, the mechanisms are more speculative and evidence is less robust compared to other features. Further investigation is suggested but not urgent."
+      "justification": "Exploratory interest due to moderate alignment with established treatment protocols, but limits in current evidence base lower priority."
     }
   ],
   "top_features": [

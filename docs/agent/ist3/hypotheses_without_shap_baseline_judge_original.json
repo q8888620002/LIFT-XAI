@@ -1,253 +1,254 @@
 {
-  "summary": "Overall, the hypotheses related to age, time to treatment initiation, and stroke severity align well with known clinical evidence on treatment effect modifiers in ischemic stroke. Hypertension and neuroimaging markers also present plausible hypotheses but are somewhat less critical compared to the top features. The feature 'Time to Treatment Initiation' shows the strongest alignment with clinical literature, underscoring its high priority for further validation. Additional attention should be given to refining subgroup delineations and addressing caveats such as confounding by comorbidity and variability in symptom onset reporting.",
+  "summary": "The evaluation of proposed mechanisms for stroke patient treatment with alteplase revealed several clinically relevant insights. Age, NIHSS score, and time to treatment are top features, supported by strong mechanistic and literature evidence. Diabetes mellitus and previous stroke history feature lower in the importance as relatively less established effect modifiers in context. Overall, proposed mechanisms demonstrate strong biological plausibility, evidence alignment, and practical subgroup implications, though certain speculative elements require careful consideration. Validation plans are generally robust, yet some methodological concerns persist, particularly regarding potential confounding factors.",
   "scored_features": [
     {
       "feature_name": "Age",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological",
-          "plausibility": 9,
-          "evidence_support": 9,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Strong biological basis due to known age-related decline in neuroplasticity. Well-supported by literature."
+          "mechanism_type": "physiological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Strong evidence supports reduced recovery potential with older age due in part to neuroplasticity limitations."
         },
         {
-          "mechanism_type": "physiological",
-          "plausibility": 9,
-          "evidence_support": 9,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Highly plausible given increased hemorrhagic risk with age; backed by strong evidence."
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Well-established that older age affects vascular biology, altering thrombolysis risk-benefit ratio."
         },
         {
           "mechanism_type": "pharmacological",
-          "plausibility": 7,
-          "evidence_support": 7,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 7,
-          "comments": "Moderate support for age affecting pharmacokinetics of thrombolytics. Less specific pathways."
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Age-related changes in drug metabolism are plausible with moderate evidence from pharmacokinetics."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 9,
-      "evidence_alignment": 10,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 9,
-      "caveat_awareness": 8,
-      "overall_score": 9,
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "overall_score": 5,
       "strengths": [
-        "Strong evidence supporting age as a modifier of thrombolysis outcomes",
-        "Well-documented biological and physiological mechanisms",
-        "Clear validation pathway through subgroup analysis"
+        "Well-documented effect modifier with strong biological basis.",
+        "Mechanisms are plausible and well-supported."
       ],
       "weaknesses": [
-        "Potential confounding with comorbid conditions like hypertension"
+        "Potential confounding with comorbidities or general health status."
       ],
       "recommendation": "high_priority",
-      "justification": "Age's clinical importance in stroke outcomes is well-documented and its high rank aligns with the literature, justifying a high priority for validation."
+      "justification": "Age is a top feature, showing excellent alignment with literature, and its mechanisms offer clear, actionable subgroup implications."
     },
     {
-      "feature_name": "Time to Treatment Initiation",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological",
-          "plausibility": 10,
-          "evidence_support": 10,
-          "specificity": 9,
-          "testability": 9,
-          "overall_score": 10,
-          "comments": "Physiological basis of time-critical thrombolysis is well-established; highly supported by evidence."
-        },
-        {
-          "mechanism_type": "biological",
-          "plausibility": 9,
-          "evidence_support": 9,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Delays in treatment leading to irreversible damage is biologically plausible with strong evidence backing."
-        },
-        {
-          "mechanism_type": "statistical",
-          "plausibility": 9,
-          "evidence_support": 9,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 9,
-          "comments": "Statistical evidence from trials reinforces biological mechanisms, underlining strong support."
-        }
-      ],
-      "mechanism_plausibility": 10,
-      "clinical_interpretation": 10,
-      "evidence_alignment": 9,
-      "subgroup_implications": 9,
-      "validation_plan_quality": 10,
-      "caveat_awareness": 9,
-      "overall_score": 10,
-      "strengths": [
-        "Strong backing by clinical trials and guideline recommendations",
-        "Immediate and actionable subgroup implication based on time windows",
-        "Robust validation plan focusing on real-world data"
-      ],
-      "weaknesses": [
-        "Relies on patient-reported symptom onset which may introduce variability"
-      ],
-      "recommendation": "high_priority",
-      "justification": "Time to treatment initiation is critical for outcomes, with clear evidence and high alignment with clinical practice, meriting high follow-up priority."
-    },
-    {
-      "feature_name": "Stroke Severity",
+      "feature_name": "Baseline NIHSS score",
       "per_mechanism_scores": [
         {
           "mechanism_type": "biological",
-          "plausibility": 8,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Biological rationale for severity affecting outcomes is reasonable; literature support is good."
-        },
-        {
-          "mechanism_type": "behavioral",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Behavioral aspects are less covered in literature, but provide a supplementary perspective."
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Strong correlation between stroke severity and outcome is supported across studies; valid biological link."
         },
         {
           "mechanism_type": "statistical",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Statistical considerations are relevant but need stronger connections to biology."
-        }
-      ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 8,
-      "overall_score": 8,
-      "strengths": [
-        "Established importance of severity metrics like NIHSS",
-        "Biological and statistical pathways for differential response highlighted"
-      ],
-      "weaknesses": [
-        "Behavioral and statistical mechanisms could be more tightly linked to outcomes"
-      ],
-      "recommendation": "medium_priority",
-      "justification": "Stroke severity is known to modulate treatment effect, but some mechanisms require further distinguishment and validation."
-    },
-    {
-      "feature_name": "Presence of Hypertension",
-      "per_mechanism_scores": [
-        {
-          "mechanism_type": "physiological",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Known physiological impacts of hypertension are strong, especially in stroke risk."
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Widely recognized as a key predictive factor post-stroke; statistical associations are robust."
         },
         {
           "mechanism_type": "pharmacological",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Pharmacological interactions are plausible but require more specific evidence."
-        },
-        {
-          "mechanism_type": "biological",
-          "plausibility": 7,
-          "evidence_support": 7,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 7,
-          "comments": "Biological rationale is sound, particularly with endothelial dysfunction concerns."
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "overall_score": 3,
+          "comments": "Larger clots less responsive to thrombolysis is a plausible but less established pharmacological nuance."
         }
       ],
-      "mechanism_plausibility": 8,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 7,
-      "subgroup_implications": 7,
-      "validation_plan_quality": 7,
-      "caveat_awareness": 7,
-      "overall_score": 8,
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 5,
       "strengths": [
-        "Well-recognized as a vascular risk factor",
-        "Mechanisms align with known hypertension effects"
+        "Well-validated predictor in clinical settings.",
+        "Clear, actionable implications for treatment response stratification."
       ],
       "weaknesses": [
-        "Potential confounding by additional comorbidities like diabetes"
+        "Potentially oversimplifies multi-dimensional severity into a single score."
       ],
-      "recommendation": "medium_priority",
-      "justification": "While hypertension is a relevant modifier, complexity in interactions and comorbid confounding necessitate cautious interpretation."
+      "recommendation": "high_priority",
+      "justification": "NIHSS score is a highly relevant predictor with strong evidence and clearly defined subgroup potential."
     },
     {
-      "feature_name": "Neuroimaging Markers",
+      "feature_name": "Time to treatment",
       "per_mechanism_scores": [
         {
-          "mechanism_type": "biological",
-          "plausibility": 9,
-          "evidence_support": 8,
-          "specificity": 8,
-          "testability": 8,
-          "overall_score": 8,
-          "comments": "Strong rationale for biological imaging markers in guiding treatment; good supporting data."
+          "mechanism_type": "pharmacological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Immediate alteplase after stroke onset maximize therapeutic benefit; well-substantiated mechanistic basis."
         },
         {
-          "mechanism_type": "physiological",
-          "plausibility": 7,
-          "evidence_support": 6,
-          "specificity": 6,
-          "testability": 6,
-          "overall_score": 6,
-          "comments": "Physiological insights are feasible but require more robust clinical connections."
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "overall_score": 5,
+          "comments": "Time-sensitive effects on penumbra salvage is a key concept; extensively documented."
         },
         {
           "mechanism_type": "statistical",
-          "plausibility": 8,
-          "evidence_support": 8,
-          "specificity": 7,
-          "testability": 7,
-          "overall_score": 8,
-          "comments": "Statistical integration of imaging results is promising for personalized treatment."
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 5,
+          "comments": "The 'time is brain' concept is widely recognized and underpins treatment protocols."
         }
       ],
-      "mechanism_plausibility": 9,
-      "clinical_interpretation": 8,
-      "evidence_alignment": 8,
-      "subgroup_implications": 8,
-      "validation_plan_quality": 8,
-      "caveat_awareness": 7,
-      "overall_score": 8,
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "overall_score": 5,
       "strengths": [
-        "Significant potential for precise stratification and tailored treatment",
-        "Strong biological and statistical framework"
+        "Strong, validated correlation between prompt treatment and improved outcomes.",
+        "Robust biological underpinnings with immediate clinical applicability."
       ],
       "weaknesses": [
-        "Limited by resource availability and implementation variability"
+        "Potential inaccuracies in symptom onset reporting may affect analyses."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Immediate treatment is foundational for stroke care, with excellent mechanistic and evidential support."
+    },
+    {
+      "feature_name": "Diabetes mellitus",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 3,
+          "overall_score": 4,
+          "comments": "Chronic effects of diabetes on vasculature are well-known; specific linkage to alteplase less defined."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Speculative concerns about altered pharmacodynamics; lacking substantial pharmacokinetic studies."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Statistics robustly associate diabetes with poorer baseline and post-treatment outcomes."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 4,
+      "strengths": [
+        "Statistical associations are robust.",
+        "Potentially impactful for specific cohorts."
+      ],
+      "weaknesses": [
+        "Mechanisms involving pharmacodynamics poorly substantiated."
       ],
       "recommendation": "medium_priority",
-      "justification": "Neuroimaging presents a promising tool for refined treatment strategies, though implementation challenges persist."
+      "justification": "Diabetes presents moderate evidence of impact on stroke outcomes, but specific pharmacological connections remain uncertain."
+    },
+    {
+      "feature_name": "Previous stroke history",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "overall_score": 4,
+          "comments": "Recurrent strokes indicate chronic issues influencing treatment outcomes; biologically sensible."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Reduced recovery reserve is plausible, with moderate literature support."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 3,
+          "overall_score": 3,
+          "comments": "Speculative mechanism; limited trial data supporting differential pharmacological response."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Biological rationale for reduced recovery potential is strong.",
+        "Key factor in personalizing stroke care."
+      ],
+      "weaknesses": [
+        "Variability in impact based on prior stroke characteristics difficult to standardize."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Prior stroke history holds variable but valuable insights; mechanisms mostly plausible with differential impact perceived."
     }
   ],
   "top_features": [
-    "Time to Treatment Initiation",
     "Age",
-    "Stroke Severity"
+    "Baseline NIHSS score",
+    "Time to treatment"
   ],
-  "methodological_concerns": null
+  "methodological_concerns": [
+    "Potential confounding in age-related analyses due to comorbidity overlaps.",
+    "Inaccurate symptom onset documentation affecting time-to-treatment analyses."
+  ]
 }
