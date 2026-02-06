@@ -87,26 +87,32 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 async function loadHypotheses() {
     const cohort = document.getElementById('cohort-select').value;
     const conditionBlind = document.getElementById('condition-select').value;
-    const raterId = document.getElementById('rater-id').value.trim();
+    const expertise = document.getElementById('expertise-select').value;
+    const specialty = document.getElementById('specialty-input').value.trim();
 
     if (!cohort) {
         alert('Please select a trial cohort');
         return;
     }
 
-    if (!raterId) {
-        alert('Please enter your ID (initials or name)');
+    if (!expertise) {
+        alert('Please select your clinical expertise level');
+        return;
+    }
+
+    if (!specialty) {
+        alert('Please enter your specialty');
         return;
     }
 
     // Map blinded condition to actual file path based on cohort
     const condition = conditionMapping[cohort][conditionBlind];
-    
+
     // WITHOUT SHAP files don't include learner name in filename
-    const fileName = condition === 'without_shap_baseline' 
+    const fileName = condition === 'without_shap_baseline'
         ? `hypotheses_${condition}.json`
         : `hypotheses_${condition}_XLearner.json`;
-    
+
     const filePath = `agent/${cohort}/${fileName}`;
 
     try {
@@ -115,10 +121,10 @@ async function loadHypotheses() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         displayTrialInfo(cohort);
-        displayHypotheses(data.feature_hypotheses, cohort, conditionBlind, raterId);
-        
+        displayHypotheses(data.feature_hypotheses, cohort, conditionBlind, expertise, specialty);
+
     } catch (error) {
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
@@ -138,10 +144,11 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-info').style.display = 'block';
 }
 
-function displayHypotheses(hypotheses, cohort, condition, raterId) {
+function displayHypotheses(hypotheses, cohort, condition, expertise, specialty) {
     currentHypotheses = hypotheses;
     ratings = {
-        rater_id: raterId,
+        expertise: expertise,
+        specialty: specialty,
         cohort: cohort,
         condition: condition,
         timestamp: new Date().toISOString(),
@@ -217,7 +224,7 @@ function createHypothesisCard(hypothesis, index) {
         <div class="rating-section">
             <h4>Your Ratings (1-10 scale)</h4>
             ${createRatingInputs(index)}
-            
+
             <div class="rating-group">
                 <label class="rating-label">Additional Comments (optional)</label>
                 <textarea id="comments-${index}" placeholder="Any additional thoughts, concerns, or suggestions..."></textarea>
@@ -234,11 +241,11 @@ function createRatingInputs(hypIndex) {
             <label class="rating-label">${criterion.label}</label>
             <div class="rating-description">${criterion.description}</div>
             <div class="rating-input">
-                <input 
-                    type="range" 
-                    id="${criterion.id}-${hypIndex}" 
-                    min="1" 
-                    max="10" 
+                <input
+                    type="range"
+                    id="${criterion.id}-${hypIndex}"
+                    min="1"
+                    max="10"
                     value="5"
                     oninput="updateRatingValue('${criterion.id}', ${hypIndex})"
                 >
@@ -258,9 +265,16 @@ function updateRatingValue(criterionId, hypIndex) {
 document.getElementById('export-btn').addEventListener('click', exportRatings);
 
 function exportRatings() {
-    const raterId = document.getElementById('rater-id').value.trim();
-    if (!raterId) {
-        alert('Please enter your ID');
+    const expertise = document.getElementById('expertise-select').value;
+    const specialty = document.getElementById('specialty-input').value.trim();
+
+    if (!expertise) {
+        alert('Please select your clinical expertise level');
+        return;
+    }
+
+    if (!specialty) {
+        alert('Please enter your specialty');
         return;
     }
 
@@ -290,12 +304,12 @@ function exportRatings() {
     const dataStr = JSON.stringify(ratings, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
-    
+
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ratings_${ratings.cohort}_${ratings.condition}_${raterId}_${Date.now()}.json`;
+    link.download = `ratings_${ratings.cohort}_${ratings.condition}_${Date.now()}.json`;
     link.click();
-    
+
     URL.revokeObjectURL(url);
 
     alert('Ratings exported successfully! Please submit the downloaded JSON file.');
