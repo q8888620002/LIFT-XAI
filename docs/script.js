@@ -165,10 +165,9 @@ function createHypothesisCard(hypothesis, index) {
 
     card.innerHTML = `
         <div class="hypothesis-header">
-            <div class="hypothesis-title">Feature ${index + 1}: ${hypothesis.feature_name}</div>
+            <div class="hypothesis-title">Feature ${index + 1}</div>
             <div>
                 <span class="feature-badge">Rank: ${hypothesis.importance_rank || index + 1}</span>
-                <span class="feature-badge">Direction: ${hypothesis.effect_direction}</span>
             </div>
         </div>
 
