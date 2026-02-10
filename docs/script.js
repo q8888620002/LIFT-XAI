@@ -268,7 +268,6 @@ function createHypothesisCard(hypothesis, index) {
                 ${hypothesis.mechanisms.map(m => `
                     <div class="mechanism-item">
                         <strong>${m.mechanism_type}:</strong> ${m.description}
-                        <br><small><em>Evidence level: ${m.evidence_level}</em></small>
                     </div>
                 `).join('')}
             </div>
