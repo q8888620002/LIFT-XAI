@@ -1091,6 +1091,9 @@ def main():
     final_output = feature_hypotheses
     verification_report = None
 
+    # Save original hypotheses before refinement
+    original_output = feature_hypotheses
+
     # ---------- VERIFY (optional) ----------
     if verifier_model:
         print(f"Refining feature hypotheses with verifier ({args.verifier_iterations} iteration(s))...")
@@ -1225,13 +1228,20 @@ def main():
 
     # ---------- WRITE OUTPUTS ----------
     ensure_out_dir(args.out_json)
+    
+    # Always save original hypotheses
     with open(args.out_json, "w") as f:
-        json.dump(final_output.model_dump(), f, indent=2)
-
-    print(f"Wrote feature hypotheses to: {args.out_json}")
-
-    # Write verifier report if available
+        json.dump(original_output.model_dump(), f, indent=2)
+    print(f"Wrote original feature hypotheses to: {args.out_json}")
+    
+    # If refined, save revised version separately
     if verification_report is not None:
+        revised_path = os.path.splitext(args.out_json)[0] + "_revised.json"
+        with open(revised_path, "w") as f:
+            json.dump(final_output.model_dump(), f, indent=2)
+        print(f"Wrote revised feature hypotheses to: {revised_path}")
+        
+        # Write verifier report
         report_path = os.path.splitext(args.out_json)[0] + "_verification.json"
         with open(report_path, "w") as f:
             json.dump(verification_report.model_dump(), f, indent=2)

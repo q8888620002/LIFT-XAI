@@ -1,0 +1,546 @@
+{
+  "dataset": "crash_2",
+  "total_mechanisms_analyzed": 15,
+  "total_abstracts_retrieved": 34,
+  "overall_support_count": 0,
+  "overall_conflict_count": 1,
+  "overall_neutral_count": 33,
+  "mechanism_results": [
+    {
+      "feature_name": "Injury Type: Penetrating",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Penetrating injuries cause blood vessel damage and immediate bleeding, potentially increasing the importance of strong hemostatic agents like TXA. However, specific evidence linking stronger efficacy solely to penetrating contexts is limited.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Penetrating\" AND (\"pathophysiology\" OR \"mechanism\" OR \"causal\" OR \"etiology\" OR \"interaction\") AND (\"potentially\" OR \"penetrating\" OR \"hemostatic\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 20,
+      "support_count": 0,
+      "conflict_count": 1,
+      "neutral_count": 19,
+      "support_percentage": 0.0,
+      "conflict_percentage": 5.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The mechanism concerns whether penetrating injuries, due to blood vessel damage and immediate bleeding, make TXA particularly more effective, implying a differential benefit by type of injury. The CRASH-2 abstract reports that TXA reduces death due to bleeding and that its effect depends strongly on time from injury, but explicitly states there was no evidence that the effect of TXA on death due to bleeding varied by type of injury. It does not show stronger efficacy specifically in penetrating trauma versus other trauma types, so it neither supports nor contradicts a mechanism focused on enhanced efficacy solely in penetrating injuries.",
+          "key_findings": "1) TXA significantly reduced all-cause mortality at 28 days (RR 0.91, 95% CI 0.85\u20130.97) and death due to bleeding (RR 0.85, 95% CI 0.76\u20130.96) in bleeding trauma patients. 2) The treatment effect varied strongly by time from injury: benefit when given \u22641 hour (RR 0.68) and 1\u20133 hours (RR 0.79), possible harm when given >3 hours (RR 1.44). 3) The authors explicitly state that there was no evidence that the effect of TXA on death due to bleeding varied by type of injury. 4) The trial does not analyze or report enhanced TXA efficacy specifically in penetrating injuries compared with other trauma types.",
+          "pmid": "23477634",
+          "title": "The CRASH-2 trial: a randomised controlled trial and economic evaluation of the effects of tranexamic acid on death, vascular occlusive events and transfusion requirement in bleeding trauma patients.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract examines neurological recovery after traumatic spinal cord injury and notes that penetrating injuries are more likely to be complete and have lower recovery rates than blunt injuries, but it does not assess bleeding, hemostasis, or the efficacy of TXA or other hemostatic agents in penetrating versus other mechanisms of injury. Thus it neither supports nor contradicts the proposed mechanism about stronger TXA efficacy in penetrating injuries.",
+          "key_findings": "Penetrating spinal cord injuries were significantly more likely to result in complete injury and had a significantly lower neurological recovery rate compared to blunt injury (OR 0.76, 95% CI 0.62\u20130.92; p = 0.006). The study does not address blood vessel damage, bleeding volume, or treatment with hemostatic agents such as TXA.",
+          "pmid": "30771786",
+          "title": "Neurological recovery following traumatic spinal cord injury: a systematic review and meta-analysis.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract concerns infectious complications (post-traumatic endophthalmitis) after open globe eye injury, focusing on risk factors, microbiology, diagnosis, and antibiotic/surgical management. It does not address bleeding, vascular damage, hemostasis, or the efficacy or context-specific importance of TXA or other hemostatic agents. Therefore it neither supports nor contradicts the proposed mechanism about penetrating injuries and hemostatic efficacy.",
+          "key_findings": "Post-traumatic endophthalmitis is a rare but serious complication of open globe injury; risk factors include lens capsule rupture, intraocular foreign body, trauma type, and delay in management. Staphylococcus epidermidis is common, but polymicrobial infections are frequent. Preventive and curative treatments (choice of antibiotics, dosage, route, and role of vitrectomy) are not well defined. No discussion of bleeding, blood vessel damage, or hemostatic agents such as TXA.",
+          "pmid": "26563842",
+          "title": "[Post-traumatic endophthalmitis].",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract compares the diagnostic accuracy of chest ultrasonography versus chest X\u2011ray for pneumothorax in trauma patients and examines heterogeneity by type of trauma (blunt vs penetrating), but it does not evaluate bleeding, blood vessel damage, hemostasis, or the efficacy or importance of TXA or other hemostatic agents. Therefore it neither supports nor conflicts with the proposed mechanism about penetrating injuries and hemostatic therapy.",
+          "key_findings": "Chest ultrasonography performed by frontline non\u2011radiologist physicians showed higher sensitivity (0.91) than supine chest X\u2011ray (0.47) for detecting traumatic pneumothorax, with similar specificities (~0.99\u20131.00). This superiority was reported as independent of type of trauma (blunt vs penetrating), type of operator, and type of ultrasound probe. No data on bleeding, vascular injury, or TXA use were presented.",
+          "pmid": "32702777",
+          "title": "Chest ultrasonography versus supine chest radiography for diagnosis of pneumothorax in trauma patients in the emergency department.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses infectious complications (endophthalmitis), risk factors, and antibiotic-based prevention/treatment after open-globe penetrating eye injuries. It does not address blood vessel damage, bleeding severity, or the efficacy/importance of hemostatic agents such as tranexamic acid (TXA), nor does it compare penetrating versus other injury types in terms of hemostatic needs.",
+          "key_findings": "Endophthalmitis after open-globe injuries is commonly caused by Bacillus species and coagulase-negative Staphylococcus; risk factors include intraocular foreign body, organic material, surgical delay, and wound type. Prognosis remains poor, and the authors emphasize prevention and describe protocols based on pharmacokinetic and multicenter treatment studies. No data on bleeding, vascular injury, or hemostatic agents is provided.",
+          "pmid": "10182102",
+          "title": "Endophthalmitis following open-globe injuries.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses diagnostic and management challenges in penetrating neck trauma but does not mention blood vessel damage mechanisms, hemostasis, or the use or relative efficacy of TXA or other hemostatic agents. It neither links penetrating injuries to increased importance of strong hemostatic agents nor provides data comparing efficacy across injury types.",
+          "key_findings": "Penetrating neck trauma involves complex anatomy and potential rapid deterioration of airway, vascular, or neurologic injuries; the review covers history/physical exam, airway management, and general management strategies, without addressing pharmacologic hemostatic interventions such as TXA.",
+          "pmid": "9496316",
+          "title": "Penetrating neck trauma.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates thromboprophylaxis (mechanical and pharmacological) for prevention of venous thromboembolism in major trauma patients, without specific focus on penetrating versus blunt trauma or on acute hemostatic treatment like TXA at the time of bleeding. It does not analyze whether penetrating injuries alter the efficacy or importance of hemostatic agents, so it neither supports nor contradicts the proposed mechanism.",
+          "key_findings": "In 16 RCTs (n=3005) of major trauma patients (including both penetrating and blunt trauma), thromboprophylaxis reduced DVT risk overall (RR 0.52, 95% CI 0.32\u20130.84); mechanical prophylaxis reduced DVT (RR 0.43, 95% CI 0.25\u20130.73); pharmacological prophylaxis was more effective than mechanical (RR 0.48, 95% CI 0.25\u20130.95); LMWH was more effective than unfractionated heparin (RR 0.68, 95% CI 0.50\u20130.94); combined mechanical and pharmacological prophylaxis further reduced DVT (RR 0.34, 95% CI 0.19\u20130.60). No mortality or PE benefit was demonstrated. The effects were not analyzed separately for penetrating versus blunt trauma, nor in relation to immediate hemostatic agents like TXA.",
+          "pmid": "23543562",
+          "title": "Thromboprophylaxis for trauma patients.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses prophylactic antibiotic use in various trauma scenarios, including penetrating abdominal wounds, but it does not address blood vessel damage, bleeding severity, or the efficacy or importance of hemostatic agents such as TXA in penetrating versus other types of injuries. Thus, it neither supports nor contradicts the proposed mechanism about enhanced importance/efficacy of TXA in penetrating injuries.",
+          "key_findings": "Prophylactic antibiotics can prevent infections in penetrating abdominal wounds, open fractures, and early adequately debrided and closed wounds, but are ineffective in wounds left open, incompletely debrided, or treated late, and in settings of ongoing contamination (e.g., after intubation, catheterization, vascular cannulation). The abstract notes that prolonged prophylactic antibiotic use may promote antibiotic-resistant infections and recommends brief, perioperative administration. No data are presented on hemostasis, blood vessel damage, bleeding, or TXA.",
+          "pmid": "7041727",
+          "title": "Prophylactic antibiotics in trauma.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract focuses on surgical management strategies for traumatic duodenal injuries and does not address hemostatic pharmacologic agents such as TXA, nor does it compare outcomes in penetrating versus other mechanisms of injury. There is no discussion of blood vessel damage, bleeding control by systemic agents, or differential efficacy of hemostatic therapies in penetrating trauma.",
+          "key_findings": "Primary, tension-free repair is preferred for duodenal injuries when possible; more complex procedures (e.g., Roux-en-Y duodenojejunostomy, pancreaticoduodenectomy) are reserved for severe cases and associated with higher complication rates; wide extraluminal drainage is recommended regardless of injury grade or repair type.",
+          "pmid": "34974741",
+          "title": "Review of Traumatic Duodenal Injuries: Etiology, Diagnosis, and Management.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract describes patterns and consequences of blunt and penetrating abdominal trauma in pregnancy, including bleeding and organ injury, but does not mention hemostatic agents, tranexamic acid (TXA), or differential treatment efficacy in penetrating versus other trauma types. It therefore neither supports nor contradicts the proposed mechanism about stronger importance or efficacy of TXA specifically in penetrating injuries.",
+          "key_findings": "Both blunt and penetrating trauma can injure the uterus and intra-abdominal organs and are associated with hemorrhage (including retroperitoneal hemorrhage in blunt trauma). Penetrating trauma can cause direct fetal, placental, and cord injuries. Laparotomy is often required to treat such injuries. The article notes that anatomic and physiologic changes of pregnancy may alter injury patterns and required treatments to reestablish maternal-fetal hemostasis, but provides no data about TXA or comparative hemostatic management in penetrating versus other injuries.",
+          "pmid": "6352147",
+          "title": "Abdominal trauma during pregnancy.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses epidemiology, forensic aspects, mortality trends, and rescue delays in penetrating cardiac injuries but does not mention hemostatic agents, TXA, or differential efficacy of hemostatic strategies in penetrating versus other injury types. It provides no mechanistic or therapeutic evidence related to the proposed role of stronger hemostatic agents in penetrating trauma.",
+          "key_findings": "Penetrating cardiac injuries are increasingly frequent; a 2010\u20132020 literature review analyzed demographics, cardiac structures involved, surgery and survival, hemodynamic stability, mechanisms of injury, and causes of death. The main temporal difference noted was in mortality rate, and the paper emphasizes that deaths may be related to delayed rescue or clinical malpractice, not only to accidental events, attacks, or suicides.",
+          "pmid": "35090334",
+          "title": "Penetrating cardiac injuries: literature review and analysis of the forensic approach.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract describes the nature and management of gunshot (penetrating) wounds in horses but does not mention TXA, hemostatic agents, bleeding severity, or comparative efficacy of hemostatic strategies in penetrating versus other injuries. It therefore does not provide evidence for or against the proposed mechanism regarding stronger efficacy of TXA in penetrating trauma.",
+          "key_findings": "Gunshot wounds in horses can cause various injuries depending on projectile and tissue; management includes debridement, drainage, and broad-spectrum antibiotics, and musculoskeletal gunshot injuries generally have a good prognosis.",
+          "pmid": "25016502",
+          "title": "Trauma and wound management: gunshot wounds in horses.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract is a general review of intraocular foreign body injuries, mechanisms, diagnosis, and management. It does not mention blood vessel damage, bleeding severity, hemostasis, or TXA, nor does it compare penetrating injuries in terms of response to hemostatic agents. Therefore, it neither supports nor contradicts the proposed mechanism.",
+          "key_findings": "The review describes epidemiology, mechanisms of intraocular foreign body injuries, foreign body types, imaging for diagnosis, management strategies (presurgical and surgical), visual prognosis, and complications, without discussing hemostatic agents or differential bleeding responses in penetrating injuries.",
+          "pmid": "26994871",
+          "title": "Intraocular foreign bodies: A review.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses mechanisms of tissue disruption in penetrating gunshot wounds and principles of surgical management but does not mention hemostatic agents, TXA, or differential efficacy of hemostasis in penetrating versus other injury types. It therefore neither supports nor refutes the proposed mechanism about increased importance or efficacy of TXA in penetrating injuries.",
+          "key_findings": "Penetrating projectiles disrupt tissue based on projectile and tissue characteristics; understanding cavitation and secondary missiles helps guide conservative versus surgical care; excessive wide excision in high-velocity wounds may be more harmful than the bullet; treatment should focus on the wound rather than the weapon. No data on hemostatic agents or TXA.",
+          "pmid": "10553223",
+          "title": "Gunshot wounds to the lower extremity. A comprehensive review.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses clinical assessment and management of penetrating and blunt neck trauma, focusing on imaging strategies, surgical exploration, and anticoagulation for blunt cerebrovascular injuries. It does not mention tranexamic acid (TXA), hemostatic agents, or compare bleeding severity or treatment efficacy between penetrating and blunt injuries in a way that addresses whether penetrating trauma specifically increases the importance or efficacy of strong hemostatic agents.",
+          "key_findings": "Penetrating neck injuries are relatively uncommon and traditionally managed with surgical exploration, now increasingly guided by MDCTA and a more targeted approach. Blunt neck injuries are even rarer and more challenging to assess; MDCTA is also the primary tool for suspected blunt injuries and for detecting BCVI, for which systemic anticoagulation is recommended. The abstract does not discuss hemostatic agents or TXA, nor does it compare hemostatic treatment efficacy between penetrating and blunt injuries.",
+          "pmid": "29558578",
+          "title": "Penetrating and blunt trauma to the neck: clinical presentation, assessment and emergency management.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract describes and compares animal models of traumatic brain injury in general, focusing on model types, parameters, and selection criteria. It does not address penetrating versus non-penetrating injuries in relation to blood vessel damage, immediate bleeding, or the efficacy or importance of TXA or other hemostatic agents.",
+          "key_findings": "The chapter reviews various TBI animal models, their mechanisms of injury, adjustability (amplitude, duration, mass/size, velocity, pressure), and practical considerations (ethics, cost, complexity). It notes there is no single gold-standard TBI model and does not discuss hemorrhage control, hemostatic therapy, or TXA, nor does it compare penetrating to other injury types in this context.",
+          "pmid": "27604713",
+          "title": "Systematic Review of Traumatic Brain Injury Animal Models.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract compares mortality outcomes between ligation and repair of IVC injuries and examines differences by injury location (suprarenal vs infrarenal) and mechanism (blunt vs penetrating). It does not evaluate hemostatic pharmacologic agents such as TXA, nor does it assess whether penetrating injuries specifically increase the efficacy or importance of stronger hemostatic agents. Thus it does not provide direct evidence for or against the proposed mechanism.",
+          "key_findings": "IVC ligation was associated with higher mortality than repair overall (OR 3.12). Suprarenal injury location and blunt mechanism were associated with higher mortality compared to infrarenal location and penetrating mechanism, respectively. The study did not investigate TXA or other hemostatic agents, nor any differential pharmacologic hemostatic efficacy in penetrating vs blunt trauma.",
+          "pmid": "33826960",
+          "title": "A Systematic Review and Meta-Analysis of Ligation Versus Repair of Inferior Vena Cava Injuries.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses laparoscopic splenectomy outcomes in traumatic splenic injury, focusing on operative approach, hemodynamic stability, and trauma mechanism (blunt vs penetrating). It does not address the use, efficacy, or context-specific importance of hemostatic agents such as tranexamic acid (TXA), nor does it compare hemostatic needs or responses between penetrating and blunt injuries. Therefore, it neither supports nor contradicts the proposed mechanism about penetrating injuries increasing the importance of strong hemostatic agents like TXA.",
+          "key_findings": "Among 202 patients with splenic trauma undergoing laparoscopic splenectomy, 92.9% had blunt trauma and 7% penetrating trauma; all were hemodynamically stable or responding to fluids. Outcomes reported included operative time, length of stay, morbidity (7.7%), and mortality (2.5%). No data on TXA or differential hemostatic management between penetrating and blunt injuries were provided.",
+          "pmid": "36448883",
+          "title": "The role of laparoscopic splenectomy in traumatic splenic injury: a narrative review.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "conflict",
+          "confidence": "high",
+          "reasoning": "The proposed mechanism suggests that penetrating injuries might specifically increase the importance or efficacy of TXA, implying relatively stronger benefit in penetrating versus other injury types. The abstract reports that subgroup analyses by type of injury (penetrating vs blunt) showed no significant heterogeneity in TXA\u2019s effects when given early, indicating that the benefit is not greater or uniquely stronger in penetrating trauma compared with blunt trauma. This directly argues against a special or enhanced efficacy limited to or heightened in penetrating injuries.",
+          "key_findings": "Subgroup analyses of early TXA treatment by type of injury (penetrating vs blunt) showed no significant heterogeneity; the time-dependent effect of TXA was not explained by type of injury, and when given within 3 hours, TXA reduced death due to bleeding regardless of type of injury.",
+          "pmid": "28143564",
+          "title": "Tranexamic acid in bleeding trauma patients: an exploration of benefits and harms.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract examines timing and method of surgical vascular control in renal trauma and its impact on nephrectomy rate and operative time. It does not study pharmacologic hemostatic agents such as TXA, nor does it compare outcomes specifically in penetrating versus blunt injuries with respect to stronger hemostatic efficacy. Therefore, it neither supports nor contradicts the proposed mechanism about penetrating injuries increasing the importance or efficacy of agents like TXA.",
+          "key_findings": "In 297 renal trauma patients, nephrectomy rate depended on degree of injury rather than type or timing of renal vascular control (before vs after opening Gerota's fascia). Obtaining vascular control after opening Gerota's fascia did not increase nephrectomy rate and shortened operative time by about 58 minutes. Recommendations were made for when to obtain vascular control after opening Gerota's fascia.",
+          "pmid": "2028374",
+          "title": "Preliminary vascular control for renal trauma.",
+          "analysis_method": "llm"
+        }
+      ]
+    },
+    {
+      "feature_name": "Injury Type: Penetrating",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Coagulation cascades respond rapidly to penetrating trauma, intensifying the demand for fibrinolysis inhibition which aligns well with TXA's mechanism of action.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Penetrating\" AND (\"physiology\" OR \"pathogenesis\" OR \"homeostasis\") AND (\"intensifying\" OR \"fibrinolysis\" OR \"coagulation\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses hemorrhage, trauma-related coagulopathy, monitoring of hemostasis, and microvascular bleeding in combat trauma but does not describe the temporal dynamics of the coagulation cascade after penetrating trauma, nor the specific role or need for fibrinolysis inhibition or TXA. It focuses on monitoring and general management rather than mechanistic evidence about rapid coagulation activation and intensified fibrinolysis inhibition demands.",
+          "key_findings": "1) Bleeding after trauma can be due to major vessel transection or microvascular bleeding from coagulopathy secondary to metabolic derangements, hypothermia, and component depletion/dysfunction. 2) Development of coagulopathy is relatively infrequent in young, healthy military populations, and current routine screening is generally adequate for initial blood product guidance. 3) New intravenous hemostatic agents will require better laboratory monitoring. 4) Catastrophic hemorrhage often causes death before care in combat, highlighting the need for rapid hemorrhage control, but without specific discussion of fibrinolysis or TXA-related mechanisms.",
+          "pmid": "15651434",
+          "title": "Monitoring of hemostasis in combat trauma patients.",
+          "analysis_method": "llm"
+        }
+      ]
+    },
+    {
+      "feature_name": "Injury Type: Penetrating",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "In consistent high-risk trauma data, differential baseline risks might exaggerate relative TXA effects seen through statistical observational data but lacks empirical studies explicitly focused here.",
+        "evidence_level": "speculative"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Penetrating\" AND (\"independent predictor\" OR \"confounding\" OR \"interaction effect\") AND (\"observational\" OR \"differential\" OR \"statistical\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates duration of antibiotic therapy and identifies clinical risk factors (e.g., shock, colon injury, CNS injury) for infection and length of stay in penetrating abdominal trauma. It does not involve tranexamic acid (TXA), does not analyze relative treatment effects across different baseline risk strata, and does not address statistical exaggeration of treatment effects in high\u2011risk trauma observational data. Therefore it neither supports nor conflicts with the proposed TXA\u2011specific statistical mechanism.",
+          "key_findings": "In a randomized trial of 300 patients with penetrating abdominal trauma, 24 hours vs 5 days of intravenous cefoxitin showed no difference in overall or intra\u2011abdominal infection rates or hospital length of stay. Colon injury independently predicted intra\u2011abdominal infection; overall infection risk was associated with preoperative shock, colon injury, CNS injury, and number of injured organs. Prolonged hospitalization was associated with intraoperative shock and injuries to the chest, colon, or CNS.",
+          "pmid": "10204554",
+          "title": "The duration of antibiotic administration in penetrating abdominal trauma.",
+          "analysis_method": "llm"
+        }
+      ]
+    },
+    {
+      "feature_name": "Injury Type: Blunt",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Blunt trauma complicates assessment due to potential multifocal internal bleeding without hemographic indicators evident by visible blood loss, challenging TXA's immediate application efficacy.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Blunt\" AND (\"pathophysiology\" OR \"mechanism\" OR \"causal\" OR \"etiology\" OR \"interaction\") AND (\"complicates\" OR \"challenging\" OR \"hemographic\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 4,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 4,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses clinical assessment and imaging (MDCTA) for penetrating and blunt neck trauma, diagnostic challenges, and management including anticoagulation for blunt cerebrovascular injury. It does not address internal multifocal bleeding without hemographic indicators, nor does it discuss TXA use, timing, or efficacy in this context. Thus it neither supports nor contradicts the proposed mechanism about TXA\u2019s immediate application being challenged by occult multifocal bleeding after blunt trauma.",
+          "key_findings": "Blunt neck injury is rarer than penetrating injury and poses challenges for risk assessment and management; MDCTA is recommended due to good sensitivity for blunt cerebrovascular and aerodigestive tract injuries; systemic anticoagulation is recommended for most blunt cerebrovascular injuries; aerodigestive tract injuries may be subtle and require careful diagnosis. No mention of TXA, hemographic indicators, or multifocal internal bleeding patterns affecting TXA efficacy.",
+          "pmid": "29558578",
+          "title": "Penetrating and blunt trauma to the neck: clinical presentation, assessment and emergency management.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "medium",
+          "reasoning": "The abstract discusses retroperitoneal traumatic lesions, their prognosis, and surgical decision-making regarding retroperitoneal hematomas. It does not address hemographic indicators, the presence or absence of visible blood loss, challenges in assessing multifocal internal bleeding, or the timing/efficacy of TXA administration. Thus it is related to internal bleeding from blunt trauma but provides no direct evidence about the proposed mechanism involving diagnostic difficulty or TXA\u2019s immediate application efficacy.",
+          "key_findings": "Retroperitoneal traumatic lesions, including from blunt trauma, worsen prognosis and can involve great vessels and various organs. Retroperitoneal hematomas may sometimes be left in place to allow spontaneous resolution rather than surgically opened. Lesions of great vessels are immediately life-threatening, and involvement of organs such as the esophagus, duodenum, or pancreas is associated with poorer long-term prognosis.",
+          "pmid": "11109670",
+          "title": "[Traumatic retroperitoneal lesions].",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract focuses on predicting pelvic fractures and indications for pelvic binder application using prehospital criteria such as blunt injury type and hemodynamic instability. It does not address multifocal internal bleeding without hemographic indicators, visible blood loss, or the efficacy or timing of TXA administration. Therefore, it neither supports nor contradicts the proposed mechanism about trauma complicating TXA assessment.",
+          "key_findings": "Blunt injury type and hemodynamic instability (SBP < 90 mmHg), along with specific mechanisms and positions, are predictive of pelvic fractures and may guide empiric prehospital pelvic binder use. The study does not examine internal bleeding patterns, visibility of blood loss, hemographic indicators, or TXA use/effectiveness.",
+          "pmid": "37171847",
+          "title": "Predictive Factors for the Application of Pelvic Binders in the Prehospital Setting.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract analyzes incidence, Denver grade distribution, bilaterality, and stroke risk of vertebral artery injury after blunt trauma. It does not address internal bleeding patterns, hemographic indicators, visible blood loss, or the efficacy or timing of TXA application. Therefore it neither supports nor contradicts the proposed mechanism about multifocal internal bleeding obscuring assessment and complicating TXA use.",
+          "key_findings": "VAI occurs in 0.49% of blunt trauma cases (14.5% among those screened by angiography). Distribution by Denver grade: I 23.4%, II 28.2%, III 5.8%, IV 42.1%, V 0.5%. Overall stroke risk is 5.32%, with higher stroke prevalence in grade III (9.8%) and IV (10.9%) than grade I (1.9%) and II (3.0%), and 33.2% stroke prevalence in bilateral VAI. These findings relate to vascular injury severity and stroke risk, not to TXA effectiveness or detection of internal bleeding without visible blood loss.",
+          "pmid": "37548568",
+          "title": "Traumatic vertebral artery injury: Denver grade, bilaterality, and stroke risk. A systematic review and meta-analysis.",
+          "analysis_method": "llm"
+        }
+      ]
+    },
+    {
+      "feature_name": "Injury Type: Blunt",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Blunt injuries create variable absorption/distribution pathways in physiological contexts, complicating TXA's pharmacokinetics without substantial study verification.",
+        "evidence_level": "weak"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Blunt\" AND (\"pharmacokinetics\" OR \"pharmacodynamics\" OR \"dose-response\" OR \"clearance\") AND (\"pharmacokinetics\" OR \"physiological\" OR \"distribution\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "Injury Type: Blunt",
+      "mechanism": {
+        "mechanism_type": "behavioral",
+        "description": "Blunt trauma often sees surveillance-focused clinical routines affecting TXA's integration into immediate care strategies unless bleeding becomes acute, with speculative support lacking targeted database studies.",
+        "evidence_level": "speculative"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"Injury Type: Blunt\" AND (\"surveillance\" OR \"integration\" OR \"speculative\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 8,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 8,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract compares outcomes of endovascular versus open surgical repair for blunt thoracic aortic injury and mentions long-term surveillance needs for stent grafts, but it does not address TXA use, clinical surveillance routines around TXA, or how these behaviors affect TXA integration into immediate care strategies.",
+          "key_findings": "Endovascular stent graft repair for blunt thoracic aortic injury is associated with lower peri-procedural mortality than open repair, but with higher procedural complication rates and a requirement for long-term stent surveillance and uncertain medium- to long-term outcomes.",
+          "pmid": "19423511",
+          "title": "Endovascular versus open surgical repair for blunt thoracic aortic injury.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract concerns guidelines for venous thromboembolism prophylaxis in adult trauma patients, focusing on timing and type of pharmacologic and mechanical prophylaxis. It does not address tranexamic acid (TXA), immediate hemorrhage management workflows, or how surveillance-focused clinical routines might affect integration of TXA into early care. Therefore it neither supports nor conflicts with the proposed behavioral mechanism.",
+          "key_findings": "Guidelines were developed for VTE prevention in adult trauma inpatients, recommending early pharmacologic prophylaxis (e.g., LMWH) in various blunt trauma scenarios, use of mechanical prophylaxis when anticoagulation is not possible, optional combined mechanical and pharmacologic prophylaxis, routine ultrasound surveillance in high-risk patients who cannot receive pharmacologic prophylaxis, and against routine prophylactic IVC filter use. TXA and its integration into acute trauma care are not mentioned.",
+          "pmid": "37165105",
+          "title": "Saudi Critical Care Society clinical practice guidelines on the prevention of venous thromboembolism in adults with trauma: reviewed for evidence-based integrity and endorsed by the Scandinavian Society of Anaesthesiology and Intensive Care Medicine.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses diagnostic strategies, endovascular treatment (TEVAR), outcomes, and long-term surveillance for blunt thoracic aortic injury, but does not mention tranexamic acid (TXA), immediate hemorrhage management routines, or how surveillance-focused clinical practices influence TXA integration. Thus it neither supports nor contradicts the proposed behavioral mechanism.",
+          "key_findings": "BTAI requires prompt recognition and management; multiple imaging modalities are used for diagnosis; TEVAR is now the gold-standard treatment in most cases, with good early outcomes; long-term outcomes and optimal surveillance protocols remain uncertain and are areas for future research.",
+          "pmid": "38741044",
+          "title": "Current expert-based opinions on endovascular treatment of blunt thoracic aortic injury: A state-of-the-art narrative review on indications, techniques, results, and challenges.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract describes general initial care routines for blunt polytrauma, focusing on sources of bleeding, pelvic management, damage control, and team coordination. It does not mention tranexamic acid (TXA), surveillance-focused routines, or how such routines might affect TXA integration into immediate care strategies, nor does it present targeted database or mechanistic evidence about TXA use.",
+          "key_findings": "Systematic search for causes of hemodynamic instability in blunt polytrauma; major bleeding sources (pleural, peritoneal, retroperitoneal, orthopaedic injuries); early vessel control and pelvic binding/angiographic embolization; trauma team leadership to set treatment priorities; emphasis on addressing nonorthopaedic injuries before definitive fracture care; use of damage control techniques to reduce blood loss and operative time; importance of coordinated multispecialty trauma care.",
+          "pmid": "15187830",
+          "title": "Initial care of the patient with blunt polytrauma.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses diagnosis, imaging (CT), staging, and surgical management of traumatic abdominal wall hernia after blunt trauma. It does not mention TXA, anticoagulation, hemostatic strategies, or surveillance-focused clinical routines, nor does it address how care pathways influence TXA integration. Therefore, it neither supports nor conflicts with the proposed behavioral mechanism.",
+          "key_findings": "TAWH is rare; diagnosis is often delayed; CT scanning is crucial; many cases have concurrent intra-abdominal injuries; literature supports immediate surgical exploration for most TAWH; a staging system may guide management priorities.",
+          "pmid": "25785340",
+          "title": "Complete abdominal wall disruption with herniation following blunt injury: case report and review of the literature.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract describes clinical management, imaging, surgical approaches, and surveillance versus immediate exploration for specific grades of pediatric aortoiliac injuries. It does not mention TXA use, decision-making about antifibrinolytics, or surveillance-focused routines influencing TXA integration into immediate care. Therefore it neither supports nor conflicts with the proposed behavioral mechanism.",
+          "key_findings": "Pediatric seat belt-type aortoiliac injuries are rare and require prompt multidisciplinary evaluation. Hemodynamically unstable patients underwent CT angiography during resuscitation, and severe injuries (contained transection, major branch avulsion, bowel perforation) mandated immediate exploration, often before spinal interventions. Lesser aortoiliac injuries have sometimes been managed with surveillance, with a need for long-term follow-up to validate this approach. No discussion of TXA or its integration into acute care strategies is provided.",
+          "pmid": "32768538",
+          "title": "Management of Seat Belt-type Blunt Abdominal Aortic Trauma and Associated Injuries in Pediatric Patients.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract discusses CT angiography as a first-line imaging modality for detecting extremity arterial injuries and its integration into trauma CT protocols. It does not mention tranexamic acid (TXA), clinical decision-making about TXA use, or surveillance-focused routines influencing TXA integration. Therefore it neither supports nor conflicts with the proposed behavioral mechanism regarding TXA.",
+          "key_findings": "CT angiography has become first-line imaging for extremity arterial injuries in trauma; it detects a variety of injuries with high sensitivity and specificity; CTA information guides surgical or endovascular interventions; technological advances (multi-detector CT, isotropic imaging, rapid acquisition) enable integration of CTA into routine trauma CT imaging with a single contrast bolus.",
+          "pmid": "17709080",
+          "title": "CT angiography of extremity trauma.",
+          "analysis_method": "llm"
+        },
+        {
+          "stance": "neutral",
+          "confidence": "high",
+          "reasoning": "The abstract deals with surgical graft materials and outcomes in tympanoplasty (cartilage vs temporalis muscle fascia). It does not involve trauma care workflows, TXA use, surveillance-focused clinical routines, or database studies related to TXA integration in acute bleeding management. Therefore, it neither supports nor contradicts the proposed behavioral mechanism.",
+          "key_findings": "Meta-analysis of 12 studies (1,286 patients) found higher graft integration rates and lower re-perforation rates with cartilage compared to temporalis muscle fascia in type I tympanoplasty, with some differences in hearing outcomes; recommends wider use of cartilage for tympanic membrane reconstruction.",
+          "pmid": "23321796",
+          "title": "Is cartilage better than temporalis muscle fascia in type I tympanoplasty? Implications for current surgical practice.",
+          "analysis_method": "llm"
+        }
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Elevated HR illustrates compensatory stress responses from hypovolemia requiring immediate intervention, aligning critical decisions with TXA use cycles.",
+        "evidence_level": "strong"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"ihr\" AND (\"physiology\" OR \"pathogenesis\" OR \"homeostasis\") AND (\"compensatory\" OR \"intervention\" OR \"hypovolemia\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Heart rate variations correlate with differential perfusion status and fibrinolytic needs which could guide intervention routes optimally under TXA administration.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"ihr\" AND (\"pathophysiology\" OR \"mechanism\" OR \"causal\" OR \"etiology\" OR \"interaction\") AND (\"administration\" OR \"differential\" OR \"fibrinolytic\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Higher HRs capture riskier patient subsets, potentially benefiting significantly from swift interventions like TXA, requiring explicit subgroup or variance analyses validation.",
+        "evidence_level": "speculative"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"ihr\" AND (\"independent predictor\" OR \"confounding\" OR \"interaction effect\") AND (\"interventions\" OR \"significantly\" OR \"potentially\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Low SBP signals aggravated shock states, often necessitating aggressive resuscitation strategies which could obscure direct TXA effects registered through conventional assessments.",
+        "evidence_level": "strong"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"isbp\" AND (\"physiology\" OR \"pathogenesis\" OR \"homeostasis\") AND (\"necessitating\" OR \"resuscitation\" OR \"conventional\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Hypoperfusion marked by SBP ties into conditions under which TXA outcomes could vary, with physiologically weaker links shaping evident responses across treatment phases.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"isbp\" AND (\"pharmacokinetics\" OR \"pharmacodynamics\" OR \"dose-response\" OR \"clearance\") AND (\"physiologically\" OR \"hypoperfusion\" OR \"conditions\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Differential mortality given SBP stratifications might exaggerate TXA observational effects without targeted interventions, requiring specific methods supporting diverse patient profiles.",
+        "evidence_level": "speculative"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"isbp\" AND (\"independent predictor\" OR \"confounding\" OR \"interaction effect\") AND (\"stratifications\" OR \"interventions\" OR \"observational\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "iage",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Older patients present distinct coagulopathy profiles potentially compromising fibrinolytic pathways exploitation through TXA\u2019s timing or result advantages.",
+        "evidence_level": "moderate"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"iage\" AND (\"pathophysiology\" OR \"mechanism\" OR \"causal\" OR \"etiology\" OR \"interaction\") AND (\"exploitation\" OR \"coagulopathy\" OR \"fibrinolytic\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "iage",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Age impacts TXA's pharmacokinetics by altering drug processing specifics, needing concrete generalized studies covering absorption and distribution variances.",
+        "evidence_level": "weak"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"iage\" AND (\"pharmacokinetics\" OR \"pharmacodynamics\" OR \"dose-response\" OR \"clearance\") AND (\"pharmacokinetics\" OR \"distribution\" OR \"generalized\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "iage",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Elevated baseline mortality risk with age could attenuate TXA intervention observations through background variability mitigation, yet needs robust explorative analytics or existing patterns documentation.",
+        "evidence_level": "speculative"
+      },
+      "query": "(\"traumatic brain injury\" OR TBI OR \"tranexamic acid\" OR TXA OR trauma) AND \"iage\" AND (\"independent predictor\" OR \"confounding\" OR \"interaction effect\") AND (\"documentation\" OR \"observations\" OR \"intervention\") AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])",
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    }
+  ]
+}

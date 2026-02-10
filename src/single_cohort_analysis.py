@@ -363,44 +363,27 @@ def main(args):
     
     # Aggregate SHAP values for categorical feature groups
     categorical_aggregates = []
-    categorical_feature_indices = set()  # Track which indices belong to categoricals
-    
     for cat_name, cat_indices in dataset.categorical_indices.items():
         # Sum absolute SHAP values across all dummy variables in this categorical
         cat_shap_abs = abs_mean_per_trial[:, cat_indices].sum(axis=1)  # (trials,)
         cat_shap_signed = mean_per_trial[:, cat_indices].sum(axis=1)  # (trials,)
         
         categorical_aggregates.append({
-            "feature": cat_name,
-            "feature_original": cat_name,
-            "is_categorical": True,
+            "categorical_feature": cat_name,
             "num_categories": len(cat_indices),
             "category_names": [str(feature_names[idx]) for idx in cat_indices],
-            "category_indices": cat_indices,
-            "shap_mean_abs": float(cat_shap_abs.mean()),
-            "shap_mean_abs_std": float(cat_shap_abs.std()),
-            "shap_mean": float(cat_shap_signed.mean()),
-            "shap_mean_std": float(cat_shap_signed.std()),
+            "shap_mean_abs_aggregated": float(cat_shap_abs.mean()),
+            "shap_mean_abs_aggregated_std": float(cat_shap_abs.std()),
+            "shap_mean_aggregated": float(cat_shap_signed.mean()),
+            "shap_mean_aggregated_std": float(cat_shap_signed.std()),
         })
-        
-        # Track categorical indices
-        categorical_feature_indices.update(cat_indices)
     
-    # Filter out individual dummy variables from feature_records (keep only non-categorical features)
-    non_categorical_features = [
-        rec for rec in feature_records 
-        if rec["feature_index"] not in categorical_feature_indices
-    ]
-    
-    # Combine non-categorical features with categorical aggregates
-    combined_features = non_categorical_features + categorical_aggregates
-    
-    # Sort combined list by mean absolute SHAP value
-    combined_features.sort(key=lambda x: x["shap_mean_abs"], reverse=True)
+    # Sort categorical aggregates by importance
+    categorical_aggregates.sort(key=lambda x: x["shap_mean_abs_aggregated"], reverse=True)
 
-    # Get top N features from combined list
+    # Get top N features
     top_n = args.top_n_features
-    top_features = [rec["feature"] for rec in combined_features[:top_n]]
+    top_features = [rec["feature"] for rec in feature_records[:top_n]]
 
     out = {
         "metadata": {
@@ -417,10 +400,11 @@ def main(args):
 
         "summary": {
             "num_features": int(num_features),
-            "num_categorical_features": len(categorical_aggregates),
-            "num_non_categorical_features": len(non_categorical_features),
             "top_n_features": top_n,
-            "top_features_by_mean_abs": combined_features[:min(top_n, len(combined_features))],
+            "top_features_by_mean_abs": feature_records[:min(top_n, num_features)],
+            
+            # Categorical feature aggregates
+            "categorical_features_aggregated": categorical_aggregates,
 
             # NEW: overall CATE prediction summary (pooled)
             "cate_prediction_overall": pred_overall,
@@ -433,8 +417,7 @@ def main(args):
             },
         },
 
-        "features": combined_features,  # Combined list with categoricals aggregated
-        "features_all_original": feature_records,  # Original list with all dummy variables
+        "features": feature_records,
 
         "per_trial": {
             "shap_abs_mean_per_trial": _to_py(abs_mean_per_trial),
@@ -461,12 +444,16 @@ def main(args):
 
     print(f"SHAP computation completed. Results saved to: {save_path}")
     print(f"JSON summary written to: {json_path}")
-    print(f"\nTop {top_n} features by mean absolute SHAP value (categorical features aggregated):")
-    for i, feat_rec in enumerate(combined_features[:top_n], 1):
-        if feat_rec.get("is_categorical", False):
-            print(f"  {i}. {feat_rec['feature']} (categorical, {feat_rec['num_categories']} categories): {feat_rec['shap_mean_abs']:.4f}")
-        else:
-            print(f"  {i}. {feat_rec['feature']}: {feat_rec['shap_mean_abs']:.4f}")
+    print(f"\nTop {top_n} features by mean absolute SHAP value:")
+    for i, feat in enumerate(top_features, 1):
+        print(f"  {i}. {feat}")
+    
+    # Print categorical aggregates if any
+    if categorical_aggregates:
+        print(f"\nCategorical features (aggregated):")
+        for i, cat in enumerate(categorical_aggregates, 1):
+            print(f"  {i}. {cat['categorical_feature']}: {cat['shap_mean_abs_aggregated']:.4f} "
+                  f"({cat['num_categories']} categories)")
 
 
 if __name__ == "__main__":

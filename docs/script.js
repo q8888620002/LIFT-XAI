@@ -109,9 +109,11 @@ async function loadHypotheses() {
     const condition = conditionMapping[cohort][conditionBlind];
 
     // WITHOUT SHAP files don't include learner name in filename
+    // crash_2 and ist3 use DRLearner, others use XLearner
+    const learner = (cohort === 'crash_2' || cohort === 'ist3') ? 'DRLearner' : 'XLearner';
     const fileName = condition === 'without_shap_baseline'
         ? `hypotheses_${condition}.json`
-        : `hypotheses_${condition}_XLearner.json`;
+        : `hypotheses_${condition}_${learner}.json`;
 
     const filePath = `agent/${cohort}/${fileName}`;
 
