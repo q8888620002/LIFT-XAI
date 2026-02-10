@@ -115,7 +115,7 @@ const featureNameMap = {
     'bp_med': 'Number of Blood Pressure Medications',
     'raceclass': 'Black Race',
     'cvd_hx_baseline': 'History of Cardiovascular Disease',
-    'antiarrhythmic': 'Antiarrhythmic Medication',
+    'antiarrhythmic': 'Antiarrhythmic Medication Use',
     'anti_coag': 'Anticoagulant Use',
     'x4smoke': 'Current Smoker',
 };
