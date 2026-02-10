@@ -213,7 +213,7 @@ function createHypothesisCard(hypothesis, index) {
         </div>
 
         <div class="rating-section">
-            <h4>Your Ratings (1-10 scale)</h4>
+            <h4>Your Ratings (1-5 scale)</h4>
             ${createRatingInputs(index)}
 
             <div class="rating-group">
@@ -236,7 +236,7 @@ function createRatingInputs(hypIndex) {
                     type="range"
                     id="${criterion.id}-${hypIndex}"
                     min="1"
-                    max="10"
+                    max="5"
                     value="5"
                     oninput="updateRatingValue('${criterion.id}', ${hypIndex})"
                 >
