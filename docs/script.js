@@ -52,11 +52,6 @@ const ratingCriteria = [
         description: 'Biological/clinical coherence, consistency with pathophysiology, specificity'
     },
     {
-        id: 'clinical_interpretation',
-        label: 'Clinical Interpretation',
-        description: 'Accuracy of feature meaning, clarity, clinical relevance'
-    },
-    {
         id: 'evidence_alignment',
         label: 'Evidence Alignment',
         description: 'Grounding in published trials, systematic reviews, established literature'
@@ -65,11 +60,6 @@ const ratingCriteria = [
         id: 'subgroup_implications',
         label: 'Subgroup Implications',
         description: 'Clarity, actionability, feasibility, clinical utility'
-    },
-    {
-        id: 'validation_plan_quality',
-        label: 'Validation Plan Quality',
-        description: 'Concreteness, methodological appropriateness, feasibility'
     },
     {
         id: 'caveat_awareness',
