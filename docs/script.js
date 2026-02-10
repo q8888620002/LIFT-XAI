@@ -44,6 +44,87 @@ const trialInfo = {
     }
 };
 
+// Feature name mapping for clean display
+const featureNameMap = {
+    // IST-3 features
+    'nihss': 'NIHSS Score',
+    'age': 'Age',
+    'weight': 'Weight',
+    'glucose': 'Blood Glucose',
+    'gcs_score_rand': 'Glasgow Coma Scale Score',
+    'sbprand': 'Systolic Blood Pressure',
+    'dbprand': 'Diastolic Blood Pressure',
+    'gender': 'Female Gender',
+    'antiplat_rand': 'Antiplatelet Usage',
+    'atrialfib_rand': 'Atrial Fibrillation History',
+    'infarct': 'Prior Infarct',
+    'stroketype_1': 'Stroke Type: TACI',
+    'stroketype_2': 'Stroke Type: PACI',
+    'stroketype_3': 'Stroke Type: POCI',
+    'stroketype_4': 'Stroke Type: LACI',
+    'Stroke Type: TACI (Total Anterior Circulation Infarct)': 'Stroke Type: TACI',
+
+    // CRASH-2 features
+    'iage': 'Age',
+    'isbp': 'Systolic Blood Pressure',
+    'irr': 'Respiratory Rate',
+    'icc': 'Central Capillary Refill Time',
+    'ihr': 'Heart Rate',
+    'igcs': 'Glasgow Coma Scale',
+    'ninjurytime': 'Time from Injury to Treatment',
+    'isex': 'Male Gender',
+    'iinjurytype': 'Injury Type',
+    'iinjurytype_1': 'Injury Type: Blunt',
+    'iinjurytype_2': 'Injury Type: Penetrating',
+    'Injury Type: Penetrating': 'Injury Type: Penetrating',
+    'Injury Type: Blunt': 'Injury Type: Blunt',
+
+    // SPRINT features
+    'sbp': 'Systolic Blood Pressure',
+    'dbp': 'Diastolic Blood Pressure',
+    'n_agents': 'Number of Antihypertensive Agents',
+    'egfr': 'Estimated Glomerular Filtration Rate',
+    'screat': 'Serum Creatinine',
+    'chr': 'Total Cholesterol/HDL Ratio',
+    'glur': 'Fasting Glucose',
+    'hdl': 'HDL Cholesterol',
+    'trr': 'Triglycerides',
+    'umalcr': 'Urine Albumin-Creatinine Ratio',
+    'bmi': 'Body Mass Index',
+    'female': 'Female Gender',
+    'race_black': 'Black Race',
+    'smoke_3cat': 'Current Smoker',
+    'aspirin': 'Aspirin Use',
+    'statin': 'Statin Use',
+    'sub_cvd': 'History of Cardiovascular Disease',
+    'sub_ckd': 'Chronic Kidney Disease',
+
+    // ACCORD features
+    'baseline_age': 'Age',
+    'hr': 'Heart Rate',
+    'fpg': 'Fasting Plasma Glucose',
+    'alt': 'Alanine Aminotransferase',
+    'cpk': 'Creatine Phosphokinase',
+    'potassium': 'Serum Potassium',
+    'gfr': 'Glomerular Filtration Rate',
+    'uacr': 'Urine Albumin-Creatinine Ratio',
+    'chol': 'Total Cholesterol',
+    'trig': 'Triglycerides',
+    'vldl': 'VLDL Cholesterol',
+    'ldl': 'LDL Cholesterol',
+    'bp_med': 'Number of Blood Pressure Medications',
+    'raceclass': 'Black Race',
+    'cvd_hx_baseline': 'History of Cardiovascular Disease',
+    'antiarrhythmic': 'Antiarrhythmic Medication',
+    'anti_coag': 'Anticoagulant Use',
+    'x4smoke': 'Current Smoker',
+};
+
+function getDisplayFeatureName(featureName) {
+    // Return mapped name if exists, otherwise return original name
+    return featureNameMap[featureName] || featureName;
+}
+
 // Rating criteria with descriptions
 const ratingCriteria = [
     {
@@ -165,7 +246,7 @@ function createHypothesisCard(hypothesis, index) {
 
     card.innerHTML = `
         <div class="hypothesis-header">
-            <div class="hypothesis-title">Feature ${index + 1}</div>
+            <div class="hypothesis-title">${getDisplayFeatureName(hypothesis.feature_name)}</div>
             <div>
                 <span class="feature-badge">Rank: ${hypothesis.importance_rank || index + 1}</span>
             </div>
