@@ -317,7 +317,7 @@ function createRatingInputs(hypIndex) {
                     id="${criterion.id}-${hypIndex}"
                     min="1"
                     max="5"
-                    value="5"
+                    value="3"
                     oninput="updateRatingValue('${criterion.id}', ${hypIndex})"
                 >
                 <span class="rating-value" id="${criterion.id}-${hypIndex}-value">5</span>
