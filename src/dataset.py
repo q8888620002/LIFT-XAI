@@ -774,7 +774,7 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
 
     # Load txa
     txa = pd.read_pickle("data/txa_cohort.pkl")
-    all_year = pd.read_csv("data/all_year.csv", index_col=0)
+    all_year = pd.read_csv("data/all_year.csv", index_col=0, low_memory=False)
 
     txa["medatetime"] = pd.to_datetime(
         txa["medstartdate"].astype(str) + " " + txa["medstarttime"].astype(str),

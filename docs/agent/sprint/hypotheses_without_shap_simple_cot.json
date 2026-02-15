@@ -1,0 +1,503 @@
+{
+  "dataset": "sprint",
+  "model": "baseline_no_shap",
+  "summary": "The hypothesized important features likely relate to patient-specific factors that influence cardiovascular risk and responsiveness to blood pressure lowering. Key factors may include baseline blood pressure levels, age, kidney function, and medication adherence, among others. Differential effects of intensive blood pressure control could be due to physiological responses, underlying comorbid conditions, or behavioral aspects like lifestyle adherence.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Age",
+      "importance_rank": 1,
+      "shap_value": 0.2,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Age of the patient.",
+      "why_important": "Age is a critical determinant of cardiovascular risk and may modify the benefits and risks of intensive blood pressure control.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Older adults may have less arterial elasticity, influencing the hemodynamic effects of blood pressure reduction.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Age-related changes in endothelial function could impact treatment efficacy.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Older patients often require different dosing regimens due to changes in drug metabolism.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Older vs. younger patients may respond differently to blood pressure targets.",
+      "validation_suggestions": [
+        "Stratified analysis by age groups",
+        "Interaction term in regression models"
+      ],
+      "caveats": [
+        "Age effects might be confounded with comorbid conditions more prevalent in older population."
+      ]
+    },
+    {
+      "feature_name": "Baseline systolic blood pressure",
+      "importance_rank": 2,
+      "shap_value": 0.18,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Initial systolic blood pressure measurement before treatment begins.",
+      "why_important": "Higher baseline BP often correlates with greater absolute risk reduction when BP is lowered.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Greater arterial pressure could cause more shear stress, accelerating atherosclerosis, hence lowering it may be more beneficial.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Individuals with higher baseline BP may have a greater blood pressure load, more likely needing aggressive management.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Higher initial measurements increase the potential for regression to the mean, possibly overestimating treatment effect in this subgroup.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with higher vs. lower baseline systolic BP may show differing degrees of benefit.",
+      "validation_suggestions": [
+        "Subgroup analysis based on tertiles of baseline BP",
+        "Evaluate interaction with outcome"
+      ],
+      "caveats": [
+        "Regression to mean could bias perceived effects at higher baselines."
+      ]
+    },
+    {
+      "feature_name": "Chronic kidney disease",
+      "importance_rank": 3,
+      "shap_value": 0.16,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Presence of reduced kidney function (e.g., eGFR <60 ml/min/1.73m2).",
+      "why_important": "CKD affects fluid balance, BP regulation and response to antihypertensive treatments.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Impaired kidney function can affect sodium handling, altering blood pressure dynamics.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "CKD-associated endothelial dysfunction can influence cardiovascular risk independently of BP.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Patients with CKD might be on multiple medications, altering pharmacokinetics of antihypertensives.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with vs. without CKD might exhibit varied responses to intensive BP control.",
+      "validation_suggestions": [
+        "Examine eGFR as a moderating factor",
+        "CKD stratification in outcome analysis"
+      ],
+      "caveats": [
+        "Medication interactions in CKD complicate interpretation."
+      ]
+    },
+    {
+      "feature_name": "Sex",
+      "importance_rank": 4,
+      "shap_value": 0.15,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Biological sex of the patient.",
+      "why_important": "Sex differences exist in cardiovascular pathophysiology and response to hypertension treatment.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Hormonal differences could mediate cardiovascular risk and response to BP lowering.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "There are sex-specific differences in endothelial function and arterial stiffness.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Sex-based differences in drug metabolism could affect treatment efficacy or side effects.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Men vs. women might experience different treatment benefits or side effects.",
+      "validation_suggestions": [
+        "Review sex-specific outcomes in trials",
+        "Consider sex interaction terms"
+      ],
+      "caveats": [
+        "Social determinants of health could confound observed sex differences."
+      ]
+    },
+    {
+      "feature_name": "Cardiovascular disease history",
+      "importance_rank": 5,
+      "shap_value": 0.14,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Presence of prior cardiovascular events.",
+      "why_important": "Patients with established cardiovascular disease may be at higher risk and may benefit more from intensive BP control.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Presence of prior atherosclerotic changes may mean more benefits from BP reduction.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Patients with existing disease might have different hemodynamic responses to BP control.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Having a cardiovascular history may influence adherence to treatment.",
+          "evidence_level": "speculative"
+        }
+      ],
+      "subgroup_implications": "Patients with vs. without cardiovascular disease history are likely to show effect size differences.",
+      "validation_suggestions": [
+        "Perform separate analyses by history of CVD",
+        "Evaluate outcomes with and without adjustment for CVD status"
+      ],
+      "caveats": [
+        "Potential unmeasured confounding by severity of past events."
+      ]
+    },
+    {
+      "feature_name": "Body mass index (BMI)",
+      "importance_rank": 6,
+      "shap_value": 0.13,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Patient's body mass index.",
+      "why_important": "Obesity is a major risk factor for hypertension and affects treatment response.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Obesity-related increased blood volume may affect BP control efficacy.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Adipose tissue can influence inflammatory states, potentially impacting BP regulation.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Higher BMI often correlates with lifestyle factors affecting adherence.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Obese vs. non-obese patients could have differential treatment responses.",
+      "validation_suggestions": [
+        "Analyze outcomes stratified by BMI categories",
+        "Include interaction terms for BMI"
+      ],
+      "caveats": [
+        "BMI alone doesn't account for body composition differences."
+      ]
+    },
+    {
+      "feature_name": "Ethnicity",
+      "importance_rank": 7,
+      "shap_value": 0.12,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "Patient's self-identified ethnic group.",
+      "why_important": "Ethnic differences in hypertension pathophysiology and treatment response are well-documented.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Genetic differences affecting drug metabolism pathways vary by ethnicity.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Differential prevalence of salt sensitivity affects BP responses.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Cultural differences can influence treatment adherence and lifestyle factors.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Different ethnic groups may experience varied efficacy from intensive BP control.",
+      "validation_suggestions": [
+        "Conduct stratified analysis based on ethnicity",
+        "Investigate specific genetic markers linked to ethnicity"
+      ],
+      "caveats": [
+        "Ethnicity may be a proxy for other socioeconomic factors."
+      ]
+    },
+    {
+      "feature_name": "Smoking status",
+      "importance_rank": 8,
+      "shap_value": 0.11,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Current or former smoking habits of the patient.",
+      "why_important": "Smoking is a known cardiovascular risk factor that affects endothelial function and BP.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Smoking-induced vascular inflammation and damage may reduce BP control effectiveness.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Nicotine acutely raises blood pressure, complicating control efforts.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Smokers may have poorer adherence to medical treatments generally.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Current smokers vs. non-smokers may benefit differently from intensive BP targets.",
+      "validation_suggestions": [
+        "Separate analysis by smoking status",
+        "Explore smoking intensity impacts on outcomes"
+      ],
+      "caveats": [
+        "Smoking status is often self-reported and prone to bias."
+      ]
+    },
+    {
+      "feature_name": "Physical activity level",
+      "importance_rank": 9,
+      "shap_value": 0.1,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Patient's level of regular physical exercise.",
+      "why_important": "Regular physical activity influences cardiovascular health and BP control effectiveness.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Exercise improves endothelial function, potentially enhancing the effects of BP control.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Active individuals may be more adherent to treatment protocols.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Physical activity reduces resting heart rate, influencing BP dynamics.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Active vs. inactive patients may experience different benefits from BP control.",
+      "validation_suggestions": [
+        "Explore moderation by activity levels",
+        "Consider detailed activity subtypes analysis"
+      ],
+      "caveats": [
+        "Activity levels are often self-reported and may not capture intensity accurately."
+      ]
+    },
+    {
+      "feature_name": "Diabetes risk or prediabetes (HbA1c)",
+      "importance_rank": 10,
+      "shap_value": 0.09,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Risk of developing diabetes or prediabetic status as indicated by HbA1c levels.",
+      "why_important": "Glucose metabolism disorders often coincide with hypertension and could influence cardiovascular outcomes and treatment response.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Insulin resistance can impaired endothelial function affecting cardiovascular reactions to BP changes.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Metabolic dysregulation might affect how the body handles blood pressure changes.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Potential interactions of BP medications with glucose metabolism.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with vs. without elevated HbA1c might respond differently to intensive BP management.",
+      "validation_suggestions": [
+        "Analyze by HbA1c tertiles",
+        "Examine treatment interactions with diabetes markers"
+      ],
+      "caveats": [
+        "Measurement of HbA1c might not capture all metabolic dysfunctions."
+      ]
+    },
+    {
+      "feature_name": "Family history of cardiovascular disease",
+      "importance_rank": 11,
+      "shap_value": 0.08,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "Family history indicating genetic predisposition to cardiovascular diseases.",
+      "why_important": "Genetic factors could affect both cardiovascular risk and responsiveness to antihypertensive therapies.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Inherited genetic predispositions might affect baseline cardiovascular risk level more than treatment.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "May serve as a surrogate for unmeasured risk factors in the patient's lifestyle or environment.",
+          "evidence_level": "speculative"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Patients with family history might be more proactive in health-related behaviors.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with vs. without family history may show differences in treatment effects.",
+      "validation_suggestions": [
+        "Include genetic markers",
+        "Explore detailed family history implications"
+      ],
+      "caveats": [
+        "Family history can be subjective and biased."
+      ]
+    },
+    {
+      "feature_name": "Medication adherence",
+      "importance_rank": 12,
+      "shap_value": 0.07,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Patient adherence to prescribed antihypertensive regimen.",
+      "why_important": "Adherence directly affects medication efficacy and cardiovascular event prevention.",
+      "mechanisms": [
+        {
+          "mechanism_type": "behavioral",
+          "description": "Non-adherence leads to under-dosing and potential treatment failure.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Varying dose-exposure-response relationship depending on adherence level.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Adherence may improve predictability of drug kinetics.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Poor adherence vs. high adherence groups will likely show varied treatment efficacy.",
+      "validation_suggestions": [
+        "Assess adherence through pharmacy data",
+        "Correlate adherence rates with BP outcomes"
+      ],
+      "caveats": [
+        "Adherence is challenging to measure accurately and consistently."
+      ]
+    },
+    {
+      "feature_name": "Socioeconomic status",
+      "importance_rank": 13,
+      "shap_value": 0.05,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "Indicative of income, education, and occupation levels.",
+      "why_important": "Socioeconomic factors influence access to healthcare and adherence to medical advice.",
+      "mechanisms": [
+        {
+          "mechanism_type": "behavioral",
+          "description": "Lower socioeconomic status is linked with lower healthcare engagement.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "May affect confounders that influence both treatment uptake and outcomes.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Chronic stress associated with lower socioeconomic status may impact hypertension management outcomes.",
+          "evidence_level": "speculative"
+        }
+      ],
+      "subgroup_implications": "Different socioeconomic groups may exhibit variable response to treatment due to access and adherence disparities.",
+      "validation_suggestions": [
+        "Use proxy variables for SES",
+        "Conduct subgroup analysis"
+      ],
+      "caveats": [
+        "SES is multifaceted and challenging to capture comprehensively."
+      ]
+    },
+    {
+      "feature_name": "Sleep apnea",
+      "importance_rank": 14,
+      "shap_value": 0.04,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Presence of obstructive sleep apnea.",
+      "why_important": "Sleep apnea can raise blood pressure and complicate hypertension management.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Intermittent hypoxia from sleep apnea leads to persistent over-activation of the sympathetic nervous system.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Inflammatory responses associated with sleep apnea may worsen cardiovascular outcomes.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Sleep quality affects adherence to lifestyle and pharmacological interventions.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with vs. without sleep apnea might respond differently to BP control regime.",
+      "validation_suggestions": [
+        "Test sleep apnea interaction with treatment",
+        "Include OSA severity measures"
+      ],
+      "caveats": [
+        "Diagnosis of sleep apnea often requires specific testing not always conducted."
+      ]
+    },
+    {
+      "feature_name": "Dyslipidemia",
+      "importance_rank": 15,
+      "shap_value": 0.03,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Presence or absence of abnormal lipid metabolism.",
+      "why_important": "Dyslipidemia is a key cardiovascular risk factor that may modulate response to BP lowering treatment.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Elevated cholesterol can exacerbate atherosclerosis, impacting BP treatment benefits.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Potential interactions between antihypertensives and statins or other lipid-altering drugs.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Dysregulated lipid levels affect endothelial function and vascular health.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Patients with dyslipidemia vs. normal lipid profiles could demonstrate differing response levels to intensive therapy.",
+      "validation_suggestions": [
+        "Correlation with lipid panel profiles",
+        "Interaction analysis with statin use"
+      ],
+      "caveats": [
+        "Lipid levels can be influenced by diet and adherence to statin therapy."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "The factors explored potentially interact in complex ways, with baseline cardiovascular risk and comorbid conditions like CKD or diabetes possibly amplifying or dampening treatment effects. Age, sex, and socioeconomic status may exert modifying influences indirectly through access to care or adherence patterns."
+}

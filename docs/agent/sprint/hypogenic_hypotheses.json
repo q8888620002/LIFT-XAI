@@ -1,0 +1,439 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "sprint",
+    "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+    "outcome": "Composite of major cardiovascular events",
+    "population": "Non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 15,
+    "w_max": 100,
+    "max_iterations": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H6",
+        "title": "Effect of Body Mass Index on Treatment Outcomes",
+        "hypothesis_statement": "The benefit of intensive blood pressure control is reduced in patients with higher BMI.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "bmi",
+            "operator": ">=",
+            "threshold": 30.0,
+            "category": null,
+            "description": "Participants with BMI \u2265 30"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Obesity-related changes in physiology, such as increased blood volume and cardiac output, might diminish the benefit from aggressive BP reduction."
+        },
+        "mechanism": "Higher BMI may require different therapeutic approaches due to obesity-associated metabolic and hemodynamic changes.",
+        "evidence_basis": [
+          "BMI influences hemodynamic responses and hypertension management",
+          "Observational studies on obesity and treatment responses"
+        ],
+        "testable_prediction": "Participants with BMI \u2265 30 will show less reduction in cardiovascular events with intensive treatment compared to those with BMI < 30."
+      },
+      "reward": 58.0,
+      "correct_predictions": 106,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H10",
+        "title": "Chronic Kidney Disease Subgroup Effect",
+        "hypothesis_statement": "Intensive blood pressure control provides less benefit in CKD patients with elevated urine albumin-creatinine ratio.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "umalcr",
+            "operator": ">=",
+            "threshold": 30.0,
+            "category": null,
+            "description": "Urine albumin-creatinine ratio \u2265 30 mg/g"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Elevated albuminuria might indicate more advanced renal disease, where intensive blood pressure control offers limited cardiovascular gains but increases the risk of kidney injury."
+        },
+        "mechanism": "High albuminuria reflects compromised kidney function, likely leading to reduced efficacy and increased harm from intensive treatment efforts.",
+        "evidence_basis": [
+          "Albuminuria predicts renal prognosis and intervention outcomes",
+          "Studies pointing to limited BP lowering benefits in advanced CKD"
+        ],
+        "testable_prediction": "Participants with urine ACR \u2265 30 mg/g will have no significant reduction in cardiovascular events with intensive treatment compared to those with ACR < 30 mg/g."
+      },
+      "reward": 58.0,
+      "correct_predictions": 106,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H1",
+        "title": "Age-Related Hypothetical Benefit",
+        "hypothesis_statement": "The effect of intensive blood pressure control varies with age, with older participants experiencing greater benefit.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">=",
+            "threshold": 75.0,
+            "category": null,
+            "description": "Participants aged 75 and older"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Older individuals may have higher baseline cardiovascular risk and thus derive greater relative benefit from intensive blood pressure control."
+        },
+        "mechanism": "With age, vascular compliance decreases and atherosclerotic burden increases, which may be more effectively managed by lower target blood pressures.",
+        "evidence_basis": [
+          "Previous studies show higher CVD risk with aging",
+          "Age-related changes in vascular stiffness and endothelial function"
+        ],
+        "testable_prediction": "Participants aged 75 and older will have a significantly lower incidence of major cardiovascular events under intensive treatment compared to standard treatment."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H2",
+        "title": "Renal Function Influence",
+        "hypothesis_statement": "Intensive blood pressure control provides less benefit to patients with lower baseline renal function.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": "<=",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Participants with eGFR \u2264 60 mL/min/1.73m\u00b2"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Low renal function may predispose patients to adverse effects without significant reductions in cardiovascular events."
+        },
+        "mechanism": "Reduced renal perfusion and autoregulation limitations in patients with CKD may lead to diminished cardiovascular benefit from blood pressure lowering below a certain threshold.",
+        "evidence_basis": [
+          "Lower eGFR levels correlate with increased adverse events from intensive treatment",
+          "Autoregulation impairments with CKD"
+        ],
+        "testable_prediction": "Participants with eGFR \u2264 60 mL/min/1.73m\u00b2 will not have a statistically significant reduction in cardiovascular events with intensive treatment compared to standard treatment."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H3",
+        "title": "Gender-Specific Variability",
+        "hypothesis_statement": "Women experience different treatment effects from intensive blood pressure control compared to men.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": null,
+            "category": "1",
+            "description": "Female participants"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Different hormonal and physiological factors in women may result in a differing response to hypertension treatment."
+        },
+        "mechanism": "Hormonal influences and vascular differences between genders may mediate different responses to BP lowering strategies.",
+        "evidence_basis": [
+          "Gender differences in hypertension-related risks noted in previous trials",
+          "Variability in hormone response to treatment"
+        ],
+        "testable_prediction": "Female participants will demonstrate a more moderated risk reduction in major cardiovascular events with intensive treatment compared to male participants."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H5",
+        "title": "Impact of Baseline Systolic Blood Pressure",
+        "hypothesis_statement": "The benefit of intensive blood pressure control is greater in patients with higher baseline systolic blood pressure.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": ">=",
+            "threshold": 140.0,
+            "category": null,
+            "description": "Baseline systolic blood pressure \u2265 140 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Patients with higher baseline hypertension might achieve greater relative benefit from more aggressive blood pressure lowering."
+        },
+        "mechanism": "Higher initial blood pressures may result in a greater absolute risk reduction when achieving lower targets, given higher starting cardiovascular risk.",
+        "evidence_basis": [
+          "Higher pretreatment SBP shown to predict greater benefit from lowering",
+          "Observations in previous hypertension trials"
+        ],
+        "testable_prediction": "Participants with baseline SBP \u2265 140 mmHg will have a significantly lower incidence of cardiovascular events with intensive treatment compared to those with SBP < 140 mmHg."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H7",
+        "title": "Smoking Status Impact",
+        "hypothesis_statement": "Non-smokers benefit more from intensive blood pressure control than smokers.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "smoke_3cat",
+            "operator": "==",
+            "threshold": null,
+            "category": "0",
+            "description": "Non-smokers"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Tobacco exposure related endothelial damage might mitigate the cardiovascular benefits from reduced blood pressure."
+        },
+        "mechanism": "Smoking-related endothelial dysfunction and increased oxidative stress may interfere with the cardiovascular protective effects of BP lowering.",
+        "evidence_basis": [
+          "Smoking impacts endothelial function and cardiovascular risk",
+          "Studies showing differential treatment responses based on smoking status"
+        ],
+        "testable_prediction": "Non-smokers will have a significantly greater reduction in cardiovascular events with intensive treatment compared to smokers."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H9",
+        "title": "Statin Therapy Influence",
+        "hypothesis_statement": "Patients on statin therapy experience enhanced benefits from intensive blood pressure control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "statin",
+            "operator": "==",
+            "threshold": null,
+            "category": "1",
+            "description": "Participants taking statins"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "The pleiotropic effects of statins, including lipid lowering and anti-inflammatory actions, may enhance the cardiovascular protection conferred by intensive blood pressure control."
+        },
+        "mechanism": "Statins' anti-inflammatory and lipid-lowering effects possibly potentiate the benefits of reduced blood pressure by minimizing residual cardiovascular risk.",
+        "evidence_basis": [
+          "Synergistic effects seen in previous hypertension and cholesterol-lowering trials",
+          "Mechanistic studies on statins and vascular health"
+        ],
+        "testable_prediction": "Participants on statin therapy will show a greater reduction in cardiovascular events with intensive treatment compared to those not on statins."
+      },
+      "reward": 39.5,
+      "correct_predictions": 94,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H11",
+        "title": "Female-specific response to intensive BP control",
+        "hypothesis_statement": "Women experience different outcomes from intensive BP control potentially due to hormonal influences altering treatment response.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": null,
+            "category": "Female",
+            "description": "Female patients"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Hormonal differences such as estrogen levels may confer different protective effects on cardiovascular health."
+        },
+        "mechanism": "Estrogen-related enhancement of endothelial function could modulate responsiveness to BP control strategies.",
+        "evidence_basis": [
+          "Sex differences in treatment response suggesting differential cardiovascular protection."
+        ],
+        "testable_prediction": "More pronounced cardiovascular benefits in women with intensive BP targets compared to men."
+      },
+      "reward": 3.0,
+      "correct_predictions": 6,
+      "total_predictions": 12
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H12",
+        "title": "Baseline diastolic BP's role in treatment response",
+        "hypothesis_statement": "Patients with lower baseline diastolic BP (<70 mmHg) may exhibit adverse outcomes with intensive treatment due to potential hypoperfusion risks.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "dbp",
+            "operator": "<",
+            "threshold": 70.0,
+            "category": null,
+            "description": "Patients with low baseline diastolic blood pressure"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "Low baseline DBP might increase the risk of organ hypoperfusion when intensified treatment is applied."
+        },
+        "mechanism": "Reduction beyond physiologic thresholds of DBP increases risk of organ ischemia under intensive regimens.",
+        "evidence_basis": [
+          "Findings of increased hypotensive complications in patients with low baseline DBP treated intensively."
+        ],
+        "testable_prediction": "Increased risk of ischemic events in patients with low DBP under intensive BP management."
+      },
+      "reward": 3.0,
+      "correct_predictions": 6,
+      "total_predictions": 12
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H13",
+        "title": "High HDL as a protective factor under treatment",
+        "hypothesis_statement": "Individuals with higher baseline HDL (>60 mg/dL) experience enhanced cardiovascular protection from intensive BP control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "hdl",
+            "operator": ">",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Patients with HDL >60 mg/dL"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "High HDL levels improve vascular health and responsiveness to BP control reducing cardiovascular risk."
+        },
+        "mechanism": "Enhanced reverse cholesterol transport and vascular function in high HDL scenarios promote treatment benefits.",
+        "evidence_basis": [
+          "Positive correlation between high HDL and cardiovascular outcomes in settings of stringent BP control."
+        ],
+        "testable_prediction": "High HDL individuals showcasing fewer cardiovascular events with intensive treatment."
+      },
+      "reward": 3.0,
+      "correct_predictions": 6,
+      "total_predictions": 12
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H15",
+        "title": "Triglyceride levels influencing BP control efficacy",
+        "hypothesis_statement": "Baseline high triglyceride levels (>150 mg/dL) may undermine the benefits of intensive BP control due to metabolic syndrome pathology.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "trr",
+            "operator": ">",
+            "threshold": 150.0,
+            "category": null,
+            "description": "Patients with high baseline triglyceride levels"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Metabolic syndrome components may interact negatively with BP interventions, diminishing their effectiveness."
+        },
+        "mechanism": "Insufficient control of associated metabolic dysfunctions contributes to poorer responses to blood pressure lowering strategies.",
+        "evidence_basis": [
+          "Less benefit observed in metabolically compromised individuals under strict BP regimes."
+        ],
+        "testable_prediction": "Patients with elevated triglycerides will have higher cardiovascular event rates despite intensive treatment."
+      },
+      "reward": 3.0,
+      "correct_predictions": 6,
+      "total_predictions": 12
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H4",
+        "title": "Racial Differences in Response",
+        "hypothesis_statement": "Participants identified as Black experience lower benefits from intensive blood pressure control compared to non-Black participants.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "race_black",
+            "operator": "==",
+            "threshold": null,
+            "category": "1",
+            "description": "Black race participants"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "moderate",
+          "rationale": "Genetic and environmental factors specific to Black individuals could influence treatment response."
+        },
+        "mechanism": "Differences in sodium handling, vascular reactivity, or genetic factors may result in altered responses to blood pressure control strategies.",
+        "evidence_basis": [
+          "Ethnic differences in response to antihypertensive therapy",
+          "Genetic studies indicating different risk profiles"
+        ],
+        "testable_prediction": "Black participants will show a smaller reduction in the incidence of major cardiovascular events under intensive treatment compared to non-Black participants."
+      },
+      "reward": 0.0,
+      "correct_predictions": 0,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H8",
+        "title": "Aspirin Interaction Effects",
+        "hypothesis_statement": "Concomitant aspirin use modifies the benefit of intensive blood pressure control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "aspirin",
+            "operator": "==",
+            "threshold": null,
+            "category": "1",
+            "description": "Participants taking aspirin"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "moderate",
+          "rationale": "The combination of aspirin and intensive blood pressure control may interact synergistically or antagonistically due to effects on coagulation and endothelial protection."
+        },
+        "mechanism": "Aspirin\u2019s effects on platelet aggregation and vascular inflammation might alter the risk-benefit profile of intensive blood pressure control.",
+        "evidence_basis": [
+          "Pharmacological interactions noted in combination therapies",
+          "Data indicating varied cardiovascular outcomes with aspirin use"
+        ],
+        "testable_prediction": "Participants on aspirin will exhibit different rates of reduction in cardiovascular events with intensive treatment versus those not taking aspirin."
+      },
+      "reward": 0.0,
+      "correct_predictions": 0,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H14",
+        "title": "Variable outcomes in multifactorial therapy",
+        "hypothesis_statement": "Patients requiring multiple antihypertensive agents show heterogeneous treatment responses due to complex drug interactions and related comorbidities.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "n_agents",
+            "operator": ">",
+            "threshold": 3.0,
+            "category": null,
+            "description": "Patients on >3 antihypertensive agents"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Polypharmacy introduces variability in therapeutic response due to interactions and overlapping side effects."
+        },
+        "mechanism": "Complex interactions between multiple drugs and underlying health conditions alter intended outcomes of BP control.",
+        "evidence_basis": [
+          "Diverse outcomes in patients requiring complex antihypertensive regimens."
+        ],
+        "testable_prediction": "Greater variability and unpredictable cardiovascular outcomes in polypharmacy-treated individuals."
+      },
+      "reward": 0.0,
+      "correct_predictions": 0,
+      "total_predictions": 12
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 24.333333333333332,
+    "avg_accuracy": 0.392
+  }
+}

@@ -1,19 +1,19 @@
 # Explaining Conditional Average Treatment Effect
 
-This is a repository for [CODE-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2), explaining CATE models with attribution techniques.
+This repository contains code for [CODE-XAI](https://www.medrxiv.org/content/10.1101/2024.09.04.24312866v2), explaining CATE models with attribution techniques and downstream hypothesis validation workflows.
 
-<<<<<<< HEAD
 ## Prerequisites
 
-CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
+Core CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which provides Torch/Jax-based sklearn-style CATE estimators.
 
-## Scripts
+## Core Scripts
 
 ### `single_cohort_analysis.py`
 
-Computes SHAP values for CATE models on a single cohort/dataset using XLearner. The script performs bootstrapped SHAP computation across multiple trials and generates a JSON summary compatible with the clinical agent for hypothesis generation.
+Computes SHAP values for CATE models on a single cohort using bootstrapped trials and exports JSON summaries compatible with `clinical_agent.py`.
 
-**Example command:**
+Example:
+
 ```bash
 python single_cohort_analysis.py \
     --num_trials 20 \
@@ -24,28 +24,27 @@ python single_cohort_analysis.py \
     --top_n_features 15
 ```
 
-**Arguments:**
-- `--num_trials` (required): Number of bootstrap trials to run for SHAP computation
-- `--cohort_name` (required): Name of the dataset (e.g., crash_2, ist3, sprint, accord)
-- `--baseline`: Use random sample baseline (default: True). If not set, uses median baseline
-- `--wandb`: Enable Weights & Biases logging (default: True)
-- `--relative_change_threshold`: Threshold for early stopping based on SHAP convergence (default: 0.05)
-- `--top_n_features`: Number of top features to include in summary (default: 10)
+### `clinical_agent.py`
 
-**Outputs:**
-- `{cohort_name}_shap_summary_{baseline}.json`: JSON summary with SHAP statistics, compatible with clinical_agent.py
-- `{cohort_name}_shap_bootstrapped_{baseline}.pkl`: Raw SHAP values across all trials
-- `{cohort_name}_predict_results_{baseline}.pkl`: CATE predictions across all trials
+Generates clinical mechanism hypotheses from SHAP summaries.
 
-### `run_experiments.py`
+Example:
 
-Contains an experiment pipeline for synthetics data analysis, the script is modified based on
+```bash
+python clinical_agent.py \
+    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --out_json docs/agent/crash_2/hypotheses_with_shap_XLearner.json \
+    --trial_name crash_2 \
+    --n_features 15 \
+    --n_hypotheses 8
+```
 
 ### `run_experiment_clinical_data.py`
 
-Contains experiments for examining ensemble explanations with knowledge distillation.
+Runs ensemble explanation experiments with knowledge distillation.
 
-**Example command:**
+Example:
+
 ```bash
 python run_experiment_clinical_data.py \
     --dataset crash_2 \
@@ -55,52 +54,77 @@ python run_experiment_clinical_data.py \
     --top_n_features 10
 ```
 
-**Arguments:**
-- `--dataset`: Dataset name
-- `--shuffle`: Whether to shuffle data, only active for training set
-- `--num_trials`: Number of ensemble models
-- `--learner`: Types of CATE learner, e.g. X-Learner, DR-Learner
-- `--top_n_features`: Whether to report top n features across runs
-
-### `clinical_agent.py`
-
-Generate clinical research hypotheses from SHAP summary JSON using OpenAI's API. Requires SHAP summary output from `single_cohort_analysis.py`.
-
-**Example command:**
-```bash
-python clinical_agent.py \
-    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
-    --out_json results/crash_2/hypotheses_baseline_shapley_XLearner.json \
-    --trial_name crash_2 \
-    --n_features 15 \
-    --n_hypotheses 8
-```
-
 ### `summarize_feature_scores.py`
 
-Summarizes and visualizes feature scores from clinical agent hypothesis outputs.
+Summarizes and visualizes feature scores from clinical agent outputs.
 
-**Example command:**
+## PubMed Mechanism Validator
+
+`pubmed_mechanism_validator.py` validates hypothesis mechanisms against PubMed literature by:
+
+1. Searching PubMed for relevant abstracts
+2. Classifying abstracts as support/conflict/neutral
+3. Producing summary and detailed JSON reports
+
+### Installation
+
 ```bash
-python summarize_feature_scores.py \
-    --judge_json results/agents/hypotheses_baseline_shapley_XLearner_judge_original.json \
-    --out_csv results/agents/feature_scores_summary.csv \
-    --plot \
-    --out_plot results/agents/feature_scores.png
-=======
-Prerequisites
-
-CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets), which is a repo that contains Torch/Jax-based, sklearn-style implementations of Neural Network-based Conditional Average Treatment Effect (CATE) Estimators by Alicia Curth.
-
-```run_experiments.py``` contains an experiment pipeline for synthetics data analysis, the script is modified based on
-
-```run_experiment_clinical_data.py```contains experiments for examining ensemble explanations with knowledge distillation. An example command is as follows
+pip install -r pubmed_requirements.txt
 ```
-run_experiment_clinical_data.py
---dataset          # dataset name
---shuffle          # whether to shuffle data, only active for training set
---num_trials       # number of ensemble models
---learner          # types of CATE learner, e.g. X-Learner, DR-Learner
---top_n_features   # whether to report top n features across runs.
->>>>>>> a0ff67ef55955080ceda52732dad9b5ee4c1c750
+
+### Basic Usage
+
+```bash
+python pubmed_mechanism_validator.py --cohort ist3
+python pubmed_mechanism_validator.py --cohort accord
+python pubmed_mechanism_validator.py --cohort crash_2
+python pubmed_mechanism_validator.py --cohort sprint
 ```
+
+### Advanced Usage
+
+```bash
+# Custom input file
+python pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json
+
+# Custom output
+python pubmed_mechanism_validator.py --cohort ist3 --output my_validation.json
+
+# LLM analysis (reads OPENAI_API_KEY from environment or .env)
+python pubmed_mechanism_validator.py --cohort ist3
+
+# Explicit API key override
+python pubmed_mechanism_validator.py --cohort ist3 --api-key "your-api-key-here"
+
+# Keyword-only mode
+python pubmed_mechanism_validator.py --cohort ist3 --no-llm
+
+# More abstracts per mechanism
+python pubmed_mechanism_validator.py --cohort ist3 --max-abstracts 50
+```
+
+### Analysis Modes
+
+- **LLM-based analysis** (recommended): more nuanced support/conflict classification.
+- **Keyword-based analysis**: no API key required, faster but less precise.
+
+### Output
+
+Outputs `<input_basename>_pubmed_validation.json` (unless `--output` is provided), containing:
+
+- dataset-level totals (`overall_support_count`, `overall_conflict_count`, `overall_neutral_count`)
+- per-mechanism query + abstract counts
+- per-abstract stance/reasoning
+
+### Best Practices
+
+1. Use LLM mode for final reporting.
+2. Use keyword mode for quick screening.
+3. Tune `--max-abstracts` for depth vs speed.
+4. Review constructed queries when retrieval quality is low.
+
+### Troubleshooting
+
+- **No abstracts found**: check query specificity and internet access.
+- **LLM errors / auth failures**: verify `OPENAI_API_KEY` (or `--api-key`) and account status.
+- **Too many neutral results**: increase query specificity or mechanism detail.

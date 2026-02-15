@@ -1,0 +1,186 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "accord",
+    "treatment": "Intensive glucose control (HbA1c target <6.0%)",
+    "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+    "population": "Adults with type 2 diabetes and high cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 15,
+    "w_max": 100,
+    "max_iterations": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H1",
+        "title": "Older Age and Intensive Glucose Control",
+        "hypothesis_statement": "Older adults (age >= 65) experience more harm than benefit from intensive glucose control for cardiovascular events.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "baseline_age",
+            "operator": ">=",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Patients who are 65 years or older"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Older adults may have increased susceptibility to hypoglycemia, which can precipitate cardiovascular events."
+        },
+        "mechanism": "Age-related decline in glucose counter-regulation mechanisms increases hypoglycemia risk.",
+        "evidence_basis": [
+          "Previous studies showing age-related hypoglycemia sensitivity"
+        ],
+        "testable_prediction": "Within the study population, patients aged 65 or older receiving intensive glucose control will have higher rates of major cardiovascular events compared to standard treatment."
+      },
+      "reward": 55.0,
+      "correct_predictions": 107,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H5",
+        "title": "Baseline Hypertension and Glucose Control",
+        "hypothesis_statement": "Patients with high baseline systolic blood pressure (SBP > 140) benefit less from intensive glucose control for cardiovascular event prevention.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": ">",
+            "threshold": 140.0,
+            "category": null,
+            "description": "Patients with baseline SBP greater than 140 mmHg"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "High baseline SBP may lead to increased cardiovascular risk, overshadowing glucose control benefits."
+        },
+        "mechanism": "Chronic hypertension could lead to vascular damage, reducing glucose control effectiveness.",
+        "evidence_basis": [
+          "Meta-analyses associating high SBP with modulated glucose control benefits"
+        ],
+        "testable_prediction": "Patients with SBP > 140 will not see a significant reduction in cardiovascular events with intensive glucose control compared to standard management."
+      },
+      "reward": 55.0,
+      "correct_predictions": 107,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H6",
+        "title": "Previous Cardiovascular Disease and Glucose Control",
+        "hypothesis_statement": "Patients with a history of cardiovascular disease (CVD) benefit less from intensive glucose control compared to those without.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "cvd_hx_baseline",
+            "operator": "==",
+            "threshold": null,
+            "category": "yes",
+            "description": "Patients with a history of cardiovascular disease at baseline"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Existing cardiovascular damage may limit the potential benefits from improved glucose control."
+        },
+        "mechanism": "Pre-existing atherosclerotic disease limits regeneration of cardiovascular health through glucose reduction.",
+        "evidence_basis": [
+          "Studies showing attenuated cardiovascular benefits in patients with prior events"
+        ],
+        "testable_prediction": "Patients with a baseline history of CVD have similar cardiovascular event rates regardless of glucose control intensity."
+      },
+      "reward": 55.0,
+      "correct_predictions": 107,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H2",
+        "title": "High Baseline BMI and Cardiovascular Outcomes",
+        "hypothesis_statement": "Patients with high baseline BMI (>30) benefit more from intensive glucose control in terms of reducing major cardiovascular events.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "bmi",
+            "operator": ">",
+            "threshold": 30.0,
+            "category": null,
+            "description": "Patients with BMI greater than 30"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Obesity-related metabolic disturbances are more reversible with intensive glucose control."
+        },
+        "mechanism": "High baseline BMI is associated with increased insulin resistance and cardiovascular risk, which intensive glucose control can mitigate.",
+        "evidence_basis": [
+          "Studies indicating improved risk profiles in obese patients with aggressive treatment"
+        ],
+        "testable_prediction": "Patients with BMI >30 under intensive glucose control will have fewer cardiovascular events than those under standard care."
+      },
+      "reward": 36.0,
+      "correct_predictions": 93,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H3",
+        "title": "Low HDL Cholesterol and Intensive Glucose Control",
+        "hypothesis_statement": "Patients with low HDL levels (<40 mg/dL) experience reduced benefits from intensive glucose control compared to standard care.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "hdl",
+            "operator": "<",
+            "threshold": 40.0,
+            "category": null,
+            "description": "Patients with HDL cholesterol less than 40 mg/dL"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Low HDL may indicate an increased risk for unpredictable cardiovascular complications not mitigated by glucose control alone."
+        },
+        "mechanism": "Low HDL is often associated with persistent cardiovascular risk that glucose control cannot sufficiently alter.",
+        "evidence_basis": [
+          "Epidemiological studies linking low HDL with reduced cardiovascular benefit from glucose control"
+        ],
+        "testable_prediction": "Lower HDL levels (<40 mg/dL) correlate with a lesser reduction in cardiovascular events under intensive glucose management."
+      },
+      "reward": 36.0,
+      "correct_predictions": 93,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H4",
+        "title": "Renal Function and Glucose Control",
+        "hypothesis_statement": "Patients with reduced renal function (GFR < 60) show more harm from intensive glucose control in preventing cardiovascular events.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "gfr",
+            "operator": "<",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Patients with GFR less than 60"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Reduced renal function may lead to increased accumulation of glucose-lowering agents, raising hypoglycemia risk."
+        },
+        "mechanism": "Impaired renal function affects drug clearance, increasing risk of toxic metabolites or side effects.",
+        "evidence_basis": [
+          "Clinical observations of increased hypoglycemia in patients with chronic kidney disease"
+        ],
+        "testable_prediction": "Patients with GFR < 60 will experience a higher incidence of adverse cardiovascular outcomes on intensive glucose control."
+      },
+      "reward": 36.0,
+      "correct_predictions": 93,
+      "total_predictions": 200
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 6,
+    "avg_reward": 45.5,
+    "avg_accuracy": 0.49999999999999994
+  }
+}

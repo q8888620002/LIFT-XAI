@@ -43,6 +43,31 @@ from typing import List, Literal, Optional
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
+
+def load_local_env(env_path: str = ".env") -> None:
+    """Load simple KEY=VALUE pairs from a local .env file into os.environ.
+
+    Existing environment variables are not overwritten.
+    """
+    if not os.path.exists(env_path):
+        return
+
+    try:
+        with open(env_path, "r") as f:
+            for raw_line in f:
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+
+                if key and key not in os.environ:
+                    os.environ[key] = value
+    except Exception:
+        pass
+
 # -----------------------------
 # Structured output schema
 # -----------------------------
@@ -638,6 +663,12 @@ def get_trial_metadata(trial_name: str) -> dict:
             "population": "Adults with type 2 diabetes and high cardiovascular risk",
             "article_query": "ACCORD trial intensive glucose control diabetes 2008",
         },
+        "txa": {
+            "treatment": "Pre-hospital tranexamic acid (TXA) administration",
+            "outcome": "Survival (in-hospital mortality status)",
+            "population": "Adult trauma patients in a pre-hospital TXA cohort",
+            "article_query": "pre-hospital TXA trauma cohort retrospective study",
+        },
     }
 
     trial_lower = trial_name.lower()
@@ -741,8 +772,10 @@ def generate_feature_hypotheses(
     )
 
     # 2. DIRECTIONAL LOGIC
+    use_data_summary = study_context.get("use_data_summary", False)
+    
     if len(top_features) > 0:
-        # THE INTERPRETER: Data -> Literature
+        # MODE 1: WITH SHAP - Data -> Literature
         role_type = "Forensic Clinical Interpreter"
         directive = (
             "You have been provided with SHAP values from a machine learning model. "
@@ -750,15 +783,26 @@ def generate_feature_hypotheses(
             "were found to be important. Do not ignore the data in favor of generic "
             "mechanisms; justify the observed signal using science."
         )
-    else:
-        # THE PREDICTOR: Literature -> Nomination
-        role_type = "Theoretical Clinical Expert"
-        available_cols = study_context.get("available_features", "the study population")
+    elif use_data_summary:
+        # MODE 2: WITH DATA SUMMARY - Literature + Available Features
+        role_type = "Informed Clinical Expert"
+        available_cols = study_context.get("available_features", [])
         directive = (
-            f"You are blinded to the model results. Based on the study context and the "
-            f"available features ({available_cols}), use the literature to PREDICT which "
-            "characteristics are most likely to modify treatment effects. Select the "
-            "most biologically plausible candidates."
+            f"You are blinded to the model importance scores, but you know which features "
+            f"were measured in this study: {available_cols}. Based on the trial context and "
+            f"these available features, use the literature to PREDICT which characteristics "
+            f"are most likely to modify treatment effects. Prioritize the most biologically "
+            f"plausible candidates from the available features."
+        )
+    else:
+        # MODE 3: WITHOUT SHAP - Literature Only
+        role_type = "Theoretical Clinical Expert"
+        directive = (
+            f"You are blinded to both the model results AND the dataset features. Based ONLY on "
+            f"the trial information (treatment, outcome, population), use the literature to "
+            f"PREDICT which patient characteristics are most likely to modify treatment effects. "
+            f"Nominate the most biologically plausible candidates based on established clinical "
+            f"evidence, without reference to what was measured in the study."
         )
 
     # 3. ASSEMBLE SYSTEM PROMPT
@@ -941,6 +985,8 @@ def score_feature_hypotheses(
 
 
 def main():
+    load_local_env()
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--shap_json",
@@ -954,7 +1000,7 @@ def main():
     # Option 1: Use trial name for automatic metadata lookup
     parser.add_argument(
         "--trial_name",
-        help="Trial name (ist3, crash_2, sprint, accord) - auto-populates metadata.",
+        help="Trial name (ist3, crash_2, sprint, accord, txa) - auto-populates metadata.",
     )
 
     # Option 2: Manual metadata (used if --trial_name not provided)
@@ -993,6 +1039,11 @@ def main():
         "--enable_judge",
         action="store_true",
         help="Enable independent judging/scoring pass using the model specified by --model.",
+    )
+    parser.add_argument(
+        "--use_data_summary",
+        action="store_true",
+        help="Use data summary baseline: provide available features but no SHAP values (intermediate between with_shap and without_shap).",
     )
     parser.add_argument(
         "--verifier_iterations",
@@ -1074,6 +1125,7 @@ def main():
         "n_hypotheses_per_feature": args.n_hypotheses,
         "n_features": args.n_features,  # Pass n_features so generator knows how many to propose if no SHAP
         "available_features": evidence.get("available_features", []),
+        "use_data_summary": args.use_data_summary,  # New baseline mode flag
     }
 
     feature_hypotheses = generate_feature_hypotheses(

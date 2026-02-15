@@ -1,0 +1,434 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "ist3",
+    "treatment": "IV alteplase (recombinant tissue plasminogen activator)",
+    "outcome": "Alive and independent (Oxford Handicap Score 0-2) at 6 months",
+    "population": "Acute ischemic stroke patients within 6 hours of symptom onset",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 15,
+    "w_max": 100,
+    "max_iterations": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H004",
+        "title": "Differential alteplase outcomes by gender",
+        "hypothesis_statement": "Female acute ischemic stroke patients may experience greater benefit from IV alteplase treatment compared to male patients, resulting in higher rates of independence at 6 months.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "gender",
+            "operator": "==",
+            "threshold": null,
+            "category": "female",
+            "description": "Female patients"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Hormonal differences and differential vascular responses may lead to a gender-based difference in the efficacy of thrombolysis."
+        },
+        "mechanism": "Estrogen and other sex-specific factors may influence vascular repair mechanisms, possibly enhancing the impact of reperfusion therapies in women.",
+        "evidence_basis": [
+          "Some studies suggest sex differences in stroke pathophysiology and recovery (Bushnell et al., 2014).",
+          "Women have shown variable responses to thrombolytic treatment in past trials."
+        ],
+        "testable_prediction": "Female patients who receive IV alteplase will have a higher likelihood of being alive and independent at 6 months compared to male patients post-treatment."
+      },
+      "reward": 19.0,
+      "correct_predictions": 101,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H001",
+        "title": "Age-dependent alteplase benefit in stroke patients",
+        "hypothesis_statement": "In acute ischemic stroke patients treated within 6 hours of symptom onset, those aged <= 80 years experience a higher benefit from IV alteplase treatment.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": "<=",
+            "threshold": 80.0,
+            "category": null,
+            "description": "Patients aged 80 years or younger"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Younger patients generally have more robust recovery potential and fewer comorbidities, which may enhance the effectiveness of thrombolytic therapy."
+        },
+        "mechanism": "Younger age is associated with higher neuroplasticity and ability to recover from ischemic damage, enhancing recovery when reperfusion is promptly achieved.",
+        "evidence_basis": [
+          "Age is a known modifier of recovery after stroke (Lees et al., 2010).",
+          "Younger stroke patients show better clinical outcomes post-thrombolysis."
+        ],
+        "testable_prediction": "Patients aged 80 years or younger who receive IV alteplase will have a higher probability of being alive and independent at 6 months compared to those who do not receive the treatment."
+      },
+      "reward": 16.0,
+      "correct_predictions": 99,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H002",
+        "title": "Impaired benefit of alteplase in hyperglycemic stroke patients",
+        "hypothesis_statement": "In acute ischemic stroke patients, those with a blood glucose level > 140 mg/dL at presentation may derive less benefit or experience harm from IV alteplase compared to those with lower glucose levels.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "glucose",
+            "operator": ">",
+            "threshold": 140.0,
+            "category": null,
+            "description": "Patients with blood glucose > 140 mg/dL"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Hyperglycemia is associated with worse outcomes in stroke patients and can exacerbate reperfusion injury, potentially offsetting the benefits of thrombolysis."
+        },
+        "mechanism": "Elevated glucose may increase cerebral edema and hemorrhagic transformation, reducing the efficacy of reperfusion and increasing risks.",
+        "evidence_basis": [
+          "Hyperglycemia is linked to poor outcomes post-stroke (Baird et al., 2003).",
+          "Previous studies suggest glucose modulation affects thrombolytic therapy outcomes."
+        ],
+        "testable_prediction": "Patients with blood glucose > 140 mg/dL who receive IV alteplase will have lower rates of being alive and independent at 6 months than similar patients managing without this treatment."
+      },
+      "reward": 16.0,
+      "correct_predictions": 99,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H003",
+        "title": "Enhanced alteplase benefit with low NIHSS",
+        "hypothesis_statement": "Patients with acute ischemic stroke and an NIH Stroke Scale (NIHSS) score <= 5 at baseline may benefit more from IV alteplase, showing greater functional independence at 6 months compared to those with higher NIHSS scores.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "nihss",
+            "operator": "<=",
+            "threshold": 5.0,
+            "category": null,
+            "description": "Patients with NIHSS score of 5 or lower"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Lower baseline neurological deficits may allow for more complete functional recovery post-thrombolysis."
+        },
+        "mechanism": "Milder neurological deficits may facilitate easier restoration of function with reperfusion therapy.",
+        "evidence_basis": [
+          "Lower NIHSS scores are associated with better stroke outcomes (Adams et al., 1999).",
+          "Patients with mild strokes stand to normalize quickly after clot removal."
+        ],
+        "testable_prediction": "Stroke patients with NIHSS <= 5 receiving IV alteplase are more likely to be alive and independent at 6 months compared to those with higher initial NIHSS scores."
+      },
+      "reward": 16.0,
+      "correct_predictions": 99,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H005",
+        "title": "Impact of atrial fibrillation on alteplase efficacy",
+        "hypothesis_statement": "Acute ischemic stroke patients without atrial fibrillation experience a greater relative benefit from alteplase treatment than those with atrial fibrillation, with higher 6-month independence rates.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "atrialfib_rand",
+            "operator": "!=",
+            "threshold": null,
+            "category": "present",
+            "description": "Patients without atrial fibrillation"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Patients without atrial fibrillation may have a different thrombus composition that responds better to thrombolytics."
+        },
+        "mechanism": "Thrombi in non-atrial fibrillation patients tend to be more fibrin-rich and amenable to dissolution by alteplase, whereas those in atrial fibrillation are often platelet-rich and resistant to lysis.",
+        "evidence_basis": [
+          "Cardioembolic strokes due to atrial fibrillation have shown variable response to thrombolysis.",
+          "Literature suggests differences in clot structure affect lysis (Marder et al., 2008)."
+        ],
+        "testable_prediction": "Patients without atrial fibrillation receiving IV alteplase are more likely to achieve independence at 6 months compared to those with atrial fibrillation."
+      },
+      "reward": 16.0,
+      "correct_predictions": 99,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H11",
+        "title": "Secondary Stroke Prevention Hypothesis",
+        "hypothesis_statement": "Secondary preventions initiated within three months reduce alteplase efficacy post-stroke.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "stroketype_3.0",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Stroke relapse within three months"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Secondary events may indicate resistance to standard interventions, including thrombolytics."
+        },
+        "mechanism": "Secondary prevention strategies might have synergistic interference with thrombolysis.",
+        "evidence_basis": [
+          "Recurring stroke signs in non-responders."
+        ],
+        "testable_prediction": "New strokes within a 3-month period show reduced responsiveness to alteplase."
+      },
+      "reward": 0.5,
+      "correct_predictions": 1,
+      "total_predictions": 1
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H12",
+        "title": "Rapid Onset Hypothesis",
+        "hypothesis_statement": "Rapid onset strokes with severe early symptoms receive less benefit from alteplase.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "nihss",
+            "operator": ">",
+            "threshold": 20.0,
+            "category": null,
+            "description": "NIHSS score above 20"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "Severe presentation may exceed the reversible ischemic threshold addressed by alteplase."
+        },
+        "mechanism": "High initial severity implies large affected volume or poor collateral circulation.",
+        "evidence_basis": [
+          "High NIHSS scores in difficult cases indicate refractory ischemic burden."
+        ],
+        "testable_prediction": "Patients with NIHSS >20 show negligible improvement from alteplase."
+      },
+      "reward": 0.5,
+      "correct_predictions": 1,
+      "total_predictions": 1
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H15",
+        "title": "Complicated Cardiovascular History Hypothesis",
+        "hypothesis_statement": "Patients with significant cardiovascular events cease to gain from alteplase later post-event.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "atrialfib_rand",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "History of significant cardiovascular complications"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Prolonged cardiac conditions relate to mixed cerebral vascular condition exacerbating challenge of treatment."
+        },
+        "mechanism": "Chronic cardiac conditions may alter vascular responsiveness, reducing efficacy of alteplase.",
+        "evidence_basis": [
+          "Chronic cardiovascular conditions observed in non-responders."
+        ],
+        "testable_prediction": "Patients with prior significant cardiac history respond less well to alteplase."
+      },
+      "reward": 0.5,
+      "correct_predictions": 1,
+      "total_predictions": 1
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H1",
+        "title": "Age-Related Metabolic Fluids Hypothesis",
+        "hypothesis_statement": "Alteplase treatment is less effective in older patients with high variability in glucose levels.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">",
+            "threshold": 75.0,
+            "category": null,
+            "description": "Patients older than 75 years"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Older patients often have altered drug metabolism and glucose handling, impacting treatment outcomes."
+        },
+        "mechanism": "Age-related metabolic changes and glucose instability might affect alteplase metabolism and clearance.",
+        "evidence_basis": [
+          "High age variance in difficult samples with wide glucose range"
+        ],
+        "testable_prediction": "Patients >75 years with high glucose variability show poorer outcomes with alteplase."
+      },
+      "reward": 0.0,
+      "correct_predictions": 1,
+      "total_predictions": 2
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H2",
+        "title": "Weight-Glucose Interaction Hypothesis",
+        "hypothesis_statement": "The interaction between high weight and elevated glucose reduces treatment efficacy of alteplase.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "weight",
+            "operator": ">",
+            "threshold": 100.0,
+            "category": null,
+            "description": "Patients with weight exceeding 100 kg"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "High weight and elevated glucose may lead to a pharmacokinetic barrier, reducing treatment efficacy."
+        },
+        "mechanism": "Increased adipose tissue and insulin resistance may alter alteplase activity.",
+        "evidence_basis": [
+          "Patterns show high weight and glucose affecting outcomes."
+        ],
+        "testable_prediction": "Patients with high weight (>100 kg) and glucose (>150 mg/dL) have worse outcomes with treatment."
+      },
+      "reward": 0.0,
+      "correct_predictions": 1,
+      "total_predictions": 2
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H3",
+        "title": "Neurological Resilience Hypothesis",
+        "hypothesis_statement": "Patients with initial low GCS scores but rapid improvement are resistant to alteplase benefits.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "gcs_score_rand",
+            "operator": "<",
+            "threshold": 8.0,
+            "category": null,
+            "description": "Initial GCS score less than 8"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "Severe neurological impairment likely entails extensive brain injury, reducing therapy effectiveness."
+        },
+        "mechanism": "Brain injury extent may exceed the therapeutic capacity of alteplase.",
+        "evidence_basis": [
+          "Low initial GCS indicates poor prognosis despite treatment."
+        ],
+        "testable_prediction": "Initial GCS <8 with improvements in first 24 hours have limited benefit from alteplase."
+      },
+      "reward": 0.0,
+      "correct_predictions": 1,
+      "total_predictions": 2
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H4",
+        "title": "Blood Pressure Stability Hypothesis",
+        "hypothesis_statement": "Large variability in blood pressure within the first 24 hours post-treatment predicts poor response to alteplase.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbprand",
+            "operator": "<",
+            "threshold": 90.0,
+            "category": null,
+            "description": "Systolic BP below 90 mmHg or above 180 mmHg within 24 hours"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Blood pressure instability may indicate endothelial dysfunction affecting drug delivery."
+        },
+        "mechanism": "Blood pressure fluctuations possibly compromise effective brain perfusion and alteplase efficacy.",
+        "evidence_basis": [
+          "Blood pressure variability identified in difficult cases."
+        ],
+        "testable_prediction": "Patients with systolic BP <90 or >180 mmHg within 24 hours post-treatment have poor alteplase outcomes."
+      },
+      "reward": 0.0,
+      "correct_predictions": 1,
+      "total_predictions": 2
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H7",
+        "title": "Preexisting Antiplatelet Use Hypothesis",
+        "hypothesis_statement": "Patients on antiplatelet therapy prior to stroke have reduced benefits from alteplase.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "antiplat_rand",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Use of antiplatelet agents before treatment"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Antiplatelet pre-treatment may reduce the efficacy of alteplase by affecting clot resolution."
+        },
+        "mechanism": "Antithrombotic drugs modify coagulation pathways, impacting clot resolution with thrombolytics.",
+        "evidence_basis": [
+          "Significant anti-platelet use noted among non-responders."
+        ],
+        "testable_prediction": "Patients pre-treated with antiplatelet agents show lower alteplase efficacy."
+      },
+      "reward": 0.0,
+      "correct_predictions": 1,
+      "total_predictions": 2
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H5",
+        "title": "Insulin Resistance Interaction Hypothesis",
+        "hypothesis_statement": "Patients with indicators of insulin resistance show diminished benefits from alteplase treatment.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "glucose",
+            "operator": ">",
+            "threshold": 180.0,
+            "category": null,
+            "description": "Fasting glucose above 180 mg/dL"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Insulin resistance might impair vascular response and drug distribution, limiting efficacy."
+        },
+        "mechanism": "Impaired glucose metabolism may alter cerebral microcirculation, limiting alteplase efficacy.",
+        "evidence_basis": [
+          "Elevated glucose is a common feature in difficult cases."
+        ],
+        "testable_prediction": "Patients with well-controlled glucose levels experience better outcomes with alteplase."
+      },
+      "reward": -0.5,
+      "correct_predictions": 0,
+      "total_predictions": 1
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H6",
+        "title": "Gender-Specific Stroke Type Response Hypothesis",
+        "hypothesis_statement": "Treatment effectiveness varies by gender and stroke type, with females with type 2 strokes showing poor response.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "gender",
+            "operator": "==",
+            "threshold": null,
+            "category": "female",
+            "description": "Female gender with stroke type 2.0"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Hormonal and vascular differences might lead to varied therapeutic responses."
+        },
+        "mechanism": "Gender-specific vascular physiology may cause differential drug efficacy.",
+        "evidence_basis": [
+          "Gender differences noted in stroke type response."
+        ],
+        "testable_prediction": "Females with stroke type 2.0 experience less benefit from alteplase than corresponding males."
+      },
+      "reward": -0.5,
+      "correct_predictions": 0,
+      "total_predictions": 1
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 5.566666666666666,
+    "avg_accuracy": 0.5323333333333333
+  }
+}

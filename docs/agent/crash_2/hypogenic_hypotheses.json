@@ -1,0 +1,160 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "crash_2",
+    "treatment": "Tranexamic acid (TXA)",
+    "outcome": "All-cause mortality at 28 days or in-hospital death",
+    "population": "Trauma patients with significant bleeding or at risk of significant hemorrhage",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 15,
+    "w_max": 100,
+    "max_iterations": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H1",
+        "title": "Effect of TXA on patients < 65 years",
+        "hypothesis_statement": "TXA is more beneficial for trauma patients under 65 years compared to older patients.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": "<",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Patients under 65 years of age"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Younger patients have better physiological reserve and might respond better to hemostatic agents like TXA."
+        },
+        "mechanism": "Younger patients have more efficient clotting mechanisms which TXA can enhance, improving hemostasis.",
+        "evidence_basis": [
+          "TXA is known to stabilize clots and prevent excessive bleeding, a benefit more pronounced in those with higher physiological reserve."
+        ],
+        "testable_prediction": "Patients under 65 receiving TXA will exhibit lower mortality rates compared to those not receiving TXA."
+      },
+      "reward": 43.0,
+      "correct_predictions": 102,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H2",
+        "title": "Effect of TXA in hypotensive patients",
+        "hypothesis_statement": "TXA is more beneficial for trauma patients with systolic blood pressure below 90 mmHg at admission.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": "<",
+            "threshold": 90.0,
+            "category": null,
+            "description": "Patients with systolic blood pressure < 90 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Hypotensive patients are at higher risk of continued bleeding and TXA's antifibrinolytic effects are crucial in stabilizing them."
+        },
+        "mechanism": "TXA prevents fibrinolysis effectively in the context of active bleeding where hypotension makes physiological compensations inadequate.",
+        "evidence_basis": [
+          "Increased benefit of TXA in patients with active bleeding and higher risks of morbidity."
+        ],
+        "testable_prediction": "TXA will significantly reduce mortality in patients presenting with systolic blood pressure below 90 mmHg compared to control."
+      },
+      "reward": 43.0,
+      "correct_predictions": 102,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H4",
+        "title": "Effect of TXA in early treatment post-injury",
+        "hypothesis_statement": "TXA administration is more effective within the first 3 hours post-injury.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "ninjurytime",
+            "operator": "<=",
+            "threshold": 3.0,
+            "category": null,
+            "description": "Intervention within 3 hours of injury"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "TXA effectiveness is time-dependent due to ongoing coagulation cascade post-trauma."
+        },
+        "mechanism": "Early stabilization of fibrinolysis by TXA reduces ongoing bleeding and enhances clot formation when administered promptly.",
+        "evidence_basis": [
+          "TXA is established to have maximal effectiveness when administered promptly post-trauma."
+        ],
+        "testable_prediction": "Patients treated with TXA within 3 hours of injury will show a significant reduction in mortality compared to later treatment."
+      },
+      "reward": 41.5,
+      "correct_predictions": 101,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H5",
+        "title": "Differential TXA impact based on heart rate",
+        "hypothesis_statement": "TXA treatment's impact is greater in patients with a heart rate > 100 bpm at admission, indicating active bleeding.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "ihr",
+            "operator": ">",
+            "threshold": 100.0,
+            "category": null,
+            "description": "Patients with heart rate > 100 bpm"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Tachycardia is indicative of significant blood loss, where stabilized clots via TXA are more critical."
+        },
+        "mechanism": "Active bleeding causes compensatory tachycardia where TXA can halt fibrinolysis, aiding in arresting blood loss.",
+        "evidence_basis": [
+          "Heart rate is a recognized marker for physiological response to hemorrhage, suggesting potential stratification."
+        ],
+        "testable_prediction": "Patients with heart rate > 100 bpm benefit more from TXA in terms of mortality reduction than those with lower heart rates."
+      },
+      "reward": 40.5,
+      "correct_predictions": 98,
+      "total_predictions": 200
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H3",
+        "title": "TXA effects in patients with severe injuries",
+        "hypothesis_statement": "Patients with severe injuries (ISS >= 15) might not benefit significantly from TXA as compared to those with moderate injuries.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "icc",
+            "operator": ">=",
+            "threshold": 15.0,
+            "category": null,
+            "description": "Patients with injury severity score >= 15"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "moderate",
+          "rationale": "Severe injuries may involve complex physiological responses that could limit the effectiveness of TXA's mechanism."
+        },
+        "mechanism": "Severe polytrauma is associated with complex coagulopathy that might not be adequately addressed by TXA alone.",
+        "evidence_basis": [
+          "Mixed outcomes in previous studies for TXA's efficacy in polytrauma cases.",
+          "Data on clot complexity in polytrauma not easily counteracted by TXA."
+        ],
+        "testable_prediction": "TXA will not significantly reduce mortality in patients with ISS >= 15 compared to those with moderate injuries."
+      },
+      "reward": 0.0,
+      "correct_predictions": 0,
+      "total_predictions": 200
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 33.6,
+    "avg_accuracy": 0.4029999999999999
+  }
+}

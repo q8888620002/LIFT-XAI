@@ -32,6 +32,31 @@ except ImportError:
     openai_available = False
 
 
+def load_local_env(env_path: str = ".env") -> None:
+    """Load simple KEY=VALUE pairs from a local .env file into os.environ.
+
+    Existing environment variables are not overwritten.
+    """
+    if not os.path.exists(env_path):
+        return
+
+    try:
+        with open(env_path, 'r') as f:
+            for raw_line in f:
+                line = raw_line.strip()
+                if not line or line.startswith('#') or '=' not in line:
+                    continue
+
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+
+                if key and key not in os.environ:
+                    os.environ[key] = value
+    except Exception:
+        pass
+
+
 class PubMedMechanismValidator:
     """Validates mechanisms against PubMed literature."""
     
@@ -675,6 +700,8 @@ class PubMedMechanismValidator:
 
 
 def main():
+    load_local_env()
+
     parser = argparse.ArgumentParser(description='Validate mechanisms against PubMed literature')
     parser.add_argument('--input', type=str, help='Path to hypotheses JSON file')
     parser.add_argument('--cohort', type=str, choices=['ist3', 'accord', 'crash_2', 'sprint'],
