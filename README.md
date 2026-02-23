@@ -68,25 +68,27 @@ Mechanism-level labels are computed with a deterministic rule tree over abstract
 
 ```mermaid
 flowchart TD
-    A[Start mechanism] --> B{SUPPORT_INTERACTION > 0\nAND CONFLICT == 0?}
+    A[Start mechanism] --> B{"SI > 0 and C == 0?"}
     B -- Yes --> L1[SUPPORT_INTERACTION]
-    B -- No --> C{Any support\nAND conflict present?\n(SUPPORT_INTERACTION > 0 OR SUPPORT_WEAK > 0)\nAND CONFLICT > 0}
+    B -- No --> C{"Any support present and C > 0?"}
 
-    C -- Yes --> D{evidence score >= 0?}
+    C -- Yes --> D{"evidence score >= 0?"}
     D -- Yes --> L2[SUPPORT_WEAK]
     D -- No --> L3[CONFLICT]
 
-    C -- No --> E{SUPPORT_WEAK > 0\nAND CONFLICT == 0?}
+    C -- No --> E{"SW > 0 and C == 0?"}
     E -- Yes --> L2
-    E -- No --> F{CONFLICT > 0\nAND no support labels?}
+    E -- No --> F{"C > 0 and no support labels?"}
 
     F -- Yes --> L3
-    F -- No --> G{NO_INTERACTION > 0\nAND no support labels?}
+    F -- No --> G{"NI > 0 and no support labels?"}
     G -- Yes --> L4[NO_INTERACTION]
-    G -- No --> H{PROGNOSTIC_MAIN_EFFECT > 0?}
+    G -- No --> H{"PME > 0?"}
     H -- Yes --> L5[PROGNOSTIC_MAIN_EFFECT]
     H -- No --> L6[IRRELEVANT]
 ```
+
+Legend: `SI=SUPPORT_INTERACTION`, `SW=SUPPORT_WEAK`, `C=CONFLICT`, `NI=NO_INTERACTION`, `PME=PROGNOSTIC_MAIN_EFFECT`.
 
 1. **STRONG_SUPPORT** if `SUPPORT_INTERACTION > 0` and `CONFLICT == 0` → mapped to `SUPPORT_INTERACTION`
 2. **MIXED_EVIDENCE** if `(SUPPORT_INTERACTION > 0 or SUPPORT_WEAK > 0)` and `CONFLICT > 0`
