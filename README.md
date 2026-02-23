@@ -67,10 +67,10 @@ Aggregates PubMed/Judge labels at abstract, mechanism, and feature levels.
 Mechanism-level labels are computed with a deterministic rule tree over abstract-level classes:
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Start mechanism] --> B{"Support interaction exists and conflict is absent?"}
     B -- Yes --> L1[SUPPORT_INTERACTION]
-    B -- No --> C{"Any support exists and conflict exists?"}
+    B -- No --> C{"Any support and any conflict?"}
 
     C -- Yes --> D{"Evidence score is non negative?"}
     D -- Yes --> L2[SUPPORT_WEAK]
@@ -78,12 +78,12 @@ flowchart TD
 
     C -- No --> E{"Weak support exists and conflict is absent?"}
     E -- Yes --> L2
-    E -- No --> F{"Conflict exists and no support labels exist?"}
+    E -- No --> F{"Conflict exists and support absent?"}
 
     F -- Yes --> L3
-    F -- No --> G{"No interaction exists and no support labels exist?"}
+    F -- No --> G{"No interaction exists and support absent?"}
     G -- Yes --> L4[NO_INTERACTION]
-    G -- No --> H{"Prognostic main effect exists?"}
+    G -- No --> H{"Any prognostic main effect?"}
     H -- Yes --> L5[PROGNOSTIC_MAIN_EFFECT]
     H -- No --> L6[IRRELEVANT]
 ```
