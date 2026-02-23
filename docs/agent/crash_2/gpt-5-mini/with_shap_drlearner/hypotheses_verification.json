@@ -1,0 +1,421 @@
+{
+  "overall_verdict": "revise",
+  "summary": "The original hypotheses are plausible and grounded in clinical reasoning (injury phenotype, shock physiology, TBI severity, age) and correctly reference relevant trial literature (CRASH-2/3). However, some claims overstate the strength of evidence given small SHAP means for most features, conflate mediation with effect modification, and leave validation plans underspecified. I provide per-feature mechanism reviews with concrete revisions, more precise clinical interpretation, actionable subgroup definitions, clearer alignment with SHAP directions/magnitudes, stronger validation plans (statistical tests, covariate sets, feasible biomarker/PK work), and additional caveats (measurement error, collider/selection bias, competing risks). A fully revised FeatureHypothesesSet is included below.",
+  "per_feature": [
+    {
+      "feature_name": "iinjurytype",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Original validation suggestions are appropriate but need explicit statistical tests, covariate adjustment sets, and pre-specified categorical definitions to be actionable within trial data."
+        },
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "The hypothesis does mention confounding by care pathways but could better address misclassification bias, heterogeneity within broad categories, and potential mediator vs modifier confusion (time-to-surgery as mediator)."
+        },
+        {
+          "type": "overclaiming_certainty",
+          "severity": "low",
+          "message": "Evidence level for biological mechanism was listed as 'moderate' which is reasonable, but overall claim of being a top driver should be tempered because SHAP mean_abs is larger than others but still modest and mean SHAP is slightly negative."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "revise",
+          "plausibility": "high",
+          "evidence_level_appropriate": false,
+          "comments": "It is biologically plausible that injury mechanism/site affects fibrinolysis phenotype. CRASH-2 rationale and perioperative literature support this, but direct trial evidence linking coded injury type to measured hyperfibrinolysis is limited in CRASH datasets.",
+          "suggested_revision": "State as 'plausible (moderate) biological mechanism: certain injury sites/patterns (e.g., blunt solid-organ injury, pelvic fractures) are associated with hyperfibrinolysis while penetrating vascular injuries produce immediate mechanical hemorrhage; however, actual fibrinolysis status should be measured (ROTEM/TEG/D-dimer) to confirm."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Physiologic consequence of location (tamponade, rapid exsanguination) limiting TXA window is plausible.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "Proxy/selection explanation is likely and should be promoted in importance; many injury-type effects may be confounded by time-to-treatment, OR transfer, or center practice.",
+          "suggested_revision": "Expand to recommend specific analyses to distinguish confounding/mediation (see validation) and acknowledge that coarse coding (e.g., 'blunt' vs 'penetrating') may mask within-category heterogeneity."
+        }
+      ],
+      "suggested_edits": "Define granular injury categories (e.g., isolated TBI, isolated truncal solid-organ injury, pelvic fracture, penetrating torso vascular injury, multisystem blunt) with pre-specified groups. Prioritize analyses that use randomization to estimate subgroup effects (interaction tests), and where possible, include measured markers of fibrinolysis or process variables (time-to-surgery) to distinguish mediation from effect modification.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "ihr",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "effect_direction_unsupported",
+          "severity": "low",
+          "message": "Direction (negative) aligns with mean SHAP but magnitude is small; this should be emphasized so claims about 'reduced benefit with high HR' are framed as hypothesis-generating."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "PK suggestions are useful but may be infeasible in the CRASH-2 dataset. Need feasible alternate plans using existing data (shock indices, lactate) and clear modeling approach."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Tachycardia as marker of shock competing risk is plausible; effect modification by degree of shock is biologically sensible.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "Shock altering TXA PK in an important way is possible but evidence is weak. Suggest reframing as speculative and proposing feasible measurement (plasma TXA sampling) only where possible in future trials rather than CRASH-2 secondary analyses.",
+          "suggested_revision": "Label as speculative; propose targeted PK substudies in future pragmatic trials or sample biobanked plasma if available."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "HR may proxy for clinician behavior/severity. Recommend explicit adjustment sets.",
+          "suggested_revision": null
+        }
+      ],
+      "suggested_edits": "Reframe claims to note small SHAP magnitude. For validation, propose: logistic regression of mortality with TXA*HR interaction, adjusting for SBP, lactate/base deficit, ISS (if available), time-to-treatment, transfusion volume and center fixed effects. Define HR cutpoints (e.g., <90, 90-110, >110 bpm) and test monotonic trend. Use early-death (\u22643h) competing-risk analyses to check for masking of effect.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "igcs",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "Although CRASH-3 provides TBI-specific evidence, the SHAP mean for GCS is very small (0.00117). The write-up should more strongly caveat that the signal is modest and that evidence is mixed depending on severity and timing."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Imaging-based validation is ideal but may not be available; propose feasible proxies and use CRASH-3 for external validation."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "CRASH-3 supports differential TXA effect by TBI severity/timing. Mechanism is plausible for intracranial bleeding progression being modifiable in less severe TBI.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "BBB penetration differences by severity are speculative. Evidence is limited; should be stated as hypothesis only for future PK/imaging studies.",
+          "suggested_revision": "Frame as speculative; propose measuring CSF/plasma ratios in dedicated substudies or use imaging-based surrogates of blood-brain barrier disruption."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "GCS proxies for competing causes of death; include cause-specific mortality in analyses where available.",
+          "suggested_revision": null
+        }
+      ],
+      "suggested_edits": "Temper language to emphasize modest SHAP signal. For validation: prespecify GCS bands (e.g., 3, 4-8, 9-12, 13-15), test TXA*GCS interaction in models adjusted for extracranial injuries, SBP, age, and time-to-treatment. Where possible, use CRASH-3 or CT-verified intracranial hemorrhage subsets to replicate. Test association with head-injury-specific mortality rather than all-cause alone.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "irr",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "RR measurement error is a significant concern and should be explicitly addressed with sensitivity analyses and alternative proxies (e.g., oxygenation, intubation status)."
+        },
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Original caveats note RR measurement issues but do not propose methods to mitigate them."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Tachypnea as marker of hypoxia/acidosis affecting coagulation is plausible; link to reduced TXA effect is biologically coherent.",
+          "suggested_revision": null
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "Direct pharmacologic impairment of TXA efficacy by acidosis/respiratory derangement is speculative; better framed as possible mediator through coagulopathy markers.",
+          "suggested_revision": "Change to propose mediation via acidosis/lactate/viscoelastic coagulopathy rather than direct PK/PD effects."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "RR may proxy for chest injury, intubation or delayed care; analyses should attempt to disentangle these potential confounders.",
+          "suggested_revision": null
+        }
+      ],
+      "suggested_edits": "Recommend sensitivity analyses excluding obviously erroneous RR entries, stratify by intubation status, and adjust for SpO2 or chest injury severity. Use shock/coagulopathy markers (pH, lactate, INR or viscoelastic tests) as covariates/mediators to test if RR effect is mediated by coagulopathy. Define RR cutpoints (e.g., <12, 12-24, >24 or >30 bpm) and test interactions as both categorical and continuous (spline).",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "iage",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Original write-up mentions competing risks and PK but should more clearly emphasize confounding by selection (treatment limitations) and the small SHAP magnitude."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "PK sampling is useful but unlikely in CRASH-2; suggest feasible analyses using creatinine/eGFR and external validation."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "Age-related renal impairment could affect TXA exposure, but effect size on clinical outcomes is uncertain and likely modest; evidence should be labeled as speculative/moderate and mediation tested with renal function data.",
+          "suggested_revision": "Recommend reframing as 'possible PK-mediated mechanism' and propose including creatinine/eGFR and body weight in mediation models."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "Age-related coagulation changes are complex and not uniformly predictive of increased antifibrinolytic responsiveness; call this speculative.",
+          "suggested_revision": "Limit to 'possible' and recommend measuring fibrinolysis markers in older vs younger patients in substudies."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Age as a proxy for DNR/less aggressive care is likely important and should be adjusted for or explored via interaction with documented care-limiting orders where available.",
+          "suggested_revision": null
+        }
+      ],
+      "suggested_edits": "Tone down certainty. For validation: include creatinine/eGFR, weight, comorbidity count, and treatment-limitation indicators in models testing TXA-by-age interaction. Pre-specify age bands (e.g., <50, 50-74, \u226575) and test trend. Consider mediation analysis to assess whether renal function explains an age interaction. If PK data are not available, recommend targeted PK substudy in future trials.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    }
+  ],
+  "revised": {
+    "dataset": "crash_2",
+    "model": "unknown_learner (SHAP-based feature importance)",
+    "summary": "Refined hypotheses: the strongest SHAP signal is injury type (iinjurytype), with smaller but potentially meaningful signals from physiologic markers of shock (ihr, irr), neurologic status (igcs), and age (iage). Directions in SHAP: iinjurytype, ihr, and irr have negative mean SHAP (suggesting some injury/physiologic categories associated with less observable TXA benefit), while igcs and iage have small positive mean SHAP. These patterns are biologically plausible: (1) injury phenotype likely maps to differing fibrinolytic states and speed of exsanguination altering TXA's window of effect, (2) shock physiology and respiratory compromise denote competing risk of early death and coagulopathy that may blunt benefit, (3) GCS/TBI severity moderates intracranial bleeding progression and TXA effect (CRASH-3), and (4) age may modify exposure (renal clearance) and competing care patterns. However, SHAP magnitudes for features 2-5 are modest; signals should be treated as hypothesis-generating. Validation should prioritize interaction tests using randomized treatment allocation (TXA vs placebo) with prespecified subgroup definitions, adjustment for time-to-treatment and severity covariates, mediation analyses where data permit, and targeted biomarker or PK substudies where feasible.",
+    "feature_hypotheses": [
+      {
+        "feature_name": "iinjurytype",
+        "importance_rank": 1,
+        "shap_value": 0.12600836157798767,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Categorical injury-type indicator capturing major trauma phenotype (recommended to re-code into pre-specified granular groups such as: isolated TBI, isolated truncal solid-organ blunt injury, pelvic fracture (with suspected venous bleeding), penetrating vascular torso injury, multisystem blunt with major bleeding). These categories reflect likely bleeding source and time-course to definitive control.",
+        "why_important": "Injury phenotype determines the mechanism of hemorrhage (mechanical vascular disruption vs tissue-driven hyperfibrinolysis), likely fibrinolytic phenotype, and the clinical pathway (immediate OR vs resuscitation/observation) that together modify the opportunity for TXA to influence outcome. The relatively large SHAP magnitude supports prioritizing this feature for subgroup analyses, but coding heterogeneity and mediation by care processes must be addressed.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Tissue injury patterns influence fibrinolysis: blunt solid-organ injuries and pelvic fractures commonly provoke tissue plasminogen activator release and hyperfibrinolysis detectable on viscoelastic testing (ROTEM/TEG LY30), making antifibrinolytic therapy (TXA) more likely to stabilize clots. In contrast, penetrating arterial injuries causing rapid exsanguination are dominated by mechanical blood loss where antifibrinolysis has limited impact until surgical control.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Certain injury sites produce physiologic states (e.g., tamponade, massive hemothorax) that accelerate early death before TXA's effect is manifest; these rapid-pathway injuries reduce observable TXA benefit even if biologic fibrinolysis is present.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Injury-type codes often correlate with process variables (time-to-operation, transfusion practice, center protocols). This creates potential confounding or mediation: the observed interaction may reflect different care pathways rather than intrinsic biological responsiveness to TXA.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Actionable subgroups to test: (A) suspected hyperfibrinolytic phenotypes (pelvic fracture with hemodynamic instability, blunt solid-organ liver/spleen injury) vs (B) immediate exsanguinators (penetrating torso vascular injuries, massive hemothorax requiring immediate thoracotomy). Use pre-specified groups and report interaction p-values and absolute risk differences. Consider restricting analysis to patients not taken directly to OR within 30 minutes to assess TXA effect when surgical control is not immediate.",
+        "validation_suggestions": [
+          "Recode injury type into the pre-specified granular groups using available variables (AIS/ISS, mechanism codes, presence of TBI record).",
+          "Fit logistic regression of 28-day mortality including TXA, injury-type groups, and TXA*group interaction; adjust for time-to-treatment, SBP, HR, age, ISS, center fixed effects. Report interaction p-values and subgroup ARR/ARR CIs.",
+          "Where available, link ROTEM/TEG or D-dimer values to injury groups to confirm that groups hypothesized as hyperfibrinolytic actually have biochemical evidence; test whether fibrinolysis markers mediate the TXA effect using mediation analysis (e.g., causal mediation methods) or include them as effect modifiers.",
+          "Sensitivity analyses: exclude immediate-OR patients (operated within X minutes), and perform instrumental variable or center-stratified analyses if practice patterns vary by center."
+        ],
+        "caveats": [
+          "Injury coding may be heterogeneous; ensure consistent definitions and perform sensitivity analyses to alternative groupings.",
+          "Observed injury-type interactions may be mediated by time-to-surgery or transfusion rather than reflecting direct biological modification of TXA effect.",
+          "Multiple subgroup tests inflate false positives; prespecify a small number of clinically plausible comparisons and control for multiplicity."
+        ]
+      },
+      {
+        "feature_name": "ihr",
+        "importance_rank": 2,
+        "shap_value": 0.037262268364429474,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Initial heart rate (beats per minute) as a readily available physiologic marker of hemorrhagic shock and sympathetic response. Recommend analyzing HR both continuously (with splines) and categorically (e.g., <90, 90\u2013110, >110 bpm) and considering shock index (HR/SBP) as a complementary marker.",
+        "why_important": "Tachycardia signals greater bleeding/shock severity, which increases competing risk of early death and is associated with trauma-induced coagulopathy (TIC). If death occurs before TXA can enact benefit or if severe shock alters coagulation biology, the observable benefit of TXA may be attenuated.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Higher HR indicates more severe hypovolemia/ongoing bleeding. In profound shock, reduced tissue perfusion and rapid progression to death reduce the time window for TXA to stabilize clots and change outcomes \u2014 a competing-risk mechanism.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Severe shock may alter TXA distribution and possibly clearance, but direct evidence linking HR-linked shock states to clinically meaningful PK changes for TXA is limited; this is a plausible but unproven mechanism that requires PK sampling to confirm.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "High HR clusters with other severity indicators and clinician behaviors (e.g., earlier transfusion, triage to OR). Observed interaction may therefore reflect residual confounding or differential co-interventions.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Test subgroups by HR bands and shock index (e.g., shock index >0.9). If interaction holds, consider operational implication: emphasize ultra-early TXA in tachycardic patients not proceeding immediately to OR, but do not withhold TXA solely for high HR without confirmatory evidence.",
+        "validation_suggestions": [
+          "Model mortality with TXA, HR (continuous spline), and TXA*HR interaction; adjust for SBP, lactate/base deficit, ISS, time-to-treatment, and transfusion volumes.",
+          "Compare early mortality (\u22643 h, \u22646 h) curves by treatment within HR strata to assess competing risks.",
+          "If biobanked samples exist, plan targeted PK sampling in a future substudy or use existing data from similar cohorts to test whether shock (low SBP/high HR) correlates with lower TXA plasma levels."
+        ],
+        "caveats": [
+          "Single HR values are noisy and influenced by drugs (e.g., beta blockers), pain, and concomitant injuries; use repeated measures or complementary indices when available.",
+          "Small SHAP magnitude indicates this is a weak-to-moderate signal\u2014interpret as hypothesis-generating rather than definitive."
+        ]
+      },
+      {
+        "feature_name": "igcs",
+        "importance_rank": 3,
+        "shap_value": 0.03494904190301895,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Glasgow Coma Scale (GCS) score on presentation as a marker of neurologic status and TBI severity. Use prespecified bands consistent with CRASH-3 (e.g., severe \u22648, moderate 9\u201312, mild 13\u201315) and consider isolating head-injured patients using imaging/diagnosis codes.",
+        "why_important": "Evidence from CRASH-3 indicates TXA benefit for head-injury-related death is concentrated in less severe TBI and with early treatment. GCS therefore plausibly modifies the effect of TXA on head-injury mortality and possibly all-cause mortality depending on cause attribution.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "In less severe TBI, intracranial hemorrhage progression and secondary bleeding may be modifiable by antifibrinolytics, preventing deterioration. In very severe TBI with extensive primary injury, the capacity for TXA to alter outcome is limited.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Differences in blood\u2013brain barrier permeability and intracranial pharmacokinetics could theoretically affect intracranial TXA exposure, but direct clinical evidence is sparse. Treat this as speculative pending targeted PK or imaging studies.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Low GCS is associated with higher risk of non-bleeding neurologic death and withdrawal of care; thus, GCS can proxy competing risks that blunt apparent TXA benefit on all-cause mortality.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Actionable test: restrict to patients with confirmed intracranial hemorrhage (if available) and compare TXA effects by GCS band used in CRASH-3. Report head-injury-specific mortality and functional outcomes where available. Do not infer broad policy from small subgroups without replication.",
+        "validation_suggestions": [
+          "Replicate analysis in CRASH-3 or pooled CRASH datasets focusing on head-injury-specific mortality and time-to-treatment strata.",
+          "Test TXA*GCS interaction adjusted for extracranial injury severity, SBP, age, and time-to-treatment; consider competing-risk regression for cause-specific death.",
+          "If imaging data exist, use hematoma volume and progression as intermediate outcomes to test whether TXA reduces hemorrhage expansion preferentially in higher-GCS patients."
+        ],
+        "caveats": [
+          "SHAP mean is very small (positive direction) \u2014 this is a tentative signal consistent with CRASH-3 but not definitive in this dataset alone.",
+          "GCS can be confounded by intoxication, sedation, or paralysis. Restricting to unimpaired assessments or adjusting for intubation/sedation improves validity."
+        ]
+      },
+      {
+        "feature_name": "irr",
+        "importance_rank": 4,
+        "shap_value": 0.031831733882427216,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Respiratory rate (breaths per minute) on presentation as a non-specific physiologic marker of respiratory distress, metabolic compensation, or severe shock. Recommend analyzing RR as categories (<12, 12\u201324, 25\u201334, \u226535) and as a continuous spline; complement with SpO2 and intubation status.",
+        "why_important": "Tachypnea often co-occurs with chest injury, hypoxia, or metabolic acidosis\u2014factors that cause coagulopathy and may shorten the window for TXA benefit. If RR signals severe physiologic derangement, the observable benefit of TXA may be attenuated.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Tachypnea reflects hypoxia or metabolic acidosis, which exacerbate trauma-induced coagulopathy (e.g., impaired thrombin generation and platelet dysfunction) and may reduce the effectiveness of antifibrinolytic therapy unless physiologic derangements are corrected.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Rather than a direct PK effect, physiological derangement (acidosis, hypothermia) may change the balance of coagulation/fibrinolysis and thus the functional impact of TXA; direct evidence that acidosis reduces TXA efficacy in humans is limited.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "RR may proxy for chest injury or procedural interventions (intubation), leading to confounding if these co-interventions alter mortality pathways independent of TXA.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Test whether patients with RR \u226530 or those intubated on arrival show different TXA effects. If RR-related attenuation of benefit is mediated by acidosis, patients with normal pH/lactate may retain benefit even when tachypneic.",
+        "validation_suggestions": [
+          "Exclude implausible RR outliers, stratify by intubation status, and include SpO2/pulse oximetry and chest-injury indicators as covariates.",
+          "Use mediation models to test whether pH/lactate/viscoelastic indices explain any RR interaction.",
+          "Perform sensitivity analyses treating RR as both continuous (spline) and categorical to check robustness."
+        ],
+        "caveats": [
+          "RR is often recorded poorly; noisy measurement will attenuate true signals and can create misleading patterns.",
+          "Effect direction is modest in SHAP \u2014 interpret findings as exploratory and corroborate with physiologic markers."
+        ]
+      },
+      {
+        "feature_name": "iage",
+        "importance_rank": 5,
+        "shap_value": 0.03159672021865845,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Age (years) as a marker of physiologic reserve, comorbidities, likelihood of renal impairment (affecting TXA clearance), and care preferences. Analyze in prespecified bands (e.g., <50, 50\u201374, \u226575) and adjust for renal function and comorbidity where available.",
+        "why_important": "Age may alter TXA exposure (reduced renal clearance), underlying coagulation biology, and competing risks (treatment-limiting decisions). These factors could either increase or decrease the observed benefit of antifibrinolytic therapy depending on context.",
+        "mechanisms": [
+          {
+            "mechanism_type": "pharmacological",
+            "description": "TXA clearance is primarily renal. Older patients with reduced eGFR may have higher plasma exposure for standard dosing, potentially increasing antifibrinolytic effect; however, increased exposure could also raise thrombotic risk. Clinical evidence linking modest exposure differences to mortality benefit is limited.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Aging-related shifts in coagulation and endothelial function could alter baseline fibrinolytic activity, but direction and magnitude are heterogeneous across populations; treat as speculative without biomarker data.",
+            "evidence_level": "weak"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Age correlates with comorbidity, frailty, and end-of-life care choices; observed age interactions may reflect differential care intensity or selection biases rather than true pharmacologic interaction.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Test age bands with adjustment for renal function and comorbidity. If interaction persists after adjustment, consider PK-focused follow-up studies in older adults to quantify exposure-response.",
+        "validation_suggestions": [
+          "Model TXA*age interaction adjusted for creatinine/eGFR, weight, comorbidity index, and treatment-limitation indicators.",
+          "If no PK data are available, plan a targeted PK substudy in older patients in future trials or use pooled data/meta-analysis to examine age-related differences.",
+          "Perform mediation analysis to test whether renal function mediates any age interaction."
+        ],
+        "caveats": [
+          "SHAP mean for age is small; signal is exploratory. Age effects are easily confounded by differential care.",
+          "Higher TXA exposure in older adults could increase thrombotic risk; careful safety monitoring is needed before clinical action based on age alone."
+        ]
+      }
+    ],
+    "cross_feature_patterns": "The features separate into injury-phenotype signals (iinjurytype, igcs) and physiologic severity signals (ihr, irr, with age partly reflecting reserve/PK). The coherent mechanistic hypothesis is that (A) bleeding site and mechanism determine whether bleeding is fibrinolysis-dominant and thus TXA-responsive, and (B) the physiologic state (shock, hypoxia, acidosis) and timing determine whether patients survive long enough and have intact coagulation biology for TXA to help. Importantly, many observed interactions could be confounded or mediated by process-of-care variables (time-to-treatment, emergency surgery, transfusion), measurement error (vital signs), and selection (treatment-limitation orders). Recommended validation pathway: (1) prespecified TXA*feature interaction tests in adjusted models using the randomized treatment assignment to avoid confounding, (2) mediation analyses for time-to-surgery and fibrinolysis markers when available, (3) replication in CRASH-3 or external datasets for TBI findings, and (4) targeted PK/biomarker substudies in future trial designs to confirm mechanistic links."
+  }
+}

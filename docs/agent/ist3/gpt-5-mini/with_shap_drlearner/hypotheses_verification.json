@@ -1,0 +1,429 @@
+{
+  "overall_verdict": "revise",
+  "summary": "The original hypotheses are a strong starting point: key clinical features (NIHSS, antiplatelet status, TACI syndrome, age, and diastolic BP) are plausibly related to heterogeneity of alteplase effect and the current text correctly separates severity/occlusion-related and bleeding-risk themes. However, several improvements are needed: clarify the uncertain definition of 'antiplat_rand'; be explicit about absolute vs relative effects; quantify proposed subgroups (NIHSS bands, age bands, BP thresholds); tighten evidence claims (downgrade speculative pharmacologic claims where appropriate); propose concrete, feasible validation steps using imaging, recanalization and sICH endpoints; and add important alternative explanations (measurement error, center BP protocols, selective endovascular rescue). I recommend revising each feature hypothesis to add these specifics, better align claimed evidence levels with what is actually supported, and provide actionable subgroup definitions and validation plans.",
+  "per_feature": [
+    {
+      "feature_name": "nihss",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "effect_direction_unsupported",
+          "severity": "low",
+          "message": "The SHAP mean is only slightly negative; the hypothesis should acknowledge small effect magnitude and potential nonlinearity rather than implying a large monotonic negative effect."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation suggestions are generic; need specific statistical models (e.g., splines, interaction tests) and imaging/recanalization endpoints to test the mechanism."
+        },
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Need to emphasize difference between absolute vs relative benefit, and the role of time-to-treatment and imaging-defined core/penumbra as confounders/mediators."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "High NIHSS reflecting larger core and smaller penumbra is a well-established determinant of potential treatment benefit. Evidence from imaging studies supports this link.",
+          "suggested_revision": "Retain but quantify: propose NIHSS banding (0-5, 6-15, 16-25, >25) and explicitly test non-linear effects; recommend controlling for time-to-scan and imaging core/penumbra volume when available."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": false,
+          "comments": "Large vessel occlusions (LVO) and clot burden reduce lysis success, but this mechanism ties NIHSS to clot biology indirectly. Evidence for weaker recanalization with higher NIHSS is moderate; claim should be more cautious.",
+          "suggested_revision": "Reframe to specify testing: assess recanalization rates (angiographic/clinical surrogate) by NIHSS, and test whether mediation by recanalization explains the NIHSS-by-treatment interaction."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "NIHSS is a proxy for multiple underlying factors (occlusion site, prior disability). This statistical explanation is important and supported.",
+          "suggested_revision": "Add recommendation to adjust for measured confounders (pre-stroke mRS, occlusion status, time-to-treatment) and perform sensitivity analyses (e.g., E-values, negative control outcomes)."
+        }
+      ],
+      "suggested_edits": "Acknowledge small negative SHAP mean and potential non-linearity. Specify NIHSS bands and concrete statistical tests (interaction terms with treatment using splines, mediation analysis via recanalization/sICH). Emphasize differentiating absolute vs relative benefit and need to adjust for occlusion status and imaging core/penumbra.",
+      "mechanism_quality": "strong",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "clinical_interpretation_wrong",
+          "severity": "high",
+          "message": "'antiplat_rand' may encode randomization to an antiplatelet strategy rather than pre-stroke antiplatelet use. The hypothesis must treat variable definition as uncertain and show separate inferences depending on exact meaning."
+        },
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "Pharmacologic synergy claims are plausible but currently speculative; evidence level labeled 'weak' should be accompanied by stronger caution."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation steps should specify endpoints (sICH, recanalization), subgroup definitions (single vs dual antiplatelet), and analytic approaches (interaction p-values, pooled IPD meta-analysis)."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "There is mechanistic plausibility that antiplatelets alter clot composition, but clinical evidence for consistent synergy increasing alteplase benefit is limited and mixed. Label as speculative unless clot-imaging/recanalization data support it.",
+          "suggested_revision": "Mark as speculative and propose targeted tests: compare IVT recanalization rates and sICH by documented pre-stroke antiplatelet type (aspirin vs clopidogrel vs dual therapy)."
+        },
+        {
+          "mechanism_type": "biological",
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Stroke etiology differences among antiplatelet users (more atherothrombotic) are plausible; evidence moderate.",
+          "suggested_revision": "Specify comparison by presumed etiology (large-artery atherosclerosis vs cardioembolism) and adjust analyses for vascular risk factors."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Confounding by healthcare engagement, comorbidity, and indication is a realistic alternative explanation.",
+          "suggested_revision": "Emphasize need to verify variable coding and, where possible, use instrumental variables or exploit randomized antiplatelet assignment if present."
+        }
+      ],
+      "suggested_edits": "First, clarify variable meaning; run separate hypotheses for (A) pre-stroke antiplatelet use and (B) randomization to antiplatelet. Downgrade pharmacologic synergy to speculative; recommend analyses stratified by type/number of antiplatelet agents, test sICH and recanalization outcomes, and include adjustment for vascular risk profile and care-seeking proxies.",
+      "mechanism_quality": "moderate",
+      "confidence": "low"
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "TACI is heterogeneous; need to note that positive SHAP likely reflects larger absolute benefit rather than improved relative efficacy and that correlated care differences (e.g., selection for endovascular therapy) may confound."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation steps should require imaging-confirmed LVO and adjustment for NIHSS and time-to-treatment."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Large anterior circulation strokes have greater tissue-at-risk and potential for large absolute functional gains if reperfused; this is plausible and supported clinically.",
+          "suggested_revision": "Clarify that this primarily predicts larger absolute benefit and propose testing with imaging-defined core/penumbra and functional outcomes."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "Claiming certain clot types in TACI are more fibrin-rich and therefore more lysable is speculative without clot composition data. This is lower-evidence.",
+          "suggested_revision": "Rephrase as speculative and restrict to testing where clot imaging or retrieved clot analysis is available."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Confounding by selection for additional therapies or baseline risk is plausible and should be examined.",
+          "suggested_revision": "Recommend adjustment for center-level treatments (availability of endovascular therapy), and include sensitivity analyses excluding patients who received endovascular therapy if possible."
+        }
+      ],
+      "suggested_edits": "State that TACI likely predicts larger absolute rather than relative benefit; specify validation using imaging-confirmed LVO, core/penumbra measures, and adjustment for NIHSS/time-to-treatment and use of endovascular therapy. Downgrade clot-composition claims to speculative.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "age",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Distinguish whether age reduces relative efficacy or mainly reduces absolute recovery potential; need to propose ways to separate bleeding-mediated harm vs reduced plasticity."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation suggestions should mention specific covariates (pre-stroke mRS, comorbidities), non-linear modeling, and pooled IPD meta-analysis plans."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "biological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Age-related reductions in recovery potential are well-supported; retain but add specifics about imaging markers (leukoaraiosis) that mediate effect.",
+          "suggested_revision": "Recommend adjusting for imaging markers of small vessel disease and pre-stroke mRS; examine age as continuous with splines and pre-specified bands (<65, 65-79, >=80)."
+        },
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "Higher bleeding risk in elderly is plausible and aligns with trial/registry data.",
+          "suggested_revision": "Propose mediation analysis quantifying proportion of age effect mediated by sICH and include checks for competing risk of early mortality."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Age correlates with comorbidity and care decisions \u2014 must be adjusted for in analyses.",
+          "suggested_revision": "Recommend pooled IPD analyses and adjustment for comorbidity indices, care intensity measures, and pre-stroke functional status."
+        }
+      ],
+      "suggested_edits": "Make explicit the need to separate relative vs absolute effect by age, specify age bands and continuous spline analyses, and propose mediation analysis for sICH and imaging-based frailty markers. Recommend pooling data (IPD) for robust estimates in older age groups.",
+      "mechanism_quality": "strong",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "dbprand",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "clinical_interpretation_wrong",
+          "severity": "low",
+          "message": "DBP is less commonly used as a lone exclusion threshold for thrombolysis than SBP; need to acknowledge correlation with SBP and local BP-management protocols."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation should explicitly adjust for systolic BP, antihypertensive treatment given, and center protocols; suggest BP threshold-based subgrouping."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "mechanism_type": "physiological",
+          "verdict": "approve",
+          "plausibility": "high",
+          "evidence_level_appropriate": true,
+          "comments": "Elevated BP increases risk of hemorrhagic transformation; this is well-supported, though most guidelines focus on systolic BP thresholds.",
+          "suggested_revision": "Recommend testing interactions using both diastolic and systolic BP, using clinically meaningful thresholds (e.g., SBP>185/DBP>110) and continuous models with splines."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "verdict": "revise",
+          "plausibility": "low",
+          "evidence_level_appropriate": false,
+          "comments": "Pharmacokinetic claims about BP altering alteplase delivery are speculative and lack direct clinical evidence.",
+          "suggested_revision": "Recast as speculative; prioritize testing of BP as a modifier of sICH rather than altered drug kinetics."
+        },
+        {
+          "mechanism_type": "statistical",
+          "verdict": "approve",
+          "plausibility": "moderate",
+          "evidence_level_appropriate": true,
+          "comments": "DBP may proxy chronic hypertension or stroke severity; this is plausible and must be adjusted for.",
+          "suggested_revision": "Advise controlling for chronic hypertension history, antihypertensive use, and center BP protocols; perform mediation analyses where appropriate."
+        }
+      ],
+      "suggested_edits": "Clarify that DBP signal should be interpreted in the context of SBP and BP-management; propose specific thresholds (e.g., DBP>110 or SBP>185) and analyses adjusting for antihypertensive therapy and center practices. Downgrade pharmacokinetic claims to speculative.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    }
+  ],
+  "revised": {
+    "dataset": "ist3",
+    "model": "unknown_learner (SHAP explainer outputs)",
+    "summary": "Revised hypotheses: The model identifies baseline stroke severity (NIHSS), prior antiplatelet flag (antiplat_rand), TACI clinical syndrome, age, and diastolic BP at randomization as top predictors of heterogeneous treatment effect of IV alteplase on 6-month independence. Two coherent biological/statistical themes remain: (A) severity/occlusion-related modifiers (NIHSS, TACI, age partly) that likely change absolute benefit via differences in salvageable penumbra, occlusion presence/size, and recanalization probability; and (B) bleeding-risk/pharmacologic-interaction modifiers (antiplatelet status, elevated BP, older age) that can reduce net benefit via increased symptomatic intracerebral hemorrhage (sICH) or lower recovery potential. Key refinements: explicitly treat antiplat_rand as uncertain (pre-stroke use vs randomized antiplatelet), emphasize absolute vs relative effects, propose concrete subgroup definitions (NIHSS bands, age bands, BP thresholds), and provide specific validation steps that leverage imaging (LVO/core/penumbra), recanalization and sICH endpoints, and robust multivariable and mediation analyses. All hypotheses remain hypothesis-generating and require causal validation.",
+    "feature_hypotheses": [
+      {
+        "feature_name": "nihss",
+        "importance_rank": 1,
+        "shap_value": 0.06344836950302124,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Baseline neurological deficit measured by the NIH Stroke Scale (higher scores = more severe stroke).",
+        "why_important": "NIHSS integrates deficits that reflect infarct size, likely occlusion location, and functional prognosis. The model's modest negative mean SHAP suggests higher NIHSS is associated with a relative reduction in predicted probability of 'alive and independent' with treatment in this model, but magnitude is small and may be nonlinear; in practice, higher NIHSS may still confer larger absolute benefit if recanalization occurs.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Higher NIHSS correlates with larger ischemic core and smaller penumbra on imaging; with less salvageable tissue, reperfusion via alteplase yields smaller functional gains. Recommend testing across NIHSS bands (0-5, 6-15, 16-25, >25) and using splines to detect non-linear interaction with treatment and adjustment for imaging core/penumbra volume.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Higher NIHSS often reflects proximal large-vessel occlusion and greater clot burden which are associated with lower rates of successful recanalization with IV alteplase alone; recanalization (or lack thereof) may mediate the NIHSS-by-treatment interaction. Test via comparison of recanalization rates (imaging/clinical surrogate) and mediation analysis.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "NIHSS acts as a proxy for several unmeasured modifiers (occlusion site, pre-stroke disability, time-to-imaging). Apparent modification may reflect these correlated factors rather than a direct effect of NIHSS. Adjust for occlusion status, pre-stroke mRS, and time-to-treatment; perform sensitivity analyses (e.g., splines, E-values).",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Pre-specify NIHSS strata for analysis: 0-5 (mild), 6-15 (moderate), 16-25 (severe), >25 (very severe). Evaluate absolute and relative treatment effects within these bands and in continuous-spline models; prioritize imaging-confirmed LVO strata to separate severity from occlusion biology.",
+        "validation_suggestions": [
+          "Fit treatment-by-NIHSS interaction using splines in a multivariable logistic model adjusted for age, pre-stroke mRS, time-to-treatment, and occlusion status.",
+          "Stratify analysis by imaging-verified LVO and by core/penumbra volumes (when available) and compare recanalization and 6-month outcomes.",
+          "Perform mediation analysis to quantify how much of NIHSS-related heterogeneity is mediated via recanalization and sICH."
+        ],
+        "caveats": [
+          "SHAP mean is small and does not indicate large monotonic effect; nonlinearity is likely.",
+          "Absolute vs relative benefit may diverge; higher baseline risk can yield larger absolute gains even if relative efficacy is unchanged.",
+          "Inter-rater variability in NIHSS and timing of measurement can introduce noise; imaging variables often provide more direct mechanistic tests."
+        ]
+      },
+      {
+        "feature_name": "antiplat_rand",
+        "importance_rank": 2,
+        "shap_value": 0.058587849140167236,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Flag for antiplatelet exposure/status at randomization. IMPORTANT: variable meaning is ambiguous in this dataset--it may represent pre-stroke antiplatelet use, in-hospital randomized antiplatelet allocation, or a baseline indicator. Interpretations must be conditional on exact coding.",
+        "why_important": "The model's positive mean SHAP implies antiplatelet-flagged patients have a higher predicted probability of independence with alteplase in this model. Potential explanations include true pharmacologic interactions (altered clot susceptibility), differing stroke etiologies among antiplatelet users, or confounding by baseline care/use of antiplatelets.",
+        "mechanisms": [
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Antiplatelet agents might change thrombus structure (platelet-fibrin interactions) and theoretically increase susceptibility to plasmin-mediated fibrinolysis, potentially improving recanalization rates with alteplase. This mechanism is speculative clinically and requires clot-imaging or retrieved-clot data for support; analyze recanalization rates by documented antiplatelet type/dose.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "biological",
+            "description": "Pre-stroke antiplatelet users may have different stroke etiologies (e.g., large-artery atherosclerosis) or collateral patterns that influence salvageable tissue and recovery potential following reperfusion. Test by comparing treatment effect across etiologic subgroups (TOAST-like) where available.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Antiplatelet status may proxy for prior vascular care engagement, comorbidity profiles, or selection factors (e.g., earlier presentation), producing an apparent interaction. If antiplat_rand encodes randomized assignment to antiplatelet, then this channel offers a stronger causal test; otherwise adjust for confounders and consider pooled analyses.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Distinguish groups: (A) confirmed pre-stroke single antiplatelet (aspirin), (B) pre-stroke dual antiplatelet, (C) randomized antiplatelet allocation (if present). For each, estimate treatment effects on both recanalization and sICH to assess net benefit. If randomized antiplatelet data are available, exploit randomization to estimate interaction causally.",
+        "validation_suggestions": [
+          "Verify variable coding (pre-stroke use vs randomization). If pre-stroke use: compare sICH, recanalization and functional outcomes between users and non-users; stratify by agent type (aspirin vs P2Y12) and mono vs dual therapy.",
+          "If variable represents randomization to antiplatelet, use interaction tests exploiting randomization as near-experimental evidence.",
+          "Pooled IPD meta-analysis across trials that capture pre-stroke antiplatelet status to increase power for interaction tests; where clot imaging is available, compare lysis/recanalization rates by antiplatelet status."
+        ],
+        "caveats": [
+          "Existing clinical evidence is mixed: some studies show higher sICH with antiplatelets but variable effects on functional outcome.",
+          "If antiplat_rand is actually a randomized allocation variable, many interpretations change; confirm coding before firm conclusions.",
+          "Confounding by indication and residual confounding are likely if variable encodes pre-stroke use. Consider instrumental-variable approaches where feasible."
+        ]
+      },
+      {
+        "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+        "importance_rank": 3,
+        "shap_value": 0.05664703622460365,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Clinical syndrome indicating a large anterior circulation stroke with cortical involvement (often severe and typically associated with proximal anterior circulation occlusion).",
+        "why_important": "TACI cases often have high baseline risk of poor outcome; a positive SHAP may reflect larger absolute gains from successful reperfusion. However, heterogeneity within TACI and differing access to endovascular rescue could confound the signal.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "TACI represents large territory at risk; if alteplase achieves recanalization, the clinical impact can be large (greater absolute benefit). Validation should use imaging-defined LVO and core/penumbra measures to confirm mechanism.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Speculative: certain clot etiologies in large anterior strokes may be relatively more fibrin-rich or platelet-rich, potentially altering susceptibility to systemic fibrinolysis. This requires clot analysis or specific imaging correlates and should be treated as hypothesis-generating.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "TACI may proxy for higher baseline risk and correlate with different care pathways (e.g., referral for endovascular therapy), producing an apparent HTE signal if correlated interventions differ by group.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Analyze TACI vs non-TACI but further stratify within TACI by documented LVO, core/penumbra ratio, and whether endovascular therapy was attempted. Expect larger absolute benefits where reperfusion is achieved; if endovascular therapy availability differs, exclude or adjust for those cases.",
+        "validation_suggestions": [
+          "Compare alteplase effect within TACI vs non-TACI while adjusting for NIHSS, time-to-treatment, and imaging LVO status.",
+          "If available, restrict to cases without subsequent endovascular therapy to isolate IV alteplase effect, or adjust for endovascular therapy in models.",
+          "Where clot retrieval data exist, examine clot type/composition and correlate with IV alteplase outcomes."
+        ],
+        "caveats": [
+          "TACI is clinically heterogeneous; not all TACI cases have similar occlusion types or salvageable tissue.",
+          "Positive SHAP may reflect absolute-risk differences rather than superior relative efficacy.",
+          "Selective use of additional therapies (e.g., thrombectomy) can confound observed HTE."
+        ]
+      },
+      {
+        "feature_name": "age",
+        "importance_rank": 4,
+        "shap_value": 0.05513943359255791,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Chronological age at randomization.",
+        "why_important": "Older age is associated with lower predicted benefit in the model. Age may reduce recovery potential, increase hemorrhagic risk, and correlate with comorbidities and pre-stroke disability that change net benefit after alteplase.",
+        "mechanisms": [
+          {
+            "mechanism_type": "biological",
+            "description": "Age-related decline in neuroplasticity, increased leukoaraiosis/small-vessel disease, and poorer collateral circulation reduce capacity for recovery after reperfusion. When imaging markers (white-matter disease, brain atrophy) are available, include them as mediators/adjustors.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "physiological",
+            "description": "Elderly patients have more fragile cerebral vessels and higher baseline bleeding risk; increased sICH may mediate reduced net benefit. Use mediation analysis to quantify the sICH-mediated portion of age-related modification.",
+            "evidence_level": "moderate"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "Age correlates with pre-stroke disability, comorbidities, and potential differences in intensity of acute care; these factors can produce apparent interactions if not adjusted for.",
+            "evidence_level": "strong"
+          }
+        ],
+        "subgroup_implications": "Pre-specify age bands (<65, 65-79, >=80) and examine continuous age with splines. For elderly groups (>=80), evaluate whether relative benefit is preserved but absolute outcomes worse; consider imaging-based selection rather than age alone for treatment decisions.",
+        "validation_suggestions": [
+          "Perform treatment-by-age interaction tests controlling for pre-stroke mRS, comorbidity index, imaging markers (leukoaraiosis), and sICH.",
+          "Pooled IPD meta-analysis including IST-3 and other trials to estimate age-specific effects with better precision in the very elderly.",
+          "Use mediation analysis to estimate proportion of age-related heterogeneity explained by sICH vs reduced recovery potential."
+        ],
+        "caveats": [
+          "Age is a surrogate for many biological and social variables; avoid using age alone to deny treatment without imaging/contextual data.",
+          "Sparse numbers in extreme age bins can make interaction estimates imprecise; pooled analyses are advisable.",
+          "SHAP indicates association in this model but not causation."
+        ]
+      },
+      {
+        "feature_name": "dbprand",
+        "importance_rank": 5,
+        "shap_value": 0.05479045212268829,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Diastolic blood pressure measured at randomization. Note: clinical practice usually emphasizes systolic BP thresholds for thrombolysis; DBP should be interpreted jointly with SBP.",
+        "why_important": "Higher baseline diastolic BP in the model is associated with reduced predicted benefit (negative SHAP mean). Elevated BP increases hemorrhagic risk after thrombolysis and may also reflect severe physiology, uncontrolled chronic hypertension, or center BP-management practices.",
+        "mechanisms": [
+          {
+            "mechanism_type": "physiological",
+            "description": "Raised BP increases perfusion pressure and may promote haemorrhagic transformation in reperfused tissue, increasing sICH and reducing net benefit. Validate using clinically meaningful thresholds (e.g., SBP>185 and DBP>110) and continuous-spline models, adjusting for antihypertensive interventions.",
+            "evidence_level": "strong"
+          },
+          {
+            "mechanism_type": "pharmacological",
+            "description": "Speculative: hypertension could alter microvascular permeability or local drug distribution in ischemic tissue; clinical relevance for alteplase kinetics is uncertain and should be treated as hypothesis-generating.",
+            "evidence_level": "speculative"
+          },
+          {
+            "mechanism_type": "statistical",
+            "description": "DBP may proxy chronic hypertension, small-vessel disease burden, or acute stress response; center-level BP policies and timing of measurement may confound associations. Adjust for SBP, antihypertensive treatment, and center protocols.",
+            "evidence_level": "moderate"
+          }
+        ],
+        "subgroup_implications": "Define BP-based subgroups: guideline-exclusionary levels (SBP>185 or DBP>110), intermediate elevations that required active lowering before thrombolysis, and controlled BP at/randomization. Compare effects across these groups and examine whether BP-lowering before/after alteplase modifies outcomes.",
+        "validation_suggestions": [
+          "Test treatment-by-DBP (and SBP) interactions adjusted for NIHSS, age, chronic hypertension history, and antihypertensive therapy given before/after randomization.",
+          "Compare sICH rates and functional outcomes among patients whose BP was lowered to guideline targets before IVT vs those who were not.",
+          "Include center fixed-effects or random-effects to account for differing BP-management protocols; perform mediation analysis to quantify sICH as mediator."
+        ],
+        "caveats": [
+          "Single BP measurement can be noisy and influenced by acute stress; repeated measures or protocolized BP recording would be preferable.",
+          "Because guidelines focus on SBP thresholds, a DBP-only signal may reflect correlation with SBP or measurement artifact.",
+          "SHAP association does not imply that modifying BP will change treatment effect\u2014randomized BP-control strategies would be required to test causality."
+        ]
+      }
+    ],
+    "cross_feature_patterns": "Refined cross-feature interpretation: severity/occlusion-related variables (NIHSS, TACI, age partly) are consistent with mechanisms tied to salvageable penumbra and recanalization probability. Bleeding-risk/interaction variables (antiplatelet flag, elevated BP, older age) plausibly reduce net benefit via higher sICH or reduced recovery potential. Important cross-feature recommendations: (1) Test joint interactions (e.g., NIHSS x occlusion status x age), (2) use imaging (LVO, core/penumbra) and recanalization as mediators, (3) stratify by clinically actionable thresholds (NIHSS bands, age bands <65/65-79/>=80, SBP/DBP thresholds and antiplatelet mono vs dual), and (4) always confirm variable coding (antiplat_rand). Validation pathway: multivariable interaction models with splines, mediation analysis for sICH/recanalization, stratified analyses by imaging-confirmed LVO and treatment pathways (with vs without endovascular therapy), and pooled IPD meta-analyses where sample size limits precision. Caveats: SHAP provides model-derived associations that can be sensitive to collinearity and model specification; without precise variable definitions and imaging data, causal claims are premature."
+  }
+}

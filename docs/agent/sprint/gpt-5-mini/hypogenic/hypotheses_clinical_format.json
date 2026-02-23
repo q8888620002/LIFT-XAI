@@ -1,0 +1,928 @@
+{
+  "dataset": "sprint",
+  "learner": "HypoGeniC",
+  "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+  "outcome": "Composite of major cardiovascular events",
+  "population": "Non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk",
+  "source_explainer": "HypoGeniC_iterative",
+  "hypotheses": [
+    {
+      "title": "Greater benefit of intensive BP control in age \u226575",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and increased CVD risk enrolled in SPRINT, participants aged \u226575 will experience a larger reduction in the composite major cardiovascular events with intensive SBP target <120 mmHg versus standard control, compared with participants <75.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "age",
+        "split_rule": "age >= 75 years",
+        "notes": "Binary encoding of age using threshold 75. Also evaluate age continuously (splines) and alternative cutpoints (70, 80) because threshold is clinically convenient but somewhat arbitrary. Report subgroup counts and event rates; small sample (n=200) may yield sparse events in subgroup."
+      },
+      "rationale": [
+        "Higher baseline absolute cardiovascular risk in older adults: absolute benefit from risk-factor modification (e.g., BP lowering) generally scales with baseline event rate, so a fixed relative risk reduction yields greater absolute risk reduction in older participants.",
+        "Age-related arterial changes (increased arterial stiffness, pulse pressure, and atherosclerotic burden) drive higher systolic pressures and may mediate greater marginal benefit from more intensive systolic lowering in reducing ischemic events.",
+        "Physiologic plausibility supported by subgroup and post-hoc analyses from prior BP trials showing clinically meaningful absolute event reductions in older strata, although relative effects vary across studies.",
+        "Older adults may accumulate more subclinical target-organ damage (LV hypertrophy, impaired endothelial function) that is ameliorated by greater SBP reduction, lowering downstream major cardiovascular events.",
+        "Whereas absolute benefit may be larger, competing risks and increased susceptibility to adverse events mean net clinical benefit depends on both efficacy (CVD reduction) and harms (falls, syncope, renal events), which should be quantified jointly."
+      ],
+      "key_features": [
+        "Age (>=75)",
+        "Baseline systolic blood pressure",
+        "Baseline 10-year cardiovascular risk (e.g., ASCVD risk or trial risk score)",
+        "Markers of arterial stiffness / pulse pressure (if available)",
+        "Baseline comorbidity burden / frailty indicators (e.g., eGFR, prior CVD)"
+      ],
+      "confounders_and_bias_risks": [
+        "Selection bias / healthy enrollee effect: trial older participants may be healthier than general \u226575 population (limits generalizability and may bias magnitude of observed benefit).",
+        "Confounding by baseline risk-profile differences between age strata (e.g., differing prevalence of prior CVD, kidney disease, or medication adherence) \u2014 though randomization should balance treatment within strata, imbalance across strata can affect comparisons of subgroup effects.",
+        "Survivor / collider bias: survivors to age 75 may represent a selected, more robust group; effect heterogeneity estimated within this selected group may not translate to all older adults.",
+        "Competing risks (non-CV death) are more frequent in older adults and can attenuate observed treatment effects on the CVD composite when using standard Cox methods if not accounted for.",
+        "Differential measurement or ascertainment of outcomes and adverse events by age (e.g., more frequent health care contact, different thresholds for hospitalization) can bias effect estimates.",
+        "Small sample size (n=200) and potentially small subgroup event counts increase risk of random error, wide CIs, and false positives/negatives (low power to detect interaction).",
+        "Post-randomization processes (differential adherence, crossovers, dose titration or more medication changes in older patients) can produce bias in per-protocol or as-treated analyses."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Intention-to-treat Cox proportional hazards model for time-to-first composite event with main effects for treatment and subgroup (age>=75) plus a treatment*subgroup interaction term; report HRs (95% CI) and interaction p-value.",
+          "Estimate absolute risk difference and number-needed-to-treat (ARR/NNT) at pre-specified follow-up times (e.g., 3 years) within age>=75 and <75 strata using Kaplan-Meier or cumulative incidence; report difference in ARRs between strata with bootstrap CIs.",
+          "Adjusted models: Cox model adjusted for baseline covariates that could confound subgroup comparisons (baseline SBP, prior CVD, eGFR, smoking, sex, race, baseline risk score) to check robustness of interaction.",
+          "Competing risks analysis: Fine-Gray subdistribution hazard models for CVD composite treating non-CV death as competing event, stratified by age group and testing interaction.",
+          "Continuous-age analysis: model age as continuous using restricted cubic splines and include treatment*age interaction to evaluate whether 75 is an inflection point or whether effect changes monotonically with age; plot estimated treatment effect (absolute and relative) across age.",
+          "Per-protocol / as-treated sensitivity: instrumental-variable or complier-average causal effect (CACE) analyses if adherence data allow, to assess whether differential adherence by age biases ITT estimates.",
+          "Adverse-event balance: compare rates of prespecified serious adverse events (hypotension, syncope, injurious falls, acute kidney injury) by treatment within the \u226575 subgroup; compute net clinical benefit metrics (e.g., events prevented minus events caused).",
+          "Stability and uncertainty checks: bootstrap or permutation-based CIs for interaction estimates; Bayesian hierarchical shrinkage for subgroup effects to avoid over-interpretation of noisy estimates.",
+          "Negative-control / falsification test: test effect of treatment on an outcome unlikely to be affected (e.g., incident non-related conditions such as new cancer diagnosis in short-term follow-up) to assess residual bias."
+        ],
+        "negative_controls": [
+          "Short-term incidence of incident cancer or non-cardiovascular outcomes not plausibly linked to BP lowering (as a falsification test).",
+          "Non-cardiovascular hospitalization for elective procedures (expected unrelated to intensive BP target)."
+        ],
+        "robustness": [
+          "Re-run subgroup analyses using alternate age thresholds (70, 80) and continuous-age interaction to assess threshold sensitivity.",
+          "Trim or weight observations to address influential cases (e.g., inverse-probability weighting for censoring or missingness), and compare results.",
+          "Use shrinkage/regularized estimates (e.g., hierarchical models) to mitigate overfitting given small sample size.",
+          "Report absolute and relative measures side-by-side; prioritize absolute risk difference in older subgroup because clinical decision-making often depends on absolute benefit."
+        ]
+      },
+      "caveats": [
+        "Subgroup effect \u2260 causality of age per se: interaction may reflect correlated factors (frailty, comorbidity, medication tolerance) rather than a direct biological effect of chronological age.",
+        "Low sample size and sparse events (n=200 overall) limit power to detect interaction and yield imprecise estimates; absence of statistical interaction does not prove no heterogeneity.",
+        "Multiplicities and post-hoc nature of subgroup testing increase false-positive risk; treat findings as hypothesis-generating unless pre-specified and replicated.",
+        "Treatment harms may offset larger absolute CVD benefit in older adults; net clinical benefit must incorporate adverse events and patient preferences.",
+        "Threshold choice (75 years) is pragmatic but arbitrary \u2014 continuous-age analyses and external validation in larger datasets/trials are essential before changing practice.",
+        "Even in an RCT, differential post-randomization care, adherence, and competing risks can distort subgroup estimates; interpret per-protocol findings cautiously and emphasize ITT results."
+      ]
+    },
+    {
+      "title": "Progressive increase in absolute cardiovascular benefit from intensive SBP (<120 mmHg) with each decade above age 60",
+      "hypothesis": "Among non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk enrolled in SPRINT, the absolute risk reduction (ARR) in the composite major cardiovascular events from intensive SBP control (<120 mmHg) increases progressively with each decade of age above 60 (i.e., 60\u201369, 70\u201379, \u226580), driven by higher baseline event rates in older age groups while relative risk reductions remain similar.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "age",
+        "split_rule": "Primary split: age > 60. Secondary strata by decade: 60\u201369, 70\u201379, \u226580 (encode as 60-69, 70-79, >=80). Also consider treating age as a continuous variable and test for linear trend per 10-year increase above 60.",
+        "notes": "Create both categorical (decades) and continuous (age - 60)/10 for trend tests. If sparse cells (e.g., few \u226580), consider combining highest decades or using splines. Age is exact in years in SPRINT; use enrollment age."
+      },
+      "rationale": [
+        "Baseline event rate rises with chronological age because of cumulative atherosclerotic burden, endothelial dysfunction, and higher prevalence of comorbidities; with a roughly constant relative risk reduction from BP lowering, higher baseline risk translates into larger absolute risk reductions (ARR = baseline risk \u00d7 relative risk reduction).",
+        "Meta-analyses and trial subgroup reports (including SPRINT secondary analyses) indicate similar relative reductions in major cardiovascular events across age groups but greater absolute event reductions in older participants because of higher baseline incidence.",
+        "Physiologic plausibility: older adults have more established target-organ vascular disease (coronary, cerebrovascular, peripheral) so BP lowering prevents a larger number of imminent events per person-year compared with younger, lower-risk patients.",
+        "Public-health and clinical decision-making rely on absolute benefit to prioritize interventions; therefore a monotonic increase in ARR by decade would support stronger recommendation intensity for older age bands (subject to harms)."
+      ],
+      "key_features": [
+        "Age (years) \u2014 primary effect modifier",
+        "Baseline cardiovascular risk (e.g., ASCVD 10-year risk or prior CVD)",
+        "Baseline systolic BP (entry SBP)",
+        "Comorbidities that raise baseline event rate: chronic kidney disease, smoking, prior MI/stroke",
+        "Frailty and competing non-CV mortality (influence on net benefit)"
+      ],
+      "confounders_and_bias_risks": [
+        "Selection/exclusion bias: SPRINT excluded diabetics and certain frail or institutionalized older adults, so trial older participants may be healthier than general older population (healthy trial participant effect).",
+        "Competing risks: non-cardiovascular mortality rises with age and can censor or compete with the composite CV outcome, biasing ARR estimates if not accounted for (overestimate or underestimate depending on analytic approach).",
+        "Differential adherence, treatment intensification, and cointerventions by age could create post-randomization differences (treatment fidelity, cross-over, or differential medication discontinuation due to side effects).",
+        "Small sample sizes in decade strata (sample N=200 overall) \u2014 sparse data in older decades can produce imprecise ARR estimates and spuriously large gradients due to random variation.",
+        "Measurement/ascertainment bias: event detection intensity may differ by age (more frequent hospitalizations in older adults) and outcome adjudication must be uniform.",
+        "Residual confounding in observational secondary analyses (e.g., if using non-randomized comparisons or adjusting for mediators such as achieved BP), and collider bias if conditioning on variables downstream of treatment."
+      ],
+      "validation": {
+        "analyses": [
+          "Estimate cumulative incidence of the composite outcome by treatment arm within each age-decade stratum (60\u201369, 70\u201379, \u226580) using Kaplan\u2013Meier (or cumulative incidence functions with competing risks) and report absolute risk reduction (ARR) at prespecified time points (e.g., 3 years, median follow-up) with bootstrap 95% CIs.",
+          "Fit Cox proportional hazards models including treatment, age-decade indicators, and treatment \u00d7 age-decade interaction terms; test interaction (Wald or likelihood-ratio) and additionally model age as a continuous interaction (treatment \u00d7 (age \u2212 60)/10) to test for linear trend per decade.",
+          "Estimate adjusted ARRs using multivariable Cox (or flexible parametric survival) models controlling for baseline covariates (sex, baseline SBP, smoking, prior CVD, eGFR, lipid-lowering therapy) and compute absolute-risk predictions per arm to derive ARR by decade (doubly robust or targeted maximum likelihood estimation preferred if available).",
+          "Produce nonparametric or semiparametric estimates of ARR vs age: plot smoothed ARR across age with restricted cubic splines and bootstrap CIs to visualize progressive gradient rather than relying only on decade bins.",
+          "Conduct competing-risks sensitivity analyses (Fine\u2013Gray subdistribution hazards) to assess impact of non-CV death on ARR estimates, and repeat ARR estimation censoring for non-CV death as a sensitivity check.",
+          "Per-protocol and as-treated sensitivity analyses to assess effect of differential adherence or treatment intensity by age; test robustness by excluding participants with early discontinuation.",
+          "Power/precision assessment: report number of events and participants in each decade stratum and present minimal detectable ARR given sample/event counts; if underpowered, emphasize hypothesis-generating nature.",
+          "Negative/falsification controls: examine outcomes not plausibly affected by BP treatment (e.g., incident non-CV cancers, traumatic fracture) and expect no treatment-associated gradient by age; if observed, investigate residual bias."
+        ],
+        "negative_controls": [
+          "Incidence of non-cardiovascular cancer (no expected effect from BP targets)",
+          "Traumatic fractures or orthopedic injury (no biologic link to BP lowering)"
+        ],
+        "robustness": [
+          "Restrict analysis to participants without prior CVD to ensure gradient is not driven solely by secondary-prevention patients.",
+          "Vary the ARR time-horizon (1, 3, 5 years) to check consistency of the gradient across follow-up lengths.",
+          "Collapse highest age strata if cell counts are sparse (e.g., combine \u226575 or \u226580) and confirm trend persists.",
+          "Adjust for competing risk of non-CV death and repeat analyses with cause-specific vs subdistribution hazard approaches.",
+          "Assess sensitivity to covariate adjustment set (minimal vs fully adjusted) and alternative estimators (IPW, TMLE)."
+        ]
+      },
+      "caveats": [
+        "An observed progressive increase in absolute benefit by decade does not imply a larger relative (proportional) effect in older adults; many antihypertensive trials show relative risk reductions are broadly similar across ages while absolute differences track baseline risk.",
+        "Because SPRINT excluded diabetics and some frail elders, external generalizability to all older adults is limited \u2014 estimated ARRs in trial participants likely overestimate those in frailer, multimorbid populations who face higher treatment-related harms.",
+        "Small overall sample size (N=200) and potentially few events within decade strata severely limits precision \u2014 lack of statistically significant interaction may reflect low power rather than absence of effect modification, and point estimates may be unstable.",
+        "Competing non-CV mortality and differential adverse event rates (e.g., syncope, orthostatic hypotension, acute kidney injury) increase with age and can alter net clinical benefit; ARR in CV events should be balanced against age-specific harm rates before treatment recommendations.",
+        "Post-hoc subgroup or subgroup-finding from machine-assisted hypotheses remain hypothesis-generating; confirmatory inference requires prespecified tests or external replication in larger datasets or pooled meta-analyses."
+      ]
+    },
+    {
+      "title": "Greater relative benefit of intensive SBP <120 in adults 65\u201374 vs 50\u201364",
+      "hypothesis": "Among SPRINT-eligible non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk, participants aged 65\u201374 will experience a larger relative reduction in the composite major cardiovascular events with intensive SBP target <120 mmHg than participants aged 50\u201364.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "age",
+        "split_rule": "age >= 65 and age <= 74 (years)",
+        "notes": "Age coded in whole years at randomization. Exclude participants <50 or >=75 for this comparison. Sensitivity: consider alternate splits (>=66, >=70) and continuous-age modeling."
+      },
+      "rationale": [
+        "Higher baseline event rates in older-middle adults increase statistical information and may yield larger observable relative (and certainly absolute) risk reductions for a fixed proportional effect \u2014 older age is a strong independent predictor of cardiovascular events.",
+        "SPRINT primary and subgroup analyses showed benefit of intensive SBP lowering across age strata including older groups; the 65\u201374 group retains vascular pathology (atherosclerosis, endothelial dysfunction, increased BP-related shear stress) that remains modifiable with BP reduction while generally having lower frailty than \u226575, preserving tolerability to therapy.",
+        "Physiologic mechanisms: age-associated increases in arterial stiffness and systolic pressure amplification raise end-organ stress that can be reduced by aggressive SBP lowering, plausibly translating into greater proportional reductions in ischemic and heart-failure events in this intermediate older group.",
+        "Tolerability is expected to be better in 65\u201374 than in \u226575 (lower prevalence of frailty, cognitive impairment, orthostatic intolerance), reducing treatment discontinuation and dilution of effect; better adherence and lower adverse event\u2013related withdrawal can increase observed treatment effect in the 65\u201374 stratum.",
+        "Epidemiologic gradients (steeply increasing baseline risk across the 50\u201374 span) plus trial evidence of benefit across ages provide a biologically and empirically grounded expectation for at least moderate incremental benefit in 65\u201374 versus younger middle-aged adults."
+      ],
+      "key_features": [
+        "Age (years) \u2014 primary effect modifier of interest",
+        "Baseline cardiovascular event risk (e.g., ASCVD risk score, prior CVD)",
+        "Baseline systolic blood pressure and BP measurement method (automated office BP per SPRINT)",
+        "Renal function (eGFR) and albuminuria \u2014 modify both risk and tolerability",
+        "Frailty / functional status and polypharmacy (effect adherence and adverse event susceptibility)"
+      ],
+      "confounders_and_bias_risks": [
+        "Imbalance in baseline comorbidities between age strata (e.g., higher prevalence of prior CVD, CKD in 65\u201374) that could modify absolute or relative effects if not accounted for \u2014 in an RCT randomization reduces confounding but stratified comparisons can still differ by chance.",
+        "Differential adherence or treatment cross-over by age (older patients may discontinue more often or receive different adjunctive medications), leading to dilution or exaggeration of ITT effects; per-protocol analyses risk selection bias.",
+        "Measurement bias: if BP measurement protocol is applied inconsistently across ages (e.g., more missing or noisy readings in older adults), misclassification of achieved BP may bias effect estimates.",
+        "Competing risks and informative censoring (higher non-CV mortality in older participants) can bias cause-specific hazard estimates and dilute observed benefit on composite CV outcome.",
+        "Selection bias / limited generalizability: trial participants are healthier than average community patients of the same age (healthy volunteer effect), so effect modification observed here may not generalize to frailer clinical populations.",
+        "Multiple testing / chance findings: subgroup comparisons often underpowered and prone to false-positive interactions when many subgroups are assessed."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary ITT analysis: fit a Cox proportional hazards model for time-to-first composite CV event including treatment indicator, age-group indicator (65\u201374 vs 50\u201364), and treatment\u00d7age-group interaction; report stratum-specific hazard ratios (HRs) with 95% CIs and p-value for interaction (Wald test).",
+          "Estimate absolute risk reduction (ARR) at fixed timepoints (e.g., 3 years) within each age stratum using Kaplan\u2013Meier or adjusted survival curves; compute difference in ARR and NNT with bootstrap 95% CIs to quantify clinical impact.",
+          "Per-protocol / as-treated sensitivity: use time-updated treatment exposure or achieved SBP (e.g., time-varying covariate) with inverse-probability-of-treatment-weighting (IPTW) or doubly robust AIPW to account for adherence, reporting potential bias from non-random adherence.",
+          "Competing-risk analysis: use Fine\u2013Gray subdistribution hazards to examine the composite CV outcome accounting for non-CV death as a competing event, and compare subdistribution HRs across age strata.",
+          "Continuous-age effect: model treatment\u00d7age interaction with age as continuous using restricted cubic splines to detect non-linear modification and identify the age region of maximal benefit; produce a plot of treatment effect (HR) versus age with CIs.",
+          "Threshold and robustness checks: repeat subgroup split at alternate thresholds (>=66, >=70) and with narrower bins (50\u201359, 60\u201364, 65\u201369, 70\u201374) to assess stability of any interaction; perform leave-one-out strata sensitivity when feasible.",
+          "Precision/power assessment: calculate detectable interaction effect given N=200 and observed event rates; report that the sample likely has limited power to detect modest interaction effects and present minimum detectable HR ratio with 80% power.",
+          "Bootstrap or permutation tests for interaction estimates to assess robustness to small-sample variability; consider Bayesian hierarchical modeling to borrow strength across strata and produce posterior probability that benefit is greater in 65\u201374."
+        ],
+        "negative_controls": [
+          "Incident cancer diagnosis (not plausibly affected by short-term BP target) as a falsification endpoint.",
+          "Rates of traumatic fracture or orthopedic surgical admission (unlikely related to BP target) as a second falsification test."
+        ],
+        "robustness": [
+          "Adjust Cox models for baseline covariates (baseline SBP, sex, race, prior CVD, eGFR, smoking, statin use) to improve precision; compare adjusted vs unadjusted subgroup HRs.",
+          "Exclude events occurring in the first 30\u201390 days (to reduce reverse causation or early post-randomization ascertainment bias).",
+          "Test proportional hazards assumption within strata and use time-varying coefficients if violated.",
+          "Assess balance of baseline covariates across treatment arms within each age stratum (standardized differences); if imbalance present, use covariate adjustment or stratified models."
+        ]
+      },
+      "caveats": [
+        "Subgroup interaction estimates are often underpowered and can be unstable in small samples; with N=200 the study may lack power to detect modest differences in relative effect between 50\u201364 and 65\u201374 \u2014 nonsignificant interaction does not prove absence of heterogeneity.",
+        "A larger observed absolute benefit in older participants is expected because of higher baseline risk; however, a larger absolute benefit does not necessarily imply a larger relative risk reduction \u2014 the hypothesis concerns relative effect and must be interpreted accordingly.",
+        "Even in randomized trials, subgroup comparisons can be affected by post-randomization factors (differential adherence, rescue therapies) that introduce bias if analyzed per-protocol; ITT estimation preserves randomization but may dilute true biologic differences.",
+        "Multiplicity: if many subgroup hypotheses are examined, adjust interpretation (or correct p-values) to avoid over-interpreting chance findings; pre-specify this subgroup test where possible.",
+        "Generalizability: SPRINT excluded patients with diabetes and had specific BP measurement and visit protocols; applicability of any age-specific effect to broader clinical populations (e.g., patients with diabetes, institutionalized elderly) is limited.",
+        "Interpret any detected interaction as hypothesis-generating unless replicated or supported by strong mechanistic consistency and adequate statistical evidence; absence of interaction should not be over-interpreted given limited sample size."
+      ]
+    },
+    {
+      "title": "Greater absolute benefit of intensive SBP <120 mmHg for baseline SBP >=150 mmHg",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk, participants with baseline systolic blood pressure (SBP) \u2265150 mmHg will experience a larger reduction in major cardiovascular events from randomization to intensive SBP target <120 mmHg than participants with baseline SBP <150 mmHg (both relative and, especially, absolute reductions).",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "sbp",
+        "split_rule": "baseline systolic blood pressure >= 150 mmHg (SBP in mmHg)",
+        "notes": "Baseline SBP should be the mean of the standardized seated automated measurements used at pre-randomization visits (as in SPRINT). If multiple pre-randomization readings are available, use their average to reduce measurement noise. Units: mmHg."
+      },
+      "rationale": [
+        "Epidemiologic and trial evidence: higher baseline SBP is strongly associated with greater absolute cardiovascular event risk; with a similar proportional risk reduction from BP lowering, higher-risk strata yield larger absolute risk reductions (greater number-needed-to-treat benefit).",
+        "Dose\u2013response plausibility: vascular end-organ stress and atherosclerotic/pressure-mediated damage increase with rising SBP; larger absolute SBP reductions in those with higher starting SBP may translate into proportionally greater event risk attenuation.",
+        "Biological mechanism: chronic elevated SBP promotes endothelial dysfunction, left ventricular hypertrophy and arterial stiffness\u2014pathways that are at least partially reversible or modifiable when SBP is substantially lowered, reducing risk of myocardial infarction, stroke and heart failure.",
+        "Practical trial observation: patients with higher baseline SBP often achieve larger on-treatment SBP reductions when intensively treated (greater delta SBP), which increases the likelihood of larger treatment effect magnitude compared with those starting near the target.",
+        "Public-health relevance: demonstrating larger absolute benefits in the very-high-baseline-SBP subgroup would support prioritizing intensive control in patients with highest baseline SBP while balancing safety signals."
+      ],
+      "key_features": [
+        "Baseline systolic blood pressure (sbp, mmHg)",
+        "Achieved on-treatment SBP (magnitude of SBP reduction)",
+        "Prior cardiovascular disease or baseline calculated cardiovascular risk",
+        "Age (older age increases baseline absolute risk and may modify absolute benefit)",
+        "Baseline renal function (eGFR) and presence of chronic kidney disease, which affect both risk and safety"
+      ],
+      "confounders_and_bias_risks": [
+        "Regression to the mean: very high single baseline SBP readings may partly reflect random fluctuation (white coat or measurement error); patients with high SBP may show large apparent improvements without treatment effect.",
+        "Measurement error and differing measurement protocols: if baseline SBP was measured differently across participants, misclassification around the 150 mmHg threshold can bias subgroup estimates.",
+        "Post-randomization mediator/collider bias: achieved SBP, adherence, or treatment intensification differences are mediators; adjusting for them can induce collider bias when estimating heterogeneity of randomized treatment effect.",
+        "Differential adherence or co-interventions: patients with higher baseline SBP may receive more attention, additional medications, or lifestyle advice, creating confounding when not accounted for.",
+        "Small sample size and multiplicity: with n=200 total, subgroup counts (especially >=150 mmHg) may be small, inflating type I and II error risk and producing unstable effect estimates.",
+        "Selection bias: if higher-SBP participants differ systematically on unmeasured prognostic factors (frailty, undiagnosed conditions), observed differences may reflect these factors rather than effect modification."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Fit an adjusted Cox proportional hazards model for time-to-first major cardiovascular event with terms for randomized treatment, subgroup indicator (SBP >=150), and their interaction; report hazard ratios and 95% CIs for treatment within each subgroup and the interaction p-value.",
+          "Estimate absolute risk (cumulative incidence) at prespecified timepoints (e.g., 3 years) by treatment arm within each subgroup using Kaplan\u2013Meier or risk regression; compute absolute risk differences and numbers-needed-to-treat (NNT) with bootstrap CIs.",
+          "Continuous-dose analysis: model baseline SBP as a continuous effect modifier using restricted cubic splines in an interaction with treatment to examine nonlinearity and identify whether benefit increases monotonically with baseline SBP.",
+          "Adjustment strategy: present unadjusted, base-adjusted (age, sex), and multivariable-adjusted (age, sex, prior CVD, smoking, eGFR, baseline antihypertensive number, statin use) estimates; use doubly robust estimators or inverse-probability-of-censoring weighting to mitigate confounding and informative censoring.",
+          "Per-protocol/as-treated sensitivity: repeat analyses censoring or reclassifying by achieved SBP or adherence (e.g., time-updated treatment compliance), recognizing mediator status\u2014report but interpret cautiously.",
+          "Threshold sensitivity: repeat subgroup definitions at alternative cut-points (e.g., 140, 145, 155 mmHg) and report consistency; correct for multiple comparisons or emphasize hypothesis-generating nature.",
+          "Bootstrap or permutation to obtain robust CIs for subgroup-specific absolute and relative effects given small sample size; present forest plot of estimates with CIs.",
+          "Check model assumptions: proportional hazards testing, goodness-of-fit, and examination of influential observations; plot treatment effect by baseline SBP quantiles.",
+          "Quantify potential unmeasured confounding via E-value for observed subgroup treatment effect estimates."
+        ],
+        "negative_controls": [
+          "Non-cardiovascular outcomes unlikely to be impacted by BP lowering (e.g., incident cancer diagnosis unrelated to hemodynamics) to test for residual confounding or systematic bias.",
+          "An outcome reflecting measurement or care intensity (e.g., frequency of clinic lab testing) to detect differential surveillance."
+        ],
+        "robustness": [
+          "Exclude early events (e.g., events in first 30\u201390 days) to reduce influence of baseline imbalances and reverse causation.",
+          "Restrict to participants with >=2 pre-randomization BP measurements (stable baseline) to reduce regression-to-the-mean effects.",
+          "Perform analyses stratified by baseline treatment intensity (number of antihypertensives) and by age strata to test for effect modification consistency.",
+          "Use alternative modeling frameworks (Poisson or Fine\u2013Gray competing risk models if non-CV death is substantial) to assess robustness of absolute benefit estimates.",
+          "Apply multiple-testing correction (e.g., false-discovery rate) or pre-specify hierarchical testing to account for multiplicity if multiple subgroups are evaluated."
+        ]
+      },
+      "caveats": [
+        "Randomization preserves causal identification for the overall treatment effect, but subgroup analyses (especially post-hoc and underpowered) can be misleading; a statistically significant interaction is required to claim credible heterogeneity.",
+        "Observed larger absolute benefit in the high-SBP subgroup may primarily reflect higher baseline risk rather than a qualitatively different relative treatment effect; report both relative (HR) and absolute (risk difference, NNT) measures.",
+        "Assess safety outcomes (e.g., acute kidney injury, symptomatic hypotension) alongside benefit; intensive control may increase adverse events and alter net clinical benefit, particularly in very-high-SBP or older/frail participants.",
+        "Threshold at 150 mmHg is somewhat arbitrary; findings may change with alternative cut-points or when modeling SBP continuously\u2014avoid over-interpreting a single dichotomous split.",
+        "With total sample size \u2248200, subgroup sample sizes (SBP >=150) may be small, leading to imprecise estimates and wide CIs; any positive finding should be considered hypothesis-generating and require confirmation in larger samples or pooled analyses.",
+        "Measurement protocol matters: if baseline SBP in this dataset was not obtained using standardized automated methods like in SPRINT, differences in technique (e.g., office vs automated) could bias subgroup assignment and effect estimates."
+      ]
+    },
+    {
+      "title": "Diminished cardiovascular benefit and increased hypotension-related harm with intensive SBP target in participants with baseline SBP <130 mmHg",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and increased CV risk enrolled in SPRINT, those with baseline systolic blood pressure (SBP) <130 mmHg will experience smaller or no reduction in the primary composite of major cardiovascular events with intensive SBP target <120 mmHg compared with usual control, and will have a higher incidence of hypotension-related adverse events (e.g., symptomatic hypotension, syncope, acute kidney injury) under intensive treatment.",
+      "expected_direction": "higher_harm",
+      "subgroup": {
+        "feature": "sbp",
+        "split_rule": "baseline systolic blood pressure (SBP) < 130 mmHg",
+        "notes": "Baseline SBP measured at trial enrollment (office measurement protocol consistent with SPRINT). Consider sensitivity bins (e.g., <120, 120\u2013129, \u2265130) and continuous modeling. Account for measurement error (single visit vs average) and exclude post-randomization achieved SBP as a baseline definition."
+      },
+      "rationale": [
+        "Physiologic margin: Participants whose baseline SBP is already close to the intensive target (<130 mmHg) have a small safety margin; further lowering toward <120 increases the probability of symptomatic hypotension and cerebral/renal hypoperfusion, especially in older or vascularly stiff patients.",
+        "J-curve / observational evidence: Observational and some trial-subgroup data support a J-shaped association between low SBP and adverse outcomes in specific populations (elderly, heart failure, perfusion-dependent states), suggesting that very low achieved pressures may increase risk rather than reduce it.",
+        "Smaller absolute benefit potential: Lower baseline SBP implies lower baseline instantaneous hazard for a BP-driven CV event, reducing absolute risk reduction achievable by further lowering SBP \u2014 therefore relative/absolute benefit of intensive control may be attenuated in this subgroup.",
+        "Higher susceptibility to medication-related harms: Those with lower starting SBP often require fewer/less aggressive up-titrations but may still experience orthostatic symptoms or acute kidney injury from small additional reductions in perfusion pressure; concomitant low diastolic BP or high arterial stiffness may augment risk.",
+        "Heterogeneity in etiology of low SBP: Low baseline SBP may reflect comorbid states (e.g., heart failure with low output, autonomic dysfunction, frailty) that both increase adverse-event susceptibility and modify treatment effects, making intensive lowering potentially harmful."
+      ],
+      "key_features": [
+        "Baseline SBP (continuous), dichotomized at <130 mmHg for the primary subgroup",
+        "Age (\u226550, but risk increases with older age strata e.g., \u226575)",
+        "Baseline diastolic BP (low DBP <60 mmHg increases perfusion risk)",
+        "Number and classes of baseline antihypertensive agents (polypharmacy increases risk of hypotension)",
+        "Baseline kidney function (eGFR), presence of heart failure or autonomic dysfunction, frailty markers"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by baseline health status: Low baseline SBP can be a marker of frailty, heart failure, or other comorbidity that independently increases risk of events (confounding of subgroup-outcome association).",
+        "Confounding by indication/post-randomization treatment differences: Although treatment is randomized, clinicians may titrate intensification differently for participants with low baseline SBP (differential treatment implementation), producing post-randomization confounding in as-treated analyses.",
+        "Regression to the mean and measurement error: Baseline SBP measured once or over short interval can fluctuate; apparent low baseline values may rebound, biasing subgroup assignment and effect estimates.",
+        "Selection/sampling bias and small sample: With sample size ~200 and potentially small proportion with SBP <130, subgroup estimates will be imprecise and susceptible to sparse-data bias.",
+        "Collider bias: Conditioning on post-randomization achieved SBP or on intermediate adverse events could induce collider bias and distort effect estimates.",
+        "Outcome ascertainment bias: Differential monitoring or reporting of hypotension-related events between randomization arms or by baseline SBP strata could bias harm estimates."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Fit Cox proportional hazards model for time-to-primary composite outcome with terms for randomized treatment, baseline SBP subgroup (binary <130 vs \u2265130) and treatment*subgroup interaction; report interaction p-value, subgroup-specific hazard ratios (HRs) and confidence intervals, and absolute risk differences at pre-specified follow-up times.",
+          "Continuous effect-modification: Model baseline SBP as a continuous effect modifier using restricted cubic splines (e.g., 3 knots) and estimate the treatment HR across the SBP continuum; plot HR (and 95% CI) versus baseline SBP to visualize non-linearity/J-curve.",
+          "Adjusted causal estimators: Use doubly robust methods (e.g., IPTW with stabilized weights or targeted maximum likelihood estimation) to estimate subgroup-specific average treatment effect on the hazard/absolute risk, adjusting for pre-randomization confounders: age, sex, baseline eGFR, prior CVD, number/classes of antihypertensives, smoking, BMI, DBP, and frailty indicators.",
+          "Harm-specific endpoints: For hypotension-related adverse events (symptomatic hypotension, syncope, AKI), estimate absolute risk difference and relative risk by subgroup; test treatment*subgroup interaction using Poisson/binomial regression or Cox models for time-to-event harms.",
+          "Sensitivity analyses: (a) Restrict to per-protocol or achieved-treatment strata (e.g., participants who actually reached intensive SBP <120) while acknowledging mediation, (b) exclude participants with baseline heart failure, low DBP (<60 mmHg), or eGFR <45 to assess robustness, (c) repeat subgroup definitions using alternative thresholds (<120, 120\u2013129) and continuous spline knots.",
+          "Missing data & stability: Use multiple imputation for missing covariates; bootstrap (or profile likelihood) to obtain robust CIs for interaction estimates given small sample size."
+        ],
+        "negative_controls": [
+          "Analyses of treatment effect on outcomes not plausibly affected by BP lowering (e.g., incident non-BP-related cancers during follow-up) to check for residual systematic biases in subgroup analyses.",
+          "Falsification test: incidence of dermatologic infections (expected null) by treatment within SBP strata to assess differential ascertainment or selection."
+        ],
+        "robustness": [
+          "Estimate E-values for the observed treatment*subgroup interaction to quantify the strength of unmeasured confounding needed to explain away the interaction.",
+          "Threshold sensitivity: re-run interaction tests using alternate cutpoints (120, 125, 135 mmHg) and use continuous modelling to avoid arbitrary dichotomization.",
+          "Propensity-stratified checks: within the randomized arms, propensity-score stratification on baseline probability of having SBP <130 (based on covariates) to see whether imbalance in baseline covariates explains subgroup effect.",
+          "Assess proportional hazards assumption and, if violated, report time-varying interaction terms or restricted follow-up intervals (early vs late events)."
+        ]
+      },
+      "caveats": [
+        "Subgroup inference is observational even within a randomized trial: randomization ensures unbiased average treatment effect overall but does not guarantee well-powered, unbiased estimates of effect modification \u2014 interaction tests often have low power, and point estimates can be unstable.",
+        "Small effective sample size for the SBP <130 subgroup in this dataset (n\u2248200 total) limits precision; null or imprecise interaction estimates do not prove absence of heterogeneity.",
+        "Baseline SBP may be a proxy for other comorbidities (reverse causation); robust adjustment can mitigate but not fully eliminate residual confounding from unmeasured health status or frailty.",
+        "Careful separation of effect modification from mediation is required: achieved on-treatment SBP is a mediator of intensive treatment and should not be adjusted for when estimating baseline effect modification, except in explicit mediation analyses with appropriate assumptions.",
+        "Interpretation should focus on clinical relevance (absolute risk differences and harms) rather than only relative measures; even when relative benefit appears attenuated, high-risk individuals might still derive clinically meaningful absolute benefit.",
+        "Given multiple subgroup tests, pre-specify this hypothesis and control for multiplicity where appropriate; treat exploratory findings as hypothesis-generating and seek replication in larger samples or pooled SPRINT meta-analyses."
+      ]
+    },
+    {
+      "title": "Baseline SBP >140 mmHg identifies greater absolute benefit from intensive SBP target (<120 mmHg)",
+      "hypothesis": "Among non\u2011diabetic adults \u226550 years with hypertension and increased cardiovascular risk enrolled in SPRINT, participants with baseline systolic blood pressure (SBP) >140 mmHg will experience a larger absolute reduction in the composite of major cardiovascular events with intensive BP control (target <120 mmHg) compared with participants with baseline SBP \u2264140 mmHg.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "sbp",
+        "split_rule": "Baseline systolic blood pressure (averaged baseline reading) > 140 mmHg",
+        "notes": "Use the trial baseline SBP as measured per SPRINT protocol (average of the pre-randomization readings). Consider alternative encodings in sensitivity checks (mean of two baseline visits if available, or first measurement)."
+      },
+      "rationale": [
+        "Higher baseline SBP confers higher absolute cardiovascular risk \u2014 when an intervention produces a relative risk reduction of similar magnitude across baseline risks, absolute risk reduction will be greater in the higher\u2011risk (higher SBP) subgroup.",
+        "Pathophysiology: elevated SBP increases arterial wall stress, left ventricular afterload, and risk of atherothrombotic and cerebrovascular events; greater downward shifts in SBP should disproportionately lower event-promoting mechanisms in those with higher starting pressures.",
+        "Prior evidence: SPRINT primary analyses and pooled meta-analyses report larger absolute event reductions in participants with higher baseline BP, consistent with risk\u2011based absolute benefit even when relative effects are similar.",
+        "Clinical plausibility: individuals with moderate-to-high hypertension (>140 mmHg) are more likely to derive measurable reductions in stroke and myocardial infarction incidence from more aggressive BP lowering compared with those near-target at baseline."
+      ],
+      "key_features": [
+        "Baseline systolic blood pressure (continuous and dichotomized at 140 mmHg)",
+        "Baseline global cardiovascular risk (e.g., Framingham score or number of risk factors)",
+        "Prior clinical atherosclerotic cardiovascular disease (secondary prevention modifies absolute risk)",
+        "Age (older age increases baseline absolute risk and potential benefit)"
+      ],
+      "confounders_and_bias_risks": [
+        "Regression to the mean: participants with high baseline SBP may show a spontaneous decrease on repeat measurement, inflating apparent treatment effect when using a single baseline reading.",
+        "Measurement error/within\u2011person variability in SBP affecting subgroup assignment; misclassification dilutes contrast between groups.",
+        "Post-randomization mediation: achieved BP and treatment adherence (medication intensity, number of agents) lie on the causal pathway; analyses that condition on these can induce collider bias.",
+        "Small sample size (n=200) and subgroup splitting can produce imprecise estimates, chance imbalances of baseline covariates within subgroup, and inflated type I/II error for interaction tests.",
+        "Differential loss to follow-up, treatment discontinuation, or cointerventions across SBP strata could bias subgroup effect estimates if related to outcome."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary confirmatory model: fit a Cox proportional hazards model for time to composite cardiovascular event including terms for randomized treatment (intensive vs standard), subgroup indicator (SBP >140 mmHg), and their interaction. Adjust for prespecified baseline covariates (age, sex, prior CVD, eGFR, smoking, baseline antihypertensive count). Report interaction coefficient, Wald p-value, and estimate subgroup-specific hazard ratios and absolute risk differences at prespecified landmark times (e.g., 3-year cumulative incidence) with 95% CIs.",
+          "Absolute effect estimation: compute Kaplan\u2013Meier cumulative incidence curves by treatment within SBP>140 and SBP\u2264140 strata; report absolute risk reduction (ARR), number needed to treat (NNT) for each stratum and difference in ARR between strata (with bootstrap CIs).",
+          "Continuous interaction and dose\u2013response: model baseline SBP as continuous with restricted cubic splines interacting with treatment to estimate marginal treatment effect as a function of baseline SBP; report effect estimates at SBP = 130, 140, 150 mmHg and test for nonlinearity.",
+          "Robustness/per\u2011protocol: perform (a) per\u2011protocol or complier\u2011average causal effect analysis using inverse\u2011probability weighting for adherence/medication intensity to assess if differential adherence explains subgroup differences (acknowledging mediation), and (b) adjust for achieved SBP at 12 months in sensitivity analyses but present as exploratory (mediator).",
+          "Sensitivity and multiplicity checks: (a) repeat dichotomous split using alternative thresholds (135, 145, 150 mmHg), (b) re-run interaction tests using permutation-based p-values and bootstrap CIs to account for small sample and distributional assumptions, and (c) report interaction p-values alongside effect sizes without dichotomous \u2018proof\u2019 thresholds."
+        ],
+        "negative_controls": [
+          "Interaction test for treatment effect on an outcome not plausibly affected by BP lowering (e.g., incident cancer diagnosis or non\u2011cardiovascular fracture) to detect residual bias or systematic subgroup differences.",
+          "Interaction test for treatment effect on early non-BP\u2011mediated events (e.g., short-term procedural complications) expected to be null."
+        ],
+        "robustness": [
+          "Exclude events occurring within the first 30 days (to reduce influence of early imbalances) and re-estimate subgroup effects.",
+          "Stratified analyses by prior CVD status and age group (\u226575 vs <75) to assess whether the SBP effect modifier is consistent across other strong effect modifiers.",
+          "Use alternative encodings of baseline SBP (mean of multiple baseline readings, categorical bands, and percentile-based splits) to test stability of findings.",
+          "Bootstrap resampling to obtain CIs for ARR differences and to assess estimate stability given small sample size."
+        ]
+      },
+      "caveats": [
+        "Subgroup findings are hypothesis\u2011generating: a significant treatment*SBP interaction does not by itself establish a causal differential effect absent replication and adequate power; risk of false positives is elevated with multiple subgroup tests.",
+        "Observed larger absolute benefit in the higher\u2011SBP group can reflect higher baseline risk rather than a qualitatively larger relative risk reduction; report both absolute and relative measures to avoid misinterpretation.",
+        "Conditioning on post\u2011randomization variables (e.g., achieved BP, medication adherence) may introduce collider or mediator bias; such analyses should be framed as explanatory and not causal proofs of effect modification.",
+        "Measurement variability in baseline SBP and small subgroup sizes can produce imprecise estimates; non\u2011significant interaction should not be overinterpreted as evidence of no heterogeneity.",
+        "Safety considerations: intensive BP lowering may increase adverse events (e.g., hypotension, acute kidney injury); even if absolute cardiovascular benefit is larger in high\u2011SBP patients, balance benefits versus harms before recommending broader treatment changes. Generalizability is limited to non\u2011diabetic adults \u226550 with the SPRINT inclusion criteria."
+      ]
+    },
+    {
+      "title": "Baseline low diastolic BP (<60 mmHg) modifies harm from intensive SBP lowering",
+      "hypothesis": "Among SPRINT-eligible participants (non-diabetic adults \u226550 with hypertension and elevated CV risk), those with baseline diastolic blood pressure (DBP) < 60 mmHg will experience worse outcomes (higher rate of the composite of major cardiovascular events and/or more adverse events) under intensive SBP control (target <120 mmHg) compared with standard control, relative to participants with DBP \u2265 60 mmHg.",
+      "expected_direction": "higher_harm",
+      "subgroup": {
+        "feature": "dbp",
+        "split_rule": "Baseline diastolic BP < 60 mmHg (measured at the baseline visit, before randomization)",
+        "notes": "Use baseline average DBP as recorded at the trial screening/randomization visit (same protocol used in SPRINT: multiple automated readings averaged if available). Encode in mmHg. Primary binary split at <60 vs \u226560; also examine alternative thresholds (e.g., <55, <65) and continuous modeling (splines) for dose\u2013response and nonlinearity. Expect small subgroup counts given overall sample size = 200 \u2014 report counts."
+      },
+      "rationale": [
+        "Physiologic mechanism: Coronary perfusion occurs primarily during diastole; very low diastolic pressures can reduce coronary perfusion pressure, increasing risk of myocardial ischemia in patients with coronary atherosclerosis or left ventricular hypertrophy, which could translate to more ischemic events when systolic BP is aggressively lowered.",
+        "Epidemiologic observations: Observational studies and secondary analyses of BP trials have reported a J-shaped association between DBP and coronary events in older adults, with higher event rates at low DBP values \u2014 suggesting low baseline DBP may identify patients at risk when SBP is pushed lower.",
+        "Pulse pressure and arterial stiffness link: Low DBP often coexists with wide pulse pressure and increased arterial stiffness (common in older adults). These vascular characteristics are themselves risk markers for adverse cardiovascular outcomes and may modify how patients tolerate aggressive SBP reduction.",
+        "Clinical trial signals: Prior trials and subgroup analyses have raised concerns about symptoms (syncope, hypotension), myocardial ischemia, and acute kidney injury in participants with low DBP or wide pulse pressure undergoing intensive BP lowering.",
+        "Pharmacologic vulnerability: Patients with low baseline DBP may more easily cross an ischemic threshold when additional antihypertensive therapy reduces coronary perfusion pressure further \u2014 especially if they have coronary stenoses or are on vasodilators/nitrates."
+      ],
+      "key_features": [
+        "Baseline diastolic blood pressure (dbp) measured at randomization",
+        "Baseline systolic BP and pulse pressure (SBP - DBP) to distinguish isolated low DBP vs overall low BP",
+        "Age and markers of arterial stiffness (e.g., pulse pressure) which correlate with low DBP",
+        "History of coronary artery disease, prior MI, or heart failure (effect modifiers / vulnerability markers)",
+        "Baseline antihypertensive medication classes (vasodilators, nitrates, beta-blockers)"
+      ],
+      "confounders_and_bias_risks": [
+        "Prognostic confounding: Low baseline DBP may be a marker of frailty, advanced vascular disease, or low cardiac output rather than a causal modifier \u2014 these conditions independently increase CV risk.",
+        "Measurement error: DBP measurement variability (device type, cuff size, number of readings) can misclassify participants around the 60 mmHg threshold; small sample exacerbates impact.",
+        "Residual confounding by arterial stiffness / pulse pressure: Wide pulse pressure or high SBP with low DBP may be the true risk factor; failing to adjust can misattribute effect to DBP alone.",
+        "Collider bias / post-randomization adjustment: Conditioning on achieved on-treatment DBP or on events that lie on the causal path can introduce bias; primary causal estimates should not adjust for post-randomization variables.",
+        "Small-sample and multiple testing risks: With total N = 200, subgroup sizes will be small, increasing chance imbalances in baseline covariates and low power to detect interaction; multiple subgroup hypotheses inflate type I error.",
+        "Selection/generalizability bias: SPRINT excluded diabetics and certain populations; results may not generalize to diabetic patients or markedly different clinical settings."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary test: Fit Cox proportional hazards model for time-to-first composite major CV event with terms for randomized treatment (intensive vs standard), indicator for baseline DBP<60, and the treatment \u00d7 DBP<60 interaction. Report interaction p-value and stratum-specific hazard ratios (HRs) with 95% CIs and absolute risk differences at a pre-specified time (e.g., median follow-up).",
+          "Adjusted analysis: Repeat the interaction model adjusting for pre-randomization covariates chosen a priori (age, sex, baseline SBP, history of CVD, eGFR, smoking status, baseline antihypertensive classes, and pulse pressure) to reduce prognostic confounding due to small-sample imbalances.",
+          "Continuous and nonlinearity check: Model baseline DBP as a continuous predictor using restricted cubic splines and include an interaction between the spline basis and treatment arm to assess dose\u2013response and nonlinearity rather than relying solely on the binary threshold.",
+          "Stratified estimates and doubly robust approach: Within the DBP<60 and DBP\u226560 strata, estimate treatment effects (HR and absolute risk difference) using inverse probability of treatment weighting or a doubly robust targeted maximum likelihood estimator to stabilize estimates given small N and any imbalance.",
+          "Sensitivity analyses: (a) Alternate thresholds (<55, <65 mmHg) to test threshold sensitivity; (b) exclude participants with baseline history of symptomatic coronary disease or heart failure to test effect heterogeneity; (c) per-protocol analysis restricted to participants who achieved sustained on-treatment SBP separation, acknowledging mediator issues.",
+          "Mediation and post-randomization assessment: Conduct a mediation analysis or marginal structural model to quantify how much of any harm is mediated by achieved (on-treatment) DBP versus baseline vulnerability \u2014 present as exploratory only and avoid using achieved DBP in primary causal model.",
+          "Assess proportional hazards and robustness: Test PH assumption, calculate E-values for observed associations to quantify unmeasured confounding needed to explain effect, and use bootstrap (or exact) CIs given small sample.",
+          "Adverse event-focused analyses: Compare the incidence of predefined adverse events (syncope, myocardial ischemia, acute kidney injury, falls) by treatment within DBP strata using Poisson or Cox models and report absolute event rates."
+        ],
+        "negative_controls": [
+          "Analyze an outcome unlikely to be mechanistically related to BP lowering (e.g., incident non-skin malignancy) for a similar treatment \u00d7 DBP interaction as a falsification test.",
+          "Check for interaction between baseline DBP and randomized treatment for an outcome plausibly unaffected by BP (e.g., incident appendicitis or cancer-related hospitalization) to detect residual bias."
+        ],
+        "robustness": [
+          "Vary the DBP cutpoint (55, 60, 65 mmHg) and present a forest plot of interaction estimates across thresholds.",
+          "Repeat analyses using achieved pulse pressure or arterial stiffness surrogate (pulse pressure) as alternative effect modifiers to test whether DBP is a proxy.",
+          "Conduct leave-one-out and influence diagnostics to assess whether a few participants drive the interaction given small N.",
+          "Pre-specify and correct for multiple testing of subgroup hypotheses (e.g., Holm or Benjamini\u2013Hochberg) and emphasize effect sizes and CIs over single p-values."
+        ]
+      },
+      "caveats": [
+        "Randomization balances treatment but not baseline subgroup membership: baseline DBP is not randomized, so observed treatment \u00d7 subgroup interactions can be confounded by baseline prognostic differences; interaction tests do not prove causality.",
+        "Limited power and imprecision: With only 200 participants total, subgroup counts (DBP<60) may be small, yielding wide confidence intervals and low power to detect true interaction \u2014 interpret null and positive findings cautiously.",
+        "Threshold choice is somewhat arbitrary: A binary cut at 60 mmHg simplifies a continuous physiologic relationship; findings should be confirmed using continuous modeling and in larger datasets before changing practice.",
+        "Avoid conditioning on post-randomization variables: Using achieved on-treatment DBP as an adjustment in primary causal models will induce bias; mediation analyses should be explicitly framed as exploratory.",
+        "Residual confounding and reverse causation: Low DBP may reflect underlying disease (e.g., heart failure, low stroke volume) that causes both low DBP and higher event risk; careful covariate adjustment helps but cannot fully exclude unmeasured confounding.",
+        "Generalisability: Results apply to SPRINT-like population (non-diabetic adults \u226550 at elevated CV risk) and may not translate to diabetic patients, younger populations, or clinical settings with different measurement protocols or medication patterns."
+      ]
+    },
+    {
+      "title": "Moderately elevated baseline DBP (>=80 mmHg) modifies benefit of intensive SBP lowering",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk, participants with baseline diastolic blood pressure (DBP) \u2265 80 mmHg will experience a larger absolute reduction in the composite of major cardiovascular events from intensive SBP control (target <120 mmHg) compared with standard control than participants with baseline DBP < 80 mmHg.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "dbp",
+        "split_rule": "Baseline diastolic BP >= 80 mmHg",
+        "notes": "Baseline DBP defined using the trial baseline visit measurement (average of the standardized seated measurements per protocol). Consider sensitivity using mean of first two clinic readings or clinic-adjudicated baseline. Alternative thresholds (75, 85) and continuous modeling recommended for robustness."
+      },
+      "rationale": [
+        "Higher baseline BP (systolic or diastolic) commonly confers greater absolute cardiovascular risk, so interventions that lower BP often yield larger absolute risk reductions in those with higher starting BP; thus DBP >= 80 mmHg may mark a subgroup with greater modifiable risk.",
+        "Physiologic mechanism: elevated DBP reflects increased peripheral vascular resistance and greater myocardial/arterial load during diastole; lowering systolic BP in this context may meaningfully reduce afterload and shear stress, translating to fewer ischemic and heart-failure events.",
+        "Clinical trial and epidemiologic data show larger absolute event reductions in participants with higher baseline BP in antihypertensive trials (including subsets from large SBP trials), supporting the plausibility that baseline diastolic elevation moderates treatment benefit.",
+        "DBP may capture pathophysiologic heterogeneity not fully captured by SBP alone (e.g., younger hypertensive phenotype with higher peripheral resistance versus older isolated systolic hypertension driven by stiffness); targeting SBP in those with preserved or moderately elevated DBP may avoid the J\u2011curve issues seen when DBP is very low and coronary perfusion could be compromised.",
+        "From a public-health perspective, if the subgroup truly has larger absolute benefit, focusing intensive therapy on DBP >= 80 mmHg could improve efficiency (lower NNT) while mitigating overtreatment in patients with low-normal DBP."
+      ],
+      "key_features": [
+        "Baseline diastolic blood pressure (dbp)",
+        "Baseline systolic blood pressure (sbp) / pulse pressure (for adjustment and mechanistic context)",
+        "Age (DBP trends with age \u2014 lower in older adults due to arterial stiffness)",
+        "Baseline cardiovascular disease (prior MI/stroke) and global risk score (effect on absolute risk)"
+      ],
+      "confounders_and_bias_risks": [
+        "Baseline SBP and pulse pressure: because SBP is correlated with DBP and is the randomized treatment target, confounding/interaction by baseline SBP could explain observed differences if not properly adjusted.",
+        "Age-related confounding: DBP tends to fall with age while SBP rises; age influences baseline risk and treatment tolerance and may modify effect estimates.",
+        "Medication and treatment-adherence differences by DBP subgroup (e.g., those with higher DBP may receive different intensification patterns or adherent behavior), producing post-randomization bias in per-protocol analyses.",
+        "Measurement error and within-person DBP variability (clinic measurement noise, white-coat effect, regression to the mean) can misclassify subgroup status, biasing subgroup estimates toward the null or producing spurious differences.",
+        "Small sample size (n\u2248200) increases risk of chance findings, wide confidence intervals, and exaggerated subgroup effect estimates (winner's curse).",
+        "Collider bias if selection into analysis conditions on variables affected by both baseline DBP and subsequent care (e.g., excluding early events or non-adherent subjects)."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Fit a Cox proportional hazards model for time-to-first major cardiovascular event including terms for randomized treatment, subgroup indicator (DBP>=80), and treatment*subgroup interaction. Report subgroup-specific hazard ratios (HRs) with 95% CIs and the interaction p-value. Present both relative (HR) and absolute effects (risk difference at 3 years).",
+          "Estimate absolute risk reduction (ARR) within each subgroup using Kaplan\u2013Meier survival curves and compute ARR at prespecified time points (e.g., 3 years) with 95% CIs via bootstrap (1,000\u20135,000 resamples). Compute NNT = 1/ARR where ARR>0.",
+          "Adjusted analyses: repeat Cox/ARR estimates controlling for prespecified covariates (age, sex, baseline SBP, pulse pressure, prior CVD, eGFR, smoking status, baseline antihypertensive count), and compare to unadjusted results to assess confounding by baseline SBP and other covariates.",
+          "Continuous interaction and nonlinearity: model baseline DBP as a continuous variable with a treatment*DBP interaction using restricted cubic splines (e.g., 3\u20134 knots) to assess non-linear effect modification and to avoid arbitrary threshold dependence.",
+          "Threshold robustness: repeat subgroup analyses using alternative DBP cutpoints (>=75 and >=85 mmHg) and by DBP quartiles to assess stability of the signal across reasonable thresholds.",
+          "Per-protocol and adherence sensitivity: perform per-protocol analysis censoring at major protocol deviations or using inverse probability weighting for adherence; compare ITT vs per-protocol estimates to evaluate bias from differential adherence.",
+          "Falsification/negative-control outcomes: test for treatment effect heterogeneity on an outcome unlikely to be affected by BP control (e.g., incident non-cardiovascular cancer diagnosis or injury-related hospitalization) to detect residual bias.",
+          "Sensitivity to unmeasured confounding: report E-values for observed subgroup-specific absolute and relative effects (or perform quantitative bias analysis) to quantify how strong an unmeasured confounder would need to be to explain away the interaction.",
+          "Bootstrap or Bayesian hierarchical modeling across DBP strata to stabilize subgroup estimates given small sample size and to shrink extreme estimates toward overall effect."
+        ],
+        "negative_controls": [
+          "Non-CV hospitalization incidence (expected no effect from BP target)",
+          "Incident cancer diagnosis during follow-up (not biologically linked to BP lowering)"
+        ],
+        "robustness": [
+          "Vary DBP threshold (75, 80, 85) and use quartile-based subgrouping.",
+          "Include baseline SBP and pulse pressure in all adjusted models; test models with and without these covariates to quantify their influence.",
+          "Use multiple imputation for any missing baseline covariates; verify results are consistent vs complete-case analysis.",
+          "Perform leave-one-out sensitivity by excluding early events (first 6 months) to reduce influence of pre-existing but subclinical disease."
+        ]
+      },
+      "caveats": [
+        "This is a subgroup hypothesis \u2014 evidence of effect modification from these analyses is not definitive causation; subgroup findings are hypothesis-generating and require replication in larger datasets or pooled meta-analyses.",
+        "Because SBP is the randomized target, confounding by baseline SBP and pulse pressure is a primary concern; observed differential absolute effects may reflect differences in baseline SBP, baseline risk, or both rather than DBP-specific biology.",
+        "Small sample size (n\u2248200) will produce imprecise estimates; absence of a statistically significant interaction does not exclude clinically meaningful heterogeneity, and a nominally significant interaction may reflect chance.",
+        "Measurement error in DBP (clinic variability, white-coat phenomenon) can misclassify subgroup membership; sensitivity analyses using alternative baseline BP summaries are required.",
+        "Potential harm in patients with low DBP (coronary perfusion/J\u2011curve) means interpretation must consider both relative and absolute harms; subgroup recommendations should not be implemented clinically without confirmatory evidence."
+      ]
+    },
+    {
+      "title": "Low\u2013normal baseline diastolic BP (\u226470 mmHg) modifies benefit from intensive SBP lowering",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk enrolled in SPRINT-like data, participants with baseline diastolic BP (DBP) \u226470 mmHg will experience smaller absolute and relative benefit from intensive systolic BP (SBP) lowering (target <120 mmHg) on the composite major cardiovascular outcome than those with DBP >70 mmHg; they may also have higher rates of hypotension-related adverse events (syncope, AKI, ischemia).",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "dbp",
+        "split_rule": "Baseline diastolic blood pressure (DBP) \u2264 70 mmHg",
+        "notes": "DBP measured at baseline as the mean of the trial/clinic protocol replicate readings (use same measurement protocol as parent study). Units mmHg. Consider using averaged seated measurements; exclude postural/orthostatic readings as baseline. Alternative encodings: continuous DBP with spline, or alternate thresholds (65, 75 mmHg) for sensitivity."
+      },
+      "rationale": [
+        "Physiologic plausibility: Coronary and end-organ perfusion occurs primarily during diastole; further lowering of SBP in individuals with already low DBP may reduce diastolic perfusion pressure and increase risk of myocardial ischemia or end-organ hypoperfusion, blunting net cardiovascular benefit.",
+        "Observational and trial-signal support: Several observational studies report a J\u2011shaped relationship between DBP and cardiovascular events, with higher relative risk at lower DBP; post-hoc analyses of hypertension trials have raised concerns that very low DBP may attenuate benefit or increase harm from aggressive BP lowering.",
+        "Adverse event signal from intensive therapy: Randomized intensive BP trials, including SPRINT, reported higher rates of treatment-related adverse events (hypotension, syncope, AKI) with intensive targets; those with lower baseline DBP may be at disproportionately greater risk of these events, reducing net clinical benefit.",
+        "Pulse pressure and arterial stiffness context: Low DBP in the presence of high SBP (wide pulse pressure) often reflects arterial stiffness; such patients' risk is driven by stiffness-related processes that may be less modifiable by further SBP lowering, producing smaller absolute risk reductions.",
+        "Clinical heterogeneity: Older age and pre-existing coronary or cerebrovascular disease interact with DBP physiology \u2014 low DBP may mark reduced hemodynamic reserve or frailty, modifying both treatment efficacy and vulnerability to harms."
+      ],
+      "key_features": [
+        "Baseline diastolic blood pressure (dbp, mmHg)",
+        "Baseline systolic BP and pulse pressure (SBP \u2212 DBP)",
+        "Age (years) \u2014 older patients more likely to have wide pulse pressure/arterial stiffness",
+        "Baseline coronary artery disease or prior ischemic events",
+        "Baseline kidney function (eGFR) and history of AKI"
+      ],
+      "confounders_and_bias_risks": [
+        "Residual prognostic differences within the DBP-defined subgroup: although treatment is randomized, subgroup comparisons can be confounded by baseline imbalances in age, prior CVD, frailty, or SBP that correlate with DBP and outcome.",
+        "DBP as a marker, not cause: Low DBP may be a proxy for arterial stiffness, advanced atherosclerosis, or frailty \u2014 variables that affect both baseline risk and responsiveness to BP lowering; adjusting for mediators (e.g., pulse pressure if it lies on causal pathway) can induce bias.",
+        "Measurement error and misclassification: Single baseline DBP readings or differing measurement protocols (clinic vs automated) can misclassify subgroup membership and dilute or exaggerate observed effect modification.",
+        "Collider bias: Conditioning on variables influenced by both DBP and risk (e.g., number of baseline medications) can open biasing paths.",
+        "Limited sample size and multiple testing: With modest N (~200), subgroup analyses have low power and high risk of chance findings and wide CIs; multiplicity of thresholds and outcomes increases type I error risk."
+      ],
+      "validation": {
+        "analyses": [
+          "Estimate treatment effect (hazard ratio and absolute risk difference) on the primary composite outcome separately within DBP \u226470 mmHg and DBP >70 mmHg groups using Kaplan\u2013Meier curves and Cox proportional hazards models; report subgroup-specific cumulative incidence at trial follow-up and 95% CIs (bootstrap for ARRs).",
+          "Test formal interaction: include treatment \u00d7 (DBP \u226470) interaction term in a Cox model (and in a model with DBP modeled continuously via restricted cubic splines interacting with treatment) to evaluate whether treatment effect differs by DBP (report p-value for interaction and interaction estimate on absolute risk scale where possible).",
+          "Adjust for pre-specified baseline covariates to improve precision (age, sex, baseline SBP, history of CVD, eGFR, smoking) but avoid controlling for variables plausibly on the causal pathway (e.g., pulse pressure as mediator) \u2014 run both unadjusted and adjusted models and compare.",
+          "Adverse events: compare incidence rates and time-to-first of hypotension, syncope, acute kidney injury, and ischemic events between treatment arms within the DBP \u226470 subgroup using Poisson/negative binomial models or Cox models; compute risk differences and rate ratios.",
+          "Continuous DBP analysis: model baseline DBP continuously with restricted cubic splines interacting with treatment to identify non-linear thresholds of effect modification and to check whether 70 mmHg is an inflection point; present marginal treatment effects across the DBP range.",
+          "Sensitivity analyses: (a) vary the DBP threshold (\u226465, \u226475 mmHg), (b) exclude participants with extreme pulse pressure (e.g., PP > 70 mmHg) or very low baseline SBP, (c) use multiple imputation for missing covariates, (d) estimate E-values for unmeasured confounding of the interaction estimate.",
+          "Precision and stability checks: perform bootstrap CIs and leave-one-out / clustered resampling (if multicenter) to assess estimate stability given small sample size."
+        ],
+        "negative_controls": [
+          "Compare treatment effect across DBP strata on an outcome not plausibly impacted by BP lowering (e.g., incident non-CV cancer diagnosis or a laboratory endpoint unrelated to perfusion) to check for residual subgroup-specific bias.",
+          "Use a falsification test such as rate of traumatic injury admissions (not mechanistically linked to BP) to detect systematic subgroup differences in ascertainment or follow-up."
+        ],
+        "robustness": [
+          "Evaluate alternative DBP encodings (continuous spline, quantiles) and alternate thresholds (65, 75 mmHg); check if conclusions persist.",
+          "Restrict to participants with multiple baseline BP readings averaged per protocol to reduce measurement error.",
+          "Stratify or adjust for pulse pressure and baseline SBP to assess whether observed effect modification is independent of pulse pressure (but interpret adjusted estimates cautiously to avoid over-adjustment).",
+          "Bootstrap and permutation tests for the interaction term to assess the likelihood of observing the interaction under the null given small sample size.",
+          "If possible, replicate the analysis in an external or pooled dataset (other trial subsets or observational cohorts with similar inclusion criteria) to assess reproducibility."
+        ]
+      },
+      "caveats": [
+        "Subgroup findings do not automatically imply a different treatment recommendation \u2014 a statistically significant interaction may be due to chance, confounding, or limited precision; treat results as hypothesis-generating unless replicated.",
+        "Because DBP is correlated with SBP and pulse pressure, observed heterogeneity may reflect other physiologic processes (arterial stiffness, prevalent CVD) rather than a causal role of low DBP itself.",
+        "Avoid adjustment for mediators on the causal path (e.g., immediate on-treatment BP, pulse pressure changes) when testing effect modification; such adjustments can obscure true heterogeneity or introduce bias.",
+        "Given the modest sample size (~200) and likely small number of events, power to detect interaction is limited; non-significant interaction does not rule out clinically meaningful effect modification, and significant interactions may have wide CIs.",
+        "Generalizability is limited to the studied population (non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk using the same BP measurement protocol); do not extrapolate to younger patients, diabetics, or different clinical contexts without further evidence."
+      ]
+    },
+    {
+      "title": "Reduced eGFR (<60) \u2014 greater absolute cardiovascular benefit from intensive BP lowering",
+      "hypothesis": "Among SPRINT-eligible participants with baseline eGFR < 60 mL/min/1.73m^2, intensive systolic BP control (target <120 mmHg) will produce a greater absolute reduction in the composite major cardiovascular events versus standard control than among participants with baseline eGFR >= 60 mL/min/1.73m^2.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "egfr",
+        "split_rule": "eGFR < 60 mL/min/1.73m^2",
+        "notes": "Use baseline (pre-randomization) eGFR calculated by the CKD-EPI equation from serum creatinine. Define subgroup on the single baseline value used in trial entry or impute if missing using pre-specified strategy. Consider sensitivity checks with alternative thresholds (e.g., 45 mL/min/1.73m^2) and modeling eGFR continuously or with spline terms."
+      },
+      "rationale": [
+        "Higher baseline risk: People with reduced eGFR have substantially higher baseline incidence of major cardiovascular events; with a similar relative risk reduction from treatment, absolute risk reduction (ARR) is expected to be larger in the lower-eGFR group.",
+        "Pathophysiology: Chronic kidney disease (CKD) is associated with endothelial dysfunction, arterial stiffness, and accelerated atherosclerosis; lowering systolic BP reduces arterial wall stress and myocardial afterload, mechanisms that plausibly translate to greater event avoidance in patients with pre-existing vascular disease.",
+        "Prior trial and observational evidence: Post-hoc analyses of major BP trials (including SPRINT subgroup reports) and observational cohorts indicate consistent relative benefit of intensive BP control across eGFR strata but higher event rates among CKD patients \u2014 supporting larger absolute benefit in the reduced-eGFR subgroup.",
+        "Dose\u2013response plausibility: Reduced kidney function may amplify hemodynamic and neurohormonal pathways that contribute to cardiovascular events; therefore, a greater hemodynamic improvement (achieved lower SBP) could confer proportionally larger clinical benefit in those with CKD.",
+        "Benefit\u2013harm balance consideration: Because CKD patients have higher event rates, the number-needed-to-treat (NNT) to prevent one event is expected to be smaller, improving the clinical value of intensive therapy provided harms (e.g., AKI, electrolyte disturbances, syncope) are not disproportionately increased."
+      ],
+      "key_features": [
+        "Baseline eGFR (CKD-EPI) < 60 mL/min/1.73m^2",
+        "Baseline composite cardiovascular risk (prior CVD, age, baseline SBP)",
+        "Achieved on-treatment SBP (degree of separation between arms)",
+        "Presence of CKD-related markers if available (e.g., albuminuria/proteinuria) \u2014 likely effect modifier but may be unavailable",
+        "Covariates affecting risk: age, sex, race, prior CVD, smoking status, baseline antihypertensive regimen"
+      ],
+      "confounders_and_bias_risks": [
+        "Residual confounding by baseline cardiovascular risk: CKD patients differ systematically (older, more prior CVD, different comorbidity patterns) and imbalance in these could confound absolute risk comparisons if not adjusted.",
+        "Mediator adjustment / collider bias: Adjusting for achieved on-treatment SBP (a mediator) or for variables affected by treatment can bias estimates of effect modification; avoid controlling for mediators when estimating treatment effect heterogeneity.",
+        "Measurement error in eGFR: Single creatinine-based eGFR can misclassify CKD stage (acute illness, lab variability), which attenuates or misattributes subgroup effects.",
+        "Differential adherence and treatment intensity: CKD patients may receive different medication classes or adherence patterns (drug intolerance, dose adjustments), creating differences in actual exposure that mimic or mask effect modification.",
+        "Small sample / random imbalance: With total sample size ~200 and a minority having eGFR <60, subgroup analyses will be imprecise and vulnerable to chance imbalances.",
+        "Competing risks and informative censoring: Higher non-CV mortality in CKD could alter observed event rates (competing risk), and differential loss-to-follow-up could bias ARR estimates.",
+        "Selection/generalizability: SPRINT excluded diabetics and had specific inclusion criteria; findings may not generalize to diabetic CKD or broader CKD populations."
+      ],
+      "validation": {
+        "analyses": [
+          "Estimate unadjusted event rates (incidence per 100 person-years) and absolute risk differences (ARRs) between intensive vs standard arms within eGFR <60 and eGFR >=60 subgroups; compute 95% CIs and NNTs.",
+          "Cox proportional hazards model for time-to-first composite event with terms for treatment, eGFR<60 indicator, and a treatment*eGFR interaction; report HRs by subgroup and p-value for interaction (multiplicative scale).",
+          "Assess additive interaction: estimate risk differences and calculate RERI (relative excess risk due to interaction) or the difference in absolute risk reductions between subgroups using g-computation or standardization.",
+          "Doubly robust / causal estimation: apply inverse-probability weighting (IPTW) or targeted maximum likelihood estimation (TMLE) to estimate subgroup-specific average treatment effects (ATEs) adjusting for baseline confounders (age, sex, race, baseline SBP, prior CVD, smoking, baseline medications).",
+          "Sensitivity analyses: model eGFR continuously (interaction between continuous eGFR and treatment) and with restricted cubic splines to detect non-linear effect modification; test alternate thresholds (e.g., 45 mL/min/1.73m^2).",
+          "Per-protocol / as-treated checks: repeat analyses restricted to participants with good adherence or achieved SBP separation to examine whether differential exposure explains subgroup differences (interpret cautiously as not randomized).",
+          "Competing risk analysis: use Fine-Gray subdistribution hazards or cause-specific hazards to account for non-CV death as a competing risk, especially important if non-CV mortality differs by eGFR.",
+          "Bootstrap or permutation to assess stability of subgroup ARR estimates given small N; report precision and avoid dichotomous interpretation of borderline p-values."
+        ],
+        "negative_controls": [
+          "Outcome unlikely to be causally affected by BP control (e.g., incident cancer diagnosis during follow-up) \u2014 expect no treatment association across eGFR strata.",
+          "Non-vascular events plausibly unrelated to BP (e.g., incidence of appendicitis) as falsification endpoints if recorded."
+        ],
+        "robustness": [
+          "Vary eGFR threshold (55, 60, 65) and model eGFR continuously to confirm that findings are not threshold-dependent.",
+          "Adjust vs unadjusted comparisons for key covariates to assess confounding impact; present both to show sensitivity.",
+          "E-value calculation for observed ARR/HR to quantify the minimum strength of an unmeasured confounder needed to explain away the observed subgroup effect.",
+          "Exclude early events (e.g., first 30\u201390 days) to reduce reverse causation from acute illness affecting baseline creatinine or early treatment changes.",
+          "Multiple-testing correction or pre-specification statement: interpret subgroup interaction p-values in the context of multiplicity and the hypothesis-generating nature of the analysis."
+        ]
+      },
+      "caveats": [
+        "Association \u2260 causation for subgroup differences: while the parent trial provides randomized treatment assignment, subgroup comparisons (especially by baseline eGFR) can be confounded by baseline imbalances and should be interpreted as effect modification hypotheses rather than definitive causal proofs.",
+        "Limited power and imprecision: with ~200 participants and likely a small eGFR<60 subgroup, estimates of absolute benefit will be imprecise; null or borderline interaction tests do not rule out clinically meaningful differences.",
+        "Scale dependency of interaction: effect modification may appear on the absolute (ARR) scale but not on the relative (HR) scale (or vice versa). For clinical decision-making, emphasize absolute benefits and harms.",
+        "Potential differential harms: CKD patients may have higher risk of AKI, electrolyte disturbances, or orthostatic events with intensive therapy; benefit estimates should be balanced against subgroup-specific harms.",
+        "Measurement and classification limits: single baseline eGFR may misclassify chronic vs acute kidney dysfunction; if albuminuria/proteinuria data are not available, important kidney-related effect modifiers may be unmeasured.",
+        "Generalizability: SPRINT excluded patients with diabetes and had specific enrollment criteria; applicability to diabetic CKD, ESRD, or younger populations is limited."
+      ]
+    },
+    {
+      "title": "High eGFR (>=90) associated with smaller absolute benefit from intensive SBP target <120 mmHg",
+      "hypothesis": "In the SPRINT-eligible sample of non-diabetic adults >=50 with hypertension and elevated cardiovascular risk, participants with baseline eGFR >= 90 mL/min/1.73m^2 will have a smaller absolute (and possibly no clinically meaningful) reduction in the incidence of the composite major cardiovascular events from intensive systolic BP control (target <120 mmHg) than participants with baseline eGFR < 90.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "egfr",
+        "split_rule": "eGFR >= 90 mL/min/1.73m^2 vs eGFR < 90 mL/min/1.73m^2",
+        "notes": "eGFR computed from serum creatinine (likely CKD-EPI). Single baseline measurement. Consider alternative encodings (continuous, spline) and alternative thresholds (e.g., 80, 100) in sensitivity checks."
+      },
+      "rationale": [
+        "Lower baseline event rate mechanism: Participants with preserved kidney function (eGFR >=90) generally have lower baseline cardiovascular event rates; when a treatment confers a similar relative risk reduction across strata, lower baseline risk produces smaller absolute risk reductions and fewer prevented events.",
+        "Comorbidity burden: Higher eGFR tends to correlate with fewer comorbidities (less prior CVD, lower prevalence of albuminuria and metabolic derangements) that drive cardiovascular events; intensive BP lowering has greater absolute impact in those with higher baseline risk driven by these comorbid states.",
+        "Biologic plausibility: Many pathophysiologic drivers of cardiovascular risk (endothelial dysfunction, atherosclerosis, volume overload, reduced renal clearance of uremic toxins) are more prominent with reduced eGFR; hence the same BP reduction may yield larger downstream cardiovascular benefit when kidney dysfunction is present.",
+        "Evidence from trials and epidemiology: Observational and trial subgroup analyses frequently show smaller absolute event reductions in lower-risk strata (including those with preserved renal function); this is consistent with the principle that absolute risk difference = baseline risk \u00d7 (1 \u2212 RR).",
+        "Measurement nuance: eGFR >=90 includes truly normal renal function but may also include people with hyperfiltration (e.g., obesity). Hyperfiltration could modify risk differently than 'healthy' high eGFR, motivating sensitivity checks."
+      ],
+      "key_features": [
+        "Baseline eGFR (creatinine-based, CKD-EPI) dichotomized at 90 mL/min/1.73m^2",
+        "Baseline cardiovascular risk (prior CVD, albuminuria, ASCVD risk score)",
+        "Baseline systolic BP and number/type of antihypertensive agents",
+        "Age, sex, BMI (as proxy for muscle mass and hyperfiltration)",
+        "Baseline creatinine and urinary albumin-to-creatinine ratio (if available)"
+      ],
+      "confounders_and_bias_risks": [
+        "Residual confounding: Although treatment allocation is randomized, subgroup membership (high vs low eGFR) is not randomized and may be associated with prognostic factors (age, prior CVD, albuminuria, medication use) that affect absolute risk and can confound subgroup comparisons if not adjusted.",
+        "Measurement error/misclassification of eGFR: Creatinine-based eGFR is influenced by muscle mass, diet, and assay differences. Low muscle mass (frailty, older age) can inflate eGFR estimates and create differential misclassification of subgroup membership.",
+        "Collider bias: Conditioning on enrollment and eGFR could induce selection/collider bias if eGFR is influenced by unmeasured factors that also affect treatment effects or adherence.",
+        "Limited sample size and power for interaction: The provided sample (n=200) is likely underpowered to detect interaction effects; false negatives (type II error) or unstable subgroup estimates are probable.",
+        "Post-randomization differences: Differential adherence, intensity of monitoring, or rescue therapy across eGFR strata could bias subgroup-specific effect estimates (treatment-on-treated vs intention-to-treat differences).",
+        "Competing risks and informative censoring: Non-cardiovascular death or loss to follow-up that differs by eGFR could bias absolute risk estimates if not handled appropriately."
+      ],
+      "validation": {
+        "analyses": [
+          "Descriptive: Tabulate baseline characteristics and crude event rates by eGFR >=90 vs <90 (counts, person-time, Kaplan\u2013Meier incidence at prespecified follow-up times).",
+          "Primary interaction test: Fit Cox proportional hazards model for time-to-composite CV event including randomized treatment (intensive vs standard), eGFR group indicator, and treatment*eGFR interaction; report subgroup-specific hazard ratios (HRs), 95% CIs, and p-value for interaction.",
+          "Absolute effect estimation: Estimate absolute risk reduction (ARR) within each eGFR stratum using Kaplan\u2013Meier cumulative incidence at fixed time points (e.g., median follow-up, 3 years) and/or restricted mean survival time (RMST) differences, with bootstrap CIs.",
+          "Adjusted analyses: Repeat Cox and ARR estimates adjusted for key baseline covariates (age, sex, baseline SBP, prior CVD, urinary albumin, BMI, smoking, number of antihypertensives) and compare with unadjusted estimates to evaluate confounding.",
+          "Continuous and non-linear assessment: Model eGFR as a continuous variable with a treatment*egfr interaction using restricted cubic splines to detect non-linear effect modification and to avoid arbitrary dichotomization.",
+          "Robust causal estimands: Use doubly robust methods (IPTW or TMLE) to estimate subgroup-average treatment effects and interaction, and report both relative (HR, RR) and absolute (ARR) effect measures.",
+          "Sensitivity analyses: (a) vary the eGFR threshold (e.g., 80, 100), (b) exclude participants with implausibly low creatinine/muscle-mass proxies (very low BMI or advanced age) to assess misclassification impact, (c) adjust for albuminuria and baseline risk score (ASCVD) to test mediation vs confounding.",
+          "Check assumptions and competing risks: Test proportional hazards assumption (Schoenfeld residuals), estimate cause-specific hazards vs Fine\u2013Gray subdistribution hazards if non-CV death is a competing risk.",
+          "Quantify unmeasured confounding: Compute E-values for observed subgroup ARRs/HRs to assess strength of unmeasured confounding needed to nullify the interaction effect."
+        ],
+        "negative_controls": [
+          "Outcome unlikely to be affected by BP strategy, e.g., incidence of incident non-cardiovascular cancer (short-term) or appendicitis admissions \u2014 expect no difference between randomized arms across eGFR strata; a non-null difference suggests bias.",
+          "Pre-randomization falsification: Verify no pre-randomization outcome difference (e.g., prior-year hospitalization rates) across eGFR strata by treatment assignment as a check on randomization integrity in the analytic subset."
+        ],
+        "robustness": [
+          "Estimate subgroup effects using different estimators (Cox PH, additive hazards, RMST, TMLE) and ensure qualitatively consistent direction and magnitude across methods.",
+          "Repeat analyses censoring early events (e.g., events in first 30 days) to rule out short-term differential ascertainment or procedural effects.",
+          "Stratify by baseline risk (e.g., tertiles of ASCVD or Framingham risk) to verify whether eGFR effect modification is independent of overall cardiovascular risk strata.",
+          "Perform leave-one-covariate-out adjustment checks to see whether any single covariate drives the interaction estimate."
+        ]
+      },
+      "caveats": [
+        "Randomization protects the main treatment effect but not subgroup comparisons: treatment-by-subgroup interaction analyses are observational within the trial and subject to imbalance and confounding; interpret subgroup differences cautiously.",
+        "Limited sample size (n=200) substantially reduces power to detect interactions; non-significant interaction tests do not prove absence of effect modification, and point estimates will have wide CIs.",
+        "Dichotomizing eGFR at 90 is clinically intuitive but arbitrary; dichotomy can conceal non-linear relationships and induce misclassification\u2014continuous/spline analyses are important.",
+        "eGFR measurement limitations: creatinine-based eGFR can be biased by muscle mass, ethnicity, and assay variability; if available, replicate analyses using cystatin C\u2013based eGFR or adjust for proxies of muscle mass (BMI, sex) to reduce misclassification.",
+        "Clinical decision-making must weigh absolute benefit against harms (e.g., hypotension, syncope, acute kidney injury), which may differ by eGFR; absence of large absolute benefit does not imply the absence of harm or benefit on other outcomes.",
+        "Potential for subgroup effect heterogeneity within the high-eGFR group (e.g., true normal vs hyperfiltration) means results may not generalize; consider further stratification if sample size permits.",
+        "Multiplicity and data-driven subgroup selection inflate type I error; pre-specify hypothesis testing order and report all tested thresholds/analyses to avoid selective inference."
+      ]
+    },
+    {
+      "title": "Moderately-severe reduced eGFR (\u226445) \u2014 renal harm may offset cardiovascular benefit from intensive SBP lowering",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and elevated cardiovascular risk enrolled in SPRINT, participants with baseline eGFR \u226445 mL/min/1.73 m^2 (CKD stage 3b or worse) will experience higher rates of renal adverse events (e.g., AKI, sustained eGFR decline) when randomized to intensive systolic BP lowering (target <120 mmHg) compared with standard control, such that the net effect on the trial primary composite of major cardiovascular events is attenuated or reversed (no net benefit or net harm) in this subgroup.",
+      "expected_direction": "higher_harm",
+      "subgroup": {
+        "feature": "egfr",
+        "split_rule": "eGFR \u2264 45 mL/min/1.73m^2 (CKD stage 3b or worse) measured at baseline prior to randomization",
+        "notes": "Specify eGFR equation used (e.g., CKD-EPI without race coefficient if available). Use baseline (pre-randomization) stable outpatient creatinine; exclude values during acute illness. Consider sensitivity re-defining by sustained low eGFR (two measurements) if available."
+      },
+      "rationale": [
+        "Physiologic vulnerability: Advanced CKD impairs renal autoregulation and reduces the kidney's ability to maintain glomerular perfusion during reductions in systemic blood pressure. Aggressive SBP reduction can therefore precipitate renal hypoperfusion and acute kidney injury (AKI) or accelerate eGFR decline.",
+        "Trial and observational evidence: Intensive BP strategies in randomized trials and observational cohorts have been associated with higher short-term rates of AKI and larger acute declines in eGFR, with signal magnified among participants with lower baseline eGFR in subgroup analyses reported in several studies.",
+        "Clinical downstream impact: Acute kidney events and sustained eGFR declines are independently associated with increased morbidity and cardiovascular risk, hospitalizations, and mortality; therefore, an excess of renal adverse events in the intensive arm could offset or exceed the cardiovascular benefit seen in participants with preserved kidney function.",
+        "Medication and monitoring interaction: Participants with low eGFR are more likely to be on renin\u2013angiotensin system inhibitors or diuretics and are more susceptible to volume depletion or drug-related reductions in glomerular filtration pressure when combined with intensive BP lowering\u2014amplifying risk.",
+        "Heterogeneity of absolute benefit: Absolute risk reduction in cardiovascular events with intensive BP control is driven by baseline cardiovascular event rates; in participants with advanced CKD, competing risks (renal events, non-CV mortality) and smaller achievable reductions in CV risk may result in smaller net benefit or net harm."
+      ],
+      "key_features": [
+        "Baseline eGFR value (continuous) and categorical <=45 mL/min/1.73m^2",
+        "History of chronic kidney disease / stage (CKD stage 3b+)",
+        "Use of ACE inhibitor/ARB or diuretics at baseline (medication interactions)",
+        "Baseline albuminuria/proteinuria (UACR) as an effect modifier and prognostic factor",
+        "Age and baseline systolic blood pressure (older age and higher baseline SBP influence both renal susceptibility and absolute CV risk)"
+      ],
+      "confounders_and_bias_risks": [
+        "Small subgroup sample size (n\u2248200 overall sample) \u2192 low power and wide CIs; random imbalances in baseline covariates across arms within the subgroup can distort subgroup-specific estimates.",
+        "Ascertainment/detection bias: Intensive-arm participants typically have more frequent visits/monitoring; AKI and transient creatinine rises may be more likely to be detected in the intensive arm.",
+        "Regression to the mean and measurement error in eGFR: Single baseline creatinine-based eGFR can misclassify CKD stage (influenced by muscle mass, acute illness); older adults may have low creatinine because of low muscle mass, biasing eGFR.",
+        "Collider bias if conditioning on post-randomization variables: Avoid defining subgroups using variables that are affected by treatment or by early adverse events.",
+        "Competing risks and informative censoring: Early deaths (non-CV) or dropout may prevent observation of later CV events; differential loss to follow-up could bias net-effect estimates.",
+        "Residual confounding for mediation analyses: Although treatment is randomized, mediation or per-protocol analyses (e.g., by achieved BP, medication changes) are observational and susceptible to confounding."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary test: Fit an intention-to-treat Cox proportional-hazards model for the primary composite outcome including randomized treatment, subgroup indicator (eGFR\u226445), and a treatment*subgroup interaction term; report interaction p-value, subgroup-specific hazard ratios, and absolute risk differences at prespecified timepoints (1 year, 3 years).",
+          "Renal adverse events: Compare incidence rates and time-to-first renal adverse event (AKI as defined in trial adjudication and sustained \u226530% eGFR decline or new dialysis) between arms within the eGFR\u226445 subgroup using Cox models and cumulative incidence functions; present cause-specific hazards and Fine\u2013Gray subdistribution hazards with death as competing risk.",
+          "Mediation/landmark analysis: Perform a landmark analysis (e.g., at 1 month and 6 months) to examine whether early renal events mediate later CV outcomes. Estimate the proportion of treatment effect on MACE mediated by early AKI or sustained eGFR decline using causal mediation methods suitable for time-to-event data (acknowledging limited power).",
+          "Continuous interaction and functional form: Model baseline eGFR continuously (restricted cubic splines) interacting with treatment to assess whether risk changes smoothly with eGFR versus only at the \u226445 threshold; report predicted absolute risk differences across eGFR range.",
+          "Per-protocol / as-treated analyses: Secondary analyses adjusting for achieved SBP and key time-varying cointerventions (ACEi/ARB/diuretic intensification) using inverse-probability-of-treatment weighting or marginal structural models to examine the role of treatment intensity and medication changes\u2014interpret as observational.",
+          "Balance and falsification checks: Verify baseline covariate balance by randomized arm within the eGFR\u226445 subgroup; run negative-control outcome analyses (e.g., incident cancer diagnosis or trauma-related hospitalization) to check for differential ascertainment or nonspecific biases."
+        ],
+        "negative_controls": [
+          "Incident cancer diagnosis rate (expected to be unrelated to short-term BP target)",
+          "Non-cardiovascular, non-renal acute events unlikely to be affected by BP (e.g., bone fractures)"
+        ],
+        "robustness": [
+          "Sensitivity to eGFR definition: repeat analyses using alternative thresholds (\u226430, \u226460), using averaged baseline eGFR if multiple pre-randomization measurements exist, and with eGFR calculated by alternative equations (CKD-EPI with/without race).",
+          "Exclude events in the first 30 days (or perform landmark at 30 days) to assess whether transient peri-randomization AKI drives results versus sustained harm.",
+          "Use E-values or other quantitative sensitivity analyses to assess how strong unmeasured confounding would have to be to explain observed subgroup differences in non-randomized analyses (e.g., mediation/per-protocol).",
+          "Bootstrap or permutation-based CIs for interaction estimates given small sample to assess stability.",
+          "Stratified analyses by baseline albuminuria (UACR \u226530 mg/g vs <30) and baseline use of ACEi/ARB or diuretics to evaluate effect modification."
+        ]
+      },
+      "caveats": [
+        "Subgroup inference limitations: Even in randomized trials, subgroup analyses are often underpowered and subject to chance findings; a statistically significant interaction should be interpreted cautiously and ideally replicated in independent datasets or pooled meta-analyses.",
+        "Distinguish transient versus sustained renal injury: Short-term rises in creatinine or adjudicated AKI may be reversible and may not translate into long-term kidney failure; net clinical harm requires considering persistence and clinical sequelae of renal events.",
+        "Measurement and classification issues: eGFR is an estimate influenced by creatinine assay, muscle mass, and equation choice. Misclassification of CKD stage may bias subgroup assignment and effect estimates.",
+        "Ascertainment and monitoring differences: More intensive follow-up in the intensive arm can increase detection of renal AEs; absolute differences should be interpreted in light of monitoring frequency and adjudication rules.",
+        "Causality vs mediation: While overall treatment assignment is randomized (causal), analyses that condition on post-randomization variables (achieved BP, medication changes, or early AKI) are observational and cannot be interpreted as purely causal without strong assumptions.",
+        "Net benefit depends on absolute magnitudes: Even if renal events are more frequent, the clinical decision must weigh absolute increases in renal harm vs absolute reductions in CV events and patient preferences; a small excess of reversible AKI may be acceptable given substantial CV risk reduction in some patients."
+      ]
+    },
+    {
+      "title": "High total cholesterol (chr >= 240 mg/dL) augments absolute benefit from intensive BP control",
+      "hypothesis": "Among trial participants with baseline total cholesterol (chr) >= 240 mg/dL, intensive systolic BP control (target <120 mmHg) produces a greater absolute reduction in the composite of major cardiovascular events compared with standard control, relative to participants with chr < 240 mg/dL.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "chr",
+        "split_rule": "chr >= 240 mg/dL (high) vs chr < 240 mg/dL (low)",
+        "notes": "Baseline total cholesterol in mg/dL measured prior to randomization. Encode as a binary indicator for primary analysis. Secondary analyses should treat chr continuously and test alternative thresholds (e.g., 200, 220, 260 mg/dL). Exclude participants with missing baseline cholesterol or impute with pre-specified method and report sensitivity."
+      },
+      "rationale": [
+        "Higher baseline absolute cardiovascular risk amplifies absolute risk reductions from interventions that lower event incidence. Individuals with elevated total cholesterol have higher baseline rates of atherosclerotic cardiovascular disease, so the same relative risk reduction from intensive BP lowering would translate into a larger absolute risk reduction.",
+        "Pathophysiology: Elevated cholesterol promotes plaque formation and atherosclerotic burden; elevated BP increases mechanical stress on plaques and accelerates plaque rupture and thrombosis. Lowering systolic BP reduces shear stress and acute triggers for events, potentially yielding proportionally greater prevention of events in those with greater underlying atherosclerotic burden.",
+        "Empirical precedence: Primary prevention principles and trials of risk-factor modification (e.g., lipid-lowering, antihypertensive) demonstrate that higher-risk subgroups experience larger absolute benefit even when relative effects are similar, supporting an expectation of higher absolute benefit in high-cholesterol participants.",
+        "Biologic interaction potential: Coexistence of severe dyslipidemia and hypertension may produce synergistic pathobiology (more unstable plaques, endothelial dysfunction). BP lowering could therefore avert a higher number of events per treated patient in the high-cholesterol subgroup compared with low-cholesterol participants."
+      ],
+      "key_features": [
+        "Baseline total cholesterol (chr) in mg/dL",
+        "Baseline atherosclerotic risk (e.g., prior CVD, smoking, age)",
+        "Baseline statin/lipid-lowering therapy (concurrent treatment that modifies risk)",
+        "Baseline systolic BP and other cardiovascular risk factors (eGFR, albuminuria)"
+      ],
+      "confounders_and_bias_risks": [
+        "Post-randomization differences in concomitant therapies: statin initiation or intensification after randomization may differ by arm and/or by cholesterol subgroup and affect event rates (mediator/confounder).",
+        "Subgroup imbalance: even in randomized trials, small sample sizes (n=200) permit chance imbalances in prognostic covariates (age, prior CVD, smoking) across treatment within the subgroup, confounding subgroup comparisons.",
+        "Measurement error/misclassification: single baseline total-cholesterol measurement may misclassify long-term lipid status; non-fasting measurements or laboratory variability can attenuate subgroup effect estimates.",
+        "Collider bias or selection effects: conditioning analyses on cholesterol could induce collider bias if cholesterol is affected by unmeasured factors that correlate with both treatment adherence and outcome.",
+        "Limited power and multiple testing: small sample size and multiple subgroup hypotheses increase risk of type I and type II errors; large CIs may make apparent heterogeneity spurious.",
+        "Competing risks and informative censoring: non-CV mortality or differential loss-to-follow-up by subgroup/treatment could bias absolute risk estimates."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Intention-to-treat analysis estimating absolute risk difference (ARR) for the composite CV outcome separately in chr >= 240 and chr < 240 groups using Kaplan\u2013Meier or cumulative incidence at a pre-specified time point (e.g., median follow-up), with 95% CIs; report ARRs and number-needed-to-treat (NNT).",
+          "Interaction test: Fit a Cox proportional hazards model for time-to-event outcome including terms for treatment, chr_high indicator, and treatment*chr_high interaction to test for heterogeneity on the relative (hazard ratio) scale; report interaction coefficient, HRs within strata, and interaction p-value.",
+          "Absolute-effect interaction: Use flexible survival regression or G-computation to estimate marginal risks by treatment within each subgroup and test for difference-in-differences (treatment effect in high-chr minus treatment effect in low-chr) with bootstrap CIs to evaluate heterogeneity on the absolute scale.",
+          "Adjusted analyses: Repeat primary and interaction models adjusting for baseline covariates that may be imbalanced or confound subgroup comparison (age, sex, race, prior CVD, smoking, eGFR, baseline SBP, statin use) and examine whether the subgroup effect persists.",
+          "Robustness checks: (a) treat chr continuously and test for linear and non-linear treatment-by-cholesterol interactions (restricted cubic splines); (b) vary threshold (200, 220, 260 mg/dL) to assess sensitivity to cutpoint; (c) per-protocol and as-treated analyses to assess adherence influence.",
+          "Sensitivity to unmeasured confounding: compute an E-value for the observed ARR or HR interaction to quantify minimum strength of unmeasured confounding needed to explain away the observed heterogeneity.",
+          "Assumption checks: Verify proportional hazards assumption (Schoenfeld residuals) and assess influence of competing risks using Fine\u2013Gray models for non-CV death as a competing event.",
+          "Subgroup balance: Within the chr >= 240 group, compare baseline characteristics by randomized arm to detect imbalances; if present, perform covariate-adjusted and propensity-score weighted analyses (IPTW/doubly robust) to mitigate bias."
+        ],
+        "negative_controls": [
+          "Analyze an outcome unlikely to be affected by BP control (e.g., incident non-cutaneous cancer diagnosis or appendicitis hospitalization) to test for residual confounding/artifact.",
+          "Use a falsification exposure: test whether an unrelated baseline laboratory (if available) shows a similar treatment interaction to detect spurious subgroup signals."
+        ],
+        "robustness": [
+          "Bootstrap CIs for ARRs and for the interaction contrast to account for small sample size.",
+          "Permutation test of treatment labels within strata to assess chance heterogeneity.",
+          "Correction for multiple comparisons (e.g., control false-discovery rate) if several subgroup hypotheses are evaluated.",
+          "Stratified analyses by baseline statin use (effect modification) and include statin initiation during follow-up as a time-varying covariate or conduct mediation analysis to separate direct BP effect from lipid-treatment effects."
+        ]
+      },
+      "caveats": [
+        "Observation of a larger absolute benefit in the high-cholesterol subgroup does not by itself imply a different biological relative treatment effect \u2014 it may reflect higher baseline risk translating the same relative risk reduction into a larger absolute change.",
+        "Subgroup analyses are hypothesis-generating when not pre-specified and can be affected by chance; findings should be interpreted cautiously and ideally validated in independent datasets or meta-analyses.",
+        "Small sample size (n=200) limits power for interaction tests; non-significant interaction p-values do not exclude clinically important heterogeneity, and significant findings may have wide uncertainty\u2014report point estimates with CIs.",
+        "Potential mediation by lipid-lowering therapy or differential adherence could confound interpretation; distinguishing effect modification from post-randomization treatment differences requires careful adjustment and sensitivity analyses.",
+        "Threshold choice (240 mg/dL) is semi-arbitrary; consistent evidence across continuous analyses and alternative cutpoints strengthens credibility. Avoid overinterpretation if effect is sensitive to cutpoint selection."
+      ]
+    },
+    {
+      "title": "Low total cholesterol (chr < 160 mg/dL) attenuates benefit or increases relative harms of intensive BP control",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension at elevated cardiovascular risk, participants with baseline total cholesterol (chr) < 160 mg/dL will experience a smaller net benefit (smaller absolute reduction in composite major cardiovascular events) \u2014 and potentially relatively higher treatment-related harms (e.g., symptomatic hypotension, syncope, acute kidney injury) \u2014 from intensive systolic BP control (target <120 mmHg) compared with participants with chr \u2265 160 mg/dL.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "chr",
+        "split_rule": "chr < 160 mg/dL",
+        "notes": "Baseline total cholesterol measured in mg/dL. Use the pre-randomization value. If multiple baseline values exist use the closest pre-randomization lab. Consider harmonizing units and excluding non-fasting extreme values; record concomitant statin therapy as an important covariate."
+      },
+      "rationale": [
+        "Lower baseline atherogenic burden implies lower baseline absolute risk of atherosclerotic cardiovascular events; for interventions with roughly proportional relative effects, lower baseline risk yields smaller absolute risk reduction, so absolute benefit of intensive BP lowering is expected to be attenuated in low-cholesterol participants.",
+        "SPRINT-like intensive BP regimens reduce cardiovascular events primarily by lowering BP-mediated risk of ischemic and hemorrhagic events; when atherosclerotic substrate (reflected by low total cholesterol) is low, the marginal gain from further BP reduction may be reduced.",
+        "Intensive BP lowering is associated with an increased incidence of hemodynamic and renal adverse events (symptomatic hypotension, syncope, acute kidney injury). In participants with low baseline event risk, these harms may outweigh small absolute cardiovascular benefit, yielding unfavorable net benefit.",
+        "Total cholesterol can be a marker of other phenotypes (e.g., chronic illness, malnutrition, frailty, or aggressive lipid-lowering therapy). These alternative mechanisms can modify both baseline risk and susceptibility to adverse effects of intensive BP lowering, producing heterogeneity in net benefit."
+      ],
+      "key_features": [
+        "Baseline total cholesterol (chr, mg/dL)",
+        "Baseline statin use (yes/no)",
+        "Baseline SBP and number of antihypertensive agents",
+        "Age and markers of frailty (BMI, recent weight loss)",
+        "Baseline eGFR / kidney function"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by indication for statin therapy: participants on statins may have different baseline risk and cholesterol levels; statin use both lowers cholesterol and may independently modify cardiovascular risk and outcomes.",
+        "Reverse causation / marker bias: low total cholesterol may reflect frailty, malnutrition, chronic illness, or inflammatory states that increase vulnerability to adverse events \u2014 these factors, not low cholesterol per se, may drive higher harm rates.",
+        "Measurement error and misclassification: non-fasting vs fasting cholesterol, laboratory variability, or using a single pre-randomization measure may misclassify participants near the 160 mg/dL threshold.",
+        "Collider bias from conditioning on post-randomization variables or variables influenced by both cholesterol and outcome (e.g., changes in medications) may induce spurious associations.",
+        "Small sample size (n=200) limits power to detect interactions; subgroup estimates will be unstable and prone to type I and II errors.",
+        "Differential adherence or differential ascertainment of adverse events across cholesterol subgroups could bias subgroup comparisons."
+      ],
+      "validation": {
+        "analyses": [
+          "Primary: Intention-to-treat estimation of treatment effect (intensive vs standard) on the composite cardiovascular outcome separately within chr <160 and chr \u2265160 strata using survival analysis (Cox proportional hazards), report hazard ratios, absolute event rates, and absolute risk differences (with 95% CIs) at pre-specified follow-up times.",
+          "Interaction test: Fit a Cox model in the full cohort including treatment, chr binary (or continuous), and a treatment*chr interaction term; report p-value for interaction and the interaction coefficient. Repeat modeling with chr as continuous (and with restricted cubic splines) to assess non-linear effect modification.",
+          "Adjusted analyses: Repeat stratum-specific and interaction models adjusting for baseline covariates that may confound effect modification (age, sex, baseline SBP, prior CVD, statin use, eGFR, BMI, smoking). Use doubly robust estimators (e.g., IPTW + outcome regression) if covariate imbalance across strata is present.",
+          "Adverse events: Compare incidence rates and absolute risk differences of prespecified treatment-related harms (symptomatic hypotension, syncope, acute kidney injury, electrolyte abnormalities) by cholesterol stratum and test for heterogeneity of harms (treatment*chr interaction) using Poisson or Cox models.",
+          "Sensitivity analyses: (a) exclude participants with markers of frailty/malnutrition (e.g., BMI <18.5 or recent weight loss); (b) restrict to participants not on statins at baseline; (c) use propensity-score weighting to balance measured covariates across cholesterol strata; (d) perform E-value calculation to quantify possible unmeasured confounding needed to explain observed interactions.",
+          "Estimation stability: Bootstrap CI estimation for interaction effects and use shrinkage/Bayesian hierarchical models to stabilize subgroup estimates given small sample size."
+        ],
+        "negative_controls": [
+          "Outcome plausibly unaffected by BP lowering (e.g., incident non-cardiovascular cancer) tested for apparent treatment*chr interaction as a falsification test.",
+          "An adverse event unlikely to be mechanistically linked to BP lowering (e.g., incident dermatologic condition) to check for differential ascertainment."
+        ],
+        "robustness": [
+          "Model chr continuously and avoid dichotomization; compare dichotomous-threshold findings to continuous spline-based interaction results.",
+          "Assess sensitivity of results to alternative thresholds (e.g., 150, 170 mg/dL) and to adjustment sets (minimal vs full).",
+          "Report both relative (HR) and absolute (risk difference, NNT/NNH) measures because clinical implications differ between scales.",
+          "Pre-specify outcomes and analyses and report all subgroup analyses to reduce selective reporting; correct for multiple testing where appropriate."
+        ]
+      },
+      "caveats": [
+        "Effect modification analyses are observational even within randomized trials: treatment is randomized but subgroup membership (low vs high cholesterol) is not, so observed heterogeneity may reflect confounding or selection rather than a causal interaction.",
+        "Dichotomizing total cholesterol reduces power and can create artifactual thresholds; continuous modeling is preferred for primary inference and dichotomous results should be considered exploratory.",
+        "Small sample size (n=200) means subgroup interaction tests will have limited power and wide CIs; null interaction does not rule out clinically important heterogeneity, and positive findings may be imprecise.",
+        "Low cholesterol can be a marker of competing risks or frailty; if so, apparent increased harms may relate to these conditions rather than cholesterol itself \u2014 interpret mechanistic attributions cautiously.",
+        "Generalizability: the SPRINT population excludes diabetics and may not represent other patient groups; these results should not be extrapolated to diabetic patients or substantially different clinical settings without further validation."
+      ]
+    },
+    {
+      "title": "Moderate total cholesterol (160\u2013239 mg/dL) derives intermediate benefit from intensive BP control",
+      "hypothesis": "Among non-diabetic adults \u226550 with hypertension and increased cardiovascular risk, participants with baseline total cholesterol (chr) in the moderate range (160\u2013239 mg/dL inclusive) will experience a clinically meaningful reduction in the composite major cardiovascular event outcome from intensive systolic BP control (<120 mmHg) that is intermediate in magnitude between the reductions observed in low-chr and high-chr groups.",
+      "expected_direction": "ambiguous",
+      "subgroup": {
+        "feature": "chr",
+        "split_rule": "chr >= 160 mg/dL and chr <= 239 mg/dL (inclusive)",
+        "notes": "Total cholesterol measured at baseline; units = mg/dL. Use baseline (pre-randomization) value. If multiple pre-randomization values exist, use the closest prior to randomization. Consider fasting vs non-fasting as recorded."
+      },
+      "rationale": [
+        "Risk-gradient / baseline-risk hypothesis: Intermediate total cholesterol is associated with an intermediate baseline cardiovascular risk; because absolute risk reduction (ARR) from a risk-factor\u2013modifying intervention often scales with baseline risk, the moderate-cholesterol group is expected to realize an intermediate ARR compared with low- and high-cholesterol strata.",
+        "Additive pathophysiology: Atherosclerotic burden is a function of multiple risk factors; moderate cholesterol combined with uncontrolled BP produces appreciable residual risk that can be further reduced by intensive BP lowering \u2014 but not to the same degree as in very high-cholesterol individuals who have higher absolute event rates.",
+        "Diminishing returns and competing mechanisms: Very low-cholesterol individuals may have low absolute risk (limiting ARR), while very high-cholesterol groups may have advanced atherosclerotic lesions less reversible by BP lowering alone; moderate-cholesterol individuals occupy the middle where BP reduction can achieve measurable, but not maximal, benefit.",
+        "Empirical precedent: Observational and trial data often show gradient effects of cardiovascular therapies across baseline lipid strata (e.g., statin trials showing absolute benefits rising with baseline LDL/total cholesterol), suggesting a plausible pattern for BP therapy when cholesterol contributes significantly to baseline risk."
+      ],
+      "key_features": [
+        "Baseline total cholesterol (chr)",
+        "Baseline cardiovascular risk (e.g., age, prior CVD, 10-year risk score)",
+        "Baseline systolic BP and achieved SBP (treatment adherence, cross-over may modify effect)",
+        "Statin use at baseline (and intensity) \u2014 important effect modifier/ confounder",
+        "Other atherosclerotic risk factors: smoking status, eGFR/CKD, HDL, triglycerides, prior clinical cardiovascular disease"
+      ],
+      "confounders_and_bias_risks": [
+        "Baseline statin use (and changes in statin therapy after randomization): statin therapy lowers cholesterol and also reduces events, confounding the chr\u2013treatment interaction if not measured/adjusted.",
+        "Differential adherence/achieved SBP by cholesterol group: if participants with different chr levels differ in adherence or achieved BP, observed effect modification may reflect differences in treatment exposure (mediator) rather than true heterogeneity.",
+        "Residual confounding by other risk factors correlated with cholesterol (smoking, obesity, socioeconomic status) that influence both baseline chr and event risk.",
+        "Measurement error and regression to the mean: single baseline cholesterol measure misclassification can dilute subgroup contrasts; extreme-value regression-to-the-mean can bias subgroup effect estimates.",
+        "Selection bias / collider bias if inclusion into the analysis sample (n=200 subset) depends on post-baseline events or on variables affected by both chr and treatment (e.g., differential loss to follow-up).",
+        "Small sample size (n=200): low power to detect interaction; estimates may be imprecise and unstable, increasing risk of type I/II errors and wide CIs.",
+        "Competing risks and informative censoring (non-CV death) may differentially affect strata and bias absolute risk estimates if not handled appropriately."
+      ],
+      "validation": {
+        "analyses": [
+          "Estimate intention-to-treat (ITT) effect of intensive vs standard BP control on the composite outcome within three predefined cholesterol strata: low (<160 mg/dL), moderate (160\u2013239 mg/dL), high (>=240 mg/dL). Report hazard ratios (Cox PH) and absolute risk differences at prespecified timepoints (e.g., 3 years) with 95% CIs.",
+          "Test for interaction: fit a Cox model on the full sample with an interaction term (treatment * cholesterol-stratum indicator) and report interaction p-values. Also fit a model with treatment * continuous baseline chr and evaluate nonlinearity using restricted cubic splines (e.g., 3\u20135 knots) to detect a non-monotone effect modification pattern.",
+          "Adjust all models for prespecified baseline covariates to reduce confounding: age, sex, race, baseline SBP, BMI, smoking status, baseline statin use (yes/no and intensity if available), eGFR, prior clinical CVD, and randomized center if applicable.",
+          "Estimate absolute risk reductions (ARR) and numbers-needed-to-treat (NNT) in each stratum using Kaplan\u2013Meier (or model-based survival estimates) to present clinically interpretable effects; calculate bootstrap CIs for ARRs and NNTs given small sample.",
+          "Use doubly robust estimators (AIPW) or inverse-probability\u2013weighted Cox/Poisson models to account for covariate imbalance and verify consistency with conventional adjusted Cox results.",
+          "Per-protocol / as-treated sensitivity: repeat analyses using achieved mean on-treatment SBP (or time-updated SBP) to explore whether differential BP lowering mediates the observed heterogeneity; use causal mediation methods if plausible (with caveats).",
+          "Assess proportional hazards assumption (Schoenfeld residuals) and, if violated, report time-varying HRs or restricted mean survival time (RMST) differences by stratum.",
+          "Report subgroup balance diagnostics (covariate distributions within cholesterol strata by randomized arm) and perform falsification tests (negative-control outcomes) to probe residual confounding."
+        ],
+        "negative_controls": [
+          "Outcome unlikely to be causally affected by BP lowering (e.g., incident non-cardiovascular cancer diagnosis within follow-up): expect no difference by treatment within cholesterol strata.",
+          "A baseline variable measured prior to randomization that should not be affected by treatment (e.g., baseline height): test for spurious \u2018effects\u2019 to detect residual confounding or analytic bias."
+        ],
+        "robustness": [
+          "Vary cholesterol cutpoints (e.g., 150\u2013219, 170\u2013249, quartiles) and re-run analyses to assess sensitivity of findings to the chosen 160\u2013239 mg/dL definition.",
+          "Model chr continuously with splines to avoid arbitrary bins and compare spline-based interaction to categorical-strata results.",
+          "Stratify or adjust for baseline statin use and perform the analysis restricted to participants not on statins at baseline to reduce confounding by lipid-lowering therapy.",
+          "Address missing data with multiple imputation (including outcome and covariates) and compare to complete-case results.",
+          "Calculate E-values to quantify the size of unmeasured confounding necessary to explain observed stratum-specific effects."
+        ]
+      },
+      "caveats": [
+        "This is a subgroup effect hypothesis \u2014 subgroup associations do not by themselves establish causal effect modification. Randomization protects the overall treatment comparison but does not guarantee balance of covariates within small subgroups, especially with n=200.",
+        "Cholesterol is a modifiable risk factor; post-randomization changes in statin use or lipids can act as mediators. Distinguishing mediation from effect modification requires careful causal mediation methods and strong assumptions.",
+        "Small sample size limits power to detect interaction and yields imprecise estimates; non-significant interaction tests may reflect low power rather than absence of heterogeneity, and point estimates may be unstable.",
+        "Multiple testing / data-driven subgroup selection inflates type I error; prespecify the subgroup, report interaction tests (not just within-group p-values), and interpret any positive finding conservatively.",
+        "Measurement error in baseline cholesterol (non-fasting vs fasting, lab variability) will attenuate effect estimates for subgroup differences and may bias conclusions toward the null.",
+        "Observed intermediate benefit in the moderate-cholesterol group could reflect differences in unmeasured confounders (e.g., socioeconomic status, diet, healthcare access) rather than a true biologic interaction between cholesterol level and BP lowering."
+      ]
+    }
+  ]
+}

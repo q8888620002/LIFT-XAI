@@ -58,6 +58,52 @@ python run_experiment_clinical_data.py \
 
 Summarizes and visualizes feature scores from clinical agent outputs.
 
+### `tools/summarize_classification_percentages.py`
+
+Aggregates PubMed/Judge labels at abstract, mechanism, and feature levels.
+
+#### Tree-based classification rule (for `--source pubmed --label-field classification`)
+
+Mechanism-level labels are computed with a deterministic rule tree over abstract-level classes:
+
+```mermaid
+flowchart TD
+    A[Start mechanism] --> B{SUPPORT_INTERACTION > 0\nAND CONFLICT == 0?}
+    B -- Yes --> L1[SUPPORT_INTERACTION]
+    B -- No --> C{Any support\nAND conflict present?\n(SUPPORT_INTERACTION > 0 OR SUPPORT_WEAK > 0)\nAND CONFLICT > 0}
+
+    C -- Yes --> D{evidence score >= 0?}
+    D -- Yes --> L2[SUPPORT_WEAK]
+    D -- No --> L3[CONFLICT]
+
+    C -- No --> E{SUPPORT_WEAK > 0\nAND CONFLICT == 0?}
+    E -- Yes --> L2
+    E -- No --> F{CONFLICT > 0\nAND no support labels?}
+
+    F -- Yes --> L3
+    F -- No --> G{NO_INTERACTION > 0\nAND no support labels?}
+    G -- Yes --> L4[NO_INTERACTION]
+    G -- No --> H{PROGNOSTIC_MAIN_EFFECT > 0?}
+    H -- Yes --> L5[PROGNOSTIC_MAIN_EFFECT]
+    H -- No --> L6[IRRELEVANT]
+```
+
+1. **STRONG_SUPPORT** if `SUPPORT_INTERACTION > 0` and `CONFLICT == 0` → mapped to `SUPPORT_INTERACTION`
+2. **MIXED_EVIDENCE** if `(SUPPORT_INTERACTION > 0 or SUPPORT_WEAK > 0)` and `CONFLICT > 0`
+    - mapped to `SUPPORT_WEAK` when score is non-negative
+    - mapped to `CONFLICT` otherwise
+3. **WEAK_SUPPORT** if `SUPPORT_WEAK > 0` and `CONFLICT == 0` → mapped to `SUPPORT_WEAK`
+4. **STRONG_CONFLICT** if `CONFLICT > 0` and no support labels → mapped to `CONFLICT`
+5. **LIKELY_NO_INTERACTION** if `NO_INTERACTION > 0` and no support labels → mapped to `NO_INTERACTION`
+6. **PROGNOSTIC_ONLY** if `PROGNOSTIC_MAIN_EFFECT > 0` → mapped to `PROGNOSTIC_MAIN_EFFECT`
+7. Otherwise **INSUFFICIENT_EVIDENCE** → mapped to `IRRELEVANT`
+
+Evidence score used in mixed-evidence routing:
+
+`score = 2*SUPPORT_INTERACTION + 1*SUPPORT_WEAK - 2*CONFLICT - 0.5*NO_INTERACTION`
+
+Feature-level labels are then computed as the dominant mechanism label per feature (majority vote; ties broken by preferred priority order).
+
 ## PubMed Mechanism Validator
 
 `pubmed_mechanism_validator.py` validates hypothesis mechanisms against PubMed literature by:

@@ -1,0 +1,659 @@
+{
+  "dataset": "accord",
+  "total_mechanisms_analyzed": 13,
+  "total_abstracts_retrieved": 45,
+  "overall_support_count": 2,
+  "overall_conflict_count": 1,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "cvd_hx_baseline",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Pathophysiologic ceiling: In patients with established atherosclerotic disease, near-term events are frequently driven by plaque instability, thrombosis, and vulnerable plaques; these pathways are major targets of statins and antiplatelet therapy. Additional modest improvements in glycemia are less likely to materially reduce plaque rupture-driven events, so the marginal absolute CV benefit of stricter HbA1c control is expected to be small. Prior trial signals and external evidence: ACCORD reported an overall excess mortality signal in the intensive arm and subgroup analyses (and other trials) suggested heterogeneous effects by baseline CVD status and baseline risk. This, together with the observed cohort features (high background statin use ~76% and aspirin use ~56%), supports the plausibility that the intensive arm confers little incremental CV protection in those with prior CVD. Risk\u2013benefit balance shifted by harms: Intensive glycemic control increases risk of severe hypoglycemia and may increase weight or fluid retention with some therapies; hypoglycemia in patients with prior CVD can precipitate arrhythmia, myocardial ischemia, or falls and thus translate into higher CV or all-cause risk, offsetting or exceeding any small benefit from better glycemic control. Competing risks and reduced latency for benefit: Patients with established CVD often have higher competing short-term risk of events and limited time to accrue long-term microvascular benefits from glycemic lowering. Therefore, any small, delayed CV protection from tighter glycemic control may not manifest, while acute harms may occur earlier. Overlapping preventive therapies reduce incremental effect size: High baseline use of statins and antiplatelets reduces the room for additional relative risk reduction from glucose lowering; when background therapy already targets major atherothrombotic mechanisms, the incremental relative and absolute benefit of intensive glycemic control is expected to be smaller.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (\"history of cardiovascular disease\" OR \"prior cardiovascular disease\" OR \"prior MI\" OR \"prior stroke\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a secondary analysis of SPRINT testing effects of intensive vs standard systolic BP treatment on brain perivascular spaces (an imaging marker). It does not report major cardiovascular outcomes or mortality, nor does it evaluate treatment effect modification on those clinical endpoints by baseline CVD status. Although baseline CVD is included as a covariate and is associated with PVS volume, that addresses an imaging surrogate, not the clinical outcome (major CV events/mortality) central to the hypothesis about intensive glycemic control in ACCORD. The treatment (BP lowering) and measured outcome (PVS changes) differ from the ACCORD glycemic-intensity question and its clinical endpoints, so the abstract does not provide relevant evidence for the proposed mechanism.",
+          "evidence_quote": "\"The effects of SBP treatment group and major antihypertensive classes on PVS volume fraction were separately tested using linear mixed-effects models while covarying for MRI site, age, sex, black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\" and \"greater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\"",
+          "stance": "neutral",
+          "pmid": "36865252",
+          "title": "Intensive Systolic Blood Pressure Treatment Remodels Brain Perivascular Spaces: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a secondary analysis of SPRINT (intensive vs standard systolic BP targets) evaluating MRI perivascular spaces (PVS) \u2014 a brain structural biomarker \u2014 not major cardiovascular outcomes or mortality. Although history of cardiovascular disease (CVD) is mentioned (as a covariate and as associated with larger PVS), the paper does not analyze whether baseline CVD modifies treatment effects on clinical cardiovascular outcomes or mortality. The mechanism hypothesis concerns differential cardiovascular benefit/harm of intensive glycemic control (ACCORD context) by baseline CVD status; the abstract studies a different intervention (BP lowering), different endpoint (PVS imaging surrogate), and provides no interaction tests or subgroup treatment-effect estimates by CVD history. Therefore it is not relevant evidence for the proposed mechanism.",
+          "evidence_quote": "\"...using linear mixed-effects models while covarying for MRI site, age, sex, Black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\" and \"greater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\"",
+          "stance": "neutral",
+          "pmid": "37774646",
+          "title": "Intensive systolic blood pressure treatment remodels brain perivascular spaces: A secondary analysis of the Systolic Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "cvd_hx_baseline",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Early-stage disease: Patients without prior clinical CVD are more likely to have less advanced atherosclerosis and therefore greater potential to modify future plaque development and stability by improving chronic glycemic exposure (consistent with the legacy effect seen in UKPDS and follow-up analyses that early glycemic control reduces long-term macrovascular events). Lower baseline vulnerability to hypoglycaemia-related harm: Those without prior CVD tend to have fewer comorbidities (less autonomic neuropathy, better cardiac reserve) and therefore may tolerate intensive regimens with fewer catastrophic consequences of severe hypoglycemia (a potential mechanism for harm seen in ACCORD overall). Reduced competing risk and physiologic reserve: Primary-prevention patients have lower competing risks from prevalent cardiac disease, so absolute reductions in incident MI/stroke are more detectable and clinically meaningful than in secondary-prevention patients whose event risk is dominated by established disease processes less modifiable by glycemic change. Plausible biologic pathway: Chronic hyperglycemia promotes endothelial dysfunction, inflammation and advanced glycation end-products that drive incident atherosclerosis; earlier interruption of these processes should reduce first events more than progression of advanced plaques. Supporting observational and trial signals: Epidemiologic studies show associations between long-term glycaemic exposure and first CV events; subgroup and post-hoc analyses across trials often suggest greater relative benefit of glucose lowering when initiated earlier in disease course, albeit with heterogeneity.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (\"history of cardiovascular disease\" OR \"prior cardiovascular disease\" OR \"prior MI\" OR \"prior stroke\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive vs standard systolic BP treatment (SPRINT) on brain perivascular spaces (an MRI surrogate) rather than major cardiovascular outcomes or mortality as required by the hypothesis context (ACCORD, glycemic control). Although baseline CVD history is included as a covariate and is reported to be associated with larger PVS (a prognostic association), the paper does not report any treatment-by-CVD-history interaction or subgroup analysis addressing whether patients without prior CVD derived different benefit from the intensive strategy. Therefore the abstract does not provide evidence for or against the proposed mechanism linking Cvd Hx Baseline to differential cardiovascular treatment effects.",
+          "evidence_quote": "\u201c...covarying for MRI site, age, sex, black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\u201d / \u201cgreater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\u201d",
+          "stance": "neutral",
+          "pmid": "36865252",
+          "title": "Intensive Systolic Blood Pressure Treatment Remodels Brain Perivascular Spaces: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Step 1 fails overall. Although the abstract does evaluate an intensive blood-pressure strategy (SPRINT) (A: pass) and it does report baseline 'history of cardiovascular disease (CVD)' as a covariate and as associated with larger PVS, the outcome evaluated is brain perivascular space volume (an MRI structural measure) rather than major cardiovascular outcomes or mortality targeted in the hypothesis. The target mechanism concerns glycemic control effects on major CV events and how baseline CVD modifies treatment benefit; this abstract addresses BP treatment effects on a brain imaging surrogate and does not analyze whether baseline CVD modifies treatment effects on major cardiovascular outcomes or mortality. The Cvd Hx Baseline appears only as a covariate/association with PVS, not as a subgroup interaction on clinical CV outcomes, so the abstract is not relevant evidence for the proposed mechanism.",
+          "evidence_quote": "\"...covarying for MRI site, age, sex, Black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\"; \"greater PVS volume fraction was associated with ... concurrent CVD.\"",
+          "stance": "neutral",
+          "pmid": "37774646",
+          "title": "Intensive systolic blood pressure treatment remodels brain perivascular spaces: A secondary analysis of the Systolic Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "cvd_hx_baseline",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Trial-level signal: The ACCORD intensive glycemia arm was stopped early for excess mortality (primarily cardiovascular-related signals reported in secondary analyses). This raises plausibility that very low HbA1c targets can be harmful in high-risk patients, particularly those with pre-existing CVD. Biologic mechanism: Intensive glucose-lowering increases risk of severe hypoglycemia, which triggers sympathoadrenal activation, QT prolongation, pro\u2011arrhythmic states, myocardial ischemia, and hemodynamic instability\u2014mechanisms that disproportionately precipitate events in patients with established coronary or cerebral atherosclerotic disease. Vulnerable substrate: Patients with prior CVD have greater plaque burden, impaired coronary reserve, and diminished ischemic tolerance; thus a hypoglycemia- or hemodynamically-mediated stressor is more likely to convert physiology into a clinical cardiovascular event compared with patients without prior CVD. Heterogeneous trial/subgroup signals: Secondary analyses of glycemia trials (including ACCORD, VADT, ADVANCE subsets) have suggested differential effects of intensive glycemic strategies by baseline CVD status or prior cardiovascular events, consistent with effect modification rather than uniform benefit. Treatment pattern differences: Individuals with prior CVD are more likely to be treated with insulin or multiple glucose\u2011lowering agents to reach intensive targets, increasing both hypoglycemia exposure and rapid glucose swings\u2014plausible proximate causes of harm in this subgroup.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (\"history of cardiovascular disease\" OR \"prior cardiovascular disease\" OR \"prior MI\" OR \"prior stroke\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports an MRI surrogate (perivascular spaces) from SPRINT, a trial of intensive vs standard systolic blood pressure control, not ACCORD or an intensive glycemic strategy. It does not report major cardiovascular outcomes or mortality, nor does it test whether baseline CVD history modifies treatment effects on clinical cardiovascular events or mortality. Although history of CVD is included as a covariate and is associated with baseline PVS, there is no subgroup interaction analysis linking Cvd Hx Baseline to differential clinical treatment effects (the mechanism concerns hypoglycemia-related CV harm in intensive glycemic control). Therefore the abstract is not relevant to the proposed mechanism.",
+          "evidence_quote": "\"covarying for MRI site, age, sex, black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\" / \"greater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\"",
+          "stance": "neutral",
+          "pmid": "36865252",
+          "title": "Intensive Systolic Blood Pressure Treatment Remodels Brain Perivascular Spaces: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not test the hypothesis of interest. The intervention is intensive systolic blood pressure lowering (SPRINT), not intensive glycemic control (ACCORD). The reported outcome is an MRI surrogate (perivascular space volume fraction), not major cardiovascular outcomes or mortality. Although history of CVD is included as a covariate and is associated cross-sectionally with greater PVS volume fraction, the abstract does not report any analysis of whether baseline CVD modifies the treatment effect (no subgroup or interaction results by CVD status). Because the target feature (Cvd Hx Baseline) is not analyzed as an effect modifier of clinically relevant cardiovascular outcomes in this trial, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\"...tested using linear mixed-effects models while covarying for MRI site, age, sex, Black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\"; \"greater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\"",
+          "stance": "neutral",
+          "pmid": "37774646",
+          "title": "Intensive systolic blood pressure treatment remodels brain perivascular spaces: A secondary analysis of the Systolic Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "potassium",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Physiologic synergy: Hypoglycemia provokes sympathetic activation that can cause QT prolongation and ventricular ectopy; background hypokalemia increases myocardial excitability and predisposes to malignant ventricular arrhythmias \u2014 jointly increasing risk of arrhythmia-triggered CV events. Blunted symptom detection: Beta-blockers and autonomic neuropathy lower resting HR and blunt adrenergic symptoms of hypoglycemia, delaying recognition/self-treatment and prolonging severe hypoglycemic episodes, increasing the probability that hypoglycemia progresses to arrhythmogenic severity. Clinical and case-series evidence: Published reports and case series have documented sudden cardiac death temporally related to severe hypoglycemia in patients with low potassium or on diuretics, and observational studies link severe hypoglycemia episodes with increased short-term risk of CV events. Observed pattern in method: The HypoGeniC identification of 'difficult' samples shows a negative shift in potassium and HR among identified cases, consistent with these being a clinically plausible vulnerable subgroup. Medication marker: Low serum K frequently reflects use of loop or thiazide diuretics (or vomiting/diarrhea/poor intake) and reduced renal function \u2014 conditions that themselves modulate both K homeostasis and CV vulnerability, providing a plausible pathway linking the measured biomarker to increased harm under protocols that increase hypoglycemia frequency.",
+        "evidence_level": "moderate"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "potassium",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Elevated baseline serum potassium often reflects reduced renal clearance (CKD) and/or use of RAAS inhibitors\u2014both conditions that increase baseline cardiovascular risk and susceptibility to adverse cardiac events; thus higher-potassium patients may derive less net benefit from intensive glycemic lowering if competing risks or vulnerability to adverse effects are greater. Intensive glucose control increases exposure to insulin therapy and risk of hypoglycaemia; insulin (and acute glycemic shifts) drives potassium intracellularly and can provoke rapid serum potassium changes that affect cardiac electrophysiology and arrhythmic risk, potentially offsetting cardiovascular benefits. Hyperkalaemia and potassium variability have been associated with arrhythmias and sudden cardiac death in multiple observational studies; if intensive therapy increases episodes of clinically significant potassium shifts or hypoglycaemia-driven arrhythmia in high-K patients, the net effect on major CV events may be attenuated or reversed. Baseline high potassium may be a marker of multimorbidity (CKD, heart failure, advanced age, polypharmacy) that modifies treatment efficacy through either biologic interaction or competing risk (higher non-modifiable event rate diminishing relative benefit of intensive control).",
+        "evidence_level": "moderate"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "potassium",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Electrolyte physiology and hypoglycemia: Hypokalemia increases susceptibility to ventricular arrhythmias, particularly during hypoglycemic episodes that can occur with intensive glucose-lowering. Participants with non-low baseline potassium may better tolerate insulin-induced shifts in potassium and thus have lower arrhythmic/CV event risk when intensified. Marker of organ reserve and competing risk: Low serum potassium commonly reflects diuretic use, poor nutritional status, or advanced renal tubular dysfunction. These states confer higher competing risk of non-preventable cardiovascular events (or non-CV mortality) that can blunt relative benefit from preventive strategies; therefore, those without low potassium may manifest clearer benefit. Interaction with renal function and drug exposure: Potassium level integrates effects of kidney function and RAAS/diuretic therapies. Non-low potassium may identify patients with more preserved renal handling and stable pharmacodynamics of glucose-lowering therapies, leading to fewer adverse metabolic-electrolyte events and enabling the cardiovascular benefit of lower glycemia to appear. Empirical precedent: Prior subgroup analyses in cardiometabolic trials commonly find larger relative benefits among participants without markers of frailty, organ failure, or biochemical depletion; potassium is a plausible, measurable proxy for these states and therefore a candidate effect modifier.",
+        "evidence_level": "moderate"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "trig",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Pathophysiology: Markedly elevated triglycerides commonly reflect underlying insulin resistance and atherogenic dyslipidemia (high TG, low HDL, small dense LDL). Insulin-resistant patients often require higher/exogenous insulin doses to achieve tight glycemic targets, increasing exposure to exogenous insulin and resulting in greater hypoglycemia risk and weight gain \u2014 both of which can offset or worsen cardiovascular risk in the short-to-intermediate term. Limited glycemic responsiveness of atherogenic lipid-driven CV risk: Atherogenic dyslipidemia contributes to plaque progression and inflammation that may not be rapidly or substantially modified by short-term intensive glycemic lowering, producing a smaller marginal CV benefit from lowering HbA1c among high-TG patients. Clinical trial evidence and adverse-effect balance: Prior intensive-glucose trials (including ACCORD) documented that hypoglycemia and weight gain associated with intensive strategies can attenuate or reverse CV benefit in vulnerable subgroups. If high-TG individuals experience more hypoglycemia/weight gain per unit HbA1c reduction, net CV benefit will be lower or absent. Empirical signal in dataset: The dataset shows strong positive skew and high TG outliers; extreme values may index a metabolically unstable phenotype whose treatment-related risks scale non-linearly (e.g., extreme insulin dosing needs for a modest HbA1c reduction). Heterogeneity of treatment effect plausibility: Biological plausibility plus observed TG distribution supports effect modification rather than a uniform treatment effect across TG strata.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (triglyceride OR triglycerides) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract is not relevant to the hypothesis test. (A) It does not evaluate an intensive vs standard blood-pressure control strategy (no trial or treatment comparison is reported). (B) It does not report major cardiovascular outcomes or mortality; the outcome studied is hypertension prevalence. (C) The target feature 'Trig' (triglycerides) is only reported as a descriptive laboratory variable that increases across TyG tertiles, not analyzed as a modifier of treatment effect on major CV outcomes or mortality. The abstract focuses on TyG and hypertension in a cross-sectional cohort, so it cannot provide evidence about treatment effect modification by triglycerides in ACCORD-like trials.",
+          "evidence_quote": "\u201c...White blood cell, Platelets, Triglycerides, Uricacid, and Hbg increased with the rises of TyG;...\u201d",
+          "stance": "neutral",
+          "pmid": "40720396",
+          "title": "The association between TyG index and hypertension in middle-aged and elderly Chinese patients: Data from CHALRS.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "trig",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Pathophysiology: A high-triglyceride/low-HDL profile reflects increased triglyceride-rich remnant lipoproteins and dysfunctional HDL, which promote atherosclerotic plaque formation and systemic inflammation \u2014 pathways primarily responsive to lipid-lowering (statins, fibrates, omega-3) rather than to short-term intensive glucose lowering. Intervention effect heterogeneity: Large randomized trials and meta-analyses (including ACCORD subgroup signals) show limited macrovascular benefit from intensive glucose lowering, particularly when competing atherogenic lipid abnormalities are present and not treated; thus glycemic control alone may not sufficiently modify the dominant causal pathway for MACE in this phenotype. Statin treatment dominance: Statins produce robust relative and absolute reductions in MACE across diabetes populations. Absence of baseline statin therapy in an atherogenic phenotype likely leaves the predominant modifiable risk driver unaddressed, reducing the marginal contribution of intensive glycemic lowering to MACE risk. Inflammation and competing risks: Atherogenic dyslipidemia associates with systemic inflammation and higher baseline cardiovascular risk and event rates; in such high competing-risk settings, benefits from glycemic interventions that act more slowly or primarily on microvascular endpoints may be diluted for macrovascular outcomes. Empirical signal in dataset: The provided dataset summary indicates an over-representation of high triglyceride outliers, a left-shifted HDL distribution and a substantial fraction (~40%) not on statins among difficult samples, consistent with a detectable subgroup in which lipid-mediated mechanisms could predominate.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (triglyceride OR triglycerides) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports an observational association between the TyG index and hypertension in a Chinese cohort (CHARLS). It does not evaluate an intervention (no intensive blood pressure control strategy or randomized treatment), nor does it report major cardiovascular outcomes or mortality (only hypertension incidence and cross-sectional/associative analyses). Although triglycerides are mentioned as increasing with TyG, triglycerides are treated as a correlated laboratory variable rather than as a feature tested for modification of a treatment effect on MACE. Therefore the abstract cannot provide evidence for or against the proposed mechanism about how triglyceride-driven atherogenic dyslipidemia modifies the effect of intensive glycemic or BP interventions on major cardiovascular events.",
+          "evidence_quote": "As displayed in Table 1, as the TyG index rises, the incidence of Diabetes, Heart disease, and Stroke in patients increased accordingly. Similarly, in terms of laboratory indicators, White blood cell, Platelets, Triglycerides, Uricacid, and Hbg increased with the rises of TyG;",
+          "stance": "neutral",
+          "pmid": "40720396",
+          "title": "The association between TyG index and hypertension in middle-aged and elderly Chinese patients: Data from CHALRS.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "trig",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Mechanistic plausibility: Elevated triglycerides reflect hepatic insulin resistance with increased VLDL production and accumulation of triglyceride-rich remnant particles that are atherogenic. Intensive glycemic lowering may reduce hepatic de novo lipogenesis and postprandial lipemia, thereby disproportionately lowering atherogenic remnant burden in persons with higher baseline TG and reducing MACE risk. Empirical linkage: Observational and genetic studies in type 2 diabetes link elevated triglycerides and remnant cholesterol with higher CVD risk independent of LDL-C; therefore, individuals with elevated TG represent a biologically susceptible subgroup for CVD prevention. Prior interventional signals: Glucose-lowering therapies and improved glycemic control have been associated with modest improvements in triglycerides and remnant cholesterol in secondary analyses; if triglyceride-driven atherogenesis is a mediator, those with greater baseline TG may experience greater absolute and relative CVD benefit from intensive glycemic control. Effect-modification plausibility: Triglyceride elevation indexes a metabolic phenotype (insulin resistance, dyslipidemia, small dense LDL) that may interact with glucose-driven pathways of atherothrombosis; thus treatment effects may differ across the TG distribution rather than being uniform.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (triglyceride OR triglycerides) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the ACCORD intensive vs standard blood pressure control strategy (Treatment Check fails) and does not report major cardiovascular outcomes or mortality (Outcome Alignment fails). Although triglycerides are mentioned as rising with higher TyG, they are presented as a baseline correlate and predictor of hypertension, not as a feature examined for effect modification of the treatment in ACCORD. Therefore the abstract is not relevant to testing whether baseline triglycerides modify the treatment effect in the stated trial/mechanism.",
+          "evidence_quote": "As displayed in Table 1, as the TyG index rises, the incidence of Diabetes, Heart disease, and Stroke in patients increased accordingly. Similarly, in terms of laboratory indicators, White blood cell, Platelets, Triglycerides, Uricacid, and Hbg increased with the rises of TyG;",
+          "stance": "neutral",
+          "pmid": "40720396",
+          "title": "The association between TyG index and hypertension in middle-aged and elderly Chinese patients: Data from CHALRS.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "baseline_age",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Physiologic vulnerability: advanced age and frailty increase susceptibility to severe hypoglycemia and its cardiovascular consequences (arrhythmias, ischemia), and to nonfatal events from falls/trauma; intensive glycemic regimens increase hypoglycemia rates, so harms are amplified in older/frail patients. Diminishing marginal benefit: atherosclerotic benefit from glucose lowering accrues slowly; in older, multimorbid individuals with limited expected benefit horizons, aggressive lowering yields little reduction in future atherosclerotic events but immediate harms (hypoglycemia-related) increase net risk. Undertreatment of atherosclerotic risk: absence of statin and/or aspirin in a high-CV-risk patient implies missed secondary prevention \u2014 these patients derive greater absolute benefit from addressing lipids/platelet risk than from tighter glycemic targets; therefore the marginal contribution of intensive glucose control to preventing CV events is small or nil while harms remain. Trial/observational precedent: large randomized trials (including ACCORD, ADVANCE, VADT) and guideline reviews show older or frail subgroups have less or negative net benefit from intensive glycemic targets; observational data support that undertreated high-risk patients benefit more from statins/antiplatelet therapy than aggressive glycemic control. Empirical signal in the dataset: cohort-level metrics show age has high dispersion (outliers up to ~2.5 SD) and statin/aspirin use is incomplete (example: statin mean ~0.6, aspirin mean ~0.48), creating a plausible subgroup that is both older and undertreated where interactions could manifest.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (age OR elderly OR geriatric) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 15,
+      "support_count": 0,
+      "conflict_count": 1,
+      "neutral_count": 14,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "While the abstract evaluates an intensive vs less intensive blood pressure (BP) control strategy and reports major cardiovascular outcomes (so it passes the treatment and outcome gates), it does not analyze or report Baseline Age as a modifier of treatment effect. Age is reported only as a cohort summary (mean age 61.84 years) with no subgroup analyses, interaction p-values, or text claiming differential benefit/harm by age. In addition, the proposed mechanism centers on harms from intensive glycemic regimens (hypoglycemia, frailty, undertreated atherosclerotic risk), whereas this abstract addresses intensive BP targets\u2014not intensive glycemic control\u2014so the mechanism is not tested by these results. Therefore the abstract is irrelevant to the specific mechanism (age modifying harm from intensive glycemic therapy).",
+          "evidence_quote": "mean age 61.84 years",
+          "stance": "neutral",
+          "pmid": "40717314",
+          "title": "Intensive Blood Pressure Control in Type 2 Diabetes: A Systematic Review and Meta-Analysis of Cardiovascular and Microvascular Outcomes.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly reports subgroup analysis by baseline age and states that age did not identify heterogeneity of treatment effect. Reported HRs are similar for <65 (HR 0.89, 95% CI 0.71\u20131.12) and \u226565 (HR 0.85, 95% CI 0.67\u20131.09), and the authors conclude they \"did not identify groups with heterogeneity of treatment effect.\" Moreover, the abstract provides no data on the specific components of the proposed mechanism (hypoglycaemia rates, frailty, statin/aspirin undertreatment) so the biological pathway posited cannot be evaluated here. Overall, the reported results do not show age modifying the effect of intensive systolic BP control, so they do not support the proposed age-related vulnerability mechanism in this dataset.",
+          "evidence_quote": "Subgroup analysis based on age (<65 years: HR 0\u00b789 [95% CI 0\u00b771-1\u00b712]; \u226565 years: 0\u00b785 [0\u00b767-1\u00b709]) ... did not identify groups with heterogeneity of treatment effect.",
+          "stance": "neutral",
+          "pmid": "36307193",
+          "title": "Individualising intensive systolic blood pressure reduction in hypertension using computational trial phenomaps and machine learning: a post-hoc analysis of randomised clinical trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract is an opinion/review piece criticizing a systolic BP target and does not present trial data showing treatment effects on major cardiovascular outcomes or mortality stratified by baseline age. While it warns that the <120 mm Hg target may harm \"multimorbid and frail\" patients, it does not analyze or report baseline age as a predictor or effect modifier (no subgroup estimates, interaction p-values, or age-specific outcome data). Therefore it fails the Feature Check (Baseline Age is not explicitly analyzed for association with outcomes or treatment effect) and provides no empirical evidence to support the proposed mechanism.",
+          "evidence_quote": "\"If applied to routine BP measurement, this target will expose the multimorbid and frail CKD patients to the risk of adverse events including falls and fractures.\"",
+          "stance": "neutral",
+          "pmid": "34784720",
+          "title": "Is the KDIGO Systolic Blood Pressure Target <120 mm\u2009Hg for Chronic Kidney Disease Appropriate in Routine Clinical Practice?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive vs standard systolic BP lowering and reports cardiovascular composite outcomes, but it does not analyze or report any results by Baseline Age. The subgroup/modifier analyses described pertain to baseline diastolic blood pressure and glycemic control only. Because the TARGET FEATURE (Baseline Age) is missing as an analyzed modifier, the abstract cannot provide evidence for or against the proposed age-related mechanism.",
+          "evidence_quote": "\"We examined whether effects of SBP control on cardiovascular composite were modified by baseline DBP and glycemic control.\"",
+          "stance": "neutral",
+          "pmid": "32366577",
+          "title": "The Influence of Baseline Diastolic Blood Pressure on the Effects of Intensive Blood Pressure Lowering on Cardiovascular Outcomes and All-Cause Mortality in Type 2 Diabetes.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a randomized comparison of intensive vs standard blood-pressure control with major cardiovascular outcomes, so it passes treatment and outcome relevance. However, it does not report any analysis of baseline age as a modifier of treatment effect. Although age \u226575 is part of the inclusion criteria for the high-risk subgroup, there are no age-stratified results, interaction p-values, or statements about differential benefit or harm by age. Moreover, the hypothesized mechanism centers on harms from intensive glycemic therapy (hypoglycemia, undertreatment of atherosclerotic risk), but the analytic sample here is restricted to the standard glucose control arm and the randomized exposure is blood-pressure target, so the abstract cannot provide evidence for the proposed glycemia-related, age-dependent mechanism. Because the target feature (baseline age) is not analyzed as an effect modifier in the reported results, the abstract is irrelevant to the mechanism test.",
+          "evidence_quote": "\"We included Action to Control Cardiovascular Risk in Diabetes - Blood Pressure participants in the standard glucose control arm who had established cardiovascular disease, chronic kidney disease, were \u226575\u2009years of age or who had a 10-year coronary heart risk \u226515%.\"",
+          "stance": "neutral",
+          "pmid": "29424469",
+          "title": "Effect of intensive blood pressure control in patients with type 2 diabetes mellitus over 9 years of follow-up: A subgroup analysis of high-risk ACCORDION trial participants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment check passes (intensive vs standard SBP lowering evaluated), but the abstract's outcomes are kidney-focused (end-stage kidney disease and kidney function decline), not the hypothesized major cardiovascular outcomes or mortality. Baseline Age is reported only as a cohort mean (mean age 63 years) and is not analyzed as a modifier of treatment effect or linked to outcomes. Because the abstract neither evaluates cardiovascular/mortality outcomes nor reports an age-by-treatment interaction, it cannot test the proposed mechanism.",
+          "evidence_quote": "The study cohort included 1,966 SPRINT-eligible ACCORD-BP participants (40% women) with a mean age of 63 years.",
+          "stance": "neutral",
+          "pmid": "36787937",
+          "title": "Effects of Intensive Systolic Blood Pressure Lowering on End-Stage Kidney Disease and Kidney Function Decline in Adults With Type 2 Diabetes Mellitus and Cardiovascular Risk Factors: A Post Hoc Analysis of ACCORD-BP and SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract reports a randomized trial of intensive vs standard systolic blood pressure control (so Treatment Check and Outcome Alignment pass), it does not analyze Baseline Age as a predictor or effect modifier of treatment effect. Age appears only as an inclusion criterion (\u201caged 60 to 80 years\u201d) and there are no subgroup analyses, interaction p-values, or statements relating baseline age to differential treatment benefit or harm. Because the proposed mechanism specifically requires evidence that baseline age modifies treatment effects (e.g., greater harm or less benefit in older/frail patients), the abstract cannot support or refute that mechanism. (Also note the mechanism centers on intensive glycemic regimens and hypoglycemia, whereas this abstract addresses blood-pressure lowering, further reducing direct relevance.)",
+          "evidence_quote": "\"The STEP trial was a randomized controlled trial that compared the effects of intensive (SBP target of 110 to <130 mmHg) and standard (SBP target of 130 to <150 mmHg) SBP control in Chinese patients aged 60 to 80 years with hypertension.\"",
+          "stance": "neutral",
+          "pmid": "37525354",
+          "title": "Association of baseline serum cholesterol with benefits of intensive blood pressure control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract studies intensive versus conventional blood pressure management after endovascular thrombectomy for stroke with subgroup analysis by infarct volume and outcome = functional independence (mRS 0-2) at 3 months. The TARGET FEATURE (Baseline Age) is not analyzed or mentioned as a subgroup or effect modifier, and the outcome is neurologic functional outcome rather than major cardiovascular events or mortality targeted in the hypothesis. Therefore the abstract does not provide evidence relevant to the proposed mechanism about age modifying harms/benefits of intensive glycemic control.",
+          "evidence_quote": "Patients were grouped based on an infarct volume cut-off of 50 ml, assessed 24 h post-EVT. (No mention of baseline age or age-stratified analysis.)",
+          "stance": "neutral",
+          "pmid": "40317165",
+          "title": "Blood pressure management based on infarct volume after successful endovascular thrombectomy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract tests intensive versus standard systolic blood pressure control and explicitly analyzes baseline age as an effect modifier, it evaluates MRI markers of cerebral small vessel disease (WMHv and diffusion metrics), not the prespecified clinical outcomes in the hypothesis (major cardiovascular outcomes and mortality) nor the hypothesized mechanism (harms from intensive glycemic regimens, hypoglycemia, or undertreatment with statin/aspirin). The mechanism centers on age-dependent vulnerability to hypoglycemia and on interactions with glycemic intensity and secondary prevention medication use; none of these exposures or clinical event outcomes are assessed in this abstract. Therefore the abstract cannot be used to support or refute the proposed mechanism.",
+          "evidence_quote": "In ACCORD, intensive SBP-lowering was associated with reduced WMHv progression in the younger (\u226465) compared with the older age group (P=0.038).",
+          "stance": "neutral",
+          "pmid": "41159258",
+          "title": "Effect of Intensive Systolic Blood Pressure Control on Markers of Cerebral Small Vessel Disease by Age.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a secondary analysis of SPRINT examining the association between baseline age and therapeutic inertia (failure to intensify antihypertensive therapy). The hypothesized mechanism concerns how baseline age modifies the net cardiovascular benefit/harm of intensive glycemic control (hypoglycemia, frailty, undertreatment with statin/aspirin) on major cardiovascular outcomes and mortality. This abstract (1) evaluates blood pressure management behavior (therapeutic inertia), not major cardiovascular outcomes or mortality, and (2) does not report age-specific treatment effects on cardiovascular events or mortality. Therefore it does not provide evidence for or against the proposed mechanism linking age to differential cardiovascular harms/benefits of intensive glycemic therapy.",
+          "evidence_quote": "\"Participants 60 to <70, 70 to <80, and \u226580 years of age had a higher prevalence of TI in both treatment groups versus participants <60 years of age ... The adjusted odds ratios for TI comparing participants \u226580 versus <60 years of age were 1.32 (95% CI, 1.14-1.53) and 1.25 (95% CI, 1.11-1.41) in the standard and intensive treatment groups, respectively.\"",
+          "stance": "neutral",
+          "pmid": "37165900",
+          "title": "Evidence for Age Bias Contributing to Therapeutic Inertia in Blood Pressure Management: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Step 1 fails because the abstract does not analyze or report baseline Age as a modifier of treatment effect. While the trial evaluates intensive versus standard blood-pressure control (A: pass) and reports major cardiovascular outcomes and mortality (B: pass), it stratifies participants by baseline Framingham Risk Score rather than by age and does not present subgroup results or interaction tests involving baseline age. The proposed mechanism specifically concerns baseline age (advanced age/frailty) amplifying harms from intensive glycemic/hypoglycemic effects; that feature is not examined in this abstract, so the abstract cannot provide evidence for or against the mechanism.",
+          "evidence_quote": "The 9298 SPRINT participants were categorized into low-risk (baseline FRS < 10%), intermediate-risk (FRS = 10%-20%), or high-risk (FRS > 20%) arms.",
+          "stance": "neutral",
+          "pmid": "31670874",
+          "title": "Effectiveness of blood pressure-lowering treatment by the levels of baseline Framingham risk score: A post hoc analysis of the Systolic Blood Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "CONFLICT",
+          "confidence": "medium",
+          "reasoning": "The abstract reports a statistically significant heterogeneity of treatment effect by age combined with comorbidity status, but the pattern is opposite to the proposed mechanism. The mechanism posits that advanced age (and frailty) will reduce net benefit or increase harm from intensive therapy (via hypoglycemia, falls, etc.) and that older/undertreated patients would not gain from aggressive targets. In contrast, the SPRINT post hoc analysis states that intensive blood pressure control produced significantly lower primary CVD events and all-cause mortality in younger patients (<75) without CVD/CKD and in older patients (\u226575) with pre-existing CVD or CKD \u2014 i.e., older patients with comorbidity derived clear benefit rather than showing reduced benefit or harm. Additionally, the abstract does not address the proposed biological pathways (hypoglycemia, frailty, statin/aspirin undertreatment) and studies blood-pressure lowering rather than glycemic intensification, so the mechanism-specific causal pathways are not tested here. Taken together, the reported age-related interaction contradicts the hypothesized direction.",
+          "evidence_quote": "\u201cWe found that intensive blood pressure control was associated with a significantly lower rate of the primary CVD outcome and all-cause mortality in subjects age <75 years with no prior CVD or CKD and in subjects age \u226575 years with pre-existing CVD or CKD.\u201d",
+          "stance": "conflict",
+          "pmid": "33460256",
+          "title": "Heterogeneity of treatment effect in SPRINT by age and baseline comorbidities: The greatest impact of intensive blood pressure treatment is observed among younger patients without CKD or CVD and in older patients with CKD or CVD.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Step 1: Treatment and outcome gates pass \u2014 the abstract evaluates an intensive blood pressure control strategy and reports major cardiovascular outcomes. However the Baseline Age feature is only reported as a cohort summary (mean and SD) and is not analyzed as a modifier of treatment effect nor are any age subgroup or interaction results presented. Furthermore, the proposed mechanism centers on age-related susceptibility to hypoglycemia from intensive glycemic regimens and the impact of undertreatment with statin/aspirin; the abstract is a BP trial secondary analysis and contains no data on hypoglycemia, frailty, or statin/aspirin treatment nor any age-specific treatment effect estimates. Because Baseline Age is not linked to differential treatment outcomes in the abstract, it cannot support or contradict the proposed mechanism.",
+          "evidence_quote": "\"A total of 33\u202f332 patients with a baseline eGFR of 60 mL/min/1.73 m2 or greater were included in this subgroup analysis (mean [SD] age, 62.8\u2009[9.1] years; 61.3% female).\"",
+          "stance": "neutral",
+          "pmid": "40643915",
+          "title": "Intensive Systolic Blood Pressure Reduction and Kidney and Cardiovascular Outcomes: A Secondary Analysis of a Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract studies effects of intensive versus standard systolic blood pressure lowering on kidney tubule biomarkers in SPRINT, not on major cardiovascular outcomes or mortality and not on glycemic control. The TARGET FEATURE (Baseline Age) is reported only as a baseline descriptor (mean age 72\u00b19 years) and there are no subgroup or interaction analyses by age linking age to treatment effect. The proposed mechanism concerns age-related vulnerability to intensive glycemic regimens (hypoglycemia, undertreated atherosclerotic risk), which is a different treatment domain (glucose control) than this blood-pressure biomarker study. Therefore the abstract does not provide evidence for or against the hypothesized age-related mechanism.",
+          "evidence_quote": "Mean age was 72\u00b19 years and eGFR was 46.1\u00b19.4mL/min/1.73m2 at baseline.",
+          "stance": "neutral",
+          "pmid": "30291012",
+          "title": "Effects of Intensive Blood Pressure Lowering on Kidney Tubule Injury in CKD: A Longitudinal Subgroup Analysis in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract studies intensive vs standard systolic BP targets (treatment check OK) and reports major cardiovascular outcomes and mortality (outcome alignment OK). However, it does not analyze or report any results by baseline age: the post-hoc analyses are explicitly by metabolic syndrome status and race/ethnicity, with no subgroup results, interaction p-values, or statements about baseline age modifying treatment effect. Baseline age is not linked to outcomes or treatment response in the abstract (at best it may appear among baseline characteristics, which is insufficient). Therefore the abstract is irrelevant to evaluating the proposed age-related mechanism.",
+          "evidence_quote": "\"To determine whether baseline metabolic syndrome (MetS) modifies the effect of intensive blood pressure control on cardiovascular (CV) outcomes, and whether the effects varied by race/ethnicity.\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "baseline_age",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Biologic plausibility: In individuals with less established atherosclerotic burden, short-to-intermediate term pathophysiologic mechanisms driven by hyperglycemia (endothelial dysfunction, increased platelet reactivity, inflammation, oxidative stress) are more likely to mediate incident CV events than irreversible plaque rupture from long-standing atherosclerosis; therefore, intensive glycemic lowering may reduce events more effectively in those with less preexisting plaque. Trial evidence and heterogeneity signals: Secondary analyses of ACCORD and other glucose\u2011lowering trials have suggested heterogeneous effects by baseline risk and prior CVD status (patients without prior CVD sometimes showing more favorable cardiovascular profiles with metabolic interventions), supporting the hypothesis that younger/low\u2011burden patients may derive more benefit. Age as proxy for modifiable disease: Younger age correlates with shorter diabetes duration, lower cumulative exposure to atherogenic processes and typically fewer comorbidities (less chronic vascular remodeling), making glycemic intervention more likely to alter near-term CV risk trajectories. Clinical-pragmatic considerations: In a high-risk trial population where intensive control increased some harms (e.g., hypoglycemia, as seen in ACCORD), net benefit may be concentrated in subgroups with greater modifiable risk and lower competing risks (younger, fewer prior events), shifting risk\u2013benefit toward treatment in that subgroup.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (age OR elderly OR geriatric) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 15,
+      "support_count": 2,
+      "conflict_count": 0,
+      "neutral_count": 13,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates intensive blood-pressure control (passes Treatment Check) and reports major cardiovascular outcomes including MACE and mortality (passes Outcome Alignment), it does NOT analyze Baseline Age as a modifier of treatment effect. Age appears only as a baseline summary (mean age 61.84 years) and there are no subgroup analyses, interaction p-values, or textual claims that treatment effect differed by age. Because the target mechanism requires evidence that baseline age modifies the effect of the intervention, the abstract is irrelevant to the proposed mechanism. (Additionally, the hypothesis centers on glycemic-driven mechanisms and benefit from intensive glycemic lowering, whereas this abstract reports intensive BP control\u2014further reducing direct relevance.)",
+          "evidence_quote": "mean age 61.84 years",
+          "stance": "neutral",
+          "pmid": "40717314",
+          "title": "Intensive Blood Pressure Control in Type 2 Diabetes: A Systematic Review and Meta-Analysis of Cardiovascular and Microvascular Outcomes.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly reports subgroup analyses by age and states that these did not identify heterogeneity of treatment effect. The age-specific hazard ratios are similar (age <65: HR 0.89 [95% CI 0.71\u20131.12]; age \u226565: HR 0.85 [95% CI 0.67\u20131.09]) with overlapping confidence intervals, and the authors conclude there was no heterogeneity by age. Thus, there is no evidence here that baseline age modified the effect of intensive versus standard systolic blood pressure control, so the proposed mechanism (greater benefit in younger/less-burdened patients) is not supported by this abstract. (Note: the trial and analysis concern intensive blood pressure control rather than glycemic-lowering interventions, which limits direct testing of hyperglycemia-driven biological mechanisms.)",
+          "evidence_quote": "Subgroup analysis based on age (<65 years: HR 0\u00b789 [95% CI 0\u00b771-1\u00b712]; \u226565 years: 0\u00b785 [0\u00b767-1\u00b709]) ... did not identify groups with heterogeneity of treatment effect.",
+          "stance": "neutral",
+          "pmid": "36307193",
+          "title": "Individualising intensive systolic blood pressure reduction in hypertension using computational trial phenomaps and machine learning: a post-hoc analysis of randomised clinical trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract is a narrative review/opinion about KDIGO BP targets in CKD, not a trial report of an intensive vs standard blood-pressure strategy with reported major cardiovascular outcomes or mortality by subgroup. It does not present randomized trial results comparing treatment arms, nor does it analyze baseline Age as an effect modifier. Therefore it fails the Outcome Alignment and Feature Check relevance gates (no explicit evaluation of major CV outcomes/mortality by treatment, and no analysis of Baseline Age modifying treatment effect).",
+          "evidence_quote": "We believe the KDIGO-recommended target systolic BP <120 mm\u2009Hg for CKD is inappropriate in the majority of CKD patients and it may even be harmful for patients managed in routine clinical practice.",
+          "stance": "neutral",
+          "pmid": "34784720",
+          "title": "Is the KDIGO Systolic Blood Pressure Target <120 mm\u2009Hg for Chronic Kidney Disease Appropriate in Routine Clinical Practice?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive versus standard systolic blood pressure lowering (ACCORD BP) and reports effects on a cardiovascular composite, so treatment and outcome relevance criteria are met. However, the target feature (Baseline Age) is not analyzed or mentioned anywhere in the abstract. Instead the paper explicitly evaluates effect modification by baseline diastolic blood pressure (DBP) and glycemic control. Because Baseline Age is missing as a subgroup or interaction variable, the abstract cannot provide evidence for or against the proposed age\u2011based biologic mechanism.",
+          "evidence_quote": "\"To examine whether low baseline diastolic blood pressure (DBP) modifies the effects of intensive systolic blood pressure (SBP) lowering on cardiovascular outcomes in type 2 diabetes mellitus (T2DM).\"",
+          "stance": "neutral",
+          "pmid": "32366577",
+          "title": "The Influence of Baseline Diastolic Blood Pressure on the Effects of Intensive Blood Pressure Lowering on Cardiovascular Outcomes and All-Cause Mortality in Type 2 Diabetes.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive blood-pressure control and reports major cardiovascular outcomes, so treatment and outcome gates pass. However, Baseline Age is not analyzed as a modifier of treatment effect: age is mentioned only as an inclusion criterion (patients \u226575 years were included in the high-risk cohort), but no subgroup results, interaction p-values, or age-stratified effect estimates are reported. Because the target feature (Baseline Age) is not linked to outcomes or treatment response in the abstract, it cannot support or refute the proposed mechanism.",
+          "evidence_quote": "We included Action to Control Cardiovascular Risk in Diabetes - Blood Pressure participants in the standard glucose control arm who had established cardiovascular disease, chronic kidney disease, were \u226575\u2009years of age or who had a 10-year coronary heart risk \u226515%.",
+          "stance": "neutral",
+          "pmid": "29424469",
+          "title": "Effect of intensive blood pressure control in patients with type 2 diabetes mellitus over 9 years of follow-up: A subgroup analysis of high-risk ACCORDION trial participants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive versus standard systolic blood pressure lowering and reports kidney outcomes (major adverse kidney events and albuminuria), not major cardiovascular outcomes or mortality required by the hypothesis. The TARGET FEATURE (Baseline Age) is reported only as a cohort mean and is not analyzed as an effect modifier or subgroup (no age-stratified results or interaction p-values are provided). The mechanism hypothesis centers on differential cardiovascular benefit of intensive glycemic lowering by baseline age; this abstract does not test glycemic intensification nor age-based heterogeneity in cardiovascular outcomes, so it cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "The study cohort included 1,966 SPRINT-eligible ACCORD-BP participants (40% women) with a mean age of 63 years.",
+          "stance": "neutral",
+          "pmid": "36787937",
+          "title": "Effects of Intensive Systolic Blood Pressure Lowering on End-Stage Kidney Disease and Kidney Function Decline in Adults With Type 2 Diabetes Mellitus and Cardiovascular Risk Factors: A Post Hoc Analysis of ACCORD-BP and SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "While the abstract evaluates an intensive vs standard SBP control strategy and reports cardiovascular outcomes (so (A) and (B) are met), it does not analyze or report any subgroup or interaction results by baseline age. The only mention of age is as an inclusion criterion ('aged 60 to 80 years'), and the post hoc analyses focus on baseline LDL-C and non-HDL-C with interaction p-values. Because Baseline Age is not examined as a predictor or effect modifier of treatment benefit, the abstract cannot provide evidence for or against the proposed age\u2011related biological mechanism.",
+          "evidence_quote": "\"The STEP trial ... in Chinese patients aged 60 to 80 years with hypertension.\"",
+          "stance": "neutral",
+          "pmid": "37525354",
+          "title": "Association of baseline serum cholesterol with benefits of intensive blood pressure control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not address the hypothesis' target feature (Baseline Age) nor the specified outcomes (major cardiovascular outcomes or mortality). Although it compares intensive versus conventional blood pressure management (so Treatment Check passes), the primary outcome is functional independence after EVT (modified Rankin Scale at 3 months), not major CV outcomes/mortality, and Baseline Age is not analyzed or reported as modifying treatment effect. Therefore it cannot provide evidence for or against the proposed age-based mechanism.",
+          "evidence_quote": "No mention of Baseline Age or age-stratified analyses in the abstract; groups are defined by infarct volume (\"Patients were grouped based on an infarct volume cut-off of 50 ml...\").",
+          "stance": "neutral",
+          "pmid": "40317165",
+          "title": "Blood pressure management based on infarct volume after successful endovascular thrombectomy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "reasoning": "The abstract reports that intensive systolic BP control produced a larger benefit on cerebral small vessel disease markers in younger participants. In ACCORD there is an explicit, statistically significant interaction by age (P=0.038) showing reduced WMHv progression in those \u226465 versus older, which directly meets the core requirement for SUPPORT_INTERACTION. SPRINT shows a consistent numeric pattern (larger WMHv and diffusion-metric reductions in the \u226465 group) but the overall interaction tests were not statistically significant (e.g., P=0.18 for WMHv), so the evidence is mixed across cohorts. Additional caveats reduce confidence: the outcome is MRI markers of cerebral small vessel disease (a surrogate) rather than the major cardiovascular events/mortality emphasized in the hypothesis, and the mechanism proposed was about glycemic lowering in diabetes while the abstract reports effects of intensive blood\u2011pressure lowering. These limitations mean the abstract provides supportive, significant interaction evidence (in ACCORD) that younger age modifies treatment benefit, but the indirectness and mixed replication justify only medium confidence.",
+          "evidence_quote": "\"In ACCORD, intensive SBP-lowering was associated with reduced WMHv progression in the younger (\u226465) compared with the older age group (P=0.038).\"",
+          "stance": "support",
+          "pmid": "41159258",
+          "title": "Effect of Intensive Systolic Blood Pressure Control on Markers of Cerebral Small Vessel Disease by Age.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract examines age-related differences in therapeutic inertia (no antihypertensive medication intensification) in SPRINT (blood-pressure management), not effects of an intensive glycemic-lowering strategy (ACCORD) on major cardiovascular outcomes or mortality. Although Baseline Age is explicitly analyzed and shows associations with therapeutic inertia, the outcome is process-of-care (TI), not clinical cardiovascular outcomes or treatment benefit heterogeneity for glycemic interventions. Therefore it does not provide evidence relevant to the proposed mechanism about age modifying the cardiovascular benefit of intensive glycemic lowering.",
+          "evidence_quote": "\u201cParticipants 60 to <70, 70 to <80, and \u226580 years of age had a higher prevalence of TI in both treatment groups versus participants <60 years of age ... The adjusted odds ratios for TI comparing participants \u226580 versus <60 years of age were 1.32 (95% CI, 1.14-1.53) and 1.25 (95% CI, 1.11-1.41) in the standard and intensive treatment groups, respectively.\u201d",
+          "stance": "neutral",
+          "pmid": "37165900",
+          "title": "Evidence for Age Bias Contributing to Therapeutic Inertia in Blood Pressure Management: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates an intensive blood-pressure lowering strategy (SPRINT) and reports major cardiovascular outcomes and mortality, so treatment and outcomes are relevant. However, the TARGET FEATURE \u2014 Baseline Age \u2014 is not analyzed or reported as a subgroup or modifier of treatment effect. The abstract stratifies participants by baseline Framingham Risk Score (FRS) but does not present results by baseline age or state any age-by-treatment interaction. Because the feature is missing (or only implicitly included within FRS but not explicitly tested), the abstract cannot provide evidence for or against the proposed age-related biological mechanism.",
+          "evidence_quote": "",
+          "stance": "neutral",
+          "pmid": "31670874",
+          "title": "Effectiveness of blood pressure-lowering treatment by the levels of baseline Framingham risk score: A post hoc analysis of the Systolic Blood Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "Relevance: The abstract evaluates an intensive treatment strategy (blood-pressure lowering), reports major CVD and mortality outcomes, and explicitly stratifies results by age (\u226575 vs <75), so it passes the relevance gates. Evidence assessment: The post-hoc subgroup analysis reports a significant benefit of intensive therapy in patients <75 years without prior CVD/CKD, which is consistent with the proposed mechanism that younger/low-burden patients derive greater modifiable-risk benefit. However, the analysis also finds significant benefit in an opposite subgroup (older patients with CVD/CKD), which complicates a simple age-based mechanistic interpretation. Crucially, the abstract does not report formal interaction statistics (no interaction p-values or numeric tests of heterogeneous treatment effect across age strata), and this is a post-hoc subgroup analysis, limiting causal inference. Also, the trial and treatment class (intensive blood-pressure lowering in SPRINT) differ from the hypothesized context (intensive glycemic lowering in ACCORD), so the biological mechanism specific to hyperglycemia is only indirectly tested. Taken together, the abstract provides a suggestive signal that age/low comorbidity status may mark greater benefit (supporting the mechanism in part), but the evidence is post-hoc, incomplete (no interaction test), and partially conflicting, so support is weak.",
+          "evidence_quote": "We found that intensive blood pressure control was associated with a significantly lower rate of the primary CVD outcome and all-cause mortality in subjects age <75 years with no prior CVD or CKD and in subjects age \u0002275 years with pre-existing CVD or CKD.",
+          "stance": "support",
+          "pmid": "33460256",
+          "title": "Heterogeneity of treatment effect in SPRINT by age and baseline comorbidities: The greatest impact of intensive blood pressure treatment is observed among younger patients without CKD or CVD and in older patients with CKD or CVD.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates an intensive blood pressure strategy (pass) and reports major cardiovascular outcomes (pass). However, it does not analyze or report any association or interaction by baseline age. Age appears only as a baseline summary statistic (mean [SD] age, 62.8 [9.1] years) and there are no subgroup results, interaction p-values, or statements about differential treatment effects by age. Because the target feature (Baseline Age) is not linked to outcomes or treatment effect in the abstract, it is not possible to assess the proposed mechanism.",
+          "evidence_quote": "A total of 33\u202f332 patients with a baseline eGFR of 60 mL/min/1.73 m2 or greater were included in this subgroup analysis (mean [SD] age, 62.8\u2009[9.1] years; 61.3% female).",
+          "stance": "neutral",
+          "pmid": "40643915",
+          "title": "Intensive Systolic Blood Pressure Reduction and Kidney and Cardiovascular Outcomes: A Secondary Analysis of a Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a SPRINT subgroup analysis of intensive versus standard systolic BP lowering focused on kidney function (eGFR changes) and urine tubule injury biomarkers. It does not report major cardiovascular outcomes or mortality (the outcomes required by the hypothesis), nor does it analyze Baseline Age as an effect modifier of treatment benefit. Age appears only as a baseline summary statistic (mean 72\u00b19 years) and is not linked to treatment response or subgroup interaction. Therefore the abstract is not relevant to evaluating the proposed mechanism linking baseline age to differential cardiovascular benefit from intensive glycemic or metabolic interventions.",
+          "evidence_quote": "Mean age was 72\u00b19 years. Clinical characteristics, eGFR, urinary albumin-creatinine ratio, and all 8 biomarker values were similar across arms at baseline.",
+          "stance": "neutral",
+          "pmid": "30291012",
+          "title": "Effects of Intensive Blood Pressure Lowering on Kidney Tubule Injury in CKD: A Longitudinal Subgroup Analysis in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a randomized comparison of intensive vs standard systolic BP targets and major cardiovascular outcomes (treatment and outcome checks pass). However, it conducts subgroup analyses by baseline metabolic syndrome and race/ethnicity only; there is no analysis, interaction test, or subgroup reporting based on Baseline Age. Because the TARGET FEATURE (Baseline Age) is not analyzed or linked to differential treatment effect in the abstract, it cannot inform the proposed mechanism about age modifying glycemic/vascular pathophysiology or treatment benefit.",
+          "evidence_quote": "\"To determine whether baseline metabolic syndrome (MetS) modifies the effect of intensive blood pressure control on cardiovascular (CV) outcomes, and whether the effects varied by race/ethnicity.\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "bmi",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Physiologic vulnerability: Lean or low-BMI individuals typically have smaller glycogen and adipose reserves and may have less physiologic reserve to tolerate repeated or severe hypoglycaemia induced by intensive glucose-lowering therapy. Severe hypoglycaemia provokes sympathetic activation, QT prolongation and can precipitate arrhythmia and myocardial ischemia, providing a biologically plausible pathway to increased cardiovascular events. Clinical/frailty overlap: Low BMI often reflects sarcopenia, chronic illness, or frailty in older adults. Frailty is independently associated with higher cardiovascular and all-cause mortality and may magnify harm from aggressive interventions due to lower reserve and higher susceptibility to adverse effects. Empirical signals from prior trials/observational data: Secondary analyses of large glucose\u2011lowering trials and observational studies have reported heterogeneity in mortality and cardiovascular outcomes by nutritional status/BMI and have occasionally identified excess mortality in subgroups characterized by lower body mass or poorer baseline health, suggesting that intensive targets may not be uniformly beneficial. Hypoglycaemia mediation observed in prior studies: Intensive glycaemic treatment arms achieve lower achieved HbA1c but simultaneously show higher rates of severe hypoglycaemia. In lean/frail patients, increased frequency/severity of hypoglycaemia can mediate the pathway from intensive therapy to cardiovascular events; therefore, subgroup-specific increases in hypoglycaemia could explain excess harm. Practical signal-detection: Standardized BMI is a routinely measured, objective baseline feature that can identify a clinically coherent subgroup (lean/frail phenotype) at low incremental measurement cost, enabling hypothesis-driven subgroup testing within the ACCORD sample.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (BMI OR obesity OR \"body mass index\" OR \"body mass\" OR overweight OR adiposity OR \"abdominal obesity\" OR \"waist circumference\" OR \"weight status\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract is an observational community study of prevalence and blood pressure control rates in hypertensive patients in Guangzhou. It does not evaluate an intensive vs standard blood pressure control strategy (ACCORD context) nor does it report major cardiovascular outcomes or mortality. Although BMI/obesity is mentioned as associated with poorer blood pressure control, BMI is not analyzed as a modifier of treatment effect on cardiovascular outcomes or mortality. Therefore the abstract does not provide evidence relevant to the proposed mechanism linking low BMI to harm from intensive glucose-lowering or intensive BP strategies.",
+          "evidence_quote": "Subgroup analysis revealed that males, older age, higher education, obesity, alcohol use, lack of physical activity, and poor medication adherence were associated with lower control rates.",
+          "stance": "neutral",
+          "pmid": "39999366",
+          "title": "Diabetes Mellitus and Hyperlipidemia Status Among Hypertensive Patients in the Community and Influencing Factors Analysis of Blood Pressure Control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive vs standard blood pressure control (SPRINT) and reports major CV outcomes and mortality, so treatment and outcomes are relevant. However, BMI is not analyzed as a modifier of treatment effect \u2014 it appears only as a baseline characteristic difference (slightly higher in one arm of the MetS subgroup). There is no subgroup analysis, interaction test, or outcome association reported by BMI, so the abstract provides no evidence for or against the proposed BMI-related mechanism.",
+          "evidence_quote": "\"Baseline characteristics were similar in the two SBP target groups within each MetS subgroup, except body mass index was slightly higher in the standard arm of the MetS subgroup (33.3 \u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000kg/m\u00003 ; P < .01)\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate an intensive vs standard blood-pressure control strategy, nor does it report major cardiovascular outcomes or mortality. BMI appears only as a subgroup in comparisons of blood-pressure measurement methods (unattended vs conventional) and is not analyzed in relation to clinical outcomes or treatment effect. Therefore it cannot inform the proposed mechanism linking low BMI, hypoglycaemia, and differential cardiovascular harm from intensive glucose-lowering in ACCORD.",
+          "evidence_quote": "Subgroup analysis by age, gender, BMI, and diabetes showed no significant difference in blood pressure measurement results between unattended and conventional methods.",
+          "stance": "neutral",
+          "pmid": "39282815",
+          "title": "Unattended versus conventional blood pressure measurements in hospitalized hypertensive patients.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "bmi",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Insulin resistance and overweight are mechanistically linked to higher baseline atherosclerotic and pro-inflammatory burden; moderate overweight (as indexed by standardized BMI >0.20) is often accompanied by metabolic dyslipidaemia and increased endothelial dysfunction, pathways that can plausibly be modified by tighter glycaemic control. Intensive glycaemic lowering reduces chronic hyperglycaemia\u2013related glycation and may lower vascular inflammation markers selectively in insulin-resistant individuals; thus those with moderate BMI-driven insulin resistance might derive relatively greater reduction in ischemic events than leaner participants. Very high BMI (>=0.40) may represent a distinct phenotype (severe obesity) with competing risks (advanced cardiometabolic disease, sarcopenic obesity, treatment challenges) or higher hypoglycaemia vulnerability from aggressive therapy; focusing on a moderate range avoids those countervailing mechanisms and targets a group likely to have benefit without excessive hypoglycaemia risk. Clinical subgroup signals in prior analyses suggest higher absolute benefit of intensive therapy in higher baseline CVD risk strata provided frailty and hypoglycaemia susceptibility are low; moderately elevated BMI often marks increased CVD risk but not necessarily frailty, making net benefit more likely. Moderate overweight is a common, clinically identifiable phenotype, so a true subgroup effect would be actionable for risk-stratified treatment decisions.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\") AND (diabetes OR \"type 2 diabetes\" OR cardiovascular)) AND (BMI OR obesity OR \"body mass index\" OR \"body mass\" OR overweight OR adiposity OR \"abdominal obesity\" OR \"waist circumference\" OR \"weight status\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate an intensive vs standard blood pressure control strategy (no trial comparison), does not report major cardiovascular outcomes or mortality, and does not analyze BMI as a modifier of a treatment effect. Although obesity/overweight are mentioned as factors associated with blood pressure control, there is no subgroup analysis showing differential benefit (or harm) of an intensive glycaemic or blood-pressure lowering intervention by BMI. Therefore it cannot provide evidence for the proposed mechanism linking BMI-driven insulin resistance to differential treatment effect in ACCORD-like intensive strategies.",
+          "evidence_quote": "Subgroup analysis revealed that males, older age, higher education, obesity, alcohol use, lack of physical activity, and poor medication adherence were associated with lower control rates.",
+          "stance": "neutral",
+          "pmid": "39999366",
+          "title": "Diabetes Mellitus and Hyperlipidemia Status Among Hypertensive Patients in the Community and Influencing Factors Analysis of Blood Pressure Control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates intensive blood pressure control versus standard control and reports major cardiovascular outcomes and mortality (so A and B pass). However, the TARGET FEATURE (Bmi) is not analyzed as an effect modifier: BMI is only reported as a baseline characteristic (a small between-arm difference within the MetS subgroup) and there is no subgroup analysis, interaction test, or outcome association reported by BMI. Because the feature is missing as an analyzed modifier (per the Step 1 rules), the abstract is irrelevant to assessing the proposed BMI-related mechanism.",
+          "evidence_quote": "\"Baseline characteristics were similar in the two SBP target groups within each MetS subgroup, except body mass index was slightly higher in the standard arm of the MetS subgroup (33.3 \u00b1 5.6 vs 33.0 \u00b1 5.3 kg/m2 ; P < .01), but were similar across treatment arms in the non-MetS subgroup.\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate an intensive versus standard blood-pressure\u2013lowering treatment strategy (it compares measurement methods), nor does it report major cardiovascular outcomes or mortality. Although BMI is mentioned in a subgroup analysis of measurement methods, it is not analyzed as a predictor or effect modifier of treatment benefit on cardiovascular outcomes. Therefore the abstract is not relevant to testing the hypothesized mechanism linking BMI-driven insulin resistance to differential benefit from intensive glycaemic control in ACCORD-like trials.",
+          "evidence_quote": "\"Subgroup analysis by age, gender, BMI, and diabetes showed no significant difference in blood pressure measurement results between unattended and conventional methods.\"",
+          "stance": "neutral",
+          "pmid": "39282815",
+          "title": "Unattended versus conventional blood pressure measurements in hospitalized hypertensive patients.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

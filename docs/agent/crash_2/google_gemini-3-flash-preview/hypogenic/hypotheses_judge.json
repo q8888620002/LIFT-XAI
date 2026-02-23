@@ -1,0 +1,356 @@
+{
+  "summary": "The evaluation covers 15 hypotheses derived from the CRASH-2 dataset using the HypoGeniC method. The top-rated hypotheses focus on the established time-dependence of TXA efficacy and the physiological drivers of hyperfibrinolysis (shock severity). Several hypotheses exploring gender-injury type interactions and 'occult shock' (capillary refill) provide novel perspectives but are limited by the small validation sample size (n=200) and the risk of over-fitting standardized features. Hypotheses related to TBI and 'fibrinolysis shutdown' align well with modern trauma literature (CRASH-3 findings) and provide strong clinical plausibility.",
+  "scored_hypotheses": [
+    {
+      "title": "Time-Dependent Efficacy and Fibrinolysis Switch",
+      "scientific_rigor": 5,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 5,
+      "validation_plan_quality": 4,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Strongly supported by original CRASH-2 and WOMAN trial results",
+        "Biologically sound mechanism involving the transition from hyperfibrinolysis to shutdown",
+        "Clear, actionable clinical threshold (3 hours)"
+      ],
+      "weaknesses": [
+        "Relatively low novelty as this is a well-known interaction",
+        "Potential for measurement error in injury-to-treatment time estimates"
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is the most robust and clinically validated interaction for TXA in trauma. It serves as a necessary benchmark for any subgroup analysis in this dataset."
+    },
+    {
+      "title": "Shock Severity and TXA Benefit",
+      "scientific_rigor": 5,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Highly plausible mechanism correlating hypoperfusion with tPA release",
+        "Clinical threshold (SBP <= 90) is standard in trauma protocols",
+        "Directly targets the primary mechanism of TXA"
+      ],
+      "weaknesses": [
+        "SBP is a dynamic metric; a single measurement may miss evolving shock",
+        "Potential for immortality bias if patients die before administration"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Fundamental to the pharmacology of TXA. While not novel, its validation is essential for defining the high-benefit cohort."
+    },
+    {
+      "title": "Traumatic Brain Injury Synergy",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 4,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Aligns with CRASH-3 trial findings regarding TBI",
+        "Mechanistically detailed (intracranial hemorrhage expansion)",
+        "Solid validation plan using DR estimation"
+      ],
+      "weaknesses": [
+        "CRASH-2 lacks neuro-imaging to confirm the mechanism",
+        "GCS can be confounded by intoxicants or sedation"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Highly relevant given the subsequent CRASH-3 trial. Validating this in the CRASH-2 cohort strengthens the global evidence for TXA in TBI."
+    },
+    {
+      "title": "The Late-Injury Coagulopathy Threshold",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Focuses on the critical 'harm' signal which is vital for safety",
+        "Utilizes modern statistical methods (Causal Forest, RCS)",
+        "Directly addresses the biological phase shift in trauma"
+      ],
+      "weaknesses": [
+        "Threshold (0.05) is standardized and requires back-calculation to be clinically useful",
+        "Small sample size in late-presenting cohorts may limit power"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Understanding the harm window is as important as the benefit window. This warrants rigorous verification."
+    },
+    {
+      "title": "Low Capillary Refill-Age Interaction in Occult Hemorrhage",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 3,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 5,
+      "overall_score": 4,
+      "strengths": [
+        "Unique focus on microcirculatory markers rather than macro-hemodynamics",
+        "Explores a physiologically sound 'compensated shock' phase in youth",
+        "High novelty"
+      ],
+      "weaknesses": [
+        "Capillary refill is notoriously subjective and poorly recorded",
+        "Relies on standardized interaction features which are difficult to implement clinically"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Very interesting hypothesis but requires high-quality data often lacking in the CRASH-2 registry for capillary refill."
+    },
+    {
+      "title": "Penetrating vs. Blunt Injury Responsiveness",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 4,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Clear anatomical and physiological distinction",
+        "Supported by military trauma data (MATTERs trial)",
+        "Straightforward validation path"
+      ],
+      "weaknesses": [
+        "Injury mechanism is often a proxy for time-to-treatment",
+        "Validation plan lacks specific controls for injury severity (ISS)"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Clinically intuitive, though the effect may be largely explained by earlier presentation of penetrating trauma victims."
+    },
+    {
+      "title": "Elderly Fibrinolytic Response",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 4,
+      "subgroup_clarity": 4,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Addresses a growing demographic in trauma medicine",
+        "Plausible mechanism regarding aged-related PAI-1 elevation"
+      ],
+      "weaknesses": [
+        "The small n=200 sample likely lacks enough elderly patients for a powered interaction test",
+        "Comorbidities/anticoagulants are major unmeasured confounders"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Biologically sound but probably underpowered in the provided context."
+    },
+    {
+      "title": "Penetrating Injury Gender Divergence",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 2,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 3,
+      "novelty": 5,
+      "overall_score": 3,
+      "strengths": [
+        "Explores intriguing biological sex differences in coagulation",
+        "Excellent awareness of socio-environmental confounders"
+      ],
+      "weaknesses": [
+        "Three-way interaction is statistically risky in a small dataset",
+        "Male predominance in 'benefit clusters' likely reflects injury severity, not hormonal biology"
+      ],
+      "recommendation": "low_priority",
+      "justification": "Highly speculative; requires much larger datasets (e.g., full CRASH-2/3 meta-analysis) to tease out gender vs. mechanism."
+    },
+    {
+      "title": "Capillary Refill and Respiration Interaction in Occult Shock",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 2,
+      "subgroup_clarity": 2,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Attempts to define a 'silent but lethal' cohort",
+        "Novel use of physiological compensation concepts"
+      ],
+      "weaknesses": [
+        "The subgroup rule (irr <= -0.14) is highly abstract",
+        "Normal RR can be a sign of intubation, which is a massive confounder"
+      ],
+      "recommendation": "low_priority",
+      "justification": "The lack of context on whether patients were intubated makes 'low respiratory rate' an unreliable feature for occult shock."
+    },
+    {
+      "title": "Low Shock Severity Paradox",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 4,
+      "subgroup_clarity": 4,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Correctly identifies the 'floor effect' in low-risk patients",
+        "Clear validation plan"
+      ],
+      "weaknesses": [
+        "Not truly an 'effect modification' as much as an 'absence of risk' calculation",
+        "Low relevance for clinical decision-making (TXA is low risk regardless)"
+      ],
+      "recommendation": "low_priority",
+      "justification": "Less a hypothesis about TXA and more a statement on baseline risk. Provides little actionable insight."
+    },
+    {
+      "title": "Normotensive Tachypneic Blunt Trauma Profile",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 3,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 3,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Sophisticated attempt to isolate metabolic vs. hemorrhagic drivers",
+        "Strong focus on competing risks (SIRS/TBI)"
+      ],
+      "weaknesses": [
+        "Likely underpowered (n=200)",
+        "Measurement of RR in trauma is highly variable"
+      ],
+      "recommendation": "reconsider",
+      "justification": "The biological signal is likely too weak to be isolated from the noise of the standard clinical measurements available."
+    },
+    {
+      "title": "Physiological Buffer Hypothesis in Compensated Shock",
+      "scientific_rigor": 2,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 2,
+      "subgroup_clarity": 2,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 2,
+      "novelty": 4,
+      "overall_score": 2,
+      "strengths": [
+        "Integrates age, BP, and respiration into a single physiological state"
+      ],
+      "weaknesses": [
+        "Overly complex subgroup rule (3 features)",
+        "Standardized thresholds (isbp >= 0) are not portable across hospitals"
+      ],
+      "recommendation": "reconsider",
+      "justification": "High risk of data-dredging with a 3-way interaction on standardized variables in a small sample."
+    },
+    {
+      "title": "Post-Injury Time Sensitivity in Males",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 3,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Targets the most data-rich demographic in the set (males)",
+        "Builds on the established clock-time decay of efficacy"
+      ],
+      "weaknesses": [
+        "The gender-specific timing effect lacks strong biological evidence",
+        "Unlikely to offer incremental benefit over a gender-neutral time analysis"
+      ],
+      "recommendation": "low_priority",
+      "justification": "Unlikely to be actionable or statistically significant compared to simple time-to-treatment analysis."
+    },
+    {
+      "title": "Neurological Resilience and TXA Benefit Interaction",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 2,
+      "evidence_alignment": 3,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 3,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Addresses the important risk-benefit balance in low-severity patients"
+      ],
+      "weaknesses": [
+        "Speculative claim that TXA increases mortality in high GCS patients",
+        "Contradicts the general safety profile of TXA seen in larger trials (no increase in VTE)"
+      ],
+      "recommendation": "reconsider",
+      "justification": "The potential 'harm' in high-GCS patients is not well-supported by broader evidence and may simply be a statistical artifact of low event rates."
+    },
+    {
+      "title": "Delayed Coagulopathy in High-GCS Blunt Trauma",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 3,
+      "evidence_alignment": 2,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 3,
+      "validation_plan_quality": 3,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Focuses on the kinetic difference between blunt and penetrating injury"
+      ],
+      "weaknesses": [
+        "High GCS blunt trauma is already a very low-mortality subgroup; finding an interaction is difficult",
+        "Confounding by indication is high"
+      ],
+      "recommendation": "low_priority",
+      "justification": "Low priority due to the likely absence of a strong mortality signal in this stable cohort."
+    }
+  ],
+  "top_hypotheses": [
+    "Time-Dependent Efficacy and Fibrinolysis Switch",
+    "Shock Severity and TXA Benefit",
+    "Traumatic Brain Injury Synergy",
+    "The Late-Injury Coagulopathy Threshold"
+  ],
+  "methodological_concerns": [
+    "Small sample size (n=200) for a trial with thousands of participants in the original registry makes interaction tests for subgroups highly susceptible to Type I errors.",
+    "The use of standardized (z-scored) features (e.g., irr <= -0.14) hinders clinical interpretability and transferability to other cohorts.",
+    "Absence of laboratory markers of coagulation (TEG/ROTEM) means that mechanisms like 'fibrinolysis shutdown' are inferred solely from timing, not physiology.",
+    "Potential for confounding by mechanical ventilation or pre-hospital medications in respiratory rate and capillary refill measurements."
+  ],
+  "statistics": {
+    "average_scores": {
+      "scientific_rigor": 3.466666666666667,
+      "clinical_plausibility": 3.6,
+      "evidence_alignment": 3.466666666666667,
+      "subgroup_clarity": 3.466666666666667,
+      "confounding_awareness": 3.6,
+      "validation_plan_quality": 3.2666666666666666,
+      "novelty": 3.4,
+      "overall_score": 3.3333333333333335
+    },
+    "recommendations": {
+      "high_priority": 4,
+      "medium_priority": 3,
+      "low_priority": 5,
+      "reconsider": 3,
+      "support_rate": 0.4666666666666667,
+      "neutral_rate": 0.3333333333333333,
+      "conflict_rate": 0.2
+    }
+  }
+}

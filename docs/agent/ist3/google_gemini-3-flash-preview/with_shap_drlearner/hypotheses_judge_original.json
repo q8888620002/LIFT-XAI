@@ -1,0 +1,270 @@
+{
+  "summary": "The evaluation of five key features from the IST-3 trial context reveals a highly plausible and evidence-aligned set of mechanistic hypotheses. The model correctly identifies NIHSS as the primary effect modifier, which is consistent with the 'stroke severity' paradox in thrombolysis (benefit vs. risk). The include of antiplatelet use and TACI status as high-importance features aligns well with the IST-3 study's specific focus on expanding the evidence base for complex patients and larger infarcts. The mechanisms proposed integrate biological (BBB disruption), pharmacological (hemostasis inhibition), and physiological (LVO recanalization) perspectives accurately.",
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Classic description of the penumbral hypothesis versus the ceiling/floor effects of stroke severity."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Strongly supported by the known limitations of IV alteplase in proximal Large Vessel Occlusions (LVOs)."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Correctly identifies the non-linear relationship between baseline severity and potential for functional recovery."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 5,
+      "strengths": [
+        "Well-established hierarchy of importance",
+        "Accurate identification of the NIHSS 10-20 'sweet spot' for relative benefit"
+      ],
+      "weaknesses": [
+        "Relatively low novelty as these are standard stroke paradigms"
+      ],
+      "recommendation": "high_priority",
+      "justification": "NIHSS is the gold standard for treatment effect heterogeneity in stroke; the proposed mechanisms are biologically sound and evidence-backed."
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Directly addresses the increased bleeding risk known from combining antiplatelets and RT-PA."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 4,
+          "overall_score": 4,
+          "comments": "Interesting perspective on clot structural changes (platelet-rich vs. fibrin-rich) affecting lysis."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Accurate assessment of antiplatelets as a marker for systemic atherosclerosis."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Identifies both a safety risk (sICH) and a surrogate marker for vascular frailty"
+      ],
+      "weaknesses": [
+        "Does not specify if the antiplatelet effect differs by actual drug type (e.g. ADP inhibitors vs COX inhibitors) in the main summary"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Antiplatelet use was a key subgroup of interest in IST-3; its high ranking correctly reflects its impact on the risk-benefit profile."
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Addresses 'room for improvement' accurately."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 4,
+          "overall_score": 4,
+          "comments": "Thoughtful insight into collateral circulation preservation despite low main-vessel recanalization."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Recognizes TACI as a high-value clinical phenotype proxy."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 4,
+      "overall_score": 4,
+      "strengths": [
+        "Highlights the importance of Bamford classification in the IST-3 trial context"
+      ],
+      "weaknesses": [
+        "TACI patients often have the worst outcomes regardless of treatment, making it difficult to prove 'benefit' via functional scores"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "While clinically vital, the 'room for improvement' logic must be balanced against the high mortality/sICH risk in this group."
+    },
+    {
+      "feature_name": "age",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Appropriate focus on BBB and amyloid angiopathy."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Speculative; liver flow is a factor but not a major clinical driver for RT-PA dose-effects."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Crucial point: pre-existing disability in elderly patients dilutes observable treatment effects."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 5,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Strong awareness of age as a proxy for both brain health and functional baseline"
+      ],
+      "weaknesses": [
+        "Pharmacological mechanism is slightly weak compared to the others"
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age was a primary focus of IST-3 (removing the age limit). Its ranking is highly appropriate and clinically grounded."
+    },
+    {
+      "feature_name": "dbprand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Directly aligns with guidelines for blood pressure management in RT-PA."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Sound reasoning regarding autoregulation impairment."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 4,
+          "overall_score": 4,
+          "comments": "Interesting link between BP and 'emergency' response to a severe thrombus."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Clear link between diastolic pressure and endothelial stress"
+      ],
+      "weaknesses": [
+        "Does not contrast DBP with SBP, which is often prioritized in clinical guidelines"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "BP is a critical safety modifier; identifying DBP as a key feature is consistent with safety protocols but standard."
+    }
+  ],
+  "top_features": [
+    "nihss",
+    "antiplat_rand",
+    "age"
+  ],
+  "methodological_concerns": [
+    "Potential confounding between NIHSS and TACI; they measure similar aspects of stroke severity and volume.",
+    "The 'survivor bias' in functional outcomes (OHS) for TACI and elderly patients should be controlled for using mortality-adjusted analyses."
+  ]
+}

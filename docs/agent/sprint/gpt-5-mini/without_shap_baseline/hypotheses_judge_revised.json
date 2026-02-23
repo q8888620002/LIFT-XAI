@@ -1,0 +1,283 @@
+{
+  "summary": "Overall, the revised hypotheses are biologically and clinically plausible and mostly well-aligned with evidence from SPRINT-era literature. Baseline SBP is the strongest, best-supported effect modifier (highest priority). Age and CKD are plausible and actionable modifiers but require frailty and albuminuria detail respectively to refine predictions. Prior CVD and baseline medication burden are reasonable hypotheses but are more heterogeneous, less consistently supported as modifiers of relative treatment effect, and more vulnerable to confounding or measurement limitations. Validation suggestions are generally appropriate; the main cross-cutting limitations are trial eligibility constraints (SPRINT excluded diabetes and very frail/institutionalized patients), possible limited availability of frailty/albuminuria/adherence data, measurement error in single SBP readings, and limited power to detect interactions.",
+  "scored_features": [
+    {
+      "feature_name": "Baseline systolic blood pressure (SBP)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Well-established pathophysiology linking chronically elevated SBP to target-organ damage (stroke, HF); specific and testable in SPRINT with achieved BP mediation."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Dose-response/greater absolute reductions from higher baseline BP are consistent with antihypertensive pharmacology; heterogeneity by agent class acknowledged but needs class-level data."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Regression-to-the-mean and baseline risk effects are real concerns; suggested corrections (averaged baseline, splines, mediation) are appropriate and testable."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Mechanisms are biologically coherent and directly relevant to outcomes measured in SPRINT.",
+        "Clear, operational subgroup cutpoints and practical validation steps (interaction models, ARR/NNT, mediation).",
+        "Caveats appropriately note measurement error and eligibility constraints."
+      ],
+      "weaknesses": [
+        "Cutpoints are clinically reasonable but somewhat arbitrary; continuous modeling with splines is recommended (and is suggested).",
+        "Evidence about heterogeneity of relative vs absolute effects needs emphasis: relative effects may be stable while absolute effects vary."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Baseline SBP is the most plausible and actionable modifier given SPRINT design and prior literature; analyses proposed are feasible and high-yield."
+    },
+    {
+      "feature_name": "Age (particularly \u226575 years)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Arterial stiffening and pulse-pressure effects are plausible contributors to differential absolute benefit; markers like pulse pressure could refine mechanism testing."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Subclinical cerebrovascular burden plausibly modifies treatment effect, but direct evidence in SPRINT without imaging/biomarkers is limited."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Age-driven differences in baseline risk and competing mortality are major drivers of absolute benefit; these are measurable and should be modeled explicitly."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Recognizes both increased absolute benefit and increased harms in older adults, and recommends frailty adjustment.",
+        "Validation suggestions (competing-risk models, NNT/NNH, frailty interaction) are appropriate."
+      ],
+      "weaknesses": [
+        "SPRINT excluded very frail or institutionalized elders; frailty proxies may be absent or incomplete in trial data.",
+        "Some mechanistic claims (imaging markers) are speculative given likely lack of data."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is an important modifier of absolute benefit but proper inference requires frailty/functional data and competing-risk approaches; moderate priority for follow-up."
+    },
+    {
+      "feature_name": "Chronic kidney disease (reduced eGFR / CKD)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "CKD increases CV risk and plausibly increases absolute benefit for CV outcomes; evidence from trials and cohorts supports this direction for earlier-stage CKD."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Reduced renal autoregulation increasing AKI risk with intensive lowering is well-described; distinguishing transient hemodynamic eGFR drops from progressive loss is crucial and testable."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "CKD captures a sicker phenotype with competing risks; net benefit assessment requires joint consideration of CV events and renal harms."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Balanced discussion of potential greater absolute CV benefit vs increased renal harms; proposes concrete renal safety analyses and eGFR slope estimation.",
+        "Subgroup cutpoints by eGFR and albuminuria are clinically meaningful."
+      ],
+      "weaknesses": [
+        "SPRINT excluded diabetics; generalizability to diabetic CKD is limited.",
+        "Albuminuria data may be incomplete in some datasets; CKD etiology heterogeneity can confound conclusions."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "CKD is a plausible and clinically important modifier, but requires careful joint outcome modeling and renal-specific endpoints; medium priority for targeted validation."
+    },
+    {
+      "feature_name": "Prior cardiovascular disease (history of MI, stroke, revascularization)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Plausible that some recurrent events are less BP-sensitive, but evidence for consistent relative-effect modification by prior CVD is weak and heterogeneous."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Confounding by background secondary-prevention therapies is a strong concern; statistical control is necessary but may not fully remove bias."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Post-stroke autoregulatory impairment increasing hypoperfusion risk is plausible, particularly for recent large strokes, but trial data are limited to evaluate this robustly."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Practical breakdown into CVD subtypes and time-since-event improves interpretability.",
+        "Appropriate caution about confounding and limited power for interaction testing."
+      ],
+      "weaknesses": [
+        "Direction of effect modification is uncertain and likely heterogeneous across subtypes.",
+        "Background therapy confounding (statins, antiplatelets) is likely and difficult to fully adjust for in trial subsets."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Worth exploring descriptively, but less likely to yield robust, actionable interaction findings in SPRINT due to heterogeneity, confounding, and limited subgroup sizes."
+    },
+    {
+      "feature_name": "Number of baseline antihypertensive medications (medication burden/resistance)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Ceiling effects and pharmacologic tolerance are reasonable mechanisms; class- and dose-level data are needed to test specificity."
+        },
+        {
+          "mechanism_type": "behavioral",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 2,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "Adherence-mediated effects are plausible but require adherence measures (often missing); speculative without such data."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Medication count is a noisy proxy for disease severity/resistance; confounding by indication is a major issue but can be partially addressed with adjustment."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Operational definition (count, resistant HTN flag) is practical and matches clinical intuition.",
+        "Validation suggestions (mediation by achieved BP, sensitivity for adherence) are appropriate."
+      ],
+      "weaknesses": [
+        "Medication count omits dosing, agent class, and true adherence; may misclassify resistant hypertension.",
+        "Reverse causation and confounding by clinician behavior limit causal interpretation."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Potentially informative for predicting achieved BP and treatment effect heterogeneity, but analysis must carefully address confounding and measurement limitations; moderate priority for exploratory analyses."
+    }
+  ],
+  "top_features": [
+    "Baseline systolic blood pressure (SBP)",
+    "Age (particularly \u226575 years)",
+    "Chronic kidney disease (reduced eGFR / CKD)"
+  ],
+  "methodological_concerns": [
+    "SPRINT eligibility (no diabetes, exclusion of extremely frail/institutionalized patients) limits external generalizability and the range of baseline SBP, age/frailty, and CKD severities\u2014interactions may not generalize.",
+    "Limited availability of key modifiers in trial data (frailty indices, albuminuria in some participants, medication dosing/class details, adherence measures, vascular imaging) will constrain mechanistic tests.",
+    "Subgroup-by-treatment interaction tests are underpowered; emphasize estimation of absolute risk differences and CIs rather than relying solely on p-values for interaction.",
+    "Regression-to-the-mean and measurement error in baseline SBP must be addressed (use averaged pre-randomization readings where possible).",
+    "Confounding by indication (e.g., medication burden reflecting clinician response to severity) and differences in background secondary-prevention therapies (in prior CVD) can bias subgroup effect estimates\u2014robust adjustment strategies needed."
+  ]
+}

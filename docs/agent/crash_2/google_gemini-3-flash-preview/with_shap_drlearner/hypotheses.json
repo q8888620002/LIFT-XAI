@@ -1,0 +1,168 @@
+{
+  "dataset": "CRASH-2",
+  "model": "Heterogeneous Treatment Effect Model",
+  "summary": "The analysis identifies baseline physiological severity and injury classification as primary drivers of Tranexamic Acid (TXA) treatment benefit. Interaction effects suggest that patients with more acute presentations of hemorrhage-induced shock and blunt trauma derive greater relative benefits from antifibrinolytic therapy.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "iinjurytype",
+      "importance_rank": 1,
+      "shap_value": 0.126,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Mechanism of injury (Blunt vs. Penetrating)",
+      "why_important": "Injury type dictates the pattern of vascular damage and the localized vs. systemic nature of the hyperfibrinolytic response.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Blunt trauma often causes more extensive tissue destruction and systemic release of tissue factor, leading to a broader hyperfibrinolytic state that TXA effectively counteracts.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Penetrating injuries may involve focal vascular lesions where surgical control is more decisive than systemic coagulation modulation compared to blunt injuries.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Injury type may serve as a proxy for 'Time since Injury' variations; blunt trauma often has different pre-hospital transport durations than penetrating trauma.",
+          "evidence_level": "weak"
+        }
+      ],
+      "subgroup_implications": "Blunt trauma patients may experience a more significant reduction in mortality compared to penetrating trauma patients.",
+      "validation_suggestions": [
+        "Perform subgroup analysis stratified by blunt vs. penetrating injury in the CRASH-3 trial dataset."
+      ],
+      "caveats": [
+        "Classification errors between blunt and penetrating injuries in multi-center trauma registries."
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "importance_rank": 2,
+      "shap_value": 0.037,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Initial heart rate (bpm)",
+      "why_important": "Tachycardia is a cardinal sign of hemorrhagic shock; higher heart rates indicate a more active state of bleeding where TXA benefit is maximized.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "High heart rate indicates compensated shock; TXA administration during this window prevents progression to coagulopathy or decompensated shock.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Increased cardiac output in tachycardia may lead to faster systemic distribution of the TXA bolus to active bleeding sites.",
+          "evidence_level": "speculative"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Heart rate is a proxy for sympathetic surge and injury severity; higher values identify the 'sickest' patients who have more to gain from any effective intervention.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with HR > 110 bpm likely exhibit higher treatment response than those with normal heart rates.",
+      "validation_suggestions": [
+        "Interact HR as a continuous variable with treatment assignment in a Cox proportional hazards model."
+      ],
+      "caveats": [
+        "Beta-blockers or other medications may mask tachycardia, confounding the heart rate as a signal for shock."
+      ]
+    },
+    {
+      "feature_name": "igcs",
+      "importance_rank": 3,
+      "shap_value": 0.035,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Glasgow Coma Scale score",
+      "why_important": "Low GCS identifies patients with severe brain injury or profound hypotension where the cause of mortality shifts from hemorrhage to primary neurological failure.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Patients with very low GCS may have primary TBI; while TXA helps bleeding, it may not reverse the primary mechanical brain injury, diluting the treatment effect.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Profoundly low GCS reflects end-stage shock where multi-organ failure has begun, potentially reaching a 'point of no return' for antifibrinolytic benefit.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Higher GCS is a proxy for survival probability; TXA may show less benefit in those with high GCS due to 'ceiling effects' where survival is already likely.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "TXA benefit may be attenuated in patients with GCS < 8 due to competing risks of death from TBI.",
+      "validation_suggestions": [
+        "Assess the interaction between GCS and TXA specifically for the 'death due to bleeding' sub-outcome."
+      ],
+      "caveats": [
+        "GCS can be influenced by sedation or alcohol, not just injury severity."
+      ]
+    },
+    {
+      "feature_name": "irr",
+      "importance_rank": 4,
+      "shap_value": 0.032,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Initial respiratory rate",
+      "why_important": "Tachypnea is a compensatory mechanism for metabolic acidosis resulting from tissue hypoperfusion in hemorrhagic shock.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "High respiratory rate signals severe metabolic acidosis; TXA's role in stabilizing clots is critical in the acidic environments where fibrinolysis is accelerated.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Increased RR indicates physiological stress and higher work of breathing; stabilizing bleeding reduces the risk of respiratory exhaustion and failure.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Respiratory rate is often a proxy for the 'Global Assessment' of patient distress not fully captured by SBP alone.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with RR > 24 per minute may derive enhanced benefit from rapid TXA administration.",
+      "validation_suggestions": [
+        "Compare TXA efficacy in patients with high RR and low SBP vs low RR and low SBP."
+      ],
+      "caveats": [
+        "Respiratory rate is often the most poorly measured vital sign in emergency settings."
+      ]
+    },
+    {
+      "feature_name": "iage",
+      "importance_rank": 5,
+      "shap_value": 0.031,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Patient age in years",
+      "why_important": "Age influences the baseline coagulation state and the physiological reserve to tolerate hemorrhage and its treatment.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Elderly patients may have a baseline pro-thrombotic state (age-related hypercoagulability); TXA might offer less incremental benefit or carry higher thrombotic risk.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Renal clearance of TXA decreases with age; older patients may experience higher plasma concentrations which could alter the risk-benefit profile.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Older patients have lower physiological reserve; the benefit of preventing bleeding may be outweighed by other comorbidities or failure to recover from surgery.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Younger patients (Age < 40) may show more consistent survival benefits than the elderly (Age > 70).",
+      "validation_suggestions": [
+        "Quadratic interaction terms for age to check for non-linear treatment effect modifiers."
+      ],
+      "caveats": [
+        "Age is highly correlated with pre-existing medications like anticoagulants which are often unmeasured in CRASH-2."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "The model prioritizes 'shock markers' (HR, RR) and 'proxies for competing mortality' (GCS, Age) as the primary modifiers of TXA benefit. This suggests the treatment effect is strongest in a 'Goldilocks zone'\u2014patients sick enough to be bleeding severely (high HR, high RR) but not so injured that neurological death is inevitable (low GCS)."
+}

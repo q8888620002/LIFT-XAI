@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """clinical_agent.py
 
-Generate clinical research hypotheses from a Shapley summary JSON using OpenAI's API,
-returning structured JSON output via Structured Outputs (Pydantic schema).
+Generate clinical research hypotheses from a Shapley summary JSON using OpenAI's API
+or OpenRouter, returning structured JSON output via Structured Outputs (Pydantic schema).
 Optionally verify and independently score hypotheses with separate LLM judges.
 
 Requires:
   pip install openai pydantic
+
+API Keys:
+  - OpenAI: Set OPENAI_API_KEY environment variable
+  - OpenRouter: Set OPENROUTER_API_KEY environment variable
 
 Example:
   python clinical_agent.py \
@@ -15,6 +19,16 @@ Example:
     --trial_name ist3 \
     --n_features 15 \
     --n_hypotheses 8
+
+  Or with OpenRouter:
+  export OPENROUTER_API_KEY=your_key_here
+  python clinical_agent.py \
+    --shap_json results/ist3/shap_summary.json \
+    --out_json results/ist3/hypotheses.json \
+    --trial_name ist3 \
+    --model anthropic/claude-3.5-sonnet \
+    --api_provider openrouter \
+    --enable_judge
 
   Or with manual metadata:
   python clinical_agent.py \
@@ -220,6 +234,12 @@ class HypothesisScore(BaseModel):
         ge=1,
         le=10,
         description="Validation plan quality (1-10): concreteness and appropriateness of proposed validation",
+    )
+    novelty: int = Field(
+        ...,
+        ge=1,
+        le=10,
+        description="Novelty (1-10): originality and potential for new insights beyond existing literature",
     )
     overall_score: int = Field(
         ..., ge=1, le=10, description="Overall score (1-10): holistic assessment"
@@ -495,6 +515,12 @@ class MechanismScore(BaseModel):
         le=5,
         description="Testability (1-5): how testable/falsifiable is this mechanism"
     )
+    novelty: int = Field(
+        ...,
+        ge=1,
+        le=5,
+        description="Novelty (1-5): originality of this specific mechanism explanation"
+    )
     overall_score: int = Field(
         ..., ge=1, le=5, description="Overall score (1-5) for this mechanism"
     )
@@ -544,6 +570,12 @@ class FeatureHypothesisScoreWithMechanisms(BaseModel):
         le=5,
         description="Caveat awareness (1-5): thoroughness in acknowledging limitations and alternatives",
     )
+    novelty: int = Field(
+        ...,
+        ge=1,
+        le=5,
+        description="Novelty (1-5): originality and potential for new insights beyond existing literature",
+    )
     overall_score: int = Field(
         ..., ge=1, le=5, description="Overall score (1-5): holistic assessment"
     )
@@ -575,13 +607,13 @@ class FeatureJudgeOutput(BaseModel):
 # -----------------------------
 
 
-def load_top_features(shap_json_path: str, n_features: int) -> dict:
+def load_top_features(shap_json_path: str, n_features: int, dataset_override: str = None) -> dict:
     with open(shap_json_path, "r") as f:
         data = json.load(f)
 
     meta = data.get("metadata", {})
     explainer = meta.get("explainer", "unknown_explainer")
-    dataset = meta.get("dataset", "unknown_dataset")
+    dataset = dataset_override if dataset_override else meta.get("dataset", "unknown_dataset")
     learner = meta.get("learner", "unknown_learner")
 
     # Prefer pre-sorted list by mean_abs if present
@@ -755,6 +787,57 @@ def search_and_extract_article(
         return None
 
 
+def _fill_mechanisms_for_feature(
+    feature_hypothesis: "FeatureHypothesis",
+    count_needed: int,
+    study_context: dict,
+    client: OpenAI,
+    model_name: str,
+) -> List["MechanismHypothesis"]:
+    """Request additional mechanisms for a feature that was under-generated."""
+
+    existing_descriptions = [m.description for m in (feature_hypothesis.mechanisms or [])]
+    existing_types = [m.mechanism_type for m in (feature_hypothesis.mechanisms or [])]
+
+    class _MechanismList(BaseModel):
+        mechanisms: List[MechanismHypothesis]
+
+    system = (
+        "You are a clinical research expert. Generate additional distinct mechanism hypotheses "
+        "for a specific feature explaining treatment effect heterogeneity. "
+        "Each mechanism must be different in type or focus from the existing ones."
+    )
+    user_prompt = {
+        "task": f"Generate {count_needed} additional mechanism(s) for feature '{feature_hypothesis.feature_name}'",
+        "study_context": study_context,
+        "feature_name": feature_hypothesis.feature_name,
+        "clinical_interpretation": feature_hypothesis.clinical_interpretation,
+        "existing_mechanisms": [
+            {"type": t, "description": d}
+            for t, d in zip(existing_types, existing_descriptions)
+        ],
+        "count_needed": count_needed,
+        "instructions": [
+            f"Generate exactly {count_needed} new mechanism(s) DISTINCT from the existing ones above",
+            "Prefer unused mechanism types: biological, pharmacological, statistical/proxy",
+            "Each mechanism must explain how this feature modifies the TREATMENT EFFECT (not just prognosis)",
+        ],
+    }
+    try:
+        completion = client.beta.chat.completions.parse(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(user_prompt, indent=2)},
+            ],
+            response_format=_MechanismList,
+        )
+        return (completion.choices[0].message.parsed.mechanisms or [])[:count_needed]
+    except Exception as e:
+        print(f"    Error in mechanism gap-fill for '{feature_hypothesis.feature_name}': {e}")
+        return []
+
+
 def generate_feature_hypotheses(
     top_features: List[dict],
     study_context: dict,
@@ -762,72 +845,76 @@ def generate_feature_hypotheses(
     model_name: str = "gpt-4o-2024-08-06"
 ) -> Optional[FeatureHypothesesSet]:
     
-    # 1. SHARED KNOWLEDGE BASE (Literature access for both)
-    literature_grounding = (
-        "Your reasoning MUST be grounded in the latest clinical literature, including:\n"
-        "- Known pathophysiology and pharmacology (MoA)\n"
-        "- Published results from phase III trials and meta-analyses\n"
-        "- Standard-of-care clinical guidelines (e.g., ACC/AHA, ASCO, etc.)\n"
-        "- Biological plausibility and pharmacokinetic principles\n"
+    # 1. CORE DEFINITIONS (Strict Definitions to prevent drift)
+    definitions = (
+        "DEFINITIONS:\n"
+        "- PROGNOSTIC FACTOR: A feature that predicts the outcome regardless of treatment (e.g., 'Age increases mortality'). "
+        "-> IGNORE these unless they also modify treatment response.\n"
+        "- PREDICTIVE FACTOR (EFFECT MODIFIER): A feature that changes the MAGNITUDE or DIRECTION of the treatment benefit "
+        "(e.g., 'Drug works better in Young people than Old'). -> FOCUS on these.\n"
     )
 
-    # 2. DIRECTIONAL LOGIC
+    # 2. MECHANISM DIVERSITY INSTRUCTION
+    diversity_instruction = (
+        "For each feature, you must propose distinct mechanism types if possible:\n"
+        "   - 'biological': Direct pathophysiological interaction.\n"
+        "   - 'pharmacological': PK/PD, metabolism, drug clearance.\n"
+        "   - 'statistical/proxy': If the feature is likely a proxy for an unmeasured confounder (e.g., 'zip code' -> 'socioeconomic status').\n"
+    )
+
+    # 3. CONTEXTUAL LOGIC
     use_data_summary = study_context.get("use_data_summary", False)
     
     if len(top_features) > 0:
-        # MODE 1: WITH SHAP - Data -> Literature
+        # MODE 1: WITH SHAP (Interpretation)
         role_type = "Forensic Clinical Interpreter"
         directive = (
-            "You have been provided with SHAP values from a machine learning model. "
-            "Your task is to use the literature to EXPLAIN why these specific features "
-            "were found to be important. Do not ignore the data in favor of generic "
-            "mechanisms; justify the observed signal using science."
+            "You are analyzing SHAP feature importance data from a machine learning model.\n"
+            "TASK: Explain WHY these specific features might be modifying the treatment effect.\n"
+            "CRITICAL WARNING: The model finds correlations, not causation. If a feature seems biologically implausible "
+            "(e.g., a random administrative code), do not hallucinate a biological mechanism. "
+            "Instead, propose a 'statistical' mechanism explaining what it might be a proxy for."
         )
     elif use_data_summary:
-        # MODE 2: WITH DATA SUMMARY - Literature + Available Features
+        # MODE 2: BLINDED PREDICTION (Available Features Only)
         role_type = "Informed Clinical Expert"
         available_cols = study_context.get("available_features", [])
         directive = (
-            f"You are blinded to the model importance scores, but you know which features "
-            f"were measured in this study: {available_cols}. Based on the trial context and "
-            f"these available features, use the literature to PREDICT which characteristics "
-            f"are most likely to modify treatment effects. Prioritize the most biologically "
-            f"plausible candidates from the available features."
+            f"You are blinded to the model results. You know only the study design and the list of measured features: {available_cols}.\n"
+            "TASK: Predict which of these available features are most likely to be true Effect Modifiers.\n"
+            "Prioritize features with strong mechanistic plausibility over generic demographic variables."
         )
     else:
-        # MODE 3: WITHOUT SHAP - Literature Only
+        # MODE 3: PURE THEORY (Literature Only)
         role_type = "Theoretical Clinical Expert"
         directive = (
-            f"You are blinded to both the model results AND the dataset features. Based ONLY on "
-            f"the trial information (treatment, outcome, population), use the literature to "
-            f"PREDICT which patient characteristics are most likely to modify treatment effects. "
-            f"Nominate the most biologically plausible candidates based on established clinical "
-            f"evidence, without reference to what was measured in the study."
+            "You are blinded to the dataset. Based ONLY on the trial metadata (Treatment/Outcome), "
+            "hypothesize which patient characteristics would theoretically modify the treatment response."
         )
 
-    # 3. ASSEMBLE SYSTEM PROMPT
+    # 4. ASSEMBLE SYSTEM PROMPT
     system_instructions = (
         f"You are a {role_type}.\n\n"
+        f"{definitions}\n"
         f"{directive}\n\n"
-        f"{literature_grounding}\n"
-        "For each characteristic, provide:\n"
-        "1. Clinical definition\n"
-        "2. Biological mechanism (up to 3)\n"
-        "3. Implied subgroups\n"
-        "\nUse concrete names. Be honest about speculative vs. established links."
+        f"{diversity_instruction}\n"
+        "REQUIREMENTS:\n"
+        "1. Focus STRICTLY on Heterogeneous Treatment Effects (Interaction), not just main effects.\n"
+        "2. If a feature has a bidirectional effect (e.g., good for some, bad for others), specify that.\n"
+        "3. grounding: Cite known trials or physiological principles.\n"
     )
 
-    # 4. TASK PARAMETERS
+    # 5. USER PROMPT
     n_mechanisms = study_context.get("n_hypotheses_per_feature", 3)
     n_features = study_context.get("n_features", len(top_features) if top_features else 5)
     
     user_prompt = {
         "study_context": study_context,
-        "observed_data": top_features if top_features else "NONE (Blinded Mode)",
-        "instructions": [
-            f"Generate hypotheses for {n_features} features.",
-            f"Propose {n_mechanisms} mechanisms each.",
-            "Cite common clinical trials or physiological laws where applicable."
+        "data_to_interpret": top_features if top_features else "NONE (Blinded Mode)",
+        "task_constraints": [
+            f"Generate hypotheses for the top {n_features} features.",
+            f"Provide exactly {n_mechanisms} distinct mechanisms per feature.",
+            "Ensure 'effect_direction' describes how the feature changes the TREATMENT BENEFIT (e.g., 'Positive' = Feature increases benefit)."
         ]
     }
 
@@ -840,10 +927,31 @@ def generate_feature_hypotheses(
             ],
             response_format=FeatureHypothesesSet,
         )
-        return completion.choices[0].message.parsed
+        result = completion.choices[0].message.parsed
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error in hypothesis generation: {e}")
         return None
+
+    # --- Gap-fill: ensure every feature has exactly n_mechanisms mechanisms ---
+    if result and result.feature_hypotheses:
+        for fh in result.feature_hypotheses:
+            existing = fh.mechanisms or []
+            gap = n_mechanisms - len(existing)
+            if gap <= 0:
+                continue
+            print(f"  Gap-fill '{fh.feature_name}': have {len(existing)}, need {gap} more mechanisms...")
+            extra = _fill_mechanisms_for_feature(
+                feature_hypothesis=fh,
+                count_needed=gap,
+                study_context=study_context,
+                client=client,
+                model_name=model_name,
+            )
+            fh.mechanisms = existing + extra
+            if len(fh.mechanisms) < n_mechanisms:
+                print(f"    Warning: still only {len(fh.mechanisms)}/{n_mechanisms} after fill")
+
+    return result
 
 def score_feature_hypotheses(
     hypotheses: List[dict],
@@ -925,12 +1033,22 @@ def score_feature_hypotheses(
         "   Score 3: Some caveats but incomplete or superficial\n"
         "   Score 1: Overclaiming, ignoring limitations, false certainty\n"
         "\n"
-        "For EACH individual mechanism, also score:\n"
-        "- Plausibility (1-10): biological believability of this specific mechanism\n"
-        "- Evidence support (1-10): how well clinical literature supports this mechanism\n"
-        "- Specificity (1-10): how detailed and connected to clinical/biological reasoning\n"
-        "- Testability (1-10): how testable/falsifiable with available data and methods\n"
-        "- Overall score (1-10): holistic assessment of this mechanism\n"
+        "5. Novelty (1-5):\n"
+        "   - Originality of the hypothesis beyond existing clinical literature\n"
+        "   - Potential to generate new insights or challenge existing paradigms\n"
+        "   - Whether the hypothesis identifies underexplored treatment effect modifiers\n"
+        "   - Balance between novelty and plausibility (novel but not implausible)\n"
+        "   Score 5: Highly original, identifies underexplored mechanisms, potential paradigm shift\n"
+        "   Score 3: Moderately novel, extends existing knowledge in meaningful ways\n"
+        "   Score 1: Reiterates well-established findings, no new insights\n"
+        "\n"
+        "For EACH individual mechanism, also score (1-5 scale):\n"
+        "- Plausibility (1-5): biological believability of this specific mechanism\n"
+        "- Evidence support (1-5): how well clinical literature supports this mechanism\n"
+        "- Specificity (1-5): how detailed and connected to clinical/biological reasoning\n"
+        "- Testability (1-5): how testable/falsifiable with available data and methods\n"
+        "- Novelty (1-5): originality and uniqueness of this mechanism explanation\n"
+        "- Overall score (1-5): holistic assessment of this mechanism\n"
         "- Brief comments: strengths, weaknesses, any concerns\n"
         "\n"
         "If original trial article context is provided, use it to:\n"
@@ -1015,6 +1133,10 @@ def main():
         "--population",
         help="Population/cohort description (required if no --trial_name).",
     )
+    parser.add_argument(
+        "--dataset",
+        help="Dataset name (overrides metadata from SHAP JSON; defaults to trial_name if provided).",
+    )
 
     parser.add_argument(
         "--n_features",
@@ -1027,8 +1149,18 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="gpt-4o-2024-08-06",
-        help="Model name supporting structured outputs (e.g., gpt-4o-2024-08-06).",
+        default="gpt-5-mini",
+        help="Model name supporting structured outputs (e.g., gpt-5-mini for OpenAI, openai/gpt-4o for OpenRouter).",
+    )
+    parser.add_argument(
+        "--api_provider",
+        default="openai",
+        choices=["openai", "openrouter"],
+        help="API provider to use (default: openai).",
+    )
+    parser.add_argument(
+        "--api_base_url",
+        help="Custom API base URL (e.g., https://openrouter.ai/api/v1 for OpenRouter).",
     )
     parser.add_argument(
         "--enable_verifier",
@@ -1067,18 +1199,34 @@ def main():
     verifier_model = args.model if args.enable_verifier else None
     judge_model = args.model if args.enable_judge else None
 
-    # Initialize API key and OpenAI client once
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        try:
-            from src.constants import openai_api_key
-            api_key = openai_api_key
-        except ImportError:
+    # Initialize API key and client based on provider
+    if args.api_provider == "openrouter":
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
             raise ValueError(
-                "OpenAI API key not found. Set OPENAI_API_KEY environment variable "
-                "or create src/constants.py with openai_api_key defined."
+                "OpenRouter API key not found. Set OPENROUTER_API_KEY environment variable."
             )
-    client = OpenAI(api_key=api_key)
+        base_url = args.api_base_url or "https://openrouter.ai/api/v1"
+        client = OpenAI(api_key=api_key, base_url=base_url)
+        print(f"Using OpenRouter API with base URL: {base_url}")
+    else:
+        # OpenAI (default)
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            try:
+                from src.constants import openai_api_key
+                api_key = openai_api_key
+            except ImportError:
+                raise ValueError(
+                    "OpenAI API key not found. Set OPENAI_API_KEY environment variable "
+                    "or create src/constants.py with openai_api_key defined."
+                )
+        if args.api_base_url:
+            client = OpenAI(api_key=api_key, base_url=args.api_base_url)
+            print(f"Using custom OpenAI-compatible API with base URL: {args.api_base_url}")
+        else:
+            client = OpenAI(api_key=api_key)
+            print("Using OpenAI API")
 
     # Determine treatment/outcome/population and fetch trial_meta once
     trial_meta = None
@@ -1096,7 +1244,9 @@ def main():
         outcome = args.outcome
         population = args.population
 
-    evidence = load_top_features(args.shap_json, args.n_features)
+    # Determine dataset name: explicit --dataset > trial_name > SHAP JSON metadata
+    dataset_name = args.dataset if args.dataset else (args.trial_name.lower() if args.trial_name else None)
+    evidence = load_top_features(args.shap_json, args.n_features, dataset_override=dataset_name)
 
     # ---------- RETRIEVE ARTICLE (optional) ----------
     article_extraction = None
@@ -1187,7 +1337,11 @@ def main():
                 "IMPORTANT: Your goal is to help create the BEST possible hypotheses.\n"
                 "Always provide a complete revised FeatureHypothesesSet with improvements,\n"
                 "even if changes are minor. Build on strengths and fix weaknesses.\n"
-                "Stay grounded in evidence - improve but don't add unsupported claims."
+                "Stay grounded in evidence - improve but don't add unsupported claims.\n"
+                "\n"
+                "CRITICAL: You MUST preserve ALL mechanisms for every feature. Never reduce the number of\n"
+                "mechanisms. If the input has 3 mechanisms for a feature, the output must also have exactly\n"
+                "3 mechanisms. Refine or rewrite mechanisms, but do NOT drop or omit any."
                 )
 
             # Use current hypotheses (either original or from previous iteration)

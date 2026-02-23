@@ -1,0 +1,174 @@
+{
+  "dataset": "sprint",
+  "model": "baseline_no_shap",
+  "summary": "Heterogeneity in intensive blood pressure control response is likely driven by baseline cardiovascular risk, physiological resilience, and drug-metabolic capacity, primarily favoring those with high baseline risk but limited secondary organ damage.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Age",
+      "importance_rank": 1,
+      "shap_value": 0.25,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Biological age and chronological wear on the vasculature.",
+      "why_important": "Age modifies the balance between preventing cardiovascular events and the risk of adverse events like hypotension or falls.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Increased arterial stiffness in older patients leads to wider pulse pressures, where intensive SBP lowering may significantly reduce pulsatile strain on cerebral and renal microvasculature.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Reduced baroreceptor sensitivity in elderly patients may increase the incidence of orthostatic hypotension, potentially mitigating the net benefit of intensive treatment.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Age is a strong proxy for accumulated atherosclerotic burden, meaning the absolute risk reduction (ARR) is higher even if the relative risk remains constant.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Patients over 75 may show higher absolute benefit despite increased risk of side effects.",
+      "validation_suggestions": [
+        "Interaction analysis between age deciles and treatment arm",
+        "Frailty index as a covariate"
+      ],
+      "caveats": [
+        "Competing risk of non-CV mortality in the very elderly",
+        "Potential for selection bias towards 'healthy' elderly in clinical trials"
+      ]
+    },
+    {
+      "feature_name": "Baseline Systolic Blood Pressure",
+      "importance_rank": 2,
+      "shap_value": 0.22,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Starting hemodynamic load on the ventricular wall and arteries.",
+      "why_important": "Determines the magnitude of BP change required to reach the <120 mmHg target.",
+      "mechanisms": [
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Patients with higher baseline SBP require more antihypertensive medications, increasing the probability of synergistic drug effects and physiological response.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "High baseline SBP causes immediate endothelial shear stress; lowering it drastically shifts the pressure-natriuresis curve and reduces wall tension.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Regression to the mean may exaggerate the perceived benefit in those with the highest baseline readings.",
+          "evidence_level": "weak"
+        }
+      ],
+      "subgroup_implications": "Subgroups with SBP >150 mmHg likely derive more benefit than those starting at 130 mmHg.",
+      "validation_suggestions": [
+        "Test for non-linear interactions using splines",
+        "Evaluate medication count as a mediator"
+      ],
+      "caveats": [
+        "White-coat hypertension may inflate baseline readings without reflecting true risk."
+      ]
+    },
+    {
+      "feature_name": "Serum Creatinine / eGFR",
+      "importance_rank": 3,
+      "shap_value": 0.18,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Baseline renal function and microvascular health.",
+      "why_important": "The kidney is both a target of BP damage and a mediator of BP control via the RAAS system.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "In CKD, impaired autoregulation makes the glomerulus sensitive to systemic pressure; lower SBP target might prevent hyperfiltration injury.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Lower eGFR reduces the clearance of certain antihypertensives, potentially leading to higher drug levels and exaggerated BP drops.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Intensive lowering may cause an acute 'hemodynamic dip' in eGFR, which can be misidentified as injury but actually reflects reduced intraglomerular pressure.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Moderate CKD patients might see more CV protection but higher rates of 'acute kidney injury' events.",
+      "validation_suggestions": [
+        "Compare outcomes in eGFR <60 vs >60 subgroups",
+        "Monitor cystatin C as a more stable marker of kidney function"
+      ],
+      "caveats": [
+        "Creatinine is influenced by muscle mass, potentially confounding results in frail patients."
+      ]
+    },
+    {
+      "feature_name": "Urine Albumin-to-Creatinine Ratio (UACR)",
+      "importance_rank": 4,
+      "shap_value": 0.15,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Marker of systemic endothelial dysfunction.",
+      "why_important": "Albuminuria indicates that the vasculature is already porous and damaged by pressure.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "UACR reflects global endothelial health; intensive BP control may 'seal' the endothelium and reduce systemic inflammatory signaling.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "High UACR identifies a phenotype of hypertension that is particularly 'pressure-sensitive', responding better to strict volume and pressure control.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "High UACR is a powerful proxy for subclinical target organ damage not captured by eGFR alone.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Patients with microalbuminuria should prioritize reaching the <120 mmHg target.",
+      "validation_suggestions": [
+        "Analysis of UACR as a continuous interaction term",
+        "Subgroup analysis by albuminuria stages"
+      ],
+      "caveats": [
+        "Spurious elevations in UACR can occur due to exercise or minor infections."
+      ]
+    },
+    {
+      "feature_name": "Framingham Risk Score",
+      "importance_rank": 5,
+      "shap_value": 0.12,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Composite estimate of 10-year cardiovascular risk.",
+      "why_important": "Aggregates multiple risk factors into a single metric of 'baseline threat'.",
+      "mechanisms": [
+        {
+          "mechanism_type": "statistical",
+          "description": "The 'Risk-Pathology' interaction: Intensive treatment is more effective when there is more total risk to mitigate (higher event rate in control arm).",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "A high score reflects multi-system vascular involvement (lipids, smoking, age) where BP becomes the 'critical' final pathway for event triggering.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Patients aware of high calculated risk may exhibit better adherence to intensive polypharmacy regimens.",
+          "evidence_level": "speculative"
+        }
+      ],
+      "subgroup_implications": "High-risk individuals gain significantly more cardiovascular benefit than low-risk individuals for the same SBP reduction.",
+      "validation_suggestions": [
+        "Number Needed to Treat (NNT) calculation across risk quintiles",
+        "Comparison with other risk scores like ASCVD"
+      ],
+      "caveats": [
+        "Framingham score may over- or under-estimate risk in non-white populations."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "There is a likely synergistic interaction between Age and UACR, where older patients with signs of endothelial leakage derive the maximum absolute benefit from intensive therapy, whereas younger patients with low baseline risk and healthy kidneys may experience more harm from intensive treatment side effects than benefit from event prevention."
+}

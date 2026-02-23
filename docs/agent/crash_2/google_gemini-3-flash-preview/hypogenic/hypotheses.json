@@ -1,0 +1,446 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "crash_2",
+    "treatment": "Tranexamic acid (TXA)",
+    "outcome": "All-cause mortality at 28 days or in-hospital death",
+    "population": "Trauma patients with significant bleeding or at risk of significant hemorrhage",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 65,
+    "top_k": 15,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_004",
+        "title": "Penetrating Injury Gender Divergence",
+        "hypothesis_statement": "Male patients with penetrating injuries (iinjurytype_1) represent a difficult-to-predict subgroup where TXA benefit is highly dependent on injury time.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iinjurytype_1",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": null,
+            "description": "Blunt injury type (inverted coding index)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "76% of difficult cases involve iinjurytype_1. The interaction between gender, injury type, and response to TXA is not captured by simple linear thresholds."
+        },
+        "mechanism": "Blunt injuries involving multiple organs (iinjurytype_1) have more complex coagulopathy profiles than focal penetrating wounds. Males may have different baseline fibrinolytic activity.",
+        "evidence_basis": [
+          "76% prevalence of iinjurytype_1 in difficult samples",
+          "72% male distribution (isex)"
+        ],
+        "testable_prediction": "The interaction term 'isex * iinjurytype_1' will be a significant predictor of TXA treatment failure."
+      },
+      "acc": 0.5257142857142859,
+      "num_visits": 175,
+      "reward": 0.6127144282966652
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "5dd95db6-2aa6-4c5a-b7d3-d5d0d8387b27",
+        "title": "Shock Severity and TXA Benefit",
+        "hypothesis_statement": "Patients in profound circulatory shock benefit disproportionately from TXA due to the high likelihood of systemic hyperfibrinolysis triggered by hypoperfusion.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": "<=",
+            "threshold": 90.0,
+            "category": null,
+            "description": "Systolic blood pressure less than or equal to 90 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Hypotension is a surrogate for massive blood loss and tissue hypoperfusion which drives fibrinolysis."
+        },
+        "mechanism": "Severe shock causes tissue hypoxia and endothelial activation, leading to massive release of tissue plasminogen activator (tPA). TXA directly antagonizes this effect.",
+        "evidence_basis": [
+          "Pathophysiology of Trauma Induced Coagulopathy (TIC)",
+          "Meta-analysis of antifibrinolytics in hemorrhage"
+        ],
+        "testable_prediction": "TXA will show a larger absolute risk reduction in the subgroup with isbp <= 90 compared to isbp > 90."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "5ff45f2f-4f88-4e48-9105-86aede1abadd",
+        "title": "Traumatic Brain Injury Synergy",
+        "hypothesis_statement": "In patients with evidence of traumatic brain injury (lower GCS), TXA reduces mortality by mitigating intracranial hemorrhage expansion.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": "<=",
+            "threshold": 12.0,
+            "category": null,
+            "description": "Glasgow Coma Scale score indicating moderate-to-severe impairment"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Intracranial bleeding is highly sensitive to clot stabilization."
+        },
+        "mechanism": "TXA crosses the blood-brain barrier and limits the expansion of intracranial hematomas and reduces neuroinflammation associated with plasmin.",
+        "evidence_basis": [
+          "CRASH-3 trial rationale",
+          "Systemic review of TXA in TBI"
+        ],
+        "testable_prediction": "Mortality reduction will be observed in patients with igcs <= 12 even if systemic blood pressure is relatively stable."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "506da2ba-ea88-4b20-b825-6c2dbc6f0f55",
+        "title": "Time-Dependent Efficacy and Fibrinolysis Switch",
+        "hypothesis_statement": "TXA is most effective in reducing mortality when administered within 3 hours of injury, while later administration may increase risk due to a shift towards a pro-thrombotic or anti-inflammatory state.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "ninjurytime",
+            "operator": "<=",
+            "threshold": 3.0,
+            "category": null,
+            "description": "Patients treated within 3 hours of injury"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Early blockade of plasminogen activation is critical before the development of established coagulopathy."
+        },
+        "mechanism": "Early TXA prevents the degradation of fibrin clots (hyperfibrinolysis phase). As time passes, trauma-induced coagulopathy shifts toward a shutdown phase where TXA may exacerbate thrombotic risk.",
+        "evidence_basis": [
+          "CRASH-2 trial primary subgroup analysis (Lancet 2010)",
+          "WOMAN trial findings on early administration"
+        ],
+        "testable_prediction": "The risk ratio for mortality in patients with ninjurytime <= 3 will be significantly lower than in patients with ninjurytime > 3."
+      },
+      "acc": 0.505,
+      "num_visits": 200,
+      "reward": 0.5863811815359364
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_002",
+        "title": "The Late-Injury Coagulopathy Threshold",
+        "hypothesis_statement": "When the time from injury exceeds a specific threshold (ninjurytime > 0.05), the shift from hyperfibrinolysis to a shut-down state makes TXA ineffective or harmful.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "ninjurytime",
+            "operator": ">",
+            "threshold": 0.05,
+            "category": null,
+            "description": "Injuries occurring significantly earlier than the sample average"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Mean ninjurytime in difficult cases is positive (0.059), indicating late presentation. Late TXA administration is associated with higher mortality due to vascular occlusion."
+        },
+        "mechanism": "Beyond 3 hours (reflected by high ninjurytime), the trauma-induced hyperfibrinolysis phase often ends. TXA at this stage may promote microvascular thrombosis.",
+        "evidence_basis": [
+          "CRASH-2 subgroup analysis showing harm after 3 hours",
+          "Difficult samples have higher mean ninjurytime than successful predictions"
+        ],
+        "testable_prediction": "TXA mortality benefit will be inversely proportional to ninjurytime when ninjurytime > 0."
+      },
+      "acc": 0.49714285714285716,
+      "num_visits": 175,
+      "reward": 0.5841429997252365
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_001",
+        "title": "Neurological Resilience Interaction",
+        "hypothesis_statement": "In patients with preserved consciousness (high GCS), TXA mortality benefit is attenuated or potentially harmful when blood pressure remains stable, suggesting over-coagulation risks.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": ">=",
+            "threshold": 0.66,
+            "category": null,
+            "description": "Patients with high Glasgow Coma Scale scores indicating minor or no traumatic brain injury"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "High GCS scores in difficult samples suggest that the primary mortality driver is not neurological. In these cases, TXA may increase complications without a survival benefit."
+        },
+        "mechanism": "TXA primarily reduces death by hemorrhage. If GCS is high, the central nervous system is intact, and if SBP is stable, the hyperfibrinolytic threat is lower; thus, the pro-thrombotic risk of TXA might outweigh the bleeding benefit.",
+        "evidence_basis": [
+          "Mean GCS in difficult samples is notably higher (0.21) than in highly responsive groups",
+          "Difficult samples show higher median GCS (0.66)"
+        ],
+        "testable_prediction": "Patients with GCS > 14 and SBP > 100 mmHg will show no difference in 28-day mortality between TXA and placebo."
+      },
+      "acc": 0.4857142857142857,
+      "num_visits": 175,
+      "reward": 0.5727144282966651
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "CRASH2_REF_001",
+        "title": "Delayed Coagulopathy in High-GCS Blunt Trauma",
+        "hypothesis_statement": "In patients with blunt trauma (iinjurytype_1) and high GCS (igcs > 0.5) where injury time is slightly delayed (ninjurytime > 0), TXA may have reduced efficacy due to a stabilized clot-lysis profile appearing later than in penetrating injuries.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": ">",
+            "threshold": 0.5,
+            "category": null,
+            "description": "Patients presenting with near-normal Glasgow Coma Scale scores (standardized)"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "High GCS and blunt trauma suggest lower immediate systemic fibrinolysis activation compared to penetrating trauma; early TXA may be redundant or introduce thrombotic risk."
+        },
+        "mechanism": "Blunt trauma in neurologically intact patients often involves slower release of tissue plasminogen activator (tPA) compared to penetrating injuries or severe TBI, leading to a later window of hyperfibrinolysis.",
+        "evidence_basis": [
+          "Difficult samples show mean igcs of 0.21 and iinjurytype_1 (blunt) at 76%",
+          "Previous failures in treating high-GCS blunt trauma cohorts"
+        ],
+        "testable_prediction": "Patients with standardized igcs > 0.5 and blunt trauma will show no mortality benefit from TXA within the first 3 hours if ninjurytime is positive."
+      },
+      "acc": 0.4857142857142857,
+      "num_visits": 175,
+      "reward": 0.5727144282966651
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "f9c6ec80-bb87-4801-b0a1-0f02fb67b66b",
+        "title": "Penetrating vs. Blunt Injury Responsiveness",
+        "hypothesis_statement": "TXA is more effective for penetrating trauma where vascular disruption is immediate and localized fibrinolysis is more prominent.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iinjurytype_1",
+            "operator": "==",
+            "threshold": null,
+            "category": "Penetrating",
+            "description": "Primary injury type is penetrating"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Penetrating injuries often involve major vessel lacerations requiring rapid clot stabilization."
+        },
+        "mechanism": "Penetrating trauma leads to acute, localized consumption of coagulation factors and intense local fibrinolysis that TXA can effectively stabilize.",
+        "evidence_basis": [
+          "MATTERs study (Military Application of Tranexamic Acid in Trauma Resuscitation)"
+        ],
+        "testable_prediction": "TXA treatment will show a higher reduction in mortality for iinjurytype_1='Penetrating' compared to iinjurytype_1='Blunt'."
+      },
+      "acc": 0.4899999999999999,
+      "num_visits": 200,
+      "reward": 0.5713811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_005",
+        "title": "Capillary Refill and Respiration Interaction",
+        "hypothesis_statement": "In patients with normal respiratory rates (irr < mean) but poor capillary refill (icc), TXA benefit is obscured by systemic inflammatory response.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "irr",
+            "operator": "<=",
+            "threshold": -0.14,
+            "category": null,
+            "description": "Respiratory rate below the standardized median"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Difficult samples show low median respiratory rates (-0.14). This suggests a subset that is physiologically quiet despite needing treatment."
+        },
+        "mechanism": "A lower respiratory rate despite trauma might mask occult shock. In these cases, TXA is beneficial but often missed because the patient appears stable.",
+        "evidence_basis": [
+          "Mean irr is negative (-0.06) in difficult cases",
+          "Median icc is also negative (-0.14)"
+        ],
+        "testable_prediction": "Patients with irr < 0 and icc < 0 will show higher benefit from TXA than patients with only one of these markers."
+      },
+      "acc": 0.48,
+      "num_visits": 175,
+      "reward": 0.5670001425823793
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "CRASH2_REF_002",
+        "title": "Physiological Buffer Hypothesis",
+        "hypothesis_statement": "Younger patients (iage < -0.3) with stable hemodynamics (isbp near 0) but elevated respiratory rates (irr > -0.1) represent a 'compensated' shock state where TXA efficacy is obscured by physiological reserve.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": "<",
+            "threshold": -0.3,
+            "category": null,
+            "description": "Younger patients significantly below the mean age of the cohort"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Compensation masks the severity of internal bleeding; TXA is protective against sudden decompensation despite stable SBP."
+        },
+        "mechanism": "Younger patients maintain SBP through intense vasoconstriction (reflected in higher irr and icc), masking ongoing fibrinolysis that TXA targets.",
+        "evidence_basis": [
+          "Difficult samples show median iage of -0.33 and median isbp of 0.004",
+          "Compensation mechanisms in younger trauma patients lead to delayed mortality signals"
+        ],
+        "testable_prediction": "Younger patients with stable SBP but high IRR will show an absolute risk reduction (>2%) in mortality with TXA compared to placebo."
+      },
+      "acc": 0.46857142857142864,
+      "num_visits": 175,
+      "reward": 0.555571571153808
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "CRASH2_REF_003",
+        "title": "Low Capillary Refill-Age Interaction",
+        "hypothesis_statement": "The interaction between low capillary refill (icc < -0.1) and younger age (iage < -0.25) identifies a subgroup where microcirculatory failure precedes macro-hemodynamic collapse, requiring aggressive TXA intervention.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "icc",
+            "operator": "<",
+            "threshold": -0.1,
+            "category": null,
+            "description": "Poor capillary refill or impaired peripheral perfusion"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Peripheral shutdown in the young is a late sign of critical volume loss; TXA provides essential stabilization of nascent clots."
+        },
+        "mechanism": "Microcirculatory dysfunction (icc) in young patients (iage) indicates severe occult hemorrhage even if iHR is not yet extreme.",
+        "evidence_basis": [
+          "Difficult samples have mean icc of -0.09 and mean iage of -0.27",
+          "TXA prevents breakdown of the micro-clots necessary to maintain perfusion"
+        ],
+        "testable_prediction": "TXA will reduce 28-day mortality more effectively in patients where icc < -0.1 compared to those with icc > 0."
+      },
+      "acc": 0.46285714285714286,
+      "num_visits": 175,
+      "reward": 0.5498572854395222
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_003",
+        "title": "Low Shock Severity Paradox",
+        "hypothesis_statement": "TXA effectiveness is marginal in hemodynamically stable patients (SBP close to mean) who are also young (age < mean).",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": ">=",
+            "threshold": 0.0,
+            "category": null,
+            "description": "Systolic blood pressure at or above the standardized mean"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Difficult samples cluster around mean SBP (-0.08) and younger age (-0.27). In these lower-risk patients, the absolute risk reduction from TXA is too small to overcome baseline variability."
+        },
+        "mechanism": "TXA targets massive clot breakdown. Stable SBP suggests the body's natural hemostasis is currently sufficient, leaving little room for TXA to improve outcomes.",
+        "evidence_basis": [
+          "Concentration of difficult samples near the SBP and Age means",
+          "Lack of severe hypotension in the failure group"
+        ],
+        "testable_prediction": "The hazard ratio for TXA will approach 1.0 as SBP and Age standardized scores approach zero."
+      },
+      "acc": 0.0,
+      "num_visits": 175,
+      "reward": 0.08700014258237936
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "CRASH2_REF_004",
+        "title": "Normotensive Tachypneic Blunt Trauma Profile",
+        "hypothesis_statement": "In blunt trauma cases (iinjurytype_1), the combination of near-normal SBP (isbp > -0.1) and elevated respiratory rates (irr > -0.1) suggests a metabolic acidosis that TXA may not sufficiently address alone.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iinjurytype_1",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": "blunt",
+            "description": "Patients with blunt trauma injuries"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "none",
+          "rationale": "The bleeding source in blunt trauma is often venous or occult; TXA's impact on arterial-heavy fibrinolysis is less pronounced."
+        },
+        "mechanism": "Blunt trauma-induced acidosis (high irr) without hypotension suggests significant tissue injury but potentially slower hemorrhage rates than penetrating wounds.",
+        "evidence_basis": [
+          "76% of difficult samples are blunt trauma",
+          "Mean irr is higher than means of sbp or hr in the error group"
+        ],
+        "testable_prediction": "Blunt trauma patients with irr > -0.1 and isbp > -0.1 will show no statistical difference in mortality between TXA and placebo."
+      },
+      "acc": 0.0,
+      "num_visits": 175,
+      "reward": 0.08700014258237936
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "CRASH2_REF_005",
+        "title": "Post-Injury Time Sensitivity in Males",
+        "hypothesis_statement": "Male patients (isex = 1) with ninjurytime > 0.05 represent a subgroup where TXA efficacy drops off significantly due to the 'exhaustion' of the fibrinolytic system.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "ninjurytime",
+            "operator": ">",
+            "threshold": 0.05,
+            "category": null,
+            "description": "Delayed presentation/treatment greater than the sample mean"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Late administration in males may coincide with the transition from hyper- to hypo-fibrinolysis ('TXA-induced shutdown')."
+        },
+        "mechanism": "Delayed TXA in males (who dominate the difficult sample set at 72%) may exacerbate a pro-thrombotic state once the initial lytic surge has passed.",
+        "evidence_basis": [
+          "Difficult samples mean ninjurytime is positive (0.059)",
+          "Sex-based differences in coagulation kinetics post-trauma"
+        ],
+        "testable_prediction": "Males treated after standardized ninjurytime > 0.05 will show a trend toward increased thrombotic events compared to those treated earlier."
+      },
+      "acc": 0.0,
+      "num_visits": 175,
+      "reward": 0.08700014258237936
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "3b469247-eaa7-4b13-95c1-b35a846090c3",
+        "title": "Elderly Fibrinolytic Response",
+        "hypothesis_statement": "Elderly patients derive less benefit from TXA due to age-related changes in fibrinolysis and increased baseline risk of thrombosis.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": ">=",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Patients aged 65 years or older"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Potential for competing risks from cardiovascular complications in older populations."
+        },
+        "mechanism": "Aging is associated with an increase in baseline PAI-1 levels (plasminogen activator inhibitor-1), which may naturally limit hyperfibrinolysis, reducing the marginal utility of TXA.",
+        "evidence_basis": [
+          "Age-related physiology in thrombosis",
+          "GUSTO trial subgroup insights"
+        ],
+        "testable_prediction": "The interaction between TXA and age will show a diminishing treatment effect (smaller odds ratio improvement) as age increases."
+      },
+      "acc": 0.0,
+      "num_visits": 200,
+      "reward": 0.08138118153593646
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 0.4465081079478509,
+    "avg_accuracy": 0.36138095238095247
+  }
+}

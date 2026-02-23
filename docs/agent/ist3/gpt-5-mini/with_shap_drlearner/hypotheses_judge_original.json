@@ -1,0 +1,285 @@
+{
+  "summary": "Overall the hypotheses are biologically and clinically plausible for acute ischemic stroke thrombolysis. NIHSS and age are the strongest, best-supported modifiers; diastolic BP is plausible (through sICH risk) but less specific; the antiplatelet signal and TACI-syndrome effect are more uncertain and likely confounded by occlusion status, imaging-defined core/penumbra and care differences. Several hypotheses are actionable (NIHSS, age, BP) and testable within IST-3 or pooled datasets; others (antiplatelet, TACI) warrant cautious follow-up with clearer variable definitions and imaging linkage.",
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Very well grounded: NIHSS correlates with infarct core/penumbra and salvageable tissue. Highly specific and measurable; interaction tests and stratified analyses are straightforward."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Plausible because severe strokes more often reflect large-vessel occlusion/clot burden with lower IV tPA recanalization. Evidence moderate; could be tested if occlusion/imaging data available."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "NIHSS may proxy for occlusion location, time-to-treatment, or pre-stroke disability. Reasonable and should be checked using mediation/adjustment analyses."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Strong pathophysiologic rationale linking severity to salvageable tissue and tPA effect.",
+        "High testability: interactions with treatment, stratified analyses, and linkage to recanalization data are feasible.",
+        "Clinical interpretation is clear and actionable (NIHSS bands commonly used)."
+      ],
+      "weaknesses": [
+        "NIHSS can be noisy and partially redundant with occlusion/imaging data; SHAP association doesn't establish causality.",
+        "Absolute vs relative effect ambiguity needs explicit separation in analyses."
+      ],
+      "recommendation": "high_priority",
+      "justification": "NIHSS is a well-established effect modifier in stroke reperfusion contexts; the mechanisms are biologically specific, testable, and actionable. Importance_rank=1 is appropriate."
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Mechanistic rationale (antiplatelets altering clot susceptibility) exists but clinical evidence for improved alteplase efficacy is weak and mixed; testing requires clot imaging/recanalization data."
+        },
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Possible association via stroke etiology differences (atherothrombotic vs cardioembolic) but not strongly established as a modifier of thrombolytic benefit."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Likely that prior antiplatelet use proxies for other care or baseline risk differences (confounding by indication); this is a credible alternative explanation."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Provides a testable hypothesis linking antiplatelet exposure to recanalization/safety outcomes.",
+        "Authors note important caveats (sICH risk, ambiguous variable meaning)."
+      ],
+      "weaknesses": [
+        "Clinical literature is mixed; antiplatelet status is not a well-established effect modifier of alteplase benefit and should not be ranked above age or NIHSS without strong evidence.",
+        "Variable ambiguity ('antiplat_rand' could mean randomization flag) undermines interpretation."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Hypothesis is plausible and testable but evidence is limited and confounding likely. Importance_rank=2 overstates current clinical evidence \u2014 downgrade warranted until further validation and clear variable definition."
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "TACI represents large anterior circulation syndromes with high baseline disability risk; conceptually these patients can have large absolute gains if reperfused, but evidence is mixed and heterogeneous."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 2,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "Linking TACI to specific clot composition more responsive to tPA is speculative and weakly supported clinically."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Likely that TACI status acts partly as a proxy for baseline risk and for selection into different care pathways (imaging/EVT), which can confound observed HTE."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Reasonable clinical interpretation; TACI is a recognized clinical syndrome and easy to operationalize from bedside data.",
+        "Hypothesis is testable by stratified analysis and adjustment for NIHSS and occlusion status."
+      ],
+      "weaknesses": [
+        "Heterogeneity within TACI and confounding by access to endovascular therapy/imaging limit interpretability.",
+        "Ranking it above age is not strongly supported by existing literature; likely over-emphasized in importance_rank=3."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "TACI is a plausible modifier for absolute benefit but the mechanism is partially statistical/confounded and evidence for differential relative efficacy is moderate at best."
+    },
+    {
+      "feature_name": "age",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Age-related reductions in neuroplasticity, collateral circulation and increased small-vessel disease burden are well established and plausibly reduce recovery potential after reperfusion."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Higher bleeding risk and vascular fragility in older patients is a plausible mediator of reduced net benefit; evidence is moderate."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Age correlates with comorbidity and pre-stroke disability; disentangling direct age effects from these mediators requires careful adjustment or pooled data."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Strong, well-supported biological rationale and many prior analyses in thrombolysis trials to compare with.",
+        "Clear operationalization (age bands) and established statistical approaches for interaction testing."
+      ],
+      "weaknesses": [
+        "Importance_rank=4 understates age's known clinical importance \u2014 this reduces evidence alignment score.",
+        "Estimates in elderly can be imprecise if few extreme-old subjects; confounding by pre-stroke disability must be addressed."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age is a robust modifier candidate; follow-up with pooled IPD meta-analysis or adjustment for pre-stroke disability and imaging markers is warranted. Rank should likely be higher than provided."
+    },
+    {
+      "feature_name": "dbprand",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Elevated BP increases sICH risk and may reduce net benefit; this is a plausible, clinically relevant pathway."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 2,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 2,
+          "novelty": 2,
+          "overall_score": 2,
+          "comments": "Claims about BP altering drug kinetics at the microcirculatory level are speculative with limited clinical evidence."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "BP may proxy for chronic hypertension, stroke severity, or center-level BP management practices; confounding is possible."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Mechanism (BP -> sICH) is clinically plausible and directly actionable through BP control protocols.",
+        "Validation suggestions (interaction tests, mediation via sICH) are appropriate and testable."
+      ],
+      "weaknesses": [
+        "Single measurement at randomization is noisy; center-level BP management differences may confound results.",
+        "Less specific to diastolic BP vs systolic BP \u2014 clarity on which BP measure matters most is needed."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "BP is a clinically meaningful modifier candidate with plausible mechanisms; evidence alignment and testability are good but novelty is low and operational issues (measurement/noise) reduce priority."
+    }
+  ],
+  "top_features": [
+    "nihss",
+    "age",
+    "antiplat_rand",
+    "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+    "dbprand"
+  ],
+  "methodological_concerns": [
+    "Ambiguity in variable definitions (e.g., 'antiplat_rand' may indicate randomization flag vs baseline antiplatelet use) weakens interpretation \u2014 clarify variable coding before causal claims.",
+    "SHAP values indicate association in the predictive model, not causal treatment effect modification. Interaction tests with randomized treatment assignment are required to support HTE claims.",
+    "Key unmeasured confounders in IST-3 (imaging-defined occlusion, core/penumbra volumes, availability of endovascular therapy, center BP management protocols) can produce spurious apparent modifiers; linkage to imaging and care-process variables is important.",
+    "Importance_rank ordering shows some misalignment with clinical consensus (age often as important as or more important than some higher-ranked features here); this reduced Evidence Alignment for some features.",
+    "Single baseline measurements (e.g., BP, NIHSS) can be noisy and may need sensitivity analyses (alternative cutpoints, continuous splines, repeated measures if available)."
+  ]
+}

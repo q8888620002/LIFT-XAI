@@ -1,0 +1,170 @@
+{
+  "dataset": "CRASH-2",
+  "model": "baseline_no_shap",
+  "summary": "Heterogeneity in TXA response is primarily driven by the timing of administration and the balance between hyperfibrinolysis and coagulopathy progression.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Time from injury to treatment",
+      "importance_rank": 1,
+      "shap_value": 0.0,
+      "effect_direction": "negative",
+      "clinical_interpretation": "The delay between trauma-induced fibrinolytic activation and TXA administration.",
+      "why_important": "TXA is an antifibrinolytic; its benefit is time-sensitive as early hyperfibrinolysis transitions to late-stage fibrinolysis shutdown.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "The 'Golden Hour' of hyperfibrinolysis: TXA prevents the early peak of plasminogen activation. Delayed administration may occur when fibrinolysis has already plateaued or turned into a thrombotic state.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Competitive inhibition of lysine binding sites on plasminogen is most effective when clot formation is actively occurring and thrombi are labile.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Late administration (>3 hours) is associated with an increased risk of thrombotic complications and vascular occlusion, potentially reversing the survival benefit.",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Patients treated within 1 hour show maximal benefit; those treated after 3 hours may experience harm.",
+      "validation_suggestions": [
+        "Interaction analysis between Time and Death from Bleeding.",
+        "Spline regression of Time vs Treatment Effect."
+      ],
+      "caveats": [
+        "Time is often measured with significant recall bias in trauma settings."
+      ]
+    },
+    {
+      "feature_name": "Systolic Blood Pressure",
+      "importance_rank": 2,
+      "shap_value": 0.0,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Indicator of hemodynamic stability and markers of shock severity.",
+      "why_important": "Patients in profound shock (hypotension) have higher substrates for hyperfibrinolysis and thus potentially more to gain from antifibrinolytics.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Shock-induced endotheliopathy: Low SBP correlates with tissue hypoperfusion, which triggers massive release of tissue plasminogen activator (tPA).",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Stabilization of the primary hemostatic plug is more critical in high-flow, low-pressure states where clot dislodgement is imminent.",
+          "evidence_level": "speculative"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Systolic SBP acts as a proxy for the 'baseline risk' (severity of bleeding), where treatments for bleeding typically show larger absolute risk reductions in higher-risk patients.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Severely hypotensive patients (SBP < 90mmHg) are expected to show a larger TXA treatment effect compared to normotensive patients.",
+      "validation_suggestions": [
+        "Subgroup analysis by SBP categories (<70, 71-90, >90).",
+        "Assessment of interaction between SBP and Time from Injury."
+      ],
+      "caveats": [
+        "SBP can be transiently elevated by catecholamine surge, masking true hemorrhage severity."
+      ]
+    },
+    {
+      "feature_name": "Glasgow Coma Scale (GCS)",
+      "importance_rank": 3,
+      "shap_value": 0.0,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Neurological status, identifying potential Traumatic Brain Injury (TBI).",
+      "why_important": "TXA has differential effects in extracranial hemorrhage versus isolated TBI-related intracranial hemorrhage.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Traumatic Brain Injury triggers local brain tissue-factor release and distinct fibrinolytic profiles compared to systemic trauma.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "TXA crosses the blood-brain barrier particularly when it is disrupted by trauma, potentially reducing expanding intracranial hematomas.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Low GCS serves as a proxy for non-survivable injury where TXA cannot possibly exert a benefit (floor effect).",
+          "evidence_level": "strong"
+        }
+      ],
+      "subgroup_implications": "Moderate GCS (9-12) might show more benefit than GCS 3 (unsalvageable) or GCS 15 (minor injury).",
+      "validation_suggestions": [
+        "Analyzing cause-specific mortality (Head injury vs Bleeding death) by GCS score."
+      ],
+      "caveats": [
+        "GCS can be confounded by alcohol or sedative use in trauma patients."
+      ]
+    },
+    {
+      "feature_name": "Age",
+      "importance_rank": 4,
+      "shap_value": 0.0,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Patient age and underlying vascular health.",
+      "why_important": "Elderly patients have higher baseline thrombotic risk and different fibrinolytic responses to injury.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Age-related changes in endothelial function and plasminogen activator inhibitor-1 (PAI-1) levels modify the coagulation baseline.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Renal clearance of TXA decreases with age, potentially leading to higher systemic concentrations and increased risk of seizures or thrombosis in the elderly.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Age is a proxy for comorbidities (e.g., use of anticoagulants) which complicate the response to antifibrinolytic therapy.",
+          "evidence_level": "weak"
+        }
+      ],
+      "subgroup_implications": "Lower relative benefit in patients over 70 compared to younger adults due to competing causes of death and pro-thrombotic baseline.",
+      "validation_suggestions": [
+        "Check for age-treatment interaction terms in a Cox model."
+      ],
+      "caveats": [
+        "Age is a strong prognostic factor for mortality, making it difficult to isolate as a predictive factor."
+      ]
+    },
+    {
+      "feature_name": "Respiratory Rate",
+      "importance_rank": 5,
+      "shap_value": 0.0,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Compensatory mechanism for metabolic acidosis and shock.",
+      "why_important": "Tachypnea in trauma often signals metabolic acidosis, which is a key component of the 'lethal triad' (acidosis, hypothermia, coagulopathy).",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Acidosis inhibits coagulation enzyme activity; TXA's stabilization of fibrin may be more critical when the natural coagulation cascade is impaired by low pH.",
+          "evidence_level": "speculative"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "High RR suggests increased sympathetic drive and severe physiological stress, correlating with the degree of trauma-induced coagulopathy.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Respiratory rate acts as a proxy for occult shock in patients who are still maintaining a normal SBP (compensated shock).",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with high RR (>24) despite normal SBP may have higher TXA benefit than those with normal RR.",
+      "validation_suggestions": [
+        "Interaction analysis between RR and TXA in 'normotensive' subgroups."
+      ],
+      "caveats": [
+        "RR is often the most poorly measured vital sign in the emergency department."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "The most potent treatment effect enhancement is expected in the 'acute shock' phenotype: Low SBP, High RR, and Treatment < 1 hour. Conversely, 'delayed presentation' (>3 hours) combined with elderly age likely identifies a subgroup where TXA benefit is neutralized or harmful."
+}

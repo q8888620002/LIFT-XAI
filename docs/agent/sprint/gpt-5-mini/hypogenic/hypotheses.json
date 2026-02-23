@@ -1,0 +1,454 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "sprint",
+    "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+    "outcome": "Composite of major cardiovascular events",
+    "population": "Non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 65,
+    "top_k": 15,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "82a6d374-d6cd-4759-a7d3-e9daa4cd135b",
+        "title": "Greater benefit of intensive BP control in age \u226575",
+        "hypothesis_statement": "Participants aged >=75 will derive greater reduction in major cardiovascular events from intensive SBP target <120 mmHg compared with standard control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">=",
+            "threshold": 75.0,
+            "category": null,
+            "description": "Older adults aged 75 years or older"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Older adults have higher absolute baseline cardiovascular risk; absolute risk reduction from BP lowering may be larger despite potential harms."
+        },
+        "mechanism": "Higher baseline arterial stiffness and atherosclerotic burden in older adults leads to greater event rate reduction when SBP is aggressively lowered.",
+        "evidence_basis": [
+          "General evidence that absolute benefit of risk-factor reduction scales with baseline risk",
+          "Post-hoc subgroup analyses of blood pressure trials suggest older adults may have substantial absolute benefit"
+        ],
+        "testable_prediction": "Within the dataset, subjects age >=75 assigned to intensive control will have a lower incidence of composite events (absolute risk difference greater than in younger age groups)."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "d97133e6-5852-4437-a4c9-032382d0c481",
+        "title": "Progressive increase in absolute benefit with each decade above 60",
+        "hypothesis_statement": "Absolute cardiovascular benefit from intensive SBP <120 increases progressively with each decade above age 60 due to rising baseline risk.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Adults older than 60 years, with expected gradient by decade"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Higher baseline event rates in older decades magnify absolute risk reductions from comparable relative risk reductions."
+        },
+        "mechanism": "Age-related accumulation of atherosclerosis increases event risk; BP lowering reduces events proportionally producing larger absolute gains.",
+        "evidence_basis": [
+          "Risk-based treatment principles and cardiovascular epidemiology",
+          "Analyses showing larger absolute event reductions in higher-risk participants"
+        ],
+        "testable_prediction": "When stratifying into 61\u201370 and 71\u201380, the absolute risk reduction for the intensive arm increases with decade of age."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "bfdb1530-30ec-419a-aecb-3ac2f43472fa",
+        "title": "Improved relative benefit in age 65-74 vs 50-64",
+        "hypothesis_statement": "Participants aged 65-74 will show greater relative reduction in cardiovascular events with intensive SBP <120 than those 50-64, due to higher event rates and preserved tolerability.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">=",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Older-middle adults 65 to 74 years"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Balance of elevated baseline risk and manageable adverse-event profile favors net benefit."
+        },
+        "mechanism": "Moderate age-associated vascular disease increases potential absolute benefit while preserving tolerance to therapy.",
+        "evidence_basis": [
+          "SPRINT subgroup analyses indicating benefit in older adults up to certain ages",
+          "Epidemiologic risk gradients by age"
+        ],
+        "testable_prediction": "Relative risk reduction in 65-74 group will exceed that in 50-64 group, with no substantial rise in serious adverse events."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "e4a4dfd4-b87f-48f7-8e09-bf1605b1983d",
+        "title": "Greater benefit of intensive BP for baseline SBP \u2265150",
+        "hypothesis_statement": "Participants with baseline SBP >=150 mmHg will experience the largest reduction in major cardiovascular events from intensive SBP <120 compared to those with lower baseline SBP.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": ">=",
+            "threshold": 150.0,
+            "category": null,
+            "description": "High baseline systolic blood pressure (>=150 mmHg)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Higher baseline SBP is associated with greater modifiable risk; larger absolute and possibly relative reductions are expected with intensive lowering."
+        },
+        "mechanism": "Greater initial hemodynamic load and vascular strain in high SBP subjects leads to larger event reduction when BP is substantially lowered.",
+        "evidence_basis": [
+          "Epidemiologic relationship between SBP level and cardiovascular risk",
+          "Conceptual dose\u2013response of BP reduction and event risk"
+        ],
+        "testable_prediction": "Subjects with baseline SBP >=150 randomized to intensive control will have a larger absolute event reduction versus those with SBP <150."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "420282ad-4baf-4f1f-ad43-ba326ac33826",
+        "title": "Diminished benefit and higher harm for baseline SBP <130",
+        "hypothesis_statement": "Participants with baseline SBP <130 will have minimal cardiovascular benefit and increased risk of hypotension-related adverse events under intensive SBP <120.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": "<",
+            "threshold": 130.0,
+            "category": null,
+            "description": "Low baseline systolic blood pressure (<130 mmHg)"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Further lowering already low SBP risks cerebral hypoperfusion and orthostatic events without substantial incremental event reduction."
+        },
+        "mechanism": "Narrow margin between baseline pressure and intensive target increases likelihood of symptomatic hypotension and perfusion-related adverse events.",
+        "evidence_basis": [
+          "Observational studies linking low SBP to adverse outcomes in some populations",
+          "Clinical concern about over-treatment when baseline BP is already low"
+        ],
+        "testable_prediction": "In SBP <130 subgroup, intensive arm will not reduce composite events and will show higher rates of hypotension/syncope."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "sbp_gt_140",
+        "title": "Moderately elevated baseline systolic BP (>140 mmHg)",
+        "hypothesis_statement": "Participants with baseline systolic blood pressure >140 mmHg will experience a greater absolute reduction in the composite of major cardiovascular events from intensive BP control (target <120 mmHg) compared with participants with lower baseline SBP.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": ">",
+            "threshold": 140.0,
+            "category": null,
+            "description": "Baseline systolic blood pressure greater than 140 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Moderately elevated baseline SBP confers higher baseline cardiovascular risk and therefore a larger absolute benefit from additional SBP lowering; intensive control is expected to prevent more events in this subgroup than in those with lower SBP."
+        },
+        "mechanism": "Higher SBP increases arterial wall stress, promotes atherosclerosis and stroke risk; more aggressive lowering reduces myocardial workload and cerebrovascular stress, thereby lowering event rates.",
+        "evidence_basis": [
+          "SPRINT primary results showing benefit of intensive BP lowering across elevated-risk populations",
+          "Meta-analyses and pooled trials indicating greater absolute event reductions in higher baseline BP groups",
+          "Pathophysiologic data linking higher SBP to increased stroke and coronary event risk that are responsive to BP lowering"
+        ],
+        "testable_prediction": "Within the subgroup with baseline SBP >140 mmHg, the intensive treatment arm will show a larger absolute risk reduction in the composite cardiovascular outcome compared with those with baseline SBP \u2264140 mmHg; an interaction test comparing treatment effect by this SBP cutoff will trend toward significance (e.g., lower p-value than in lower-SBP groups)."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "dbp_hyp_001",
+        "title": "Low diastolic BP (<60 mmHg) increases harm from intensive SBP lowering",
+        "hypothesis_statement": "Among trial participants with baseline diastolic blood pressure (dbp) < 60 mmHg, intensive systolic BP control (target <120 mmHg) will be associated with worse outcomes (higher composite major cardiovascular events and/or more adverse events) compared with standard control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "dbp",
+            "operator": "<",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Baseline diastolic BP less than 60 mmHg"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Very low diastolic pressure may reduce coronary and cerebral perfusion when systolic BP is aggressively lowered, increasing ischemic events and adverse events; therefore avoid intensive SBP lowering in this subgroup."
+        },
+        "mechanism": "Excessive reduction of diastolic pressure can impair coronary perfusion (particularly during diastole), precipitating myocardial ischemia and increasing risk of adverse cardiovascular events and syncope in vulnerable older adults.",
+        "evidence_basis": [
+          "Physiologic studies linking low diastolic pressure to reduced coronary perfusion pressure",
+          "Observational data associating low DBP with increased coronary events in older adults",
+          "Clinical concern raised in BP-lowering trials about low DBP and ischemic complications"
+        ],
+        "testable_prediction": "Within the trial sample, participants with baseline dbp <60 randomized to intensive control will have a higher rate of the composite outcome and/or a higher rate of ischemic/adverse events compared with those randomized to standard control."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "dbp_hyp_002",
+        "title": "Moderately elevated diastolic BP (>=80 mmHg) gains greater benefit from intensive SBP lowering",
+        "hypothesis_statement": "Participants with baseline dbp >= 80 mmHg will derive a larger absolute reduction in major cardiovascular events from intensive SBP control (target <120 mmHg) versus standard control than those with lower dbp.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "dbp",
+            "operator": ">=",
+            "threshold": 80.0,
+            "category": null,
+            "description": "Baseline diastolic BP greater than or equal to 80 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Higher baseline diastolic pressure identifies individuals with greater overall BP burden and vascular risk, so intensive systolic lowering may produce larger absolute risk reductions in cardiovascular events."
+        },
+        "mechanism": "Higher DBP reflects increased peripheral resistance and target-organ stress; reducing systolic pressure in this subgroup reduces load on the vasculature and heart, lowering event risk more substantially than in those with low-normal DBP.",
+        "evidence_basis": [
+          "Subgroup findings in BP trials showing larger absolute benefit in participants with higher baseline BP",
+          "Epidemiologic associations between higher DBP and cardiovascular risk in middle-aged populations",
+          "Physiologic rationale that greater baseline BP offers greater modifiable risk"
+        ],
+        "testable_prediction": "In the dataset, participants with baseline dbp >=80 randomized to intensive control will show a greater absolute and possibly relative reduction in the primary composite outcome compared with their counterparts with dbp <80."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "dbp_hyp_003",
+        "title": "Low\u2013normal diastolic BP (<=70 mmHg) yields minimal benefit from intensive SBP lowering",
+        "hypothesis_statement": "Participants with baseline dbp <= 70 mmHg will have little to no benefit from intensive SBP lowering (target <120 mmHg) relative to standard control, with a smaller absolute risk reduction and possibly more adverse events.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "dbp",
+            "operator": "<=",
+            "threshold": 70.0,
+            "category": null,
+            "description": "Baseline diastolic BP less than or equal to 70 mmHg"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Low\u2013normal diastolic pressures suggest less BP-related modifiable risk and a narrower safety margin for further reduction; therefore benefit from intensive systolic lowering is likely small and trade-offs with harm are uncertain."
+        },
+        "mechanism": "In participants with low\u2013normal DBP the hemodynamic reserve is limited; aggressive lowering of systolic pressure may not meaningfully reduce event risk but may increase risk of adverse effects such as syncope, acute kidney injury, or ischemia.",
+        "evidence_basis": [
+          "Observational signals that low\u2013normal DBP is associated with less incremental benefit from further BP lowering",
+          "Clinical trial concerns about narrow pulse pressure/low DBP and adverse outcomes with aggressive therapy",
+          "Physiologic plausibility regarding limited perfusion reserve at lower DBP"
+        ],
+        "testable_prediction": "Among participants with baseline dbp <=70, the intensive arm will show a smaller absolute reduction (or no reduction) in the composite outcome compared with higher-dbp subgroups, and a similar or higher rate of treatment-related adverse events."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "egfr_lt_60_high_absolute_benefit",
+        "title": "Reduced eGFR (<60) \u2014 greater absolute cardiovascular benefit from intensive BP lowering",
+        "hypothesis_statement": "Among participants with eGFR < 60 mL/min/1.73m^2, intensive systolic BP control (target <120 mmHg) will yield a greater absolute reduction in the composite major cardiovascular events compared with standard control, compared with participants with higher eGFR.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": "<",
+            "threshold": 60.0,
+            "category": "reduced",
+            "description": "eGFR less than 60 mL/min/1.73m^2 (CKD stage \u22653a)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Lower eGFR identifies patients at higher baseline cardiovascular risk; greater baseline risk increases potential absolute benefit from intensive BP reduction, although monitoring for renal adverse events is warranted."
+        },
+        "mechanism": "Chronic kidney dysfunction is associated with accelerated atherosclerosis and higher baseline risk of CV events; intensive BP lowering reduces afterload and arterial stress, producing a larger absolute event reduction in higher-risk (lower eGFR) patients.",
+        "evidence_basis": [
+          "Post-hoc subgroup analyses of intensive BP trials showing consistent relative benefit across kidney function strata and higher baseline event rates in CKD patients",
+          "Observational literature linking reduced eGFR to increased cardiovascular risk",
+          "Physiologic rationale that high baseline risk increases absolute risk reductions with effective interventions"
+        ],
+        "testable_prediction": "In the trial dataset, the intensive vs standard BP arms among participants with eGFR <60 will show a hazard ratio <1 for the composite outcome and a larger absolute risk reduction compared with participants with eGFR \u226560 after adjustment for covariates."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "egfr_ge_90_low_incremental_benefit",
+        "title": "High eGFR (\u226590) \u2014 lower incremental benefit of intensive BP lowering",
+        "hypothesis_statement": "Participants with eGFR \u2265 90 mL/min/1.73m^2 will experience smaller absolute and possibly no meaningful cardiovascular benefit from intensive systolic BP control (target <120 mmHg) relative to standard control, compared with participants with lower eGFR.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": ">=",
+            "threshold": 90.0,
+            "category": "high",
+            "description": "eGFR greater than or equal to 90 mL/min/1.73m^2 (normal or supranormal kidney function)"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Participants with preserved (high) eGFR typically have lower baseline cardiovascular event rates; therefore, the absolute benefit of more intensive BP lowering is likely small and may not justify added treatment burden or risk."
+        },
+        "mechanism": "Normal/high eGFR reflects lower baseline comorbidity and cardiovascular risk; relative risk reductions translate into smaller absolute gains, reducing the net clinical benefit of intensive targets in this subgroup.",
+        "evidence_basis": [
+          "Epidemiologic data showing lower event rates among individuals with preserved kidney function",
+          "Principles of absolute vs relative risk: lower baseline event rate \u2192 smaller absolute benefit",
+          "Clinical trial subgroup observations where lower-risk strata derived smaller absolute benefit"
+        ],
+        "testable_prediction": "Within participants with eGFR \u226590, the difference in event rates between intensive and standard BP arms will be smaller than in lower-eGFR strata and may not reach clinical significance (minimal absolute risk reduction)."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "egfr_le_45_potential_harm_from_intensive",
+        "title": "Moderately-severe reduced eGFR (\u226445) \u2014 risk of renal harm may offset cardiovascular benefit",
+        "hypothesis_statement": "Participants with eGFR \u2264 45 mL/min/1.73m^2 will have increased risk of renal adverse events (e.g., acute kidney injury, sustained eGFR decline) from intensive systolic BP lowering, potentially resulting in no net cardiovascular benefit or net harm compared with standard control.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": "<=",
+            "threshold": 45.0,
+            "category": "moderately_severe",
+            "description": "eGFR less than or equal to 45 mL/min/1.73m^2 (CKD stage 3b or worse)"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Lower perfusion pressure from intensive BP targets may precipitate AKI or progressive renal decline in patients with more advanced kidney disease, increasing morbidity and offsetting potential CV event reductions; therefore, standard BP targets may be safer in this subgroup."
+        },
+        "mechanism": "In patients with more advanced CKD, renal autoregulation is impaired and aggressive lowering of systemic blood pressure can reduce renal perfusion, leading to AKI and acceleration of CKD progression; these renal complications can increase overall morbidity and mortality.",
+        "evidence_basis": [
+          "Reports from intensive BP trials and observational studies showing higher rates of renal adverse events (e.g., AKI) with intensive BP lowering, particularly among those with impaired baseline kidney function",
+          "Physiologic studies of renal autoregulation and susceptibility to hypoperfusion in advanced CKD",
+          "Clinical guidance that BP lowering in advanced CKD requires individualized risk\u2013benefit assessment"
+        ],
+        "testable_prediction": "In participants with eGFR \u226445, the intensive arm will have higher rates of renal adverse events and no significant reduction (or a smaller reduction) in the composite cardiovascular outcome compared with the standard arm; net clinical outcome (CV events + serious renal events) may be worse with intensive treatment."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "chr_high_01",
+        "title": "High total cholesterol (chr >= 240 mg/dL) augments absolute benefit from intensive BP control",
+        "hypothesis_statement": "Among trial participants with chr >= 240 mg/dL, intensive systolic BP control (<120 mmHg) will produce a greater absolute reduction in the composite of major cardiovascular events compared with standard control, relative to participants with lower chr.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "chr",
+            "operator": ">=",
+            "threshold": 240.0,
+            "category": null,
+            "description": "High cholesterol: chr >= 240 mg/dL"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "High total cholesterol marks increased atherosclerotic burden and baseline cardiovascular risk; lowering systolic BP aggressively in a higher-risk group should yield larger absolute risk reductions in major cardiovascular events. Intensive BP lowering may thus provide substantial benefit when combined with elevated atherogenic lipids."
+        },
+        "mechanism": "Higher plaque burden and vascular vulnerability in individuals with elevated cholesterol increases event risk; lowering BP reduces shear stress and plaque rupture risk, producing a larger absolute event reduction in this subgroup.",
+        "evidence_basis": [
+          "Higher baseline cardiovascular risk leads to greater absolute benefit from risk-factor reduction",
+          "Pathophysiology links elevated cholesterol to atherosclerotic disease and higher event rates"
+        ],
+        "testable_prediction": "The absolute risk reduction (ARR) for the composite outcome in chr >= 240 mg/dL will be significantly larger than in the rest of the cohort (e.g., ARR difference >2\u20133%), and the interaction term between chr (high vs others) and treatment will trend toward significance."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "chr_low_02",
+        "title": "Low total cholesterol (chr < 160 mg/dL) attenuates benefit or increases relative harms of intensive BP control",
+        "hypothesis_statement": "Participants with chr < 160 mg/dL will derive smaller (or no) net benefit from intensive systolic BP control (<120 mmHg) for the composite cardiovascular outcome, and may experience relatively more treatment-related adverse events, compared with participants with higher chr.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "chr",
+            "operator": "<",
+            "threshold": 160.0,
+            "category": null,
+            "description": "Low cholesterol: chr < 160 mg/dL"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Low total cholesterol identifies a lower baseline atherosclerotic risk population in which the absolute event rate is smaller; therefore the marginal benefit of very intensive BP lowering is reduced while risks (e.g., hypotension, syncope, acute kidney injury) may be proportionally more important."
+        },
+        "mechanism": "Lower atherogenic burden reduces baseline event incidence; intensive BP lowering yields smaller absolute reductions and exposes low-risk patients to potential hemodynamic adverse effects without meaningful cardiovascular benefit.",
+        "evidence_basis": [
+          "Principle that lower baseline risk yields smaller absolute benefit from interventions",
+          "Observed adverse event profiles from intensive BP lowering in low-risk subgroups in prior trials"
+        ],
+        "testable_prediction": "In chr < 160 mg/dL participants, the event rate difference between intensive and standard BP arms will be near zero or favor standard care; adverse event rates (e.g., symptomatic hypotension, syncope) per 1000 person-years will be higher in the intensive arm relative to standard."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "chr_moderate_03",
+        "title": "Moderate total cholesterol (160\u2013239 mg/dL) derives intermediate benefit from intensive BP control",
+        "hypothesis_statement": "Participants with chr in the moderate range (160\u2013239 mg/dL) will experience a moderate, clinically meaningful reduction in the composite cardiovascular outcome with intensive systolic BP control (<120 mmHg), intermediate between the high-chr and low-chr groups.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "chr",
+            "operator": "<=",
+            "threshold": 239.0,
+            "category": null,
+            "description": "Moderate cholesterol: chr >= 160 mg/dL and chr <= 239 mg/dL (inclusive)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Patients with moderate cholesterol have appreciable atherosclerotic risk but not as high as those with very elevated cholesterol; intensive BP lowering is likely to yield a moderate absolute reduction in events, balancing benefit and risk appropriately in this group."
+        },
+        "mechanism": "Intermediate atherosclerotic burden produces a mid-range baseline event rate; intensive BP reduction reduces event risk proportionally, resulting in a moderate absolute benefit without the extremes of benefit or futility seen at the ends of the cholesterol distribution.",
+        "evidence_basis": [
+          "Risk-gradient concept: intermediate risk yields intermediate absolute benefit from interventions",
+          "Clinical plausibility that combined risk-factor burden (cholesterol plus BP) is additive for event risk"
+        ],
+        "testable_prediction": "The relative risk reduction in the 160\u2013239 mg/dL group will be similar to the overall trial effect but the ARR will fall between that seen in the high-chr and low-chr subgroups; interaction tests will show a graded (dose-response) relationship across chr categories."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 0.2004603938453121,
+    "avg_accuracy": 0.1733333333333333
+  }
+}

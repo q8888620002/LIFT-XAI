@@ -1,0 +1,443 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "sprint",
+    "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+    "outcome": "Composite of major cardiovascular events",
+    "population": "Non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 65,
+    "top_k": 15,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "H001",
+        "title": "Low Baseline BP Resilience Hypothesis",
+        "hypothesis_statement": "Patients with lower baseline SBP and DBP exhibit diminished benefit or potential harm from intensive control due to hypoperfusion risk.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "sbp",
+            "operator": "<=",
+            "threshold": -0.5,
+            "category": null,
+            "description": "Baseline Systolic Blood Pressure more than 0.5 standard deviations below the mean"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Mean SBP in difficult samples is -0.44. Intensive lowering from a low baseline may trigger the J-curve effect, compromising coronary and cerebral perfusion."
+        },
+        "mechanism": "Autoregulatory failure; the mean baseline SBP and DBP in difficult samples suggest these patients are already near the physiological floor for safe blood pressure.",
+        "evidence_basis": [
+          "J-curve phenomenon in cardiovascular intensive control",
+          "Difficult sample SBP mean of -0.43 and DBP mean of -0.23"
+        ],
+        "testable_prediction": "Patients in the bottom quintile of SBP will show higher rates of orthostatic hypotension and acute kidney injury."
+      },
+      "acc": 0.5639097744360902,
+      "num_visits": 133,
+      "reward": 0.6637057822229906
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_002",
+        "title": "Renal Reserve and Intensive Control Resilience",
+        "hypothesis_statement": "Low baseline urinary albumin-to-creatinine ratios (umalcr < -0.16) identify a subgroup where the 'easy wins' of intensive BP control are absent, requiring more nuanced management.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "umalcr",
+            "operator": "<",
+            "threshold": -0.16,
+            "category": null,
+            "description": "Patients with very low urinary albumin-to-creatinine ratio z-scores"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Difficult samples cluster at very low umalcr values (mean -0.166), suggesting these patients lack the albuminuric risk profile that intensive BP control typically mitigates."
+        },
+        "mechanism": "Low umalcr indicates intact glomerular integrity; in these patients, the risks of intensive therapy (e.g., hypotension, acute kidney injury) may outweigh the marginal cardiovascular benefits.",
+        "evidence_basis": [
+          "Difficult samples show a mean umalcr of -0.166.",
+          "Intensive SBP control is highly effective in proteinuric patients, but less so in those with normal albumin excretion."
+        ],
+        "testable_prediction": "The hazard ratio for MACE in the intensive arm will be close to 1.0 for the bottom quintile of umalcr."
+      },
+      "acc": 0.5379746835443041,
+      "num_visits": 158,
+      "reward": 0.6295356662534506
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_004",
+        "title": "Statin-BP Synergistic Failure",
+        "hypothesis_statement": "Patients already on statin and aspirin therapy (means ~0.48) show a plateau in benefit where further intensive BP reduction adds more risk than reward.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "statin",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": null,
+            "description": "Patients already receiving statin therapy"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Nearly half of the difficult samples were on statins/aspirin, suggesting that aggressive BP lowering might provide diminishing returns when metabolic risk is already pharmacologically managed."
+        },
+        "mechanism": "Statins stabilize plaques and improve endothelial function, potentially overlapping with the protective mechanisms of intensive BP control, leading to a ceiling effect on risk reduction.",
+        "evidence_basis": [
+          "Statin and aspirin use are both 48% in the difficult sample set.",
+          "Polypharmacy in this group increases the risk of adverse drug-drug interactions during intensive titration."
+        ],
+        "testable_prediction": "The absolute risk reduction from intensive BP control will be significantly lower in patients on baseline statin therapy."
+      },
+      "acc": 0.5316455696202529,
+      "num_visits": 158,
+      "reward": 0.6232065523293994
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_005",
+        "title": "Age-Dependent SBP-eGFR Interaction",
+        "hypothesis_statement": "In patients over the age mean (>0.11), a high eGFR (max 5.53) combined with intensive BP control leads to paradoxically poor outcomes due to over-filtration and subsequent renal strain.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": ">",
+            "threshold": 0.032,
+            "category": null,
+            "description": "eGFR above the failure sample mean"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Higher eGFR in older patients in this cluster indicates a hyperfiltration state that is sensitive to the hemodynamic shifts caused by intensive BP medication."
+        },
+        "mechanism": "Intensive BP lowering in hyperfiltering older adults can cause a rapid decline in GFR, leading to electrolyte imbalances and increased cardiovascular sensitivity.",
+        "evidence_basis": [
+          "Mean age is high (0.11) in failures",
+          "egfr shows extreme positive outliers (max 5.53) in failure cases"
+        ],
+        "testable_prediction": "Patients over 75 with eGFR >90 will show a higher rate of serious adverse events in the intensive arm."
+      },
+      "acc": 0.5253164556962026,
+      "num_visits": 158,
+      "reward": 0.616877438405349
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "3a6536fd-31a6-439b-822b-ef292f66802f",
+        "title": "Baseline Renal Function Modification",
+        "hypothesis_statement": "Patients with preserved renal function derive greater relative benefit from intensive systolic blood pressure control compared to those with advanced chronic kidney disease.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "egfr",
+            "operator": ">=",
+            "threshold": 60.0,
+            "category": null,
+            "description": "Baseline estimated Glomerular Filtration Rate (eGFR) of 60 mL/min/1.73m\u00b2 or higher."
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "High eGFR suggests greater physiological reserve to tolerate the hemodynamic shifts associated with aggressive BP lowering."
+        },
+        "mechanism": "Lower eGFR is associated with impaired autoregulation of renal blood flow, increasing susceptibility to acute kidney injury (AKI) when BP is aggressively lowered.",
+        "evidence_basis": [
+          "Post-hoc analyses of SPRINT CKD subgroups showing attenuated CV benefit in low-eGFR strata."
+        ],
+        "testable_prediction": "The hazard ratio for CV events comparing intensive to standard treatment will be significantly lower (favoring intensive) in patients with eGFR >= 60 compared to < 60."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "91d70e0d-a4a1-4be9-a091-69dba307fa96",
+        "title": "Aged-Related Vascular Stiffness",
+        "hypothesis_statement": "Older patients with higher arterial stiffness benefit more from intensive control due to the high baseline risk of stroke.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">=",
+            "threshold": 75.0,
+            "category": null,
+            "description": "Adults aged 75 years and older."
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Older patients have the highest absolute risk of cardiovascular events, leading to a larger absolute risk reduction."
+        },
+        "mechanism": "Intensive BP control reduces the pulsatile load on cerebral small vessels, which is more pronounced in elderly patients with stiffer arteries.",
+        "evidence_basis": [
+          "SPRINT SENIOR trial results showing robust CV benefit in the 75+ population."
+        ],
+        "testable_prediction": "The absolute risk reduction for the composite outcome will be greater in the subgroup with age >= 75 compared to age < 75."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "e371c917-7cba-4766-992b-a06c4a512cde",
+        "title": "Synergistic Effect of Statin Therapy",
+        "hypothesis_statement": "The benefit of intensive BP control is enhanced in patients already receiving statin therapy due to plaque stabilization.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "statin",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": "yes",
+            "description": "Patients taking baseline statin medication."
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Dual management of lipids and blood pressure provides synergistic cardiovascular protection."
+        },
+        "mechanism": "Statins improve endothelial function and plaque stability, while intensive BP control reduces shear stress on these stabilized plaques.",
+        "evidence_basis": [
+          "HOPE-3 trial data suggesting benefits of combined lipid and BP lowering."
+        ],
+        "testable_prediction": "Interaction analysis between statin use and treatment arm will show a more favorable hazard ratio for intensive control in the statin group."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "8e9864cb-2126-41cc-b1a6-0fdbc8b84ee6",
+        "title": "Pulse Pressure and Arterial Compliance",
+        "hypothesis_statement": "Patients with high baseline pulse pressure (proxy for arterial stiffness) derive less benefit from intensive targeting due to increased risk of diastolic hypotension.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "dbp",
+            "operator": "<",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Baseline diastolic BP less than 65 mmHg."
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Aggressive systolic lowering in patients with already low diastolic BP may compromise coronary perfusion."
+        },
+        "mechanism": "Coronary artery perfusion occurs during diastole. Excessive lowering of DBP in patients with low baseline values may induce myocardial ischemia despite reducing systolic load.",
+        "evidence_basis": [
+          "J-curve hypothesis in hypertension treatment."
+        ],
+        "testable_prediction": "The intensive treatment group will show a higher hazard ratio for CV events if baseline DBP is <65 compared to those with DBP >=65."
+      },
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_001",
+        "title": "The High-HDL Paradox in Intensive Control",
+        "hypothesis_statement": "Individuals with significantly elevated HDL levels (z-score > 0.25) show resistance to the benefits of intensive SBP control, possibly due to dysfunctional HDL or different underlying vascular stiffness profiles.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "hdl",
+            "operator": ">",
+            "threshold": 0.25,
+            "category": null,
+            "description": "Patients with HDL cholesterol z-scores above 0.25"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "The difficult sample mean HDL is elevated (0.259), suggesting that standard intensive targets may not provide the expected CV protection in this high-HDL subgroup."
+        },
+        "mechanism": "Elevated HDL levels in certain populations can be associated with pro-inflammatory properties or genetic variants that decouple HDL from cardiovascular protection, rendering aggressive pressure reduction less effective.",
+        "evidence_basis": [
+          "Mean HDL in difficult samples is 0.259 compared to expected neutral distributions.",
+          "Previous literature suggests a U-shaped curve for HDL and CV risk."
+        ],
+        "testable_prediction": "Subjects with HDL z-scores > 0.25 in the intensive arm will show no significant reduction in MACE compared to the standard arm."
+      },
+      "acc": 0.468354430379747,
+      "num_visits": 158,
+      "reward": 0.5599154130888935
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_002",
+        "title": "U-Shaped HDL and Baseline SBP Interference",
+        "hypothesis_statement": "Patients with high HDL (mean 0.26) but lower baseline SBP (mean -0.11) do not benefit from intensive control because their cardiovascular risk is primarily non-pressure dependent.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "hdl",
+            "operator": ">=",
+            "threshold": 0.25,
+            "category": null,
+            "description": "High-density lipoprotein levels above the cohort mean"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "High HDL serves as a protective factor that shifts the risk-benefit ratio of intensive BP lowering toward potential side effects rather than event reduction."
+        },
+        "mechanism": "In patients with favorable lipid profiles and moderate baseline SBP, the absolute risk reduction from intensive therapy is too small to outweigh the risks of polypharmacy and hypotension.",
+        "evidence_basis": [
+          "Failure cases showed high HDL mean (0.26) and max (5.13)",
+          "Mean baseline SBP was lower (-0.11) in failure cases"
+        ],
+        "testable_prediction": "Benefit of SBP <120 will be negligible in the top quintile of HDL values."
+      },
+      "acc": 0.468354430379747,
+      "num_visits": 158,
+      "reward": 0.5599154130888935
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_001",
+        "title": "The African-American Metabolic Resilience Pattern",
+        "hypothesis_statement": "Black individuals with significantly lower-than-average triglycerides (trr < -0.41) exhibit a paradoxical reduction in benefit from intensive BP control due to pre-existing microvascular adaptation.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "race_black",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": "1",
+            "description": "Self-identified Black race combined with low triglycerides"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "The high prevalence of Black individuals (44%) in failure cases, combined with a very low median triglyceride level (trr mean -0.21, median -0.41), suggests that in this population, traditional BP targets are safer than intensive ones."
+        },
+        "mechanism": "Elevated microvascular resistance in Black patients may be compensated for by higher perfusion pressures; lowering SBP to <120 in those with low lipid-driven systemic inflammation may reduce critical organ perfusion.",
+        "evidence_basis": [
+          "44% of failure cases are Black vs ~30% in general study",
+          "Median trr is significantly lower in the failure group (-0.41)"
+        ],
+        "testable_prediction": "Black patients with lower trr will show higher rates of orthostatic hypotension or acute kidney injury when SBP is targeted <120."
+      },
+      "acc": 0.44936708860759494,
+      "num_visits": 158,
+      "reward": 0.5409280713167414
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_003",
+        "title": "The Female Vascular Complexity Subgroup",
+        "hypothesis_statement": "Middle-aged women with low albumin-to-creatinine ratios (umalcr < -0.19) experience higher failure rates with intensive SBP targets due to different arterial stiffening profiles.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": "1",
+            "description": "Female sex with low urinary albumin-to-creatinine ratio"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "With 40% of difficult cases being female and having extremely low umalcr (mean -0.16), these patients likely have low baseline renal risk, making intensive BP targets unnecessary and potentially harmful."
+        },
+        "mechanism": "Women often exhibit different arterial compliance patterns; in the absence of proteinuria (low umalcr), aggressive BP lowering may impair cerebral and coronary autoregulation.",
+        "evidence_basis": [
+          "40% of failures are female",
+          "umalcr median is -0.19 in failure cases"
+        ],
+        "testable_prediction": "Females with umalcr below the median will have no significant difference in CV events between 120 and 140 mmHg targets."
+      },
+      "acc": 0.44936708860759494,
+      "num_visits": 158,
+      "reward": 0.5409280713167414
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_003",
+        "title": "The Black-Female Interaction in BP Sensitivity",
+        "hypothesis_statement": "Black female patients (race_black=1 and female=1) represent a significant portion of difficult samples, suggesting that standard intensive targets may need adjustment for this demographic's specific vascular physiology.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "race_black",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": null,
+            "description": "Black patients (binary indicator)"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "moderate",
+          "rationale": "With 44% of difficult samples being Black and 40% female, the interaction of these traits defines a group where standard models struggle to predict benefit."
+        },
+        "mechanism": "Differences in salt sensitivity and the renin-angiotensin-aldosterone system (RAAS) in Black women may lead to heterogeneous responses to the multiple medications often required for intensive control.",
+        "evidence_basis": [
+          "Race_black mean is 0.44 and Female mean is 0.40 in the failure cases.",
+          "Higher prevalence of resistant hypertension in this demographic."
+        ],
+        "testable_prediction": "Intensive control will show higher variance in treatment response among Black female participants than in other subgroups."
+      },
+      "acc": 0.0,
+      "num_visits": 158,
+      "reward": 0.09156098270914645
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_005",
+        "title": "Age-Related Autonomic Fragility",
+        "hypothesis_statement": "In patients with advanced age (z-score > 0.11), intensive control is harder to manage due to impaired baroreflex sensitivity, leading to inconsistent outcomes.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "age",
+            "operator": ">",
+            "threshold": 0.11,
+            "category": null,
+            "description": "Patients with age z-scores above 0.11"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "moderate",
+          "rationale": "Difficult samples skewed older (mean 0.116). Elderly patients often suffer more side effects from intensive targets, complicating the benefit-risk profile."
+        },
+        "mechanism": "Aging is associated with arterial stiffness and blunted baroreflexes, meaning intensive reduction in SBP may cause transient cerebral or myocardial hypoperfusion despite 'target' numbers.",
+        "evidence_basis": [
+          "Mean age z-score of 0.116 in difficult samples.",
+          "Clinical evidence of orthostatic hypotension risk in the elderly during intensive BP management."
+        ],
+        "testable_prediction": "Older patients will show a higher rate of serious adverse events that negate the CV benefits of reaching an SBP < 120."
+      },
+      "acc": 0.0,
+      "num_visits": 158,
+      "reward": 0.09156098270914645
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_004",
+        "title": "Aspirin-Saturated Cardiovascular Risk",
+        "hypothesis_statement": "The concurrent use of aspirin (48% of failure cases) masks or saturates the protective effect of intensive BP control in patients with sub-clinical CKD.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "aspirin",
+            "operator": "==",
+            "threshold": 1.0,
+            "category": "1",
+            "description": "Daily aspirin use in the context of moderate-risk hypertension"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Aspirin provides potent anti-thrombotic protection that may make the additional marginal benefit of SBP <120 statistically insignificant in certain individuals."
+        },
+        "mechanism": "Anti-platelet therapy reduces the rate of plaque-driven events, which are the primary events intensive BP control aims to prevent, leading to a 'risk floor' where further BP reduction has diminishing returns.",
+        "evidence_basis": [
+          "48% aspirin use in failed cases",
+          "32% sub_ckd prevalence in failed cases"
+        ],
+        "testable_prediction": "The Hazard Ratio for intensive treatment will drift closer to 1.0 in patients already on aspirin vs those not on aspirin."
+      },
+      "acc": 0.0,
+      "num_visits": 158,
+      "reward": 0.09156098270914645
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 0.49434800548624286,
+    "avg_accuracy": 0.4049526347514355
+  }
+}

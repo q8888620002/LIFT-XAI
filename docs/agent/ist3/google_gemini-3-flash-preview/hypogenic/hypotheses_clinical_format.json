@@ -1,0 +1,741 @@
+{
+  "dataset": "ist3",
+  "learner": "HypoGeniC",
+  "treatment": "IV alteplase (recombinant tissue plasminogen activator)",
+  "outcome": "Alive and independent (Oxford Handicap Score 0-2) at 6 months",
+  "population": "Acute ischemic stroke patients within 6 hours of symptom onset",
+  "source_explainer": "HypoGeniC_iterative",
+  "hypotheses": [
+    {
+      "title": "AF-Infarct Type Conflict",
+      "hypothesis": "Patients with Atrial Fibrillation (AF) and evidence of early ischemic changes on CT scan experience lower benefit or potential harm from IV alteplase due to increased risk of hemorrhagic transformation and larger clot burden.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "atrialfib_rand",
+        "split_rule": "atrialfib_rand == 1.0",
+        "notes": "Subgroup defined by the presence of pre-existing or trial-detected Atrial Fibrillation combined with baseline CT findings."
+      },
+      "rationale": [
+        "Cardioembolic strokes associated with AF often involve larger, more organized fibrin-rich thrombi that are less susceptible to thrombolysis compared to other stroke subtypes.",
+        "Patients with AF often have greater hemodynamic instability and fluctuations in cerebral perfusion, making the ischemic penumbra more fragile during the reperfusion process.",
+        "Early infarct signs on CT indicate significant parenchymal injury already occurred; in the context of AF-related emboli, the blood-brain barrier is more likely to be compromised, increasing the risk of symptomatic intracranial hemorrhage (sICH).",
+        "AF is frequently associated with advanced age and prior anticoagulant use, both of which serve as independent risk factors for poor functional recovery and thrombolytic complications.",
+        "Evidence shows higher failure rates when 'atrialfib_rand' and 'infarct_feature' coefficients are elevated, suggesting a synergistic negative effect on the 6-month Oxford Handicap Scale."
+      ],
+      "key_features": [
+        "atrialfib_rand",
+        "baseline_ct_infarct_signs",
+        "age_at_randomisation",
+        "systolic_bp_rand"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by age: AF is highly correlated with elderly status, which independently predicts poor outcomes.",
+        "Pre-stroke anticoagulation: Patients with AF may have been on vitamin K antagonists or other agents that increase bleeding risk.",
+        "Severity of stroke at baseline: Cardioembolic strokes are often clinically more severe (higher NIHSS equivalent) than lacunar strokes.",
+        "Time-to-treatment bias: Large vessel occlusions common in AF might have longer onset-to-needle times in certain centers."
+      ],
+      "validation": {
+        "analyses": [
+          "Logistic regression with an interaction term between 'atrialfib_rand' and treatment allocation for the OHS 0-2 outcome.",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) stratified by AF status and CT infarct visibility.",
+          "Subgroup-specific safety analysis focusing on the incidence of symptomatic intracranial hemorrhage (sICH) within 24-72 hours.",
+          "Sensitivity analysis excluding patients on prior anticoagulation to isolate the AF mechanism."
+        ],
+        "negative_controls": [
+          "Repeat the analysis using a non-vascular outcome, such as pre-existing cataract presence or accidental injury, to check for spurious correlations."
+        ],
+        "robustness": [
+          "Perform cross-validation using the IST-3 validation set or separate stroke registry data.",
+          "Evaluate the stability of the effect size across different OHS score thresholds (e.g., OHS 0-1 vs OHS 0-2)."
+        ]
+      },
+      "caveats": [
+        "The small sample size (n=200) in this HypoGeniC subset limits the power to detect significant interaction effects.",
+        "Observational features of baseline CT are subject to inter-rater variability among neuroradiologists.",
+        "Causality cannot be definitively established; AF may be a marker for more severe underlying vascular fragility rather than the direct cause of treatment failure."
+      ]
+    },
+    {
+      "title": "Consciousness Level as a Proxy for Collateral Failure",
+      "hypothesis": "Patients with normal consciousness (GCS score = max) but significant neurological deficits (moderate NIHSS) may derive higher benefit from IV alteplase due to a higher proportion of salvageable penumbra maintained by failing collateral circulation.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "gcs_score_rand",
+        "split_rule": "gcs_score_rand == 0.757",
+        "notes": "Representing a score of 15 (normal consciousness) in the IST-3 normalized dataset."
+      },
+      "rationale": [
+        "A normal GCS in the presence of focal deficits suggests a stroke syndrome characterized by preserved global cortical function despite localized ischemia, typically seen in earlier phases of collateral failure.",
+        "The 92% prevalence of Total or Partial Anterior Circulation Strokes (TACS/PACS) in this subgroup suggests large vessel involvement where clinical 'wakefulness' masks the underlying tissue-at-risk (penumbra).",
+        "Normal consciousness scores may paradoxically lead to clinicians underestimating the acuity of large vessel occlusions, making these patients 'hyper-sensitive' to early reperfusion with IV alteplase.",
+        "Preserved consciousness allows for a higher baseline for the 6-month Oxford Handicap Score (0-2), as cognitive deficits that usually depress GCS are absent, centering the outcome strictly on motor/functional recovery via thrombolysis.",
+        "The 'sink-effect' mechanism suggests that without thrombolytic intervention, these fragile collateral networks are prone to rapid exhaustion, leading to late-onset delirium or global GCS decline post-randomization."
+      ],
+      "key_features": [
+        "gcs_score_rand",
+        "NIHSS (National Institutes of Health Stroke Scale)",
+        "Stroketype (TACS/PACS classification)",
+        "Time from onset to treatment"
+      ],
+      "confounders_and_bias_risks": [
+        "Measurement bias: GCS is often less sensitive to right-hemisphere cortical deficits which may lead to misclassification of stroke severity.",
+        "Confounding by indication: Patients with normal GCS might have been treated faster or received more aggressive supportive care.",
+        "Selection bias: IST-3 included patients over 80 years old where baseline cognitive impairment (dementia) could confound the 'normal GCS' classification.",
+        "Presence of tandem lesions: Collateral status is heavily influenced by proximal arterial integrity, which is not captured by GCS alone."
+      ],
+      "validation": {
+        "analyses": [
+          "Interaction analysis between GCS (normal vs. reduced) and treatment arm using a logistic regression model for 6-month OHS (0-2).",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) specifically within the GCS=15 and NIHSS > 10 strata.",
+          "Sensitivity analysis adjusting for stroke subtype (TACS vs. PACS) as a potential effect modifier.",
+          "Post-hoc analysis of early neurological deterioration (END) within 24 hours for the placebo arm of this subgroup."
+        ],
+        "negative_controls": [
+          "Evaluation of treatment effect in patients with normal GCS but very low NIHSS (<4) where penumbral volume is negligible.",
+          "Treatment effect on non-neurological outcomes, such as 6-month pneumonia rates."
+        ],
+        "robustness": [
+          "Bootstrap resampling (1000 iterations) to assess the stability of the GCS threshold effect.",
+          "Comparison of findings using the NIHSS consciousness component (1a) instead of GCS."
+        ]
+      },
+      "caveats": [
+        "The 200-patient sample size in the dataset may limit the statistical power for high-order interaction terms.",
+        "GCS may not be a perfect surrogate for collateral flow in the absence of CT-angiography or perfusion imaging data.",
+        "Causal interpretation is limited by the observational nature of subgroup discovery; 'Normal GCS' may simply be a marker of a 'slow-progressing' stroke phenotype rather than a specific mechanism of drug response."
+      ]
+    },
+    {
+      "title": "Female Cardioembolic Resistance Interaction",
+      "hypothesis": "Elderly female patients with atrial fibrillation and low NIHSS are more likely to have lower benefit or higher harm from IV alteplase due to an increased risk of symptomatic intracranial hemorrhage (sICH) and non-salvageable ischemic territory, potentially narrowing the net clinical benefit in this specific demographic.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "gender",
+        "split_rule": "gender == 1 (Female)",
+        "notes": "Hypothesis specifically targets the interaction between female sex, age, and cardioembolic etiology (atrial fibrillation)."
+      },
+      "rationale": [
+        "Female patients with atrial fibrillation have been shown to have higher rates of cardioembolic stroke and worse functional outcomes compared to males, often attributed to larger emboli and lower collateral flow.",
+        "Higher vascular fragility in elderly post-menopausal women increases the risk of hemorrhagic transformation following thrombolysis, particularly when the ischemic core is already established.",
+        "The presence of low NIHSS initially may mask severe proximal occlusions (e.g., in the M1 or M2 segments) that are prone to sudden deterioration or hemorrhagic transformation upon late recanalization with tPA.",
+        "Cardioembolic strokes in this subgroup are frequently associated with 'distal fragmentation' where alteplase may be less effective at restoring meaningful tissue perfusion in the presence of microvascular dysfunction."
+      ],
+      "key_features": [
+        "gender",
+        "atrialfib_rand",
+        "age",
+        "nihss_score"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by age: Women in stroke trials are statistically older than men, which is a primary driver of poor 6-month outcomes.",
+        "Pre-stroke disability: Women often have higher baseline disability levels which can inflate the 'non-independent' outcome regardless of treatment efficacy.",
+        "Time-to-treatment bias: If female patients in this cohort experienced longer door-to-needle times, the perceived 'resistance' may simply be a function of the time-dependency of alteplase."
+      ],
+      "validation": {
+        "analyses": [
+          "Fit a multivariable logistic regression model with an interaction term for (Treatment * Gender * Atrial Fibrillation) on the primary outcome (OHS 0-2).",
+          "Calculate the Average Treatment Effect (ATE) specifically within the female-AFib-low NIHSS strata using Doubly Robust estimators.",
+          "Conduct a safety-specific analysis comparing rates of sICH (SITS-MOST criteria) within this subgroup versus the remainder of the IST-3 population."
+        ],
+        "negative_controls": [
+          "Assess the same interaction on a non-vascular outcome (e.g., post-randomization pneumonia) to ensure the effect is specific to the stroke-tPA mechanism.",
+          "Re-run the analysis using 'eye color' or 'randomly generated binary variable' as a placebo effect modifier."
+        ],
+        "robustness": [
+          "Sensitivity analysis adjusting for pre-stroke Oxford Handicap Scale to ensure results are not driven by baseline frailty.",
+          "Subgroup bootstrap validation (n=1000) to check the stability of the effect size estimate across different resamples of the cohort."
+        ]
+      },
+      "caveats": [
+        "IST-3 was an open-label trial for the clinician, which may introduce hidden bias in post-stroke care management for elderly female patients.",
+        "Small sample size (n=200 in this subset) increases the risk of over-fitting and finding a 'chance' interaction (Type I error).",
+        "Low NIHSS is a subjective measure of severity and may not capture the true physiological burden of a cardioembolic occlusion.",
+        "Correlation does not imply causation; the observed lower benefit may be a marker of higher baseline risk rather than a lack of biological response to alteplase."
+      ]
+    },
+    {
+      "title": "Age and Neuroplasticity",
+      "hypothesis": "The treatment effect of IV alteplase on 6-month independence is greater in patients aged < 70 compared to older patients due to increased vascular resilience and lower stroke-related complication risks.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "age",
+        "split_rule": "age < 70",
+        "notes": "Age is treated as a continuous variable but dichotomized at 70 for simplicity in clinical decision-making based on prior IST-3 subgroup trends."
+      },
+      "rationale": [
+        "Younger patients typically demonstrate higher vascular integrity and lower baseline burden of cerebral small vessel disease (SVD), which reduces the likelihood of alteplase-induced blood-brain barrier disruption.",
+        "Primary risk factor for symptomatic intracranial hemorrhage (sICH) is advanced age, which correlates with cerebral amyloid angiopathy; younger brains are more resilient to the fibrinolytic process.",
+        "Enhanced neuroplasticity and greater physiological reserve in patients under 70 facilitate superior functional recovery (OHS 0-2) following successful reperfusion.",
+        "Younger populations have fewer competing comorbidities like atrial fibrillation or chronic kidney disease, which can complicate acute management and long-term stroke recovery."
+      ],
+      "key_features": [
+        "age",
+        "baseline_OHS",
+        "systolic_blood_pressure",
+        "history_of_diabetes"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by baseline stroke severity: Older patients often present with higher NIHSS scores, which independently predicts poor outcome regardless of treatment.",
+        "Selection bias in IST-3: The 'uncertainty principle' used for recruitment may have led to the inclusion of healthier older patients compared to the general stroke population.",
+        "Survivor bias: Younger patients have lower 6-month mortality, potentially inflating the independence outcome relative to older cohorts with higher non-stroke mortality."
+      ],
+      "validation": {
+        "analyses": [
+          "Interaction test between age (<70 vs >=70) and alteplase treatment in a logistic regression model for OHS 0-2.",
+          "Doubly robust estimation of the conditional average treatment effect (CATE) within the age < 70 stratum.",
+          "Sensitivity analysis using age as a continuous cubic spline to identify non-linearities in treatment effect."
+        ],
+        "negative_controls": [
+          "Repeat analysis using 'Eye Color' or 'Day of Admission' as the subgroup to ensure findings are not due to multiple testing artifacts."
+        ],
+        "robustness": [
+          "Propensity score matching to balance baseline NIHSS and time-to-treatment between age groups.",
+          "E-value calculation to assess the potential impact of unmeasured confounders like pre-stroke frailty."
+        ]
+      },
+      "caveats": [
+        "The absolute benefit in older patients remains significant; a 'higher benefit' in younger patients should not be used to justify withholding treatment from the elderly.",
+        "IST-3 intentionally included older patients to demonstrate safety; results from this 200-patient subset may lack power to achieve statistical significance for an interaction term.",
+        "Age is a proxy for biological frailty; biological age may be a more accurate predictor of outcome than chronological age."
+      ]
+    },
+    {
+      "title": "Glucose-Mediated Penumbra Toxicity",
+      "hypothesis": "Baseline hyperglycemia (glucose > 8.0 mmol/L) reduces the probability of a positive outcome with alteplase due to increased oxidative stress and exacerbated reperfusion injury.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "glucose",
+        "split_rule": "glucose > 8.0 mmol/L",
+        "notes": "The 8.0 mmol/L threshold represents a clinically significant cutoff for hyperglycemia in acute ischemic settings."
+      },
+      "rationale": [
+        "Hyperglycemia promotes anaerobic metabolism in the ischemic penumbra, leading to localized lactic acidosis and accelerated neuronal death.",
+        "Elevated glucose levels trigger the activation of matrix metalloproteinases (specifically MMP-9), which compromises the blood-brain barrier and increases the risk of hemorrhagic transformation after fibrinolysis.",
+        "High serum glucose promotes superoxide production and oxidative stress via the polyol pathway, which neutralizes the potential recovery benefit of reperfusion provided by alteplase.",
+        "Clinical evidence suggests that hyperglycemic patients exhibit reduced recanalization rates, possibly due to a more fibrin-rich clot structure or impaired endogenous fibrinolytic activity."
+      ],
+      "key_features": [
+        "serum_glucose",
+        "time_since_onset",
+        "baseline_nihss"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by stroke severity: Higher NIHSS scores are often associated with stress-induced hyperglycemia and worse outcomes regardless of treatment.",
+        "Diabetes mellitus status: Chronic hyperglycemia (HbA1c) may modify the acute effect of glucose levels on ischemic tissue.",
+        "Insulin administration: Pre-randomization or early hospital glucose management protocols could mask the natural history of the hyperglycemia-treatment interaction."
+      ],
+      "validation": {
+        "analyses": [
+          "Interaction analysis using a logistic regression model with the term Treatment * (Glucose > 8.0) to estimate the heterogeneity of treatment effect (HTE).",
+          "Doubly robust estimation of the Conditional Average Treatment Effect (CATE) within the glucose > 8.0 and glucose <= 8.0 strata.",
+          "Dose-response sensitivity analysis treating glucose as a continuous variable using a restricted cubic spline model."
+        ],
+        "negative_controls": [
+          "Validation against outcomes unrelated to revascularization, such as pre-existing disability scores, to ensure the effect is specific to the acute treatment phase.",
+          "Testing the interaction using patient gender as a negative control variable."
+        ],
+        "robustness": [
+          "Propensity score matching for baseline NIHSS and age within glucose strata to isolate the effect of hyperglycemia.",
+          "E-value calculation to determine the required strength of an unmeasured confounder to nullify the observed interaction."
+        ]
+      },
+      "caveats": [
+        "Observational data cannot definitively separate stress-induced hyperglycemia as a marker of severe injury from its role as a causal agent of harm.",
+        "The modest sample size (n=200) may lack the statistical power to detect subtle interactions, increasing the risk of Type II error.",
+        "Absence of baseline imaging data (e.g., penumbra-core mismatch volume) limits the ability to confirm the 'Penumbra Toxicity' mechanism directly."
+      ]
+    },
+    {
+      "title": "Effect of moderate NIHSS on Tissue Salvage versus Hemorrhagic Risk",
+      "hypothesis": "Acute ischemic stroke patients with moderate severity (NIHSS 5-15) demonstrate higher therapeutic benefit from IV alteplase compared to very mild or very severe presentations at 6 months.",
+      "expected_direction": "higher_benefit",
+      "subgroup": {
+        "feature": "nihss",
+        "split_rule": "NIHSS >= 5 AND NIHSS <= 15",
+        "notes": "Focused on the middle tercile of stroke severity where the risk-to-benefit ratio of thrombolysis is traditionally considered most favorable."
+      },
+      "rationale": [
+        "Patients with NIHSS < 5 often have a high rate of spontaneous recovery, leading to a ceiling effect where the incremental benefit of alteplase is statistically difficult to prove against standard care.",
+        "Higher NIHSS scores (>15) are pathophysiologically associated with larger infarct volumes, which correlate with an increased risk of symptomatic intracranial hemorrhage (sICH) after thrombolytic administration.",
+        "The range of 5-15 represents a therapeutic 'sweet spot' where there is sufficient salvageable penumbra to justify treatment, but lower baseline blood-brain barrier disruption compared to massive strokes.",
+        "Reperfusion success in moderate strokes is more likely to translate into functional independence (OHS 0-2) than in severe strokes where primary neuronal loss may already be extensive."
+      ],
+      "key_features": [
+        "Baseline NIHSS",
+        "Symptom-to-needle time",
+        "Baseline systolic blood pressure",
+        "Age"
+      ],
+      "confounders_and_bias_risks": [
+        "Selection bias: Clinicians may be more hesitant to treat very elderly patients with high NIHSS even within trial protocols (confounding by indication).",
+        "Co-morbidities: Higher NIHSS may correlate with pre-existing frailty or atrial fibrillation, which independently affect 6-month independence.",
+        "Measurement error: Inter-rater variability in the NIHSS scale, particularly in the assessment of aphasia versus level of consciousness.",
+        "Imaging-clinical mismatch: NIHSS does not always perfectly correlate with core infarct size, which is a better biological predictor of response."
+      ],
+      "validation": {
+        "analyses": [
+          "Subgroup-specific odds ratios for OHS 0-2 using a logistic regression model with an interaction term (alteplase * NIHSS_category).",
+          "Doubly Robust (DR) estimation to adjust for baseline imbalances in age and blood pressure within the 5-15 NIHSS stratum.",
+          "A dose-response analysis using Restricted Cubic Splines for NIHSS as a continuous variable to identify the exact peak of treatment effect."
+        ],
+        "negative_controls": [
+          "Hospitalization day of the week as a negative control exposure to check for systemic trial bias.",
+          "Treatment effect on non-vascular mortality (e.g., cancer-related deaths) as a negative control outcome."
+        ],
+        "robustness": [
+          "Sensitivity analysis excluding patients with a history of prior stroke.",
+          "Re-evaluation using the modified Rankin Scale (mRS) Shift Analysis instead of the dichotomous OHS independence threshold."
+        ]
+      },
+      "caveats": [
+        "Small sample size (n=200) limits the statistical power to detect subgroup interactions reliably without risk of Type I error.",
+        "IST-3 was an open-label trial for clinicians, introducing potential observer bias in early management, though 6-month outcomes were blinded.",
+        "A 'lower' benefit in severe strokes (NIHSS > 15) does not necessarily imply no benefit, as severe patients may still experience significant absolute risk reduction despite higher sICH rates."
+      ]
+    },
+    {
+      "title": "Impact of Baseline Hypertension on Alteplase Treatment Benefit",
+      "hypothesis": "Acute ischemic stroke patients presenting with initial systolic blood pressure (SBP) > 160 mmHg exhibit a diminished treatment effect or potential net harm from IV alteplase compared to those with lower baseline SBP, primarily due to increased risk of symptomatic intracranial hemorrhage (sICH).",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "sbprand",
+        "split_rule": "sbprand > 160",
+        "notes": "Units in mmHg. The threshold of 160 mmHg represents a common clinical breakpoint where vascular wall stress increases before reaching the contraindication threshold of 185 mmHg."
+      },
+      "rationale": [
+        "High systolic pressure exerts mechanical wall stress on ischemic cerebral microvasculature, which may already have compromised integrity due to local hypoxia.",
+        "Alteplase-induced depletion of circulating fibrinogen and the resulting hypocoagulable state significantly reduce the threshold for vessel rupture in hypertensive environments.",
+        "The 'Recanalization-Reperfusion' paradox: rapid restoration of high-pressure blood flow to friable, distal ischemic zones (reperfusion injury) is exacerbated by high systemic SBP during the infusion period.",
+        "Clinical registry data (e.g., SITS-ISTR) suggests a linear relationship between baseline SBP and the risk of intracranial hemorrhage following thrombolysis.",
+        "Autoregulatory failure in the penumbra means cerebral blood flow becomes passively dependent on systemic pressure, increasing the risk of capillary leak and hemorrhagic transformation under hypertensive conditions."
+      ],
+      "key_features": [
+        "sbprand",
+        "systolic_blood_pressure",
+        "baseline_stroke_severity",
+        "age"
+      ],
+      "confounders_and_bias_risks": [
+        "History of chronic hypertension (vascular remodeling may protect some high-SBP patients).",
+        "Concomitant use of antihypertensive agents (e.g., IV labetalol) during or shortly after alteplase administration.",
+        "Baseline stroke severity (higher NIHSS/OHS scores are often correlated with higher acute stress-induced SBP).",
+        "Measurement error: Blood pressure variability at the time of randomization versus sustained hypertension during the 24-hour post-treatment window.",
+        "Time from onset to treatment (longer ischemia periods increase blood-brain barrier permeability, interacting with SBP)."
+      ],
+      "validation": {
+        "analyses": [
+          "Logistic regression model assessing the interaction between treatment (alteplase vs. control) and SBP (>160 vs. <=160) on the primary outcome (OHS 0-2).",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) within the SBP > 160 and SBP <= 160 strata.",
+          "A restricted cubic spline analysis of SBP as a continuous variable to identify the specific inflection point where treatment benefit diminishes.",
+          "Sensitivity analysis adjusting for baseline NIHSS and time-to-treatment to ensure the BP effect is independent of stroke severity."
+        ],
+        "negative_controls": [
+          "Analysis of treatment interaction with unrelated features (e.g., patient eye color or hospital ward ID) to check for spurious subgroup findings.",
+          "Testing the interaction on non-vascular outcomes such as incidental baseline comorbidities."
+        ],
+        "robustness": [
+          "Subgroup consistency checks using different SBP thresholds (e.g., 150 mmHg and 170 mmHg).",
+          "E-value calculation to determine the strength of unmeasured confounding required to negate the observed interaction."
+        ]
+      },
+      "caveats": [
+        "Association between high SBP and poor outcome does not necessarily imply that lowering SBP prior to tPA will improve the treatment effect (the 'U-shaped' curve risk).",
+        "A sample size of 200 in this context may be underpowered to detect a statistically significant interaction term, even if a clinical trend exists.",
+        "The ist3 trial included older patients and wider time windows than earlier trials, which may influence the generalizability of the SBP-harm relationship.",
+        "The absence of site-specific BP management protocols in early datasets could introduce institutional bias in how hypertensive patients were handled."
+      ]
+    },
+    {
+      "title": "Hypotensive Hypoperfusion Limitation in Acute Stroke",
+      "hypothesis": "Acute ischemic stroke patients presenting with lower systolic blood pressure (sbprand < -0.146 standardized units) and moderate neurological deficits (NIHSS) experience lower therapeutic benefit from IV alteplase due to impaired penumbral perfusion and insufficient collateral flow.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "sbprand",
+        "split_rule": "sbprand < -0.146",
+        "notes": "The threshold represents a standardized systolic blood pressure below the cohort mean, identified as a marker for low-perfusion difficult-to-treat cases."
+      },
+      "rationale": [
+        "Compromised Collateral Perfusion: Systemic hypotension in the acute phase of ischemic stroke reduces the pressure gradient required to drive blood through pial collaterals to the ischemic penumbra.",
+        "Time-Sensitive Penumbral Loss: Lower baseline perfusion accelerates the transition from penumbra to completed infarction, rendering late-stage recanalization via rt-PA ineffective for tissue salvage.",
+        "Autoregulation Failure: In the setting of acute large vessel occlusion, cerebral autoregulation is frequently impaired, making the salvageable penumbra directly dependent on systemic mean arterial pressure.",
+        "Hemodynamic Limitation to Recanalization: Even with successful enzymatic thrombolysis, low transit pressure may fail to achieve 'no-reflow' reversal at the microvascular level."
+      ],
+      "key_features": [
+        "sbprand",
+        "dbprand",
+        "nihss",
+        "age"
+      ],
+      "confounders_and_bias_risks": [
+        "Pre-hospital antihypertensive medication use may confound the relationship between baseline BP and natural collateral status.",
+        "Cardiac comorbidities such as heart failure or acute myocardial infarction could drive the low-BP phenotype and independently worsen 6-month outcomes.",
+        "Baseline stroke severity (NIHSS) acts as a significant confounder, as very severe strokes may induce a stress-related hypertensive response compared to moderate strokes.",
+        "Selection bias in IST-3: Very hypotensive patients may have been excluded by investigators fearing poor prognosis."
+      ],
+      "validation": {
+        "analyses": [
+          "Subgroup-specific odds ratios (OR) for 6-month OHS 0-2 using a Doubly Robust (DR) learner to estimate the Conditional Average Treatment Effect (CATE).",
+          "Inclusion of an interaction term (rt-PA * sbprand) in a multivariate logistic regression model adjusted for age and baseline NIHSS.",
+          "Spline analysis of systolic BP across the continuous range to identify if the Benefit-BP relationship is linear or threshold-based."
+        ],
+        "negative_controls": [
+          "Assess the impact of systolic BP on non-vascular endpoints to ensure the effect is specific to ischemic recovery.",
+          "Evaluate effect of BP on symptom-to-needle time to rule out process-of-care delays."
+        ],
+        "robustness": [
+          "Sensitivity analysis using diastolic blood pressure (dbprand) as the primary split feature instead of systolic blood pressure.",
+          "E-value calculation to determine the strength of unmeasured confounding required to negate the observed effect modification."
+        ]
+      },
+      "caveats": [
+        "This hypothesis suggests a correlation between low baseline BP and lower RT-PA benefit but does not justify iatrogenic hypertension induction without further safety data.",
+        "The standardized threshold (-0.146) is dataset-specific (IST-3) and requires recalibration to absolute mmHg for clinical application.",
+        "Low BP may be a proxy for frailty or occult volume depletion rather than a purely hemodynamic mechanism of treatment failure."
+      ]
+    },
+    {
+      "title": "Antiplatelet-Mediated Lysis Resistance in Minor Stroke",
+      "hypothesis": "Among patients presenting with minor ischemic stroke (Stroketype 2.0), those receiving pre-stroke antiplatelet therapy experience lower net clinical benefit from IV alteplase due to a combination of altered clot architecture and a disproportionately high risk of symptomatic intracranial hemorrhage relative to the potential for neurological recovery.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "antiplat_rand",
+        "split_rule": "antiplat_rand == 1.0 (Pre-stroke antiplatelet use)",
+        "notes": "Includes patients on aspirin, clopidogrel, or dipyridamole at the time of stroke onset."
+      },
+      "rationale": [
+        "Prior antiplatelet use is associated with altered clot morphology, specifically impacting fibrin cross-linking and platelet density, which may render the thrombus less susceptible to rt-PA mediated fibrinolysis in minor deficits.",
+        "The presence of antiplatelets increases microvascular friability, significantly raising the hazard ratio for hemorrhagic transformation even in small infarct volumes typically seen in minor strokes.",
+        "In minor strokes, the physiological 'ceiling effect' for improvement means the absolute risk reduction provided by rt-PA is minimal, making the increased bleeding risk from antiplatelet use a dominant factor in the net benefit equation.",
+        "Pre-treatment with aspirin or clopidogrel has been clinically observed to correlate with slower recanalization rates in distal occlusions, which are frequently the etiology of minor strokes."
+      ],
+      "key_features": [
+        "antiplat_rand",
+        "Stroketype",
+        "NIHSS_baseline",
+        "age_rand"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by indication: Patients on antiplatelets are more likely to have comorbid cardiovascular disease and small vessel disease, which independently influence recovery.",
+        "Age bias: Older patients are more likely to be on chronic antiplatelet therapy and have higher baseline rates of intracranial hemorrhage.",
+        "Measurement error: Self-reporting of medication adherence prior to stroke may be unreliable, leading to classification error in the subgroup."
+      ],
+      "validation": {
+        "analyses": [
+          "Logistic regression model with an interaction term between treatment (rt-PA) and pre-stroke antiplatelet status, adjusted for baseline NIHSS and age.",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect on the Treated (ATT) within the minor stroke stratum, segmented by antiplatelet status.",
+          "Safety analysis comparing the absolute risk increase (ARI) of symptomatic intracranial hemorrhage within the antiplatelet-positive subgroup."
+        ],
+        "negative_controls": [
+          "Validation of benefit in patients with high NIHSS (Major Stroke) where the thrombolytic benefit should outweigh antiplatelet-related bleeding risks."
+        ],
+        "robustness": [
+          "Sensitivity analysis using E-values to assess the strength required for an unmeasured confounder (e.g., leukoaraiosis) to negate the observed effect modification."
+        ]
+      },
+      "caveats": [
+        "The IST-3 population includes a wide age range; effect modification might be driven by age-related small vessel disease rather than the antiplatelet agent itself.",
+        "Association does not imply causality; antiplatelet use may serve as a proxy for a high burden of atherosclerotic disease which limits collateral circulation.",
+        "Minor stroke definitions (Stroketype 2.0) may vary in their exclusion of rapidly improving symptoms."
+      ]
+    },
+    {
+      "title": "Low NIHSS and Blood Pressure Sensitivity to Reperfusion Injury",
+      "hypothesis": "In patients with mild neurological deficits (standardized NIHSS < -0.198), treatment with IV alteplase results in lower-than-average benefit or increased risk when accompanied by moderate systolic blood pressure elevation due to capillary bed fragility and luxury perfusion.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "nihss",
+        "split_rule": "standardized nihss < -0.198",
+        "notes": "NIHSS values are standardized based on the IST-3 failure cohort mean; corresponds to clinical mild-to-moderate stroke presentations."
+      },
+      "rationale": [
+        "In low-severity strokes, the ischemic penumbra is smaller, reducing the total volume of salvageable tissue compared to the baseline risk of fibrinolysis.",
+        "Alteplase-induced rapid recanalization in patients with lower NIHSS can lead to 'luxury perfusion'\u2014where blood flow exceeds metabolic demand\u2014increasing the risk of cerebral edema.",
+        "Fragile capillary beds distal to smaller occlusions may be more susceptible to hemorrhagic transformation when subjected to even moderate systolic blood pressure elevation (SBP > 140 mmHg).",
+        "The benefit-to-risk ratio of IV tPA narrows in mild strokes, as the potential functional improvement (ceiling effect) may be outweighed by the iatrogenic risk of symptomatic intracranial hemorrhage.",
+        "Higher SBP levels concurrently reduce the blood-brain barrier integrity, exacerbating the extravasation of alteplase-induced lytic factors into the brain parenchyma."
+      ],
+      "key_features": [
+        "nihss",
+        "systolic_blood_pressure",
+        "age",
+        "onset_to_randomization_time"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by indication: Patients with lower NIHSS may have been selected for treatment despite later presentation times.",
+        "Measurement error in NIHSS: Low NIHSS scores can mask significant non-motor deficits (e.g., aphasia, neglect) that influence independent living (OHS 0-2).",
+        "Survivor bias: Patients in the lower NIHSS group are more likely to survive, potentially over-representing OHS 0-2 outcomes regardless of treatment effect.",
+        "Baseline BP variability: A single baseline SBP measurement may not reflect the hemodynamic stability during the critical 24-hour post-rtPA window."
+      ],
+      "validation": {
+        "analyses": [
+          "Subgroup analysis using a Doubly Robust (DR) learner to estimate the Conditional Average Treatment Effect (CATE) for patients with standardized NIHSS < -0.198.",
+          "Interaction model: Logistic regression assessing the interaction between Treatment (rtPA) and NIHSS, stratified by SBP quartiles.",
+          "Estimation of the treatment-attributable risk of Symptomatic Intracranial Hemorrhage (sICH) specifically within the low-NIHSS, high-SBP cohort."
+        ],
+        "negative_controls": [
+          "Perform the same analysis using 'pre-existing comorbidities' as a negative control feature where no specific interaction with rtPA mechanism is expected."
+        ],
+        "robustness": [
+          "Sensitivity analysis using different OHS cutoffs (e.g., OHS 0-1 vs OHS 0-2) to ensure the effect is not driven by the definition of independence.",
+          "E-value calculation to determine the strength of unmeasured confounding required to negate the observed association."
+        ]
+      },
+      "caveats": [
+        "The analysis is based on the IST-3 trial dataset which included an older, more heterogeneous population than previous tPA trials; results may not generalize to younger cohorts.",
+        "A 'lower benefit' finding does not equate to 'no benefit'; clinical decision-making must still weigh individual patient risk factors.",
+        "The standardized threshold (NIHSS < -0.198) is data-driven and requires validation in independent prospective cohorts before clinical application."
+      ]
+    },
+    {
+      "title": "Adverse Synergy of Body Weight and Hyperglycemia on Alteplase Efficacy",
+      "hypothesis": "In acute ischemic stroke, patients with body weight > 0.279 (standardized) and elevated glucose demonstrate a significant reduction in 6-month independence (OHS 0-2) when treated with IV alteplase compared to lean, euglycemic counterparts.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "weight",
+        "split_rule": "weight > 0.279 (standardized units)",
+        "notes": "This threshold identifies patients at risk of exceeding the capping limit of alteplase dosing or experiencing lower relative serum concentrations."
+      },
+      "rationale": [
+        "The standard IV alteplase dose is weight-based (0.9 mg/kg) but capped at a 90 mg maximum; patients in this high-weight subgroup are more likely to receive a lower effective mg/kg dose due to this ceiling effect.",
+        "Hyperglycemia promotes the glycation of fibrinogen and modifies clot architecture, creating denser, less porous fiber networks that are inherently more resistant to plasmin-mediated fibrinolysis.",
+        "Elevated glucose levels are associated with increased Plasminogen Activator Inhibitor-1 (PAI-1) activity, which directly antagonizes the catalytic efficiency of exogenous alteplase.",
+        "The combination of relative under-dosing (low mg/kg) and chemically resistant clots (hyperglycemic modification) creates a synergistic barrier to successful recanalization.",
+        "High weight is often comorbid with systemic inflammation, which further shifts the hemostatic balance toward a pro-thrombotic state, blunting the treatment's net clinical benefit."
+      ],
+      "key_features": [
+        "weight",
+        "glucose",
+        "max_dose_indicator",
+        "systolic_blood_pressure"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by indication: Patients with higher weight and glucose may have higher rates of diabetes and metabolic syndrome, leading to poorer baseline microvascular health.",
+        "Measurement error: Variation in glucose levels may occur if the recorded value is a single random measurement rather than a fasting or admission-standardized value.",
+        "Selection bias: Heavier patients with severe comorbidities may have been excluded from the initial trial, potentially over-representing relatively healthy obese patients.",
+        "Collider bias: High weight is correlated with both diabetes and hypertension, which are independent predictors of poor stroke outcomes."
+      ],
+      "validation": {
+        "analyses": [
+          "Logistic regression including a formal interaction term (Weight*Treatment) to estimate the heterogeneity of treatment effect.",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) specifically within the glucose > 7.0 mmol/L and high-weight strata.",
+          "Sensitivity analysis using weight as a continuous variable (spline) to determine if the benefit-diminishment follows a linear or threshold-based pattern.",
+          "Adjustment for baseline NIHSS score to ensure the observed benefit reduction is not merely due to higher baseline stroke severity."
+        ],
+        "negative_controls": [
+          "Repeat the analysis using 6-month mortality as the outcome to see if the effect is specific to functional independence or general survival.",
+          "Perform the same interaction analysis using 'Time from onset' as a control feature to ensure findings are not confounded by treatment delays."
+        ],
+        "robustness": [
+          "Apply the E-value sensitivity analysis to determine the strength required for an unmeasured confounder to negate the observed interaction.",
+          "Leave-one-out cross-validation to assess the stability of the weight threshold across different trial centers."
+        ]
+      },
+      "caveats": [
+        "The standardized threshold of 0.279 must be mapped back to absolute units (kg) to ensure clinical applicability.",
+        "The study size (n=200) may lack sufficient statistical power to detect subtle interactions, necessitating caution against over-interpreting p-values.",
+        "A reduction in 'benefit' in this subgroup does not necessarily imply 'harm' or a contraindication for alteplase, as there may still be a marginal benefit compared to no treatment at all.",
+        "Observational associations between glucose and outcome do not prove that aggressive glucose lowering would restore alteplase efficacy."
+      ]
+    },
+    {
+      "title": "Metabolic Threshold for Reperfusion Efficiency",
+      "hypothesis": "In acute ischemic stroke patients, the presence of combined hyperadiposopathy (represented by higher weight) and hyperglycemia creates a pro-thrombotic milieu that significantly diminishes the clinical effectiveness of IV alteplase, resulting in a lower probability of achieving independence (OHS 0-2) at 6 months.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "weight",
+        "split_rule": "weight > 0.279",
+        "notes": "Threshold derived from standardized weight metrics in failure-case clusters (HypoGeniC analysis)."
+      },
+      "rationale": [
+        "Elevated body weight and visceral adiposity are correlates of increased Plasminogen Activator Inhibitor-1 (PAI-1) production, which acts as a direct biochemical antagonist to recombinant tissue plasminogen activator (rt-PA).",
+        "Concomitant hyperglycemia induces acute oxidative stress and non-enzymatic glycation of fibrinogen, altering clot structure into a denser, more lysis-resistant framework.",
+        "The synergy of high serum glucose and metabolic syndrome markers (weight) promotes microvascular 'no-reflow' phenomena, where distal perfusion fails even after successful proximal recanalization.",
+        "Hyperglycemia exacerbates blood-brain barrier disruption during reperfusion, increasing the risk of hemorrhagic transformation in patients with high metabolic burden.",
+        "Fixed-dose rt-PA protocols may lead to relative under-dosing in high-weight patients while simultaneously failing to overcome the physiologic resistance mediated by PAI-1."
+      ],
+      "key_features": [
+        "weight",
+        "glucose_max",
+        "systolic_bp",
+        "age"
+      ],
+      "confounders_and_bias_risks": [
+        "Association between obesity and atrial fibrillation, which may involve harder-to-lyse red-cell-rich emboli.",
+        "Potential confounding by baseline stroke severity (NIHSS), as metabolic syndrome patients often present with more severe multi-vessel disease.",
+        "Time-to-treatment bias: larger patients may experience longer imaging-to-needle times due to logistical challenges in transfer and positioning.",
+        "Measurement error in standardized weight values across different clinical sites within the IST-3 trial."
+      ],
+      "validation": {
+        "analyses": [
+          "Cox proportional hazards model with an interaction term between treatment (alteplase vs. control) and the weight-glucose metabolic cluster.",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) within the subgroup defined by weight > 0.279 vs. the general cohort.",
+          "Sensitivity analysis adjusting for baseline NIHSS and time-from-onset to ensure metabolic markers are independent predictors of outcome.",
+          "Logistic regression modeling the probability of OHS 0-2 at 6 months across quartiles of weight and glucose simultaneously."
+        ],
+        "negative_controls": [
+          "Duration of hospitalization (unlikely to be driven solely by metabolic rt-PA resistance)",
+          "Pre-stroke functional status (to ensure no pre-existing selection bias in weight-split)"
+        ],
+        "robustness": [
+          "E-value calculation to determine the strength of unmeasured confounding required to negate the observed effect modification.",
+          "Check for consistency across other outcomes like 7-day mortality and symptomatic intracranial hemorrhage (sICH)."
+        ]
+      },
+      "caveats": [
+        "The threshold of 0.279 is feature-scaled and requires back-transformation to kilograms for clinical bedside utility.",
+        "Causality between adiposity and alteplase failure cannot be definitively established from retrospective trial data without biomarker confirmation (e.g., PAI-1 levels).",
+        "Observational subgroup findings in a trial setting may be subject to 'winner's curse' and require external validation in independent cohorts (e.g., SITS-ISTR).",
+        "The 'obesity paradox' in stroke sometimes suggests better long-term survival in higher-weight patients; 6-month Oxford Handicap Scores must be interpreted with caution regarding this trend."
+      ]
+    },
+    {
+      "title": "Neurological Dissociation Refractivity",
+      "hypothesis": "Patients with high NIHSS but relatively preserved GCS (indicative of specific lacunar or minor stroke syndromes) show a lower benefit from IV alteplase compared to patients with globally impaired consciousness.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "gcs_score_rand",
+        "split_rule": "gcs_score_rand > 0.757 (standardized scale)",
+        "notes": "Higher value indicates preserved Glasgow Coma Scale (GCS) score, suggesting absence of global encephalopathy or massive space-occupying hemispheric infarction."
+      },
+      "rationale": [
+        "High NIHSS with preserved GCS often localizes the infarct to subcortical structures or specific white matter tracts, characteristic of lacunar syndromes or small vessel disease which may have lower fibrinolytic response rates than large vessel occlusions.",
+        "Preserved GCS indicates the absence of massive hemispheric edema or primary brainstem involvement at presentation, factors that usually drive the high-magnitude benefit observed in global reperfusion studies.",
+        "Dissociation between global cognitive status (GCS) and focal deficit (NIHSS) can suggest a slower progression of penumbral loss, potentially extending the window where natural collateralization or local autoregulation is more relevant than immediate thrombolysis.",
+        "Lacunar strokes are often caused by lipohyalinotic changes or local microatheroma rather than true embolic fibrin-rich thrombi, making them inherently less sensitive to recombinant tissue plasminogen activator (rt-PA).",
+        "Clinical evidence from prior trials suggests that patients with 'milder' global presentations despite specific motor deficits have a higher rate of 'favorable outcome' even in the placebo arm, leading to a ceiling effect that reduces the observable therapeutic benefit of alteplase."
+      ],
+      "key_features": [
+        "gcs_score_rand",
+        "nihss_score_rand",
+        "ocsp_stroke_type",
+        "age_rand"
+      ],
+      "confounders_and_bias_risks": [
+        "Selection bias in the IST3 trial towards the elderly may influence the GCS/NIHSS relationship due to pre-existing atrophy.",
+        "Measurement error in NIHSS components (e.g., aphasia) can artificially inflate the NIHSS score relative to GCS.",
+        "Confounding by time-to-treatment: patients with preserved GCS may be diagnosed later, influencing the efficacy of alteplase.",
+        "Differential misclassification of stroke mimics which often present with focal deficits but high GCS."
+      ],
+      "validation": {
+        "analyses": [
+          "Logistic regression model with an interaction term between treatment (alteplase) and the GCS/NIHSS ratio.",
+          "Doubly Robust (DR) estimation of the Average Treatment Effect (ATE) within the high-GCS/high-NIHSS stratum compared to the low-GCS/high-NIHSS stratum.",
+          "Propensity score matching to compare similar focal deficits across different levels of consciousness at baseline.",
+          "Subgroup sensitivity analysis using the Oxford Community Stroke Project (OCSP) classifications to verify if the effect is driven predominantly by Lacunar (LACI) types."
+        ],
+        "negative_controls": [
+          "Wait-time for ambulance (variable unrelated to biological response)",
+          "Day of week of admission"
+        ],
+        "robustness": [
+          "Leave-one-center-out cross-validation",
+          "E-value calculation to assess sensitivity to unmeasured confounding",
+          "Permutation testing of the GCS threshold (0.757)"
+        ]
+      },
+      "caveats": [
+        "The 6-month assessment (OHS 0-2) may not capture subtle neurological recovery patterns specific to preserved GCS subgroups.",
+        "IST3 was an open-label trial for the clinicians, potentially introducing bias in GCS scoring if treatment assignment was known.",
+        "The threshold of 0.757 is based on a standardized score and requires mapping back to raw GCS points (13-15 range) for bedside application.",
+        "Reduced benefit does not necessarily imply lack of benefit; treatment may still be clinically indicated to prevent incremental disability."
+      ]
+    },
+    {
+      "title": "Gender-Specific Antiplatelet Interference in Thrombolysis Efficacy",
+      "hypothesis": "Female patients receiving IV alteplase for acute ischemic stroke who were prescribed antiplatelet therapy prior to the event (antiplat_rand == 1.0) exhibit a significantly reduced probability of achieving functional independence (OHS 0-2) at 6 months compared to males on antiplatelets or patients not on antiplatelets.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "antiplat_rand",
+        "split_rule": "antiplat_rand == 1.0 (Prior antiplatelet use)",
+        "notes": "Focus on female interaction (gender == 1.0) as the primary effect modifier within the antiplatelet-positive subgroup."
+      },
+      "rationale": [
+        "Sex-specific differences in platelet reactivity and hormonal influences (estrogen) may modulate the efficacy of alteplase-induced fibrinolysis when antiplatelet therapy is already present.",
+        "Pre-treatment with antiplatelets in women is associated with a distinct 'white clot' or platelet-rich thrombus architecture that is structurally more resistant to recombinant tissue plasminogen activator (rt-PA) than fibrin-rich 'red clots'.",
+        "Female patients often present with higher baseline platelet sensitivity; the introduction of rt-PA into an environment of incomplete platelet inhibition might trigger paradoxical thrombotic pathways.",
+        "Clinical data suggests women on antiplatelets may experience higher rates of asymptomatic or symptomatic intracranial hemorrhage (sICH) which offsets the recanalization benefits of alteplase."
+      ],
+      "key_features": [
+        "antiplat_rand",
+        "gender",
+        "age",
+        "baseline_stroke_severity"
+      ],
+      "confounders_and_bias_risks": [
+        "Confounding by age: Women in stroke trials are frequently older and have more comorbidities, which correlates with higher antiplatelet utilization.",
+        "Survival bias: Differential mortality rates between sexes at 6 months could skew the recorded functional outcome (OHS).",
+        "Adherence bias: Self-reported or baseline recorded antiplatelet use does not account for actual pharmaceutical compliance prior to the stroke event."
+      ],
+      "validation": {
+        "analyses": [
+          "Three-way interaction term analysis (Treatment x Gender x Antiplatelet Use) in a logistic regression model for OHS 0-2.",
+          "Doubly Robust (DR) estimation of treatment effects stratified by both gender and antiplatelet status to control for baseline imbalances.",
+          "Sensitivity analysis examining the rate of symptomatic intracranial hemorrhage as a competing risk in this specific subgroup."
+        ],
+        "negative_controls": [
+          "Repeat the analysis using OHS outcome at 48 hours (where long-term independence is not yet established) to test for early-stage consistency.",
+          "Applying the same model to patients with transient ischemic attacks (TIA) where thrombolysis is not indicated."
+        ],
+        "robustness": [
+          "Propensity score matching for age and baseline NIHSS to ensure gender differences are not driven by severity or longevity.",
+          "Bootstrap resampling (1000 iterations) to assess the stability of the effect modification."
+        ]
+      },
+      "caveats": [
+        "The IST-3 dataset sample size of 200 for this specific subgroup analysis may be underpowered to detect a statistically significant three-way interaction.",
+        "Gender is often a proxy for unmeasured social and biological variables including vessel diameter and time-to-treatment delays.",
+        "The specific type of antiplatelet (aspirin vs. clopidogrel) is not always differentiated, which may affect the biological mechanism proposed."
+      ]
+    },
+    {
+      "title": "Impact of Pre-existing Atrial Fibrillation on Alteplase Treatment Effect in Acute Ischemic Stroke",
+      "hypothesis": "Intravenous alteplase (rt-PA) confers an attenuated treatment benefit in patients with pre-existing atrial fibrillation (AF) compared to those in sinus rhythm, potentially due to the structural and compositional resistance of cardioembolic thrombi.",
+      "expected_direction": "lower_benefit",
+      "subgroup": {
+        "feature": "atrialfib_rand",
+        "split_rule": "atrialfib_rand == 1",
+        "notes": "Positive status indicates patient was in atrial fibrillation at the time of randomization or had a documented history of AF."
+      },
+      "rationale": [
+        "Cardioembolic thrombi derived from the left atrial appendage typically exhibit higher fibrin and platelet content and lower erythrocyte concentrations than large-artery atherosclerotic clots, increasing hydraulic resistance to thrombolytic penetration.",
+        "Thrombi associated with atrial fibrillation are often more 'organized' and older (chronic stasis in the atrium), leading to cross-linking of fibrin that is less responsive to tPA-mediated plasminogen activation.",
+        "Patients with AF are more likely to have larger clot volumes and proximal occlusions (e.g., M1 or ICA terminus), which are known to have lower recanalization rates with intravenous thrombolysis alone.",
+        "The 'clot burden score' in cardioembolic events often correlates with poorer collateral circulation compared to atherosclerotic strokes, where pre-existing stenosis may have induced ischemic preconditioning."
+      ],
+      "key_features": [
+        "atrialfib_rand",
+        "age",
+        "baseline_NIHSS",
+        "systolic_bp_rand"
+      ],
+      "confounders_and_bias_risks": [
+        "Age Confounding: AF patients are significantly older on average, introducing higher risks of frailty and pre-stroke disability (Oxford Handicap Score > 0).",
+        "Anticoagulant Use: Patients with known AF may have been on Vitamin K antagonists or DOACs prior to the event, affecting both the safety profile and the efficacy of alteplase.",
+        "Stroke Severity: AF-related strokes tend to be more severe at baseline (higher NIHSS), which is a strong independent predictor of 6-month outcomes.",
+        "Immune-Mediated Response: AF is associated with systemic inflammation, which may exacerbate reperfusion injury regardless of thrombus lysis."
+      ],
+      "validation": {
+        "analyses": [
+          "Log-linear regression modeling the interaction between treatment (alteplase) and atrial fibrillation status (atrialfib_rand) on the 6-month OHS 0-2 outcome.",
+          "Doubly Robust (DR) estimation to calculate the Conditional Average Treatment Effect (CATE) within the AF and non-AF strata, adjusting for baseline NIHSS and age.",
+          "Sensitivity analysis excluding patients with pre-stroke anticoagulation to isolate the biological effect of clot source from pharmacological interference.",
+          "Ordinal analysis (shift analysis) of the full Oxford Handicap Score to detect subtle improvements that does not meet the binary 0-2 threshold."
+        ],
+        "negative_controls": [
+          "Perform the same interaction analysis using 'gender' as a subgroup to ensure the AF interaction is not a result of general model overfitting.",
+          "Assess the effect of alteplase on 24-hour imaging if available, using a non-vascular outcome as a control."
+        ],
+        "robustness": [
+          "Bootstrap resampling (1000 iterations) to assess the stability of the interaction coefficient.",
+          "Subgroup consistency check across different age quintiles to ensure the AF effect is not merely a proxy for advanced age."
+        ]
+      },
+      "caveats": [
+        "This hypothesis suggests lower efficacy, not necessarily a lack of benefit; alteplase may still be superior to placebo even if the effect size is reduced.",
+        "The 200-patient sample size in this specific study context may be underpowered to detect a statistically significant interaction term.",
+        "Causality cannot be definitively established if thrombus imaging (E.g., CT Angiography or MRI) is not used to confirm the site and nature of the occlusion.",
+        "Outcome at 6 months may be influenced by secondary prevention strategies (e.g., starting anticoagulation after the stroke) which may differ between the AF and non-AF cohorts."
+      ]
+    }
+  ]
+}

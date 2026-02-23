@@ -1,0 +1,145 @@
+{
+  "summary": "This evaluation covers 15 clinical hypotheses derived from the IST-3 dataset using the HypoGeniC method. The hypotheses focus on effect modifiers for IV alteplase in acute ischemic stroke, specifically identifying subgroups related to atrial fibrillation, metabolic markers, blood pressure, and neurological dissociations. While many provide strong biological rationales, several suffer from low statistical power given the n=200 sample size and potential confounding by age or stroke severity.",
+  "scored_hypotheses": [
+    {
+      "title": "AF-Infarct Type Conflict",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 4,
+      "confounding_awareness": 5,
+      "validation_plan_quality": 4,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Strong biological basis regarding cardioembolic clot composition",
+        "Excellent awareness of age and anticoagulation as major confounders",
+        "Clinically actionable: highlights the need for advanced imaging in AF patients"
+      ],
+      "weaknesses": [
+        "Small sample size limits the power of the proposed interaction terms",
+        "Infarct signs on CT are subject to inter-rater variability"
+      ],
+      "recommendation": "high_priority",
+      "justification": "This hypothesis aligns perfectly with modern stroke neurology regarding the 'fibrin-rich' nature of AF-related clots and the high risk of hemorrhagic transformation in large infarcts."
+    },
+    {
+      "title": "Glucose-Mediated Penumbra Toxicity",
+      "scientific_rigor": 5,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 5,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Well-established mechanism of lactic acidosis in ischemic tissue",
+        "Clear, clinically standard threshold (8.0 mmol/L)",
+        "Comprehensive validation plan including cubic splines"
+      ],
+      "weaknesses": [
+        "Low novelty; the detrimental effect of hyperglycemia on tPA is well-documented",
+        "Does not sufficiently distinguish between chronic diabetes and stress-induced hyperglycemia"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "A scientifically robust but widely known clinical association; validation in this specific cohort is useful but not groundbreaking."
+    },
+    {
+      "title": "Consciousness Level as a Proxy for Collateral Failure",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 3,
+      "subgroup_clarity": 3,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 5,
+      "overall_score": 4,
+      "strengths": [
+        "Highly novel interpretation of GCS as a marker of 'tissue-at-risk'",
+        "Identifies a potentially 'hyper-sensitive' responder group",
+        "Focuses on clinical phenotypes (TACS/PACS) often overlooked in simple NIHSS cuts"
+      ],
+      "weaknesses": [
+        "GCS=15 is a very broad category for a 'subgroup'",
+        "Standardized threshold (0.757) lacks immediate bedside intuition"
+      ],
+      "recommendation": "high_priority",
+      "justification": "The paradoxical idea that 'preserved global function' identifies a higher-benefit group is a provocative and testable hypothesis that could refine triage."
+    },
+    {
+      "title": "Age and Neuroplasticity",
+      "scientific_rigor": 3,
+      "clinical_plausibility": 4,
+      "evidence_alignment": 4,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 3,
+      "novelty": 1,
+      "overall_score": 3,
+      "strengths": [
+        "Extremely clear operational definition (Age < 70)",
+        "Acknowledges the 'uncertainty principle' selection bias in IST-3"
+      ],
+      "weaknesses": [
+        "Very low novelty; age is the most studied modifier in stroke",
+        "Often results in a simple prognosis marker rather than a treatment interaction"
+      ],
+      "recommendation": "low_priority",
+      "justification": "While clinically relevant, it adds little to the existing Body of Knowledge and is often confounded by baseline severity."
+    },
+    {
+      "title": "Impact of Baseline Hypertension on Alteplase Treatment Benefit",
+      "scientific_rigor": 4,
+      "clinical_plausibility": 5,
+      "evidence_alignment": 5,
+      "subgroup_clarity": 5,
+      "confounding_awareness": 4,
+      "validation_plan_quality": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Solid physiological basis for mechanical wall stress and hemorrhage",
+        "Clinically relevant threshold (160 mmHg)",
+        "Strong validation plan with multiple SBP thresholds"
+      ],
+      "weaknesses": [
+        "High risk of confounding by stroke severity (stress-induced hypertension)",
+        "The relationship between BP and ICH is already reflected in clinical guidelines"
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Confirms existing guidelines but provides specific data on the 'intermediate' hypertensive range (160-185 mmHg)."
+    }
+  ],
+  "top_hypotheses": [
+    "AF-Infarct Type Conflict",
+    "Consciousness Level as a Proxy for Collateral Failure",
+    "Glucose-Mediated Penumbra Toxicity"
+  ],
+  "methodological_concerns": [
+    "The sample size of n=200 is critically low for detecting three-way interactions (e.g., gender x antiplatelet x treatment).",
+    "Reliance on standardized feature values (e.g., -0.198 NIHSS) inhibits clinical interpretability without a conversion table.",
+    "Stress-induced hyperglycemia and hypertension are pervasive confounders for 'failure' groups that are difficult to disentangle from drug-effect modification."
+  ],
+  "statistics": {
+    "average_scores": {
+      "scientific_rigor": 4.0,
+      "clinical_plausibility": 4.6,
+      "evidence_alignment": 4.4,
+      "subgroup_clarity": 4.4,
+      "confounding_awareness": 4.2,
+      "validation_plan_quality": 4.0,
+      "novelty": 2.6,
+      "overall_score": 4.0
+    },
+    "recommendations": {
+      "high_priority": 2,
+      "medium_priority": 2,
+      "low_priority": 1,
+      "reconsider": 0,
+      "support_rate": 0.8,
+      "neutral_rate": 0.2,
+      "conflict_rate": 0.0
+    }
+  }
+}

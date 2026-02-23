@@ -1,0 +1,190 @@
+{
+  "dataset": "sprint",
+  "model": "unknown_learner (blinded)",
+  "summary": "Refined, actionable hypotheses on effect modification of intensive SBP target (<120 mmHg) vs standard control among non-diabetic adults \u226550 at increased CV risk (SPRINT-like). For five top features (baseline SBP, age, CKD, prior CVD, baseline antihypertensive medication count) I provide clearer clinical definitions, sharpened mechanisms with specific plausible pathways, explicit subgroup thresholds, concrete validation steps (statistical models, mediation and net-benefit calculations), and added caveats about trial eligibility and measurement limitations.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Baseline systolic blood pressure (SBP)",
+      "importance_rank": 1,
+      "shap_value": 0.08,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Average pre-randomization SBP (best practice: mean of available pre-randomization readings). Categorize for analysis: <130, 130\u0013139, 140\u0013149, \u001e150 mmHg.",
+      "why_important": "Higher baseline SBP increases absolute event risk and typically allows larger achievable absolute SBP reductions with intensification, producing larger absolute risk reductions for BP-sensitive outcomes (stroke, HF). Conversely, those with SBP near target have smaller incremental benefit and higher proportional risk of hypotension-related harms.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Higher SBP chronically increases shear stress, endothelial dysfunction and progression of hypertensive target-organ damage (left ventricular hypertrophy, cerebrovascular small-vessel disease). Intensive lowering reduces mechanical stress and ischemic triggers, yielding larger absolute reductions in stroke and heart failure events among those starting at higher SBP.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Absolute BP-lowering achieved per medication dose is typically larger when baseline SBP is higher (greater delta to move); therefore intensive-protocol titration achieves larger absolute SBP drops in higher-baseline cohorts. Response heterogeneity by agent class (e.g., diuretics vs ACE inhibitors) and adherence will modulate this effect.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Baseline SBP may produce apparent effect modification via regression-to-the-mean and baseline risk differences: higher baseline SBP both predicts higher event rates (increasing absolute ARR) and larger measurable SBP decrements, which can make interactions appear even if relative risk reduction is constant. Measurement error in single SBP readings can exacerbate these artifacts.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Actionable groups: <130, 130\u0013139, 140\u0013149, \u001e150 mmHg. Expect largest absolute benefit in the \u001e150 and 140\u0013149 bands; minimal incremental benefit and higher harm risk in <130\u0011e139 band. Use caution extrapolating beyond trial-eligible SBP ranges.",
+      "validation_suggestions": [
+        "Fit Cox PH models with treatment\u007fxSBP interaction using SBP as continuous term with restricted cubic splines to detect nonlinear interaction.",
+        "Compute absolute risk differences and NNT by SBP strata and present relative HRs alongside ARR.",
+        "Perform mediation analysis where achieved SBP (e.g., 6-month average) is mediator: estimate natural indirect/effect via parametric g-computation or structural equation models to quantify how much of treatment effect heterogeneity is explained by achieved SBP.",
+        "Mitigate regression-to-the-mean by using averaged pre-randomization SBP or repeated baseline measures; perform sensitivity analyses using measurement-error correction if possible."
+      ],
+      "caveats": [
+        "SPRINT eligibility limited baseline SBP distribution; extrapolation to very low (<120) or very high (>180) SBP is speculative.",
+        "Single-visit baseline SBP is noisy; averaging multiple readings improves validity.",
+        "Relative effect may be stable while absolute effect varies; clinical decisions should weigh absolute ARR and harms."
+      ]
+    },
+    {
+      "feature_name": "Age (particularly \u0001e75 years)",
+      "importance_rank": 2,
+      "shap_value": 0.07,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Chronological age in years; analyze as continuous and in bands (50-64, 65-74, 75-79, \u001e80). Where available, include frailty/fxn proxies (gait speed, Katz ADL count) or a frailty index to refine vulnerability assessment.",
+      "why_important": "Older adults generally have higher baseline CV event rates (increasing absolute benefit) and greater arterial stiffness (potentially larger physiological benefit), but also higher susceptibility to harms (orthostatic hypotension, syncope, AKI). Net benefit depends on balance of ARR and harm rate, modified by frailty and comorbidity.",
+      "mechanisms": [
+        {
+          "mechanism_type": "physiological",
+          "description": "Age-associated arterial stiffening raises pulse pressure and LV afterload. Lowering SBP reduces afterload and myocardial oxygen demand which can disproportionately prevent heart failure and some ischemic events in older adults; pulse-pressure or arterial compliance measures can act as mechanistic markers.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Older adults often have greater burden of subclinical cerebrovascular disease (white-matter hyperintensities) and vulnerable coronary microcirculation; intensive BP lowering may stabilize these beds and reduce events. This is plausible but evidence is less direct unless imaging/biomarkers are available.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Age is a strong prognostic factor; larger observed absolute benefit with age may reflect higher baseline event rates rather than a larger relative treatment effect. Additionally, competing non-CV mortality in older age modifies observed long-term benefit.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Actionable subgroups: 75-79 and \u001e80 years, and stratification by frailty (robust vs prefrail vs frail). Anticipate greater absolute benefit in fit older adults, but increased harm risk in frail older adults\u2014recommend individualized decisions guided by frailty metrics.",
+      "validation_suggestions": [
+        "Test interaction treatment\u007fxage (continuous with splines) and treatment\u007ffrailty (if available).",
+        "Report absolute and relative effects by age bands and frailty categories; calculate NNT and NNH (number-needed-to-harm) and net clinical benefit (e.g., composite of CV events minus serious adverse events).",
+        "Use competing-risk (Fine-Gray) and cause-specific Cox models to account for non-CV mortality; consider QALY or utility-weighted outcomes if data permit."
+      ],
+      "caveats": [
+        "SPRINT excluded institutionalized and extremely frail individuals; results may not apply to nursing-home residents or those with advanced dementia.",
+        "Age alone is an imperfect surrogate for physiologic reserve\u2014frailty and functional status are crucial modifiers.",
+        "Short-term harms (syncope/AKI) may offset some early ARR; some kidney function changes may be hemodynamic and reversible."
+      ]
+    },
+    {
+      "feature_name": "Chronic kidney disease (reduced eGFR / CKD)",
+      "importance_rank": 3,
+      "shap_value": 0.06,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Baseline CKD defined by eGFR and albuminuria categories (recommend eGFR bands: \u001e60, 45\u00139, 30\u001430, <30 mL/min/1.73 m2; albuminuria: UACR <30, 30\u0013100, >300 mg/g).",
+      "why_important": "CKD increases baseline CV event risk (potential greater absolute CV benefit) but reduces renal autoregulatory reserve, increasing vulnerability to hemodynamic AKI with intensive SBP lowering\u2014yielding a bidirectional net effect depending on CKD stage, albuminuria, and comorbidity.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "CKD is associated with accelerated atherosclerosis, inflammation, and volume-mediated cardiovascular strain; lowering SBP reduces afterload and may reduce CV events. Expect greater absolute CV benefit in earlier-stage CKD with preserved autoregulation.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Reduced renal autoregulation (especially with lower eGFR or renal artery disease) makes kidneys sensitive to reductions in perfusion pressure; intensive targets can trigger AKI or sustained eGFR decline. Distinguish transient hemodynamic eGFR fall (often reversible) from progressive structural decline.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "CKD status reflects competing risks and high comorbidity burden; analyses focusing only on CV endpoints may miss important renal harms that change net benefit. Heterogeneity by CKD subtype (albuminuric vs non-albuminuric) is plausible.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Actionable stratifications: eGFR \u001e60 vs 45\u0013159 vs 30\u001439 vs <30, and albuminuria categories. Hypothesis: earlier-stage CKD (eGFR 45\u0013159, low albuminuria) may have net CV benefit; advanced CKD or high albuminuria may have increased renal harms and less favorable net benefit.",
+      "validation_suggestions": [
+        "Test treatment\u007fCKD interaction for primary CV outcome and separately for renal safety endpoints (AKI, sustained \u001e30% eGFR decline, ESRD).",
+        "Estimate eGFR slope by treatment arm and CKD strata (mixed-effects models) and examine transient vs sustained declines (e.g., confirm eGFR decline at 6 months and 1 year).",
+        "Mediation analysis: quantify how much renal adverse events (AKI/transient eGFR decline) mediate net outcome differences; present composite net outcomes that combine CV events and major renal harms."
+      ],
+      "caveats": [
+        "SPRINT excluded patients with diabetes; these CKD findings may not apply to diabetic CKD populations (ACCORD context differs).",
+        "Baseline CKD is heterogeneous in etiology; albuminuria and markers of chronicity can change expected benefit/harm.",
+        "Early eGFR declines in the intensive arm may be hemodynamic and reversible\u2014do not automatically equate early decline with irreversible harm."
+      ]
+    },
+    {
+      "feature_name": "Prior cardiovascular disease (history of MI, stroke, revascularization)",
+      "importance_rank": 4,
+      "shap_value": 0.05,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "History of clinical atherosclerotic events (separate categories: coronary artery disease/MI/revascularization; cerebrovascular disease/stroke/TIA; peripheral arterial disease). Also capture time since last event (<6 months, 6-12 months, >12 months).",
+      "why_important": "Prior CVD increases baseline risk (potential for larger absolute benefit) but may modify responsiveness to BP lowering depending on event type, time since event, and background secondary-prevention therapy. The direction of effect modification on relative benefit is uncertain and likely heterogeneous by CVD subtype.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Some recurrent events (e.g., plaque rupture) may be less immediately driven by hemodynamic load than de novo events; therefore relative BP-mediated prevention might be reduced for certain recurrent outcomes, but evidence is inconsistent.",
+          "evidence_level": "speculative"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Patients with prior CVD are more likely to be on intensive secondary prevention (statins, antiplatelets, ACEi), which can reduce the marginal relative benefit of additional BP lowering. Confounding by concomitant therapies must be addressed.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Post-stroke autoregulatory impairment or fixed coronary obstructions may increase vulnerability to hypoperfusion with aggressive BP lowering\u2014this risk is most relevant for recent or large-vessel cerebrovascular disease.",
+          "evidence_level": "weak"
+        }
+      ],
+      "subgroup_implications": "Actionable subgroups: coronary vs cerebrovascular vs peripheral disease; time since event (<6 months vs >12 months); presence/absence of revascularization or residual ischemia. Hypothesis: patients with remote, stabilized coronary disease on optimal secondary prevention may still derive absolute benefit, whereas recent stroke patients with impaired autoregulation may face higher harm risk.",
+      "validation_suggestions": [
+        "Test treatment\u007fprior-CVD interaction overall and by CVD subtype; adjust models for concomitant secondary-prevention medications (statin, antiplatelet, beta-blocker) and for time since event.",
+        "Examine event subtypes (ischemic vs hemorrhagic stroke, MI vs unstable angina) to see whether particular outcomes drive heterogeneity.",
+        "Use stratified propensity adjustment or inverse-probability weighting to reduce confounding by differences in background therapy intensity."
+      ],
+      "caveats": [
+        "Evidence for reduced relative benefit in secondary-prevention patients is mixed; avoid asserting a consistent negative effect direction.",
+        "Residual confounding by disease severity and concomitant therapies is likely; sample sizes for some subtypes may be small.",
+        "SPRINT's power for subgroup-by-treatment interactions is limited; interpret subgroup findings cautiously."
+      ]
+    },
+    {
+      "feature_name": "Number of baseline antihypertensive medications (medication burden/resistance)",
+      "importance_rank": 5,
+      "shap_value": 0.04,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Count of antihypertensive drug classes at baseline (0,1,2,\u001e3). Supplement count with class indicators and a flag for resistant hypertension (uncontrolled BP on \u001e3 classes including a diuretic). Record recent medication changes and adherence proxies if available.",
+      "why_important": "Higher baseline medication burden may reflect resistant or long-standing hypertension and vascular remodeling that attenuates further BP responsiveness, and may signal higher risk of adverse events when therapy is intensified. However, medication count is an imperfect proxy and must be contextualized by BP control and agent classes.",
+      "mechanisms": [
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Patients on multiple agents may have smaller incremental SBP reductions with additional medications due to a ceiling effect or pharmacologic tolerance; response also depends on agent classes and whether diuretic therapy is optimized (resistant HTN defined by uncontrolled BP on \u001e3 classes including diuretic).",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "behavioral",
+          "description": "Complex regimens may reduce adherence; adding more medications to reach an intensive target could worsen adherence and thereby blunt benefit or increase adverse events. This mechanism is plausible but requires adherence data to confirm.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Medication count proxies disease chronicity and severity; such patients may have accrued end-organ damage making them less responsive to intensification, producing heterogeneous treatment effects. Confounding by indication is a major concern.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Actionable groups: 0,1,2, \u001e3 baseline classes, and a separate subgroup for 'resistant HTN' per definition. Expect smaller achieved SBP reduction and less incremental CV benefit among those meeting resistant HTN criteria, but verify with achieved-BP mediation analysis.",
+      "validation_suggestions": [
+        "Test treatment\u007fbaseline-medication-count interaction, adjusting for baseline SBP, hypertension duration and agent classes.",
+        "Define and analyze 'resistant hypertension' explicitly (uncontrolled on \u001e3 including diuretic) and perform sensitivity analyses excluding such participants.",
+        "Assess mediation by achieved SBP: compare achieved BP trajectories by baseline medication count (mixed-effects models) and estimate how much of the heterogeneous effect is explained by differing achieved SBP.",
+        "If adherence measures exist (pill counts, refill data, visit-reported adherence), include them in sensitivity analyses; otherwise perform worst-case/best-case adherence sensitivity checks."
+      ],
+      "caveats": [
+        "Medication count does not capture class-specific effects or dose optimization; ACEi vs diuretic differences are important but may be unmeasured if only counts are available.",
+        "Reverse causation: clinicians may have escalated medications pre-randomization in high-risk patients, confounding the relationship.",
+        "Without adherence data, behavioral mechanism claims remain speculative."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "Three recurrent themes: 1) Higher baseline risk (higher SBP, older age, CKD) often increases absolute potential benefit but also increases susceptibility to harms, producing bidirectional net effects; 2) Achieved SBP is a key mediator\u2014many interactions should be evaluated via mediation analyses to separate direct effect modification from differences in achieved BP; 3) Clinical proxies (medication count, prior CVD) are imperfect and require more granular definitions (classes, time since event, resistant HTN) and adjustment for concomitant therapies. Validation emphasis: interaction tests with splines for nonlinearity, mediation by achieved SBP, stratified net-benefit metrics (ARR, NNT/NNH), and sensitivity analyses for measurement error, regression-to-the-mean, and confounding by concomitant medications."
+}

@@ -1,0 +1,451 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "crash_2",
+    "treatment": "Tranexamic acid (TXA)",
+    "outcome": "All-cause mortality at 28 days or in-hospital death",
+    "population": "Trauma patients with significant bleeding or at risk of significant hemorrhage",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 65,
+    "top_k": 15,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "5053782c-f1c3-4133-99b2-b8aefb6f7085",
+        "title": "Severe hypotension (SBP <70) high TXA benefit",
+        "hypothesis_statement": "Patients with initial systolic blood pressure (isbp) < 70 mmHg derive substantial mortality reduction from TXA.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": "<",
+            "threshold": 70.0,
+            "category": null,
+            "description": "Severe hypotension: SBP less than 70 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Severe hypotension indicates ongoing major hemorrhage and hyperfibrinolysis; TXA may reduce bleeding deaths markedly when shock is profound."
+        },
+        "mechanism": "Shock-induced hyperfibrinolysis increases bleeding; TXA stabilizes clot and reduces exsanguination in severe hypotension.",
+        "evidence_basis": [
+          "Laboratory studies showing fibrinolysis activation in hemorrhagic shock",
+          "Clinical analyses showing greater TXA benefit in severely bleeding patients"
+        ],
+        "testable_prediction": "Among patients with isbp < 70, 28-day mortality will be lower with TXA versus control."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "62fbdb97-7596-484e-aaae-9ce11e8498a9",
+        "title": "Hypotension (SBP <90) benefits from TXA",
+        "hypothesis_statement": "Patients with isbp < 90 mmHg will have a significant mortality reduction with TXA compared with normotensive patients.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": "<",
+            "threshold": 90.0,
+            "category": null,
+            "description": "Hypotensive patients: SBP less than 90 mmHg"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "SBP < 90 is a clinical marker of major hemorrhage and coagulopathy; antifibrinolysis reduces bleeding deaths in this group."
+        },
+        "mechanism": "Hypotension indicates more severe bleeding with fibrinolytic activation; TXA reduces fibrin degradation and stabilizes hemostasis.",
+        "evidence_basis": [
+          "CRASH-2 subgroup signals for more benefit in clinically severe bleeding",
+          "Pathophysiology of trauma-induced coagulopathy"
+        ],
+        "testable_prediction": "For isbp < 90, TXA-treated patients will have lower 28-day/in-hospital mortality than controls."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "478de764-707d-4800-8989-2da091ef46df",
+        "title": "Hypertensive presentation (SBP \u2265140) neutral or harmful",
+        "hypothesis_statement": "Patients presenting with SBP \u2265 140 mmHg will not benefit from TXA and may have increased thrombotic risk.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "isbp",
+            "operator": ">=",
+            "threshold": 140.0,
+            "category": null,
+            "description": "Hypertensive presentation: SBP 140 mmHg or higher"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Elevated blood pressure suggests lower likelihood of life\u2011threatening hemorrhage at presentation; higher vascular risk could increase thrombotic events with TXA."
+        },
+        "mechanism": "Antifibrinolytic therapy in patients with vascular disease may tilt balance toward thrombosis without reducing significant bleeding deaths.",
+        "evidence_basis": [
+          "Epidemiologic associations of hypertension with vascular events",
+          "Clinical reasoning about lower bleeding burden in hypertensive presentations"
+        ],
+        "testable_prediction": "For isbp \u2265 140, TXA will not reduce 28-day mortality and may increase vascular complications compared with control."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "ee985ade-7c78-4c0a-864a-ceda17d4662a",
+        "title": "Age < 30 benefits more from TXA",
+        "hypothesis_statement": "Trauma patients aged < 30 will experience greater mortality reduction with TXA than older patients.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": "<",
+            "threshold": 30.0,
+            "category": null,
+            "description": "Patients younger than 30 years"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Younger patients have fewer comorbidities and greater physiological reserve; early antifibrinolytic effect may translate to larger absolute mortality benefit."
+        },
+        "mechanism": "Younger patients tolerate hemorrhagic shock better and have less baseline thrombotic risk; inhibiting fibrinolysis with TXA reduces exsanguination without substantially increasing thrombotic complications.",
+        "evidence_basis": [
+          "CRASH-2: overall TXA benefit in bleeding trauma",
+          "Physiologic data: better reserve in younger patients reduces competing causes of death"
+        ],
+        "testable_prediction": "Among patients with iage < 30, TXA-treated patients will have lower 28-day/in-hospital mortality than controls."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "c2ba2cfe-b036-43a0-bd5b-3fc9c65794f4",
+        "title": "Age \u2265 65: potential harm or no benefit",
+        "hypothesis_statement": "Patients aged \u226565 will not benefit from TXA and may have increased adverse outcomes compared with placebo.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": ">=",
+            "threshold": 65.0,
+            "category": null,
+            "description": "Patients aged 65 years or older"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Advanced age associated with comorbid cardiovascular disease may amplify prothrombotic risk after antifibrinolytic therapy leading to net harm."
+        },
+        "mechanism": "TXA's antifibrinolytic effect could increase risk of ischemic/thrombotic events in frail elderly, offsetting bleeding mortality reduction.",
+        "evidence_basis": [
+          "Observational signal in some studies of higher vascular events in older patients on prothrombotic therapies",
+          "Physiology: age-related coagulopathy and vascular disease"
+        ],
+        "testable_prediction": "For iage \u2265 65, TXA will show no mortality benefit and may be associated with higher incidence of death or vascular complications versus control."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "17ed8893-4f55-486a-95cc-0e283f8feded",
+        "title": "Young children/teenagers (iage <18) greater benefit",
+        "hypothesis_statement": "Patients aged <18 derive strong mortality benefit from TXA compared with adults.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "iage",
+            "operator": "<",
+            "threshold": 18.0,
+            "category": null,
+            "description": "Pediatric/adolescent patients under 18"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Lower comorbidity burden and robust physiologic reserve in children/adolescents allow antifibrinolytic therapy to more effectively reduce bleeding deaths."
+        },
+        "mechanism": "Preserved compensatory mechanisms and lower baseline thrombotic risk mean that TXA reduces hemorrhagic mortality with minimal thrombotic offset.",
+        "evidence_basis": [
+          "Pediatric trauma literature indicating lower baseline thrombotic complications",
+          "Mechanistic expectation of favorable risk\u2013benefit in younger patients"
+        ],
+        "testable_prediction": "Among iage < 18, TXA-treated patients will have lower 28-day/in-hospital mortality than controls."
+      },
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "68b711de-365f-4149-89f7-d7b7f75be8b7",
+        "title": "GCS 9\u201312 (moderate TBI) benefits from TXA",
+        "hypothesis_statement": "Patients with igcs 9\u201312 will have mortality reduction with TXA, particularly from reduced intracranial bleeding progression.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": ">=",
+            "threshold": 9.0,
+            "category": null,
+            "description": "GCS 9 or higher (analysis limited to 9\u201312 range)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Moderate TBI often involves potentially preventable intracranial bleeding progression where antifibrinolytics can reduce mortality and neurological deterioration."
+        },
+        "mechanism": "TXA reduces fibrinolysis and hematoma expansion in intracranial bleeding, which is more likely to change outcomes in moderate TBI than in devastating injuries.",
+        "evidence_basis": [
+          "CRASH-3 subgroup analyses suggesting benefit in less severe TBI",
+          "Imaging and clinical studies linking hematoma expansion to worse outcomes"
+        ],
+        "testable_prediction": "For igcs 9\u201312, TXA will lower 28-day/in-hospital mortality compared with control."
+      },
+      "acc": 0.4899999999999999,
+      "num_visits": 200,
+      "reward": 0.5713811815359363
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "af20d5af-7627-4fad-b6ac-d38d48fb476d",
+        "title": "GCS \u22648 (severe TBI) limited or no benefit",
+        "hypothesis_statement": "Patients with igcs \u2264 8 (severe traumatic brain injury) will derive little mortality benefit from systemic TXA and may have different risk/benefit compared to non-TBI bleeding.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": "<=",
+            "threshold": 8.0,
+            "category": null,
+            "description": "Severe traumatic brain injury: GCS 8 or less"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Severe TBI outcomes are often driven by primary brain injury and intracranial hypertension; systemic TXA may have limited impact on overall mortality."
+        },
+        "mechanism": "While TXA may reduce intracranial bleeding progression via antifibrinolysis, the magnitude of effect on overall survival in severe primary brain injury is limited by irreversible neuronal damage.",
+        "evidence_basis": [
+          "CRASH-3 findings suggesting benefit may be limited to less severe TBI; uncertainty in severe TBI",
+          "Pathophysiology of primary brain injury"
+        ],
+        "testable_prediction": "Among patients with igcs \u2264 8, there will be no significant reduction in 28-day mortality with TXA compared to control."
+      },
+      "acc": 0.0,
+      "num_visits": 200,
+      "reward": 0.08138118153593646
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "igcs_ge_13_txabenefit_001",
+        "title": "Mild or no TBI (GCS \u226513): greater benefit from TXA",
+        "hypothesis_statement": "In trauma patients with initial Glasgow Coma Scale score of 13 or higher, administration of tranexamic acid (TXA) reduces all-cause 28-day or in-hospital mortality compared with no TXA.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "igcs",
+            "operator": ">=",
+            "threshold": 13.0,
+            "category": null,
+            "description": "Patients with GCS 13 to 15 (mild or no traumatic brain injury)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Patients with GCS \u226513 are less likely to have severe intracranial injury driving mortality; their deaths are more often related to extracranial hemorrhage or systemic bleeding where antifibrinolytic therapy can meaningfully reduce bleeding and death."
+        },
+        "mechanism": "TXA inhibits fibrinolysis and stabilizes clots, reducing progression of extracranial hemorrhage and transfusion requirements; in patients without severe TBI, this translates into lower risk of exsanguination and downstream organ failure.",
+        "evidence_basis": [
+          "TXA reduces death due to bleeding in general trauma populations (e.g., CRASH-2 findings)",
+          "Subgroup analyses and biologic plausibility suggest patients without severe head injury may derive clearer hemostatic benefit",
+          "Clinical rationale that preventing systemic hemorrhage is more likely to affect survival when severe TBI is not the dominant cause of death"
+        ],
+        "testable_prediction": "Among patients with igcs >= 13, those randomized to TXA will have a lower 28-day or in-hospital mortality rate than controls (risk ratio < 1); effect size measurable in this subgroup within the study sample."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "irr_hyp_001",
+        "title": "Benefit of TXA in patients with very high initial respiratory rate (>=30 bpm)",
+        "hypothesis_statement": "Trauma patients presenting with an initial respiratory rate (irr) >= 30 breaths per minute will gain greater mortality benefit from early tranexamic acid (TXA) compared with patients with lower irr.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "irr",
+            "operator": ">=",
+            "threshold": 30.0,
+            "category": null,
+            "description": "Very high initial respiratory rate (>=30 breaths/min) suggesting severe physiologic stress/compensatory hyperventilation"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Very high respiratory rate at presentation may reflect severe hemorrhagic shock, major tissue hypoperfusion and activation of fibrinolysis; TXA may reduce bleeding-related mortality in this high-risk physiologic group."
+        },
+        "mechanism": "Marked tachypnea is a physiologic sign of severe shock and metabolic stress, which is associated with increased activation of fibrinolytic pathways; inhibiting fibrinolysis with TXA could stabilize clots and reduce exsanguination in this subgroup.",
+        "evidence_basis": [
+          "Physiologic markers of shock correlate with increased bleeding and fibrinolysis, and CRASH-2 showed greater absolute benefit of TXA in higher-risk patients.",
+          "Tachypnea is commonly observed in patients with significant hemorrhage and may serve as a bedside marker of severity when blood pressure is not yet profoundly low."
+        ],
+        "testable_prediction": "Among patients with irr >= 30, administration of TXA within the trial window will reduce 28-day/in-hospital mortality by an absolute 8\u201315% compared with placebo (larger absolute risk reduction than in the overall cohort)."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "irr_hyp_002",
+        "title": "Limited benefit or no benefit of TXA in patients with low initial respiratory rate (<=12 bpm)",
+        "hypothesis_statement": "Trauma patients presenting with an initial respiratory rate (irr) <= 12 breaths per minute will derive little to no mortality benefit from TXA, compared with patients with higher irr.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "irr",
+            "operator": "<=",
+            "threshold": 12.0,
+            "category": null,
+            "description": "Low or normal-low initial respiratory rate (<=12 breaths/min) possibly reflecting lower physiologic compensation for hemorrhage or presence of isolated traumatic brain injury with respiratory depression"
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "A low initial RR may indicate less pronounced haemodynamic compensation from bleeding or non-hemorrhagic causes (e.g., TBI with depressed drive); in the absence of high risk of systemic hyperfibrinolysis, TXA is less likely to provide mortality benefit."
+        },
+        "mechanism": "Lower respiratory rates may identify patients without active compensatory hyperventilation from massive hemorrhage and therefore lower likelihood of ongoing hyperfibrinolysis; inhibiting fibrinolysis in this group may not change bleeding-related outcomes.",
+        "evidence_basis": [
+          "Clinical logic linking physiologic markers (RR, BP, HR) with severity of bleeding and fibrinolytic activation.",
+          "Subgroup analyses in bleeding trials typically show greater absolute benefit of hemostatic interventions in patients with higher physiologic derangement."
+        ],
+        "testable_prediction": "In the subgroup with irr <= 12, 28-day/in-hospital mortality will not be meaningfully different between TXA and placebo (absolute risk difference near 0%, confidence intervals including no effect)."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "irr_hyp_003",
+        "title": "Moderate tachypnea (irr > 18 bpm) identifies patients with enhanced TXA benefit compared with normopneic patients",
+        "hypothesis_statement": "Trauma patients with initial respiratory rate (irr) > 18 breaths per minute (but not necessarily extreme tachypnea) will have a measurable mortality reduction from TXA compared with patients with irr <= 18.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "irr",
+            "operator": ">",
+            "threshold": 18.0,
+            "category": null,
+            "description": "Moderately elevated initial respiratory rate (>18 breaths/min) indicating physiologic stress/possible ongoing bleeding"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "low",
+          "rationale": "Moderately elevated RR is a pragmatic marker of increased physiologic risk; TXA may offer benefit in these patients but the magnitude is expected to be smaller than in those with extreme tachypnea."
+        },
+        "mechanism": "A RR > 18 reflects increased respiratory drive from hypovolemia, pain, or metabolic acidosis associated with bleeding; partially increased fibrinolysis in this group may be attenuated by TXA, leading to a modest mortality benefit.",
+        "evidence_basis": [
+          "RR thresholds (e.g., >20) are used clinically to flag physiologic instability; intermediate elevations often identify patients at increased risk but with heterogeneous causes.",
+          "Prior trauma research indicates graduated benefit of hemostatic therapies across increasing physiologic derangement rather than a strict binary effect."
+        ],
+        "testable_prediction": "Patients with irr > 18 receiving TXA will have a modest absolute mortality reduction (approximately 3\u20138%) versus placebo; effect size will be smaller than in the irr >= 30 subgroup but greater than in the irr <= 12 subgroup."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "icc_hyp_001",
+        "title": "Severe intracranial injury (icc >= 3) modifies TXA benefit \u2014 low expected benefit",
+        "hypothesis_statement": "Among trauma patients with icc >= 3 (severe intracranial injury), administration of tranexamic acid (TXA) will confer little or no mortality benefit compared with control and may have a lower expected benefit than in patients with less severe or no intracranial injury.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "icc",
+            "operator": ">=",
+            "threshold": 3.0,
+            "category": null,
+            "description": "Patients with icc score of 3 or higher indicating severe intracranial injury"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Severe intracranial injury often reflects extensive primary brain damage and high baseline mortality where antifibrinolytic therapy may be less able to change outcome; additionally, the pathophysiology may favor early neurosurgical control rather than systemic haemostatic modification."
+        },
+        "mechanism": "In patients with severe intracranial injury the dominant driver of early mortality is primary tissue destruction and raised intracranial pressure; systemic TXA may not reverse these processes and could have limited effect on the evolution of mortality despite reducing bleeding.",
+        "evidence_basis": [
+          "Physiologic rationale that primary severe brain injury leads to mortality not solely driven by ongoing haemorrhage",
+          "Secondary analyses of trauma trials indicating smaller absolute TXA benefit among patients with extremely high baseline risk due to non-bleeding causes",
+          "CRASH-3 suggests effect of TXA varies by head-injury severity"
+        ],
+        "testable_prediction": "In the subgroup with icc >= 3, the absolute reduction in 28-day all-cause mortality with TXA will be <3% (and not statistically significant) compared with control in this dataset (n\u2248200)."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "icc_hyp_002",
+        "title": "No intracranial injury (icc < 1) predicts greater TXA benefit for extracranial bleeding",
+        "hypothesis_statement": "Among trauma patients with icc < 1 (no or minimal intracranial injury), TXA treatment will be associated with a greater reduction in 28-day or in-hospital mortality compared with control, because haemorrhage is more likely to be extracranial and amenable to systemic antifibrinolytic therapy.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "icc",
+            "operator": "<",
+            "threshold": 1.0,
+            "category": null,
+            "description": "Patients with icc score less than 1 (no intracranial injury documented)"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Absence of intracranial injury identifies patients whose early mortality is more likely driven by extracranial bleeding; TXA reduces bleeding-related deaths and should therefore have clearer benefit in this group."
+        },
+        "mechanism": "When intracranial injury is absent, ongoing systemic fibrinolysis contributes more to hemorrhage-related deaths; TXA inhibits fibrinolysis and thus reduces bleeding volume and transfusion requirements, improving survival.",
+        "evidence_basis": [
+          "CRASH-2 main trial demonstrated overall mortality reduction with TXA in bleeding trauma",
+          "Biologic plausibility that extracranial hemorrhage is more responsive to systemic antifibrinolytics than massive primary brain injury",
+          "Observational data showing larger TXA effect sizes in populations without severe head injury"
+        ],
+        "testable_prediction": "In the subgroup with icc < 1, TXA will produce an absolute mortality reduction of \u22655% at 28 days compared with control in this sample, with a point estimate favoring treatment."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "icc_hyp_003",
+        "title": "Moderate intracranial injury (icc == 2) predicts the greatest relative benefit from early TXA",
+        "hypothesis_statement": "Patients with icc == 2 (moderate intracranial injury) will derive a larger relative reduction in mortality with early TXA compared with both patients with no intracranial injury and those with severe intracranial injury, because injury is potentially reversible with reduced haemorrhage expansion.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "icc",
+            "operator": "==",
+            "threshold": 2.0,
+            "category": null,
+            "description": "Patients with icc score equal to 2 indicating moderate intracranial injury"
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Moderate intracranial injuries are at risk of haemorrhage expansion where antifibrinolytic therapy can limit secondary injury and improve survival; CRASH-3 and related data suggest patients with non-severe but clinically significant head injury may benefit most."
+        },
+        "mechanism": "In moderate intracranial injury there is viable brain at risk from expanding haemorrhage; TXA reduces fibrinolysis-driven hematoma expansion, preserving salvageable brain tissue and lowering mortality.",
+        "evidence_basis": [
+          "CRASH-3 subgroup analyses indicating a stronger TXA effect in patients with less than severe head injury",
+          "Pathophysiologic data on hematoma expansion being amenable to antifibrinolytic therapy in early hours after injury",
+          "Clinical experience that moderate head injuries have a window where interventions change outcome"
+        ],
+        "testable_prediction": "In patients with icc == 2, treatment with TXA will show a relative risk reduction in 28-day mortality of at least 15% compared with control (larger than the effect estimated in the icc >=3 subgroup) in this dataset."
+      },
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 0.2800699634858331,
+    "avg_accuracy": 0.2366666666666669
+  }
+}

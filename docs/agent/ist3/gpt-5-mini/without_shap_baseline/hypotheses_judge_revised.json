@@ -1,0 +1,283 @@
+{
+  "summary": "Overall the five revised hypotheses are biologically and clinically coherent and align well with existing stroke literature. Onset-to-treatment time and baseline infarct core (ASPECTS/CTP) are the strongest, highest-priority effect modifiers with robust RCT and imaging evidence. Age and baseline NIHSS are plausible and important modifiers but require careful adjustment for confounding (pre-stroke mRS, comorbidity). Hyperglycemia is plausible but supported mainly by observational data and remains more hypothesis-generating for effect modification. Validation suggestions provided are appropriate; principal methodological concerns are variable availability/quality of imaging in IST-3, misclassification of onset time (wake-up strokes), and residual confounding in observational interaction analyses.",
+  "scored_features": [
+    {
+      "feature_name": "Onset-to-treatment time (minutes since last-known-well)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 1,
+          "overall_score": 5,
+          "comments": "Strong, well-established mechanism: penumbral loss over time supported by RCT meta-analyses (Emberson et al.) and pathophysiology. Highly specific to thrombolysis effect and directly testable with time-to-treatment interaction models."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Thrombus evolution/clot composition plausibly reduces fibrinolysis efficacy with delay; supported by recanalization and clot analysis studies. Testable if recanalization/imaging endpoints available, less novel."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Delay proxies system/patient factors that may confound interactions. Well-known risk; requires careful adjustment and sensitivity analyses but is testable with available covariates and sensitivity exclusions."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Highest-priority, well-established modifier with strong RCT/meta-analysis support.",
+        "Mechanisms are biologically specific and directly relevant to alteplase efficacy.",
+        "Validation suggestions (splines, bands, mediation via reperfusion) are appropriate and actionable."
+      ],
+      "weaknesses": [
+        "Wake-up/unknown onset classification and measurement error can bias estimates.",
+        "If IST-3 lacks systematic recanalization imaging, mediation testing may be limited.",
+        "Very little novelty; hypothesis mainly confirms established knowledge."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Time-to-treatment is the single most important and well-supported effect modifier for thrombolysis; validation is straightforward and clinically actionable."
+    },
+    {
+      "feature_name": "Age (years, continuous; also analyze categorical bands)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Age-related vascular and neuroplastic changes plausibly reduce salvage and recovery. Mechanism consistent with literature but age is a surrogate for multiple processes."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Increased BBB fragility and SVD with age increase hemorrhage risk; supported by observational/registry data. Specificity limited without direct frailty measures."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Age correlates with pre-stroke disability and comorbidity; confounding is a major concern but is addressable by adjustment for pre-stroke mRS and comorbidity indices."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Clear clinical variable, easily measured and widely available; biologically plausible modifiers described.",
+        "Appropriate validation steps (splines, adjustment for pre-stroke mRS) are proposed."
+      ],
+      "weaknesses": [
+        "Age is an imperfect proxy for frailty; residual confounding likely.",
+        "Cutpoints are somewhat arbitrary and effect heterogeneity may be continuous rather than banded."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is an important, plausible modifier and the rank (2) is appropriate; validate interactions with careful confounder adjustment but expect limited novelty."
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIHSS score)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "NIHSS correlates with territory/volume and LVO likelihood; provides a biologically meaningful gradient for salvageable tissue and absolute benefit potential."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Very severe strokes often have larger cores and worse collaterals, increasing harm risk; consistent with clinical experience and observational data."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Outcome variance and baseline risk interact to produce larger absolute differences in severe strokes; requires reporting both absolute and relative effects to avoid misinterpretation."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "NIHSS is standard, interpretable, and clinically actionable; combining with LVO status increases utility.",
+        "Mechanisms and suggested analyses (splines, bands, sICH checks) are suitable."
+      ],
+      "weaknesses": [
+        "NIHSS underestimates posterior circulation strokes and does not uniquely identify core vs penumbra.",
+        "Bidirectional interaction claims need careful presentation to avoid misinterpretation of absolute vs relative effects."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "NIHSS is a relevant modifier with practical subgroup implications; tests are feasible and helpful, though not highly novel."
+    },
+    {
+      "feature_name": "Extent of early ischemic change / infarct core on baseline CT (ASPECTS or NCCT hypodense volume; use CTP core volume if available)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 5,
+          "comments": "Established infarct core is directly tied to irreversibly damaged tissue; strong biological and clinical evidence that large core reduces benefit and increases hemorrhage risk."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Fibrinolysis increasing hemorrhage risk in damaged tissue is plausible and supported by observational and pathophysiological data."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Imaging interacts with time and severity; confounding and measurement error (ASPECTS variability) can attenuate observed interactions \u2014 appropriate to adjust and use central reads where possible."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Imaging-derived core measures are highly specific to the biological mechanism and strongly predictive of benefit/harm.",
+        "Actionable: ASPECTS/core-volume thresholds are already used in clinical decision-making and trials."
+      ],
+      "weaknesses": [
+        "In IST-3, advanced perfusion imaging may be unavailable or inconsistent; ASPECTS has inter-rater variability and limited sensitivity for early changes.",
+        "Thresholds (e.g., >70 mL) come from thrombectomy-era data; applicability to IV-only populations needs careful calibration."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Imaging core/ASPECTS is a strong, specific modifier with direct clinical decision implications; prioritize validation while accounting for measurement limitations in IST-3."
+    },
+    {
+      "feature_name": "Baseline hyperglycemia / history of diabetes (admission glucose in mmol/L; HbA1c if available)",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Hyperglycemia plausibly worsens ischemic injury via metabolic pathways; evidence for effect modification on thrombolysis outcomes is moderate and mostly observational."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Microvascular dysfunction and BBB disruption in diabetes could reduce reperfusion benefit and increase sICH; plausible but direct randomized evidence for modification is limited."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Admission glucose may reflect stroke severity (stress hyperglycemia); confounding is a key concern and HbA1c availability materially affects interpretation."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Biologically plausible with measurable variables (glucose, HbA1c); analyses proposed (splines, adjustment) are appropriate.",
+        "Could identify higher-risk patients and generate hypotheses about glucose management and sICH mediation."
+      ],
+      "weaknesses": [
+        "Evidence for true effect modification is moderate and largely observational; glucose-lowering trials have not shown improved functional outcome.",
+        "Admission glucose may be confounded by severity; HbA1c often missing, limiting ability to separate chronic vs stress hyperglycemia."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth testing as a hypothesis-generating modifier using careful adjustment and stratification by HbA1c where available, but lower priority than time and imaging core because evidence is weaker and less actionable."
+    }
+  ],
+  "top_features": [
+    "Onset-to-treatment time (minutes since last-known-well)",
+    "Extent of early ischemic change / infarct core on baseline CT (ASPECTS or NCCT hypodense volume; use CTP core volume if available)"
+  ],
+  "methodological_concerns": [
+    "IST-3 may have incomplete availability of advanced imaging (CTP) and variable ASPECTS quality; central reads or sensitivity analyses are needed.",
+    "Onset time misclassification (wake-up/unknown) can bias time interactions; proposed separate categorization and sensitivity exclusions are essential.",
+    "Residual confounding (pre-stroke mRS, comorbidities, system-level delays) may distort observed interactions; multivariable adjustment and mediation analysis should be preplanned.",
+    "Multiple interaction tests increase false-positive risk; prespecify key interactions (time, core, NIHSS) and correct for multiplicity or treat findings as exploratory.",
+    "SHAP contributions listed are modest; model-derived feature importance should be reconciled with clinical priors and RCT/meta-analysis results."
+  ]
+}

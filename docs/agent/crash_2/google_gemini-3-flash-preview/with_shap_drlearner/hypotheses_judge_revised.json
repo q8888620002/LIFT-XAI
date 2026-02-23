@@ -1,0 +1,244 @@
+{
+  "summary": "The evaluation shows high-quality hypotheses for the CRASH-2 dataset, particularly in how they address the tension between hemorrhage-related mortality (TXA responsive) and neurologic/physiological exhaustion (TXA insensitive). The ranking of features, with injury type and age at the top, aligns well with established subgroup analyses and the known biology of tranexamic acid. The strongest hypotheses are those for 'iinjurytype' and 'igcs', which correctly identify the competing risks that often obscure treatment effects in trauma trials.",
+  "scored_features": [
+    {
+      "feature_name": "iinjurytype",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 5,
+          "comments": "Very strong; blunt trauma is well-documented to cause massive tPA release and systemic fibrinolysis compared to focal penetrating injuries."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Accurate assessment of the surgical necessity vs. medical stabilization in penetrating trauma."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 4,
+          "overall_score": 4,
+          "comments": "Astute observation; blunt trauma patients often have longer transport times, which is the most critical modifier in CRASH-2/WOMAN trials."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Aligns perfectly with CRASH-2 subgroup findings.",
+        "Captures the 'fibrinolytic storm' concept central to TXA research.",
+        "Ranking at #1 is clinically justified."
+      ],
+      "weaknesses": [
+        "Does not explicitly address the interaction with head injury which also varies by injury type."
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is the most critical modifier in CRASH-2; the mechanisms provided are biologically sound and directly supported by the trial's post-hoc analyses."
+    },
+    {
+      "feature_name": "iage",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Vascular friability in elderly is a valid risk factor for hemorrhage severity."
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 5,
+          "overall_score": 4,
+          "comments": "Highly novel and plausible; renal clearance of TXA is known, but rarely discussed in the context of HTE."
+        },
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "The 'secondary hit' concept is standard trauma physiology."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 5,
+      "novelty": 4,
+      "overall_score": 4,
+      "strengths": [
+        "Unique pharmacological angle regarding renal clearance.",
+        "Correctly identifies that age is a major driver of the baseline risk, influencing absolute benefit."
+      ],
+      "weaknesses": [
+        "Possible confounding with co-morbidities (anti-platelet use) not mentioned."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Ranked appropriately at #2; age is a robust predictor of mortality and the pharmacological hypothesis offers a testable new avenue."
+    },
+    {
+      "feature_name": "igcs",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 4,
+          "overall_score": 5,
+          "comments": "Strongly supported by the later CRASH-3 results and the 'extracranial' focus of CRASH-2."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 4,
+          "overall_score": 5,
+          "comments": "Excellent recognition of competing risks in clinical trials."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 5,
+      "novelty": 4,
+      "overall_score": 5,
+      "strengths": [
+        "Addresses the 'pollution' of trial results by non-bleeding deaths (TBI).",
+        "Validation plan using 'Death from Bleeding' is the gold-standard for confirming TXA mechanism."
+      ],
+      "weaknesses": [
+        "Does not account for GCS as a proxy for shock-induced hypoperfusion."
+      ],
+      "recommendation": "high_priority",
+      "justification": "GCS is a pivotal discriminator of TXA efficacy in multi-trauma patients; the hypotheses are statistically and biologically sophisticated."
+    },
+    {
+      "feature_name": "ihr",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "physiological",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Compensated vs. decompensated shock is a valid framework for TXA's time-sensitive benefit."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Reasonable 'floor effect' argument for patients in extremis."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Identifies the importance of the moderate-shock window (the 'sweet spot')."
+      ],
+      "weaknesses": [
+        "Heart rate is often a noisy signal in trauma settings due to pain/sympathetic surge."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Important physiological marker, though secondary to the categorical drivers like injury type and GCS."
+    },
+    {
+      "feature_name": "irr",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 5,
+          "overall_score": 4,
+          "comments": "The acid-base status affecting coagulation enzymes is a well-known part of the 'lethal triad'."
+        },
+        {
+          "mechanism_type": "statistical",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Similar saturation effect to HR."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 5,
+      "novelty": 4,
+      "overall_score": 4,
+      "strengths": [
+        "Strong biological link between respiratory compensation for acidosis and TXA function.",
+        "Excellent awareness of data quality issues (digit preference in RR reporting)."
+      ],
+      "weaknesses": [
+        "Ranked lowest, which is appropriate given it is often a lagging or poorly measured indicator."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Provides a sophisticated biological link through the lethal triad, showing good epistemic depth."
+    }
+  ],
+  "top_features": [
+    "iinjurytype",
+    "igcs",
+    "iage"
+  ],
+  "methodological_concerns": [
+    "The analysis should explicitly check for colinearity between HR, RR, and GCS as markers of the same shock state.",
+    "The bidirectional effect for injury type needs to be explicitly mapped to the time-since-injury, as TXA benefit flips to harm after 3 hours."
+  ]
+}

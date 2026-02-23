@@ -1,0 +1,188 @@
+{
+  "dataset": "crash_2",
+  "model": "unknown_learner",
+  "summary": "Based on CRASH-2 trial context (TXA for bleeding trauma), the largest hypothesized effect modifiers are time-to-treatment, physiological severity of bleeding/shock, presence and severity of traumatic brain injury, objective coagulopathy/hyperfibrinolysis, and renal clearance (or correlates such as age/CKD). These features are biologically and pharmacologically plausible effect modifiers: TXA blocks active fibrinolysis so it should help most when fibrinolysis is present and when given early; pharmacokinetics (renal clearance) and injury type (intracranial vs extracranial bleeding) further shape benefit vs harm. Interaction tests should focus on early vs late treatment, markers of active fibrinolysis, shock status and TBI severity.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Time from injury to TXA administration",
+      "importance_rank": 1,
+      "shap_value": 0.32,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Elapsed minutes/hours between injury (or bleeding onset) and administration of tranexamic acid.",
+      "why_important": "Multiple randomized results (CRASH-2) and physiological reasoning indicate TXA reduces death due to bleeding primarily when given early (strong effect if given within the first 1\u20133 hours). Time modifies treatment benefit because the therapeutic target (active fibrinolysis and ongoing bleeding) evolves rapidly after trauma.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Early after trauma there is a rise in tissue plasminogen activator (tPA) and active fibrinolysis leading to ongoing clot breakdown; TXA prevents plasminogen activation and fibrin degradation, so earlier blockade prevents hematoma expansion/ongoing hemorrhage. Late after injury fibrinolytic activity declines and other processes (consumptive coagulopathy or prothrombotic states) predominate, reducing TXA's benefit or producing harm.",
+          "evidence_level": "strong"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Pharmacodynamic window: TXA's mechanism is inhibition of fibrinolysis \u2014 if given after fibrin breakdown has largely completed, there is little substrate for effect and dosing may instead shift the balance toward thrombosis. Thus time affects drug-class PD relevance and therapeutic index.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Time-to-treatment can act as a proxy for systems factors (prehospital care quality, distance to hospital) and case mix; patients treated very late may differ systematically (different injury patterns, delays due to other comorbidities) so observed interactions might partly reflect confounding by these factors.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients treated within 1 hour (or within 3 hours) of injury are predicted to derive the greatest mortality reduction; benefit falls with increasing delay and may reverse after ~3 hours (as seen in CRASH-2 subgroup analyses).",
+      "validation_suggestions": [
+        "Pre-specified interaction test of continuous time-to-treatment in the trial dataset (e.g., splines or piecewise models with cutoff at 3 hours).",
+        "Compare early (\u22641 h), intermediate (1\u20133 h), and late (>3 h) strata for treatment effect and check for nonlinearity.",
+        "Adjust for prehospital system variables and perform instrumental-variable analysis if possible (e.g., ambulance response times) to separate confounding."
+      ],
+      "caveats": [
+        "Accurate time measurement can be noisy (recall bias for injury time).",
+        "Observed harm after late treatment in subgroup analyses could be due to residual confounding or chance (lower event counts late).",
+        "The optimal time cutpoint may vary by bleeding source (intracranial vs extracranial)."
+      ]
+    },
+    {
+      "feature_name": "Physiological severity of hemorrhagic shock (e.g., systolic BP, shock index)",
+      "importance_rank": 2,
+      "shap_value": 0.22,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Markers of circulatory compromise from bleeding (low SBP, high heart rate, elevated shock index) indicating volume loss and tissue hypoperfusion.",
+      "why_important": "Severe shock is associated with endothelial activation and tPA release with higher propensity to pathologic hyperfibrinolysis; patients with greater bleeding burden may therefore derive larger absolute and relative benefit from an antifibrinolytic.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "Severe hypoperfusion and endothelial injury drive tPA release and hyperfibrinolysis; when fibrinolytic activity is elevated, inhibiting plasmin generation with TXA has a larger mechanistic effect on stabilizing clots and reducing ongoing hemorrhage.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Severe shock alters organ perfusion and drug distribution; reduced renal perfusion may prolong TXA exposure (higher plasma concentrations), potentially increasing both efficacy and risk of adverse effects. This PK/PD shift modifies net benefit.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Shock severity proxies for bleeding volume and need for massive transfusion/surgery; these downstream interventions and care pathways modify absolute treatment effect and confound observed interactions unless adjusted for.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients presenting in frank shock or with high shock index are likely to have the largest relative benefit from TXA (larger absolute risk reduction), whereas minimally shocked patients may have smaller benefit.",
+      "validation_suggestions": [
+        "Test interaction of treatment with continuous SBP and shock index; perform analyses stratified by massive transfusion/PRBC units.",
+        "Assess TEG/ROTEM fibrinolysis markers conditional on shock severity to see if shock->fibrinolysis mediates the interaction.",
+        "Pharmacokinetic substudies in hypotensive patients to measure TXA exposure and correlate with outcomes."
+      ],
+      "caveats": [
+        "Shock metrics are dynamic and single admission values may misclassify ongoing physiology.",
+        "Residual confounding by injury severity and location (e.g., isolated limb vs torso bleeding) can influence results.",
+        "PK changes in shock are complex and differ by patient; predicted exposure changes are uncertain."
+      ]
+    },
+    {
+      "feature_name": "Traumatic brain injury severity (e.g., Glasgow Coma Scale, head AIS)",
+      "importance_rank": 3,
+      "shap_value": 0.18,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Degree of primary brain injury (mild, moderate, severe) which reflects the likelihood that intracranial hemorrhage progression will influence survival or neurological outcome.",
+      "why_important": "CRASH-3 and related evidence indicate TXA reduces head-injury related death mainly when given early in mild-to-moderate TBI; in severe TBI the extent of primary injury may limit the ability of haemostatic therapy to change mortality, so the direction and magnitude of benefit may differ by severity.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "In patients with intracranial bleeding, inhibition of fibrinolysis can reduce hematoma expansion and secondary injury\u2014this provides clear benefit for patients with salvageable brain tissue (mild-moderate TBI). In severe TBI where primary structural injury is catastrophic, preventing expansion may not change outcome.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "physiological",
+          "description": "Blood\u2013brain barrier disruption and intracranial pressure dynamics can alter TXA distribution to the intracranial compartment; the degree of barrier disruption and timing may affect local drug concentration and hence effect on bleeding evolution.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "GCS/head AIS correlates with decisions about level-of-care, early withdrawal of life-sustaining treatment, and comorbidity; these processes can modify apparent treatment effect (competing risks, treatment limitation bias).",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Expect the largest mortality/functional benefit in patients with mild-to-moderate TBI treated early; effect in severe TBI is likely attenuated or absent and may be influenced by care-limitation practices.",
+      "validation_suggestions": [
+        "Stratified analysis by GCS categories (e.g., 3\u20138, 9\u201312, 13\u201315) and head AIS to estimate heterogeneous effects.",
+        "Interaction tests between treatment and TBI severity with adjustment for time-to-treatment.",
+        "Use imaging-based hematoma expansion endpoints (where available) as intermediate outcomes to link TXA exposure to intracranial bleeding control."
+      ],
+      "caveats": [
+        "TBI severity is often co-linear with other injuries and with prehospital time; disentangling effects requires careful adjustment.",
+        "Imaging to quantify hematoma expansion may be unavailable for many patients.",
+        "CRASH-3 findings apply specifically to isolated head injury; extrapolation to multisystem trauma needs caution."
+      ]
+    },
+    {
+      "feature_name": "Laboratory evidence of coagulopathy/hyperfibrinolysis (e.g., TEG/ROTEM LY30, D-dimer)",
+      "importance_rank": 4,
+      "shap_value": 0.12,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Objective markers indicating ongoing fibrinolysis or systemic coagulopathy at presentation.",
+      "why_important": "TXA's mechanism directly targets fibrinolysis; patients with biochemical or viscoelastic evidence of hyperfibrinolysis are theoretically the ones most likely to benefit because they have active plasmin-mediated clot breakdown.",
+      "mechanisms": [
+        {
+          "mechanism_type": "biological",
+          "description": "When laboratory markers show high fibrinolytic activity (e.g., elevated LY30 on TEG), plasmin-mediated fibrin degradation is occurring and TXA can directly prevent clot lysis, reducing bleeding and transfusion requirements, translating into lower mortality.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "pharmacological",
+          "description": "The PD effect of TXA depends on the magnitude of fibrinolytic drive; higher fibrinolysis may demand greater effective drug exposure for sustained inhibition, implicating dose\u2013response relationships and timing for maximal effect.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Laboratory coagulopathy markers are proxies for injury severity and massive transfusion needs; observed interaction may partly reflect that lab-positive patients are simply those with the greatest bleeding risk (larger absolute benefit).",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with documented hyperfibrinolysis (TEG LY30 elevated, high D-dimer) should have larger treatment effects; conversely, those with fibrinolytic shutdown may not benefit and could be harmed by antifibrinolytics.",
+      "validation_suggestions": [
+        "Perform subgroup analyses by presence/absence of hyperfibrinolysis using TEG/ROTEM and D-dimer where available.",
+        "Mediation analysis to test whether correction of fibrinolysis (change in TEG parameters post-TXA) mediates the mortality benefit.",
+        "Prospective trial/randomized strategy evaluation comparing standard care vs TEG-guided TXA administration."
+      ],
+      "caveats": [
+        "TEG/ROTEM availability and timing vary widely; measurements taken after initial resuscitation may misclassify early fibrinolytic state.",
+        "Definitions of 'hyperfibrinolysis' differ across studies, complicating comparability.",
+        "Observational associations may be confounded by concurrent interventions (massive transfusion protocols)."
+      ]
+    },
+    {
+      "feature_name": "Renal function (creatinine/CKD status)",
+      "importance_rank": 5,
+      "shap_value": 0.08,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Baseline renal clearance capability (acute or chronic), which determines elimination of renally excreted drugs including TXA.",
+      "why_important": "TXA is largely renally excreted; impaired renal function prolongs drug exposure, which could increase antifibrinolytic efficacy but also raise the risk of adverse effects (e.g., seizures, potential thrombotic complications), leading to a net effect that could be either beneficial or harmful depending on patient context.",
+      "mechanisms": [
+        {
+          "mechanism_type": "pharmacological",
+          "description": "Reduced GFR decreases TXA clearance and increases plasma half-life and AUC, potentially enhancing and prolonging antifibrinolytic effect (greater efficacy) while simultaneously increasing risk of toxicity (seizures, thrombosis) at higher exposures.",
+          "evidence_level": "moderate"
+        },
+        {
+          "mechanism_type": "biological",
+          "description": "Chronic kidney disease induces complex haemostatic changes (both bleeding and prothrombotic tendencies) that may alter the net effect of antifibrinolytic therapy; uremic platelet dysfunction could reduce the marginal benefit of stabilizing fibrin clots.",
+          "evidence_level": "weak"
+        },
+        {
+          "mechanism_type": "statistical",
+          "description": "Renal impairment correlates with older age and comorbidity burden; observed modification of TXA effect could reflect competing risks (non-bleeding mortality) or differential treatment intensity rather than a direct PK/PD interaction.",
+          "evidence_level": "moderate"
+        }
+      ],
+      "subgroup_implications": "Patients with moderate renal impairment may have greater drug exposure and possibly larger haemostatic effect, but also higher risk of adverse events; very severe renal dysfunction could tilt net effect toward harm. Dose adjustments or monitoring may be required in CKD.",
+      "validation_suggestions": [
+        "Test interaction of baseline creatinine/eGFR with treatment effect and examine nonlinearity (e.g., threshold effects).",
+        "Conduct PK analyses of TXA concentrations vs renal function and correlate with outcomes and adverse events (seizures, thromboembolism).",
+        "Sensitivity analyses excluding patients with pre-existing advanced CKD or adjusting for age/comorbidities to separate correlated effects."
+      ],
+      "caveats": [
+        "Acute kidney injury may develop after enrollment; baseline creatinine may not reflect later clearance.",
+        "Seizures and thrombotic events are relatively rare; studies may be underpowered to detect harm signals in renal-impaired subgroups.",
+        "Dose\u2013response relationships in renal impairment for TXA have not been established in large RCTs in trauma settings."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "Expect correlation and potential mediation across features: time-to-treatment interacts with TBI severity and shock (early-treated shocked patients may derive outsized benefit), hyperfibrinolysis is more frequent in shock and predicts TXA responsiveness, and renal function correlates with age/comorbidity which alters competing risks. Joint models (e.g., time \u00d7 fibrinolysis, shock \u00d7 TBI) and mediation analyses (fibrinolysis as mediator of shock\u2192benefit) are recommended to disentangle overlapping effects. Be cautious of collider/confounding bias where care decisions (e.g., transfer delays) affect both time and severity."
+}

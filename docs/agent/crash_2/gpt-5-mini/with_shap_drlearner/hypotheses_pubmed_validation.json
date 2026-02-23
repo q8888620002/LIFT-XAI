@@ -1,0 +1,729 @@
+{
+  "dataset": "crash_2",
+  "total_mechanisms_analyzed": 15,
+  "total_abstracts_retrieved": 48,
+  "overall_support_count": 3,
+  "overall_conflict_count": 0,
+  "mechanism_results": [
+    {
+      "feature_name": "iinjurytype",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Different injury types result in varied tissue damage and inflammation levels, altering physiological responses.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"injury type\" OR \"penetrating injury\" OR \"blunt trauma\" OR \"mechanism of injury\" OR \"penetrating trauma\" OR \"blunt injury\" OR \"injury mechanism\" OR \"injury pattern\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A fails: the abstract's included trials evaluated recombinant activated factor VIIa (rFVIIa), not tranexamic acid (TXA) or an antifibrinolytic equivalent; therefore the treatment alignment requirement is not met. Although mortality outcomes are reported, there is no evidence of any interaction test by injury type (Iinjurytype) \u2014 no subgroup analysis pre-specified for Iinjurytype and no interaction P-values. The abstract explicitly states clinical heterogeneity prevented pooling and the included trials were small and of poor quality; it does not provide directionally consistent mechanistic evidence linking different injury types to differential TXA effect. Because the treatment and interaction feature requirements are unmet, the abstract is irrelevant to the specific HTE hypothesis.",
+          "evidence_quote": "We included two trials. One was a post-hoc analysis of 30 TBI patients from a randomised controlled trial of rFVIIa in blunt trauma patients. ... The other trial evaluated the effect of rFVIIa in 97 TBI patients with evidence of intracerebral bleeding in a computed tomography (CT) scan.",
+          "stance": "neutral",
+          "pmid": "20091656",
+          "title": "Haemostatic drugs for traumatic brain injury.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "iinjurytype",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Site and nature of injury (e.g., brain vs. peripheral) activate different biological cascades affecting prognosis, like altered coagulation.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"injury type\" OR \"penetrating injury\" OR \"blunt trauma\" OR \"mechanism of injury\" OR \"penetrating trauma\" OR \"blunt injury\" OR \"injury mechanism\" OR \"injury pattern\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A fails: the abstract's included trials evaluated recombinant activated factor VIIa (rFVIIa), not tranexamic acid (TXA) or an equivalent antifibrinolytic class; therefore the treatment alignment requirement is not met. The abstract does not report any interaction test or subgroup analysis by the specified feature 'Iinjurytype' (site/nature of injury). It reports only overall TBI trials (rFVIIa) with poor quality reporting and no evidence that treatment effects differ by injury type or that the proposed mechanism (different biological cascades by injury site) was assessed. Because the primary alignment gates (treatment and feature) are not satisfied, the abstract is irrelevant to the requested HTE assessment.",
+          "evidence_quote": "We included two trials. One was a post-hoc analysis of 30 TBI patients from a randomised controlled trial of rFVIIa in blunt trauma patients... The other trial evaluated the effect of rFVIIa in 97 TBI patients with evidence of intracerebral bleeding in a computed tomography (CT) scan.",
+          "stance": "neutral",
+          "pmid": "20091656",
+          "title": "Haemostatic drugs for traumatic brain injury.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "iinjurytype",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "TXA's effectiveness in reducing mortality may differ based on injury-related changes in absorption or action; further study into specific injury-type drug interaction profiles is needed.",
+        "evidence_level": "speculative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"injury type\" OR \"penetrating injury\" OR \"blunt trauma\" OR \"mechanism of injury\" OR \"penetrating trauma\" OR \"blunt injury\" OR \"injury mechanism\" OR \"injury pattern\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 1,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails mandatory Treatment Alignment (A). The abstract\u2019s included trials evaluated recombinant activated factor VIIa (rFVIIa), not tranexamic acid (TXA) or an equivalent antifibrinolytic agent. Because the treatment differs in class from TXA (mechanism and pharmacology differ), the study cannot provide evidence about a TXA-by-injurytype interaction. The abstract also does not report any statistical interaction test between treatment effect and the specified feature 'Iinjurytype'. Thus it does not support the requested mechanism or HTE claim.",
+          "evidence_quote": "We included two trials. ... One was a post-hoc analysis of 30 TBI patients from a randomised controlled trial of rFVIIa in blunt trauma patients. ... The other trial evaluated the effect of rFVIIa in 97 TBI patients with evidence of intracerebral bleeding in a computed tomography (CT) scan.",
+          "stance": "neutral",
+          "pmid": "20091656",
+          "title": "Haemostatic drugs for traumatic brain injury.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Low SBP indicates hemorrhagic shock severity, influencing survival prognosis with TXA.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (28-day mortality) are satisfied. However the abstract contains no analysis, subgrouping, or interaction test by initial systolic blood pressure (Isbp). Isbp is only mentioned as an inclusion criterion (SBP \u2265 90 mm Hg), so the trial does not present evidence that treatment effect varies by Isbp nor test the proposed mechanism linking low SBP (hemorrhagic shock severity) to differential TXA benefit. Because the FEATURE ALIGNMENT and MECHANISM ALIGNMENT gates fail, the abstract is irrelevant to the specific HTE claim for Isbp.",
+          "evidence_quote": "randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus followed by an in-hospital saline infusion, a 1-g out-of-hospital TXA bolus/1-g in-hospital TXA infusion, or an out-of-hospital saline bolus/in-hospital saline infusion (placebo).",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "A: Treatment alignment passes (TXA evaluated). B: Outcome alignment fails \u2014 the abstract evaluates intraoperative blood loss, hemoglobin/hematocrit, and operating time, not death due to bleeding or mortality. C: Feature alignment fails \u2014 there is no assessment or interaction reported for systolic blood pressure (Isbp). D: Mechanism alignment fails \u2014 the abstract provides no data or subgroup analyses linking baseline SBP/hemorrhagic shock severity to differential TXA effect. Because outcomes and the target feature (Isbp) are not evaluated, the abstract is irrelevant to the hypothesized HTE.",
+          "evidence_quote": "The predictor variable was the hemostatic measures, and the main outcome variable was the total IOB volume.",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not address the hypothesized trial context (CRASH-2) outcomes or the target feature. Although the intervention is tranexamic acid (passes treatment alignment), the study population and outcomes are different: this trial evaluates postoperative recurrence and complications in chronic subdural hematoma patients, not death due to bleeding or mortality as in the CRASH-2 context (fails Outcome Alignment). The abstract contains no mention of systolic blood pressure (Isbp) or any interaction analyses involving Isbp (fails Feature Alignment). The proposed mechanism (low SBP indicating hemorrhagic shock severity modifying TXA effect on mortality) is not applicable to the study setting (elective/operative CSDH recurrence), so Mechanism Alignment also fails. Therefore the abstract is irrelevant to whether there is a heterogeneous treatment effect by Isbp on death due to bleeding/mortality.",
+          "evidence_quote": "We evaluated image and clinical recurrence of CSDH at follow up of 6 months... Clinical and radiological recurrence occurred in three patients (6%)... There were no significant difference between baseline data in groups regarding to age, gender, use of antiplatelet or anticoagulants, smoking, alcoholism, systemic arterial hypertension, diabetes mellitus, hematoma laterality, hematoma thickness, and drain use.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid (TXA) and reports mortality outcomes (90-day mortality), it contains no analysis or interaction testing involving the target feature 'Isbp' (initial systolic blood pressure). Subgroup analyses reported (time windows, spot sign, hypertensive ICH, NOAC-associated ICH) do not constitute an Isbp interaction; 'hypertensive ICH' is a diagnostic subgroup, not an evaluation of baseline systolic BP as an effect modifier. The mechanism claim (low SBP indicating hemorrhagic shock severity altering TXA benefit) is not addressed or supported by any directional or causal evidence in the abstract. Therefore the abstract fails the FEATURE and MECHANISM alignment gates and is irrelevant to the specified HTE question.",
+          "evidence_quote": "\"Another subgroup analysis based on study populations revealed a significant effect of TXA on hematoma volume in studies involving sICH without a specific subgroup classification. However, no significant effect was observed in other subgroups, including sICH with spot sign, hypertensive ICH, and NOAC-associated ICH.\"",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate (A) failed: the abstract evaluates prehospital hypertonic fluid resuscitation (7.5% NaCl, 7.5% NaCl/6% Dextran, or 0.9% NaCl), not tranexamic acid (TXA) or an equivalent antifibrinolytic. Because the treatment does not match the TXA context required by the hypothesis, the abstract is not relevant for assessing a heterogeneous treatment effect of TXA by initial systolic blood pressure (Isbp). The abstract also does not report treatment effects on death due to bleeding or mortality by Isbp, nor an interaction analysis involving TXA and Isbp.",
+          "evidence_quote": "Patients received 7.5% NaCl (HS), 7.5% NaCl/6% Dextran 70 (HSD), or 0.9% NaCl (normal saline [NS]) in the prehospital setting.",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does mention tranexamic acid (TXA) use (treatment alignment), but it does not report mortality or death due to bleeding (outcome alignment fails). It also contains no data, subgroup analysis, or interaction testing involving the target feature 'Isbp' (initial systolic blood pressure) \u2014 Isbp is not mentioned and only 'hypotension' is referenced as part of the severe PPH definition. There is no evidence linking low SBP to differential TXA effect or any causal/mechanistic pathway consistent with the hypothesized mechanism. Therefore it fails mandatory outcome, feature, and mechanism alignment gates and is irrelevant for assessing an HTE by Isbp.",
+          "evidence_quote": "\"tranexamic acid in 4.9% (n = 5/103[missing 117])\"; \"severe PPH (blood loss \u22651,000ml or \u2265500ml with hypotension or at least three transfusions)\"",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Shock states alter TXA's distribution and efficacy, as reduced perfusion complicates drug delivery.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gates A and B pass: the study tests tranexamic acid (TXA) and reports mortality (28-day). Gate C fails: the abstract contains no analysis of, interaction with, or subgroup results by initial systolic blood pressure (Isbp). The only mention is an inclusion criterion (\"systolic blood pressure \u2265 90 mm Hg\"), not an effect-modification analysis. Gate D (mechanism) therefore cannot be assessed because no Isbp interaction or stratified results are reported to support the proposed shock/perfusion mechanism. Because the target feature (Isbp) is not evaluated as an effect modifier in the abstract, the evidence is irrelevant to the requested HTE question.",
+          "evidence_quote": "\"randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus...\"",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) for reducing intraoperative blood loss in orthognathic surgery, so Treatment Alignment (A) is satisfied. However, it does not assess mortality or death due to bleeding (fails Outcome Alignment B) and does not evaluate or report any interaction with 'Isbp' (systolic blood pressure) (fails Feature Alignment C). The abstract also provides no data linking shock/perfusion physiology to TXA efficacy (fails Mechanism Alignment D). Because the required outcome and the target feature (Isbp) are not addressed and the mechanism is not supported, the abstract is irrelevant to the hypothesis about heterogeneous treatment effect by Isbp.",
+          "evidence_quote": "\"TXA significantly reduces IOB by an average of one third, regardless of whether it was given intravenously (IV) or applied topically.\"",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract fails mandatory alignment gates. (A) Treatment alignment passes (uses tranexamic acid). (B) Outcome alignment fails: the trial evaluates recurrence and complications of chronic subdural hematoma, not death due to bleeding or mortality. (C) Feature alignment fails: the abstract contains no mention of 'Isbp' (initial systolic blood pressure) or any blood pressure measurements, so no interaction with Isbp can be assessed. (D) Mechanism alignment fails because there is no data linking perfusion or shock states to TXA distribution or effect. Therefore the abstract is irrelevant to the specified HTE question.",
+          "evidence_quote": "N/A - the abstract contains no mention of 'Isbp' (systolic blood pressure) or mortality outcomes.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (90-day mortality) are met, but the abstract contains no analysis, subgroup, or interaction testing involving the specified feature 'Isbp' (presumed initial systolic blood pressure). Subgroup analyses reported relate to time windows, spot sign, hypertensive ICH, and NOAC-associated ICH, none of which test or report interaction with Isbp. Because the mandatory FEATURE ALIGNMENT gate fails, the abstract is irrelevant to determining a heterogeneous treatment effect by Isbp; the proposed mechanism (shock/perfusion affecting TXA delivery) cannot be evaluated from this abstract.",
+          "evidence_quote": "No mention of 'Isbp' or initial systolic blood pressure appears in the abstract; subgroup analyses reported: time windows, spot sign, hypertensive ICH, and NOAC-associated ICH.",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment alignment) fails: the abstract evaluates prehospital hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran 70, normal saline) versus each other, not tranexamic acid (TXA) or an equivalent antifibrinolytic. Gate B also fails because the outcomes reported are measures of coagulation (hypocoagulability, hyperfibrinolysis, INR, biomarkers) rather than death due to bleeding or mortality. Gate C (feature) is not met for the required interaction: although systolic blood pressure (Isbp) is mentioned as an inclusion criterion and an admission measure, the study does not evaluate an interaction between Isbp and TXA (or any TXA-like treatment). Gate D (mechanism) is not applicable because the treatment and outcome alignments are not met. Therefore the abstract is not relevant to assessing heterogeneous treatment effects of TXA by Isbp.",
+          "evidence_quote": "\u201csingle-bolus (250 mL) hypertonic fluid resuscitation of hemorrhagic shock trauma patients (systolic blood pressure, \u226470 mmHg).\u201d",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Alignment gates fail. (A) Treatment alignment: the abstract mentions tranexamic acid (TXA) usage, so this gate is satisfied. (B) Outcome alignment: the abstract does not report death due to bleeding or other mortality outcomes\u2014only PPH prevalence, risk indicators, causes, and management\u2014so the required outcome is not evaluated. (C) Feature alignment: the abstract does not evaluate or report an interaction with the specified feature 'Isbp' (no analyses or subgroup results by initial systolic blood pressure are presented; only a definition of severe PPH that includes 'hypotension' is given). (D) Mechanism alignment: the abstract provides no evidence supporting the proposed mechanism (shock-related altered TXA distribution or efficacy) and contains no interaction analyses that could be interpreted causally. Because one or more mandatory gates fail, the abstract is irrelevant to the requested HTE assessment.",
+          "evidence_quote": "severe PPH (blood loss \u22651,000ml or \u2265500ml with hypotension or at least three transfusions) ... tranexamic acid in 4.9% (n = 5/103[missing 117]).",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "isbp",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "SBP impacts coagulopathy progression via perfusion-related mechanisms.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (mortality) are satisfied, but the abstract contains no analysis or report of effect modification by systolic blood pressure (Isbp). The only SBP information is an inclusion criterion (SBP \u2265 90 mm Hg); there are no subgroup analyses, interaction tests, or statements that the treatment effect differs by Isbp or that findings support the proposed perfusion-related mechanism. Therefore the mandatory Feature Alignment (C) and Mechanism Alignment (D) gates fail.",
+          "evidence_quote": "randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus...",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment) passes because the abstract includes tranexamic acid (TXA). Gate B (outcome) is borderline but fails strongly on Gate C: the abstract does not evaluate or report any interaction with 'Isbp' (initial systolic blood pressure) \u2014 no subgroup or interaction analyses by SBP are presented. Gate D (mechanism) also fails because there is no evidence relating SBP to coagulopathy progression or differential TXA effect. Therefore the abstract is not relevant to the specified HTE question.",
+          "evidence_quote": "\"The individual trials demonstrated the effects on IOB from hypotensive anesthetic regimens, the use of aprotinin, and the herbal medicine Yunnan Baiyao.\" (No mention of initial systolic blood pressure or interaction analyses by Isbp in the abstract.)",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "A: Treatment alignment OK (TXA studied). B: Outcome alignment fails \u2014 the abstract reports recurrence and complications after chronic subdural hematoma surgery, not death due to bleeding or mortality outcomes required by the hypothesis. C: Feature alignment fails \u2014 the abstract does not evaluate or report any interaction with 'Isbp' (systolic blood pressure). D: Mechanism alignment fails because no data are presented linking SBP/perfusion to coagulopathy or differential TXA effect. Because outcomes and the target feature are not addressed, the abstract cannot support any HTE claim for Isbp in the specified context.",
+          "evidence_quote": "We evaluated image and clinical recurrence of CSDH at follow up of 6 months and potential clinical and/or surgical complications impact of TXA.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) and reports mortality outcomes, so treatment and outcome alignment are met. However, it does not report any analyses or interactions involving the target feature 'Isbp' (initial systolic blood pressure). Subgroup analyses listed (spot sign, hypertensive ICH, NOAC-associated ICH, timing) do not include Isbp or an interaction by initial SBP, nor is there any mechanistic evidence in the abstract linking SBP to differential treatment effects. Because the required feature alignment (interaction with Isbp) is absent, the task fails the mandatory alignment gates and must be classified as IRRELEVANT.",
+          "evidence_quote": "Another subgroup analysis based on study populations revealed a significant effect of TXA on hematoma volume in studies involving sICH without a specific subgroup classification. However, no significant effect was observed in other subgroups, including sICH with spot sign, hypertensive ICH, and NOAC-associated ICH.",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails mandatory alignment gates. (A) Treatment mismatch: the abstract evaluates prehospital hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran, or 0.9% NaCl), not tranexamic acid (TXA) or an equivalent antifibrinolytic\u2014so the trial context (TXA vs no TXA) is not addressed. (B) Outcome mismatch: the reported outcomes are coagulation parameters (hypocoagulability, hyperfibrinolysis, INR, coagulation biomarkers) rather than death due to bleeding or mortality. (C) Although the abstract reports systolic blood pressure (Isbp) changes, the primary treatment and outcomes do not align with the specified hypothesis. (D) Because the treatment and outcome alignments fail, the abstract cannot provide evidence for or against the proposed SBP\u2192coagulopathy mechanism in the context of TXA effect modification. Therefore the abstract is irrelevant to determining an HTE of TXA by Isbp on bleeding mortality.",
+          "evidence_quote": "\u201csingle-bolus (250 mL) hypertonic fluid resuscitation of hemorrhagic shock trauma patients (systolic blood pressure, \u226470 mmHg).\u201d",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate mortality or death due to bleeding (required outcome alignment). It is a descriptive audit of postpartum hemorrhage prevalence and management; tranexamic acid is only reported as being administered in 4.9% of cases, not studied for effects on mortality. There is no analysis of treatment effect modification by initial systolic blood pressure (Isbp) or any SBP subgroup/interaction testing. Because the outcome alignment (death due to bleeding/mortality) fails, the abstract is not relevant to the specified HTE question.",
+          "evidence_quote": "A criteria-based audit revealed that women with severe PPH received prophylactic oxytocin in 61.3% (n = 95/155[missing 65]), oxytocin treatment in 68.8% (n = 106/154[missing 66]), and tranexamic acid in 4.9% (n = 5/103[missing 117]).\n\n... severe PPH (blood loss \u22651,000ml or \u2265500ml with hypotension or at least three transfusions) ...",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "icc",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Pre-treatment coagulopathy affects bleeding risk and response to hemostatic intervention.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"capillary refill\" OR perfusion OR shock) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 4,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 4,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails mandatory alignment gates. (A) Treatment mismatch: the abstract studies prehospital hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran, or normal saline), not tranexamic acid or an equivalent hemostatic drug. (B) Outcome mismatch: the reported outcomes are measures of coagulopathy (INR, fibrinolysis markers, hypocoagulability) rather than death due to bleeding or mortality. (C) Feature mismatch: the target feature 'Icc' is not mentioned or analyzed in the abstract. (D) Mechanism alignment cannot be assessed because the treatment, outcome, and feature do not match the hypothesis; although the paper discusses coagulopathy mechanisms, it does not link pre-treatment 'Icc' to TXA treatment effect. Therefore the abstract is irrelevant to the requested HTE assessment.",
+          "evidence_quote": "\"Patients received 7.5% NaCl (HS), 7.5% NaCl/6% Dextran 70 (HSD), or 0.9% NaCl (normal saline [NS]) in the prehospital setting.\" (abstract contains no mention of tranexamic acid/TXA, no analysis of mortality/death due to bleeding, and no reference to the feature 'Icc')",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate tranexamic acid (TXA) or any hemostatic treatment (fails Treatment Alignment). It does not report outcomes of death due to bleeding or treatment mortality effects (only a general statement that coagulopathy predicts mortality), so Outcome Alignment fails. The target feature \u201cIcc\u201d is not mentioned, nor is there any interaction analysis involving Icc (fails Feature Alignment). Finally, the abstract discusses viscoelastic testing and the need for quality studies but provides no evidence linking a pre-treatment coagulopathy mechanism to differential treatment effects (fails Mechanism Alignment). Because multiple mandatory alignment gates are not met, the abstract is irrelevant to the specified HTE question.",
+          "evidence_quote": "Coagulopathy is a physiological response to massive bleeding that frequently occurs after severe trauma and is an independent predictive factor for mortality.",
+          "stance": "neutral",
+          "pmid": "34798696",
+          "title": "Monitoring the coagulation status of trauma patients with viscoelastic devices.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (in-hospital mortality) are satisfied. However the abstract contains no evaluation, subgroup analysis, or interaction test involving the target feature 'Icc' (no mention of 'Icc' or an equivalent pre-treatment coagulopathy variable). The abstract mentions coagulopathy broadly as a clinical concern but does not present any statistical interaction between TXA effect and Icc or stratified results by Icc. Because the FEATURE ALIGNMENT gate (C) fails, the abstract is irrelevant to determining a heterogeneous treatment effect by Icc.",
+          "evidence_quote": "No mention of 'Icc' or analysis by Icc in the abstract.",
+          "stance": "neutral",
+          "pmid": "33802254",
+          "title": "Efficacy and Safety of Tranexamic Acid in Emergency Trauma: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate B (Outcome Alignment) fails: the abstract's primary and reported outcomes are blood product volume transfused within 24 hours, not death due to bleeding or mortality. Although the abstract mentions subgroup analyses that include 'presence of intracranial hemorrhage (Icc)', it provides no analysis of TXA effect on mortality or death due to bleeding, nor any statistical interaction test by Icc. The required mechanism (pre-treatment coagulopathy influencing bleeding risk and response to hemostatic intervention) is not assessed or supported in the abstract. Therefore the study does not provide evidence relevant to whether TXA shows a heterogeneous treatment effect on mortality by Icc.",
+          "evidence_quote": "\"Subgroup analyses included patients with penetrating injuries, severe shock, presence of intracranial hemorrhage and patients without head injury who received large-volume blood products.\"",
+          "stance": "neutral",
+          "pmid": "41029248",
+          "title": "Does TXA reduce total volume of 24-hour blood products transfused in post-traumatic hemorrhage in a resource-constrained setting:Secondary analysis of a prospective cohort trauma study in South Africa.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "icc",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "TXA impacts are modulated by the coagulation cascade's status, as varying baseline profiles alter drug targets.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"capillary refill\" OR perfusion OR shock) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 4,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 4,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails mandatory alignment gates. (A) Treatment alignment: the abstract evaluates prehospital hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran, normal saline), not tranexamic acid (TXA) or an equivalent antifibrinolytic\u2014so the treatment context does not match. (B) Outcome alignment: the abstract reports coagulation/fibrinolysis biomarkers and hypocoagulability/hyperfibrinolysis after shock, not death due to bleeding or mortality outcomes. (C) Feature alignment: the target feature 'Icc' is not mentioned or evaluated; interactions reported concern coagulation factors and fibrinolysis markers, not 'Icc'. (D) Mechanism alignment: although the abstract discusses coagulation/fibrinolysis, because the treatment and feature do not match the specified TXA\u2013Icc hypothesis, the mechanism claim about TXA modulation via baseline coagulation cannot be assessed. Therefore the abstract is irrelevant to the specified HTE question.",
+          "evidence_quote": "Patients received 7.5% NaCl (HS), 7.5% NaCl/6% Dextran 70 (HSD), or 0.9% NaCl (normal saline [NS]) in the prehospital setting.",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not meet mandatory alignment gates. (A) Treatment: there is no mention of tranexamic acid (TXA) or an equivalent antifibrinolytic\u2014abstract discusses viscoelastic devices and transfusion strategies only. (B) Outcome: it does not report death due to bleeding, mortality, or relevant clinical outcomes\u2014focus is diagnostic/monitoring and on transfusion guidance. (C) Feature (Icc): the term 'Icc' is not mentioned and no interaction analysis with that feature is reported. (D) Mechanism: nothing in the abstract links TXA effects to coagulation status via the proposed pathway in the context of treatment effect heterogeneity. Because multiple required alignment gates fail, the abstract is not relevant to supporting or refuting an HTE by Icc in the CRASH_2 context.",
+          "evidence_quote": "N/A - the abstract does not mention 'Icc' (it discusses viscoelastic devices, coagulopathy, and guideline/research needs but contains no TXA, mortality outcomes, or Icc interaction).",
+          "stance": "neutral",
+          "pmid": "34798696",
+          "title": "Monitoring the coagulation status of trauma patients with viscoelastic devices.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (in-hospital mortality) are met, but the abstract does not evaluate or report any interaction with the specified target feature \"Icc.\" No subgroup, interaction test, or stratified analysis by \"Icc\" is described, and the paper's statements about coagulation or D-dimers are general and do not link TXA effect specifically to \"Icc\" or the proposed mechanism pathway. Because the FEATURE ALIGNMENT gate fails (no evidence involving \"Icc\"), the item is classified as IRRELEVANT.",
+          "evidence_quote": "No mention of \"Icc\" in the abstract; closest related text: \"In trauma patients, bleeding can lead to coagulopathy, hemorrhagic shock, and multiorgan failure... Patients who undergo treatment with TXA should be monitored for clinical signs of thromboembolism, since TXA is a standalone risk factor of a thromboembolic event and the D-dimers in traumatic patients are almost always elevated.\"",
+          "stance": "neutral",
+          "pmid": "33802254",
+          "title": "Efficacy and Safety of Tranexamic Acid in Emergency Trauma: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment): PASS \u2014 study evaluates tranexamic acid. Gate B (outcome): FAIL \u2014 the abstract's primary outcome is 24-hour blood product volume, not death due to bleeding or a clearly validated mortality surrogate; no mortality or death-by-bleeding outcomes are reported. Gate C (feature): PARTIAL \u2014 the abstract includes a subgroup for 'presence of intracranial hemorrhage' (Icc) but does not present an interaction test; it reports no significant difference in blood product volumes in subgroup analyses. Gate D (mechanism): FAIL \u2014 the abstract provides no data on coagulation status or any mechanistic pathway linking baseline coagulation (the stated mechanism) to TXA effect. Because the required outcome alignment and mechanism alignment are not met (and no Icc interaction on the prespecified mortality outcome is presented), the abstract is irrelevant to the hypothesized HTE for Icc.",
+          "evidence_quote": "Subgroup analyses included patients with penetrating injuries, severe shock, presence of intracranial hemorrhage and patients without head injury who received large-volume blood products.",
+          "stance": "neutral",
+          "pmid": "41029248",
+          "title": "Does TXA reduce total volume of 24-hour blood products transfused in post-traumatic hemorrhage in a resource-constrained setting:Secondary analysis of a prospective cohort trauma study in South Africa.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "icc",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Coagulation capacity impacts hemodynamic stability, influencing tolerability and effect of hemostatic treatments.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"capillary refill\" OR perfusion OR shock) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 4,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 4,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails mandatory alignment gates. (A) Treatment mismatch: the abstract studies prehospital hypertonic fluid resuscitation (7.5% NaCl, 7.5% NaCl/6% Dextran 70, or normal saline), not tranexamic acid (TXA) or an equivalent antifibrinolytic, so it cannot inform TXA treatment effect heterogeneity. (B) Outcome mismatch: the reported endpoints are coagulation biomarkers and hypocoagulability/hyperfibrinolysis, not death due to bleeding or mortality. (C) Feature mismatch: the abstract does not mention the target feature \u201cIcc\u201d or report interactions by that feature. (D) Mechanism/pathway: although coagulation is discussed, the paper examines effects of fluids on coagulation, not the proposed mechanism linking coagulation capacity (Icc) to differential TXA treatment effects. Therefore the abstract is irrelevant to assessing HTE of TXA by Icc.",
+          "evidence_quote": "\"We conducted a prospective observational subgroup analysis of large clinical trial on out-of-hospital single-bolus (250 mL) hypertonic fluid resuscitation of hemorrhagic shock trauma patients... Patients received 7.5% NaCl (HS), 7.5% NaCl/6% Dextran 70 (HSD), or 0.9% NaCl (normal saline [NS]).\"",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not meet the mandatory alignment gates. (A) Treatment alignment: it discusses viscoelastic testing and mentions anti-fibrinolytic agents generically but does not evaluate tranexamic acid (TXA) versus placebo/no TXA or report treatment effects. (B) Outcome alignment: it notes that coagulopathy predicts mortality but does not report treatment effects on death due to bleeding or other mortality outcomes. (C) Feature alignment: the abstract does not mention or test the target feature 'Icc' or any interaction with it. (D) Mechanism alignment: although the abstract addresses coagulation assessment, it provides no evidence of a causal or directional link between an Icc feature and differential TXA treatment effect. Because several required alignment gates fail and there is no interaction evidence involving 'Icc', the correct classification is IRRELEVANT.",
+          "evidence_quote": "",
+          "stance": "neutral",
+          "pmid": "34798696",
+          "title": "Monitoring the coagulation status of trauma patients with viscoelastic devices.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid and mortality outcomes (A and B satisfied) but contains no mention or analysis of the target feature 'Icc' or any interaction with it. The subgroup analyses reported (civilian vs military, RCTs) do not involve 'Icc', and the mechanistic pathway relating coagulation capacity via 'Icc' to differential TXA effect is not evaluated or supported. Therefore the mandatory feature-alignment gate (C) fails and the abstract is irrelevant to detecting an HTE by 'Icc'.",
+          "evidence_quote": "No mention of 'Icc' or analysis of interaction with 'Icc' is present in the abstract.",
+          "stance": "neutral",
+          "pmid": "33802254",
+          "title": "Efficacy and Safety of Tranexamic Acid in Emergency Trauma: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Mandatory gate (B) fails: the abstract's primary outcome is total blood product administration within 24 hours, not death due to bleeding or mortality outcomes specified in the hypothesis. Although the treatment (TXA) matches (gate A) and the abstract mentions a subgroup defined by presence of intracranial hemorrhage (Icc), there is no analysis of mortality nor any reported interaction test between TXA effect and Icc. The mechanism claim (coagulation capacity affecting hemodynamic stability and treatment tolerability) is not evaluated or supported by the reported outcomes. Therefore the abstract is not relevant to assessing an HTE for Icc on mortality.",
+          "evidence_quote": "Subgroup analyses included patients with penetrating injuries, severe shock, presence of intracranial hemorrhage and patients without head injury who received large-volume blood products.",
+          "stance": "neutral",
+          "pmid": "41029248",
+          "title": "Does TXA reduce total volume of 24-hour blood products transfused in post-traumatic hemorrhage in a resource-constrained setting:Secondary analysis of a prospective cohort trauma study in South Africa.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "TXA halts fibrinolysis more effectively when administered sooner, limiting clot breakdown.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and feature alignment (time from hemorrhage to start of TXA = Ninjurytime) are met and the abstract reports a statistically significant interaction by time. However the mandatory mechanism gate fails: the provided mechanism claim predicts greater benefit when TXA is given sooner, whereas the abstract reports a protective effect only when TXA was initiated after 6 h (i.e. later), which contradicts the stated mechanism. Additionally the abstract's primary reported outcome is rebleeding and functional outcome (mRS), not death due to bleeding/mortality; rebleeding is related but is not the specified mortality outcome. Because the observed interaction is directionally opposite to the proposed mechanism, the result is not supportive for the hypothesized HTE and must be classified as IRRELEVANT per the mechanism-alignment rule.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract is from the CRASH-3 trial of tranexamic acid (TXA) and reports analyses specifically modelling a time-to-treatment (Ninjurytime) \u00d7 treatment interaction for head\u2011injury death. They provide explicit statistical interaction estimates with 95% CIs that exclude the null (interaction term 1.15, 95% CI 1.03\u20131.27, and 1.16, 95% CI 1.05\u20131.28 after using monitored times), and report larger treatment effects when treatment is given earlier (e.g. OR at 1 h ~0.58\u20130.63). These findings indicate a significant heterogeneous treatment effect by time from injury, and the direction (greater benefit with earlier treatment) is consistent with the proposed mechanism that TXA is more effective when given sooner.",
+          "evidence_quote": "\u201cWe model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\u201d",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract concerns anti-fibrinolytics (which includes tranexamic acid) and primary outcomes are death from stroke/head injury (mortality), and it explicitly states that analyses will examine variation by time to treatment (Ninjurytime), it is a statistical analysis plan with no results. It provides no statistical evidence (no interaction tests, p-values, or direction of effect) to support a heterogeneous treatment effect by time-to-treatment, nor any data consistent with the proposed mechanistic claim that earlier TXA is more effective. Therefore it fails the mechanism/evidence gate (no empirical support) and cannot be classified as showing an HTE.",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Delayed treatment progression to irreversible shock, undermining TXA benefit.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment) passes: the abstract evaluates tranexamic acid (TXA). Gate B (outcome) fails: the abstract reports effects on rebleeding and functional outcome (mRS 0-3) but does not evaluate death due to bleeding or mortality outcomes requested in the hypothesis. Gate C (feature) partially aligns because the paper analyses time-to-treatment (0-3, 3-6, >6 h), which corresponds to 'Ninjurytime', but Gate D (mechanism) fails: the specified mechanism concerns delayed progression to irreversible shock undermining TXA benefit (relevant to trauma/bleeding deaths), whereas the abstract addresses rebleeding after aneurysmal subarachnoid hemorrhage and reports no mortality effect; the pathway and outcome do not support the proposed irreversible-shock mechanism. Because the required outcome/mechanism alignment is lacking, the abstract is irrelevant to the hypothesis of HTE for Ninjurytime on death due to bleeding.",
+          "evidence_quote": "\u201cWe assessed ... time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6 h). Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001) ... Tranexamic acid treatment showed no effect on good outcome (OR 0.96, 95% CI: 0.72-1.27).\u201d",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract reports an explicit time-to-treatment (Ninjurytime) interaction: early treatment is more beneficial and the reported time-treatment interaction term is >1 with 95% CIs excluding 1 (1.15 [1.03,1.27] \u2192 1.16 [1.05,1.28]), and treatment ORs at 1 hour show substantially greater benefit. This satisfies the requirement that the treatment effect differs by time-from-injury and is directionally consistent with the proposed mechanism (delayed treatment reduces TXA benefit). However, the paper does not provide direct causal measurements of the hypothesized pathway (e.g., progression to irreversible shock), so mechanistic support is directional rather than demonstrated with mediator data.",
+          "evidence_quote": "In mild and moderate TBI, there is a time to treatment interaction, with early treatment being most beneficial. The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81) than for clinician-recorded times OR = 0.63 (95% CI 0.48, 0.83). Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract concerns anti-fibrinolytics (TXA-class) and mortality outcomes and explicitly states it will examine effect modification by time-to-treatment (Ninjurytime), it is a statistical analysis plan/protocol with no results. It provides no empirical evidence (no interaction p-values or subgroup effects) and gives no directionally consistent mechanistic evidence that delayed treatment leads to irreversible shock thereby undermining TXA benefit. Because the mechanism requirement (directional/causal support) is unmet and no interaction findings are reported, the abstract cannot be used to support an HTE for Ninjurytime.",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Swift TXA can stabilize the coagulation system before irreversible systemic imbalance.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and feature alignment (time from hemorrhage to treatment, i.e. Ninjurytime) are satisfied. However, the abstract does not evaluate the requested outcome (death due to bleeding / mortality) but instead reports rebleeding and functional outcome. More importantly, the observed interaction contradicts the proposed mechanism: the abstract reports a (clinically non-relevant) protective effect only when TXA was started after 6 h, which is directionally inconsistent with the mechanism that earlier (swift) TXA stabilizes coagulation and prevents irreversible imbalance. Gate (D) requires consistency with the proposed causal/mechanistic pathway, so this evidence must be rejected as irrelevant to supporting the hypothesized mechanism.",
+          "evidence_quote": "We assessed ... stratified into time categories (0-3, 3-6 and >6\u0000h). Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6\u0000h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract reports a statistically significant time-by-treatment interaction for time from injury to treatment (Ninjurytime). It states that early treatment is most beneficial and provides an interaction term whose 95% CI excludes the null (interaction term 1.15, 95% CI 1.03\u20131.27, increased to 1.16, 95% CI 1.05\u20131.28 with monitored times), indicating heterogeneity of treatment effect by time. The outcome is death due to head injury, and the treatment is tranexamic acid, so alignment gates A\u2013C are satisfied. The finding that earlier TXA produces greater benefit is directionally consistent with the proposed mechanism (swift TXA stabilizes coagulation before irreversible imbalance), so mechanism alignment (gate D) is met. Therefore the abstract provides strong evidence of an HTE by Ninjurytime.",
+          "evidence_quote": "\"In mild and moderate TBI, there is a time to treatment interaction, with early treatment being most beneficial.\" ... \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract addresses anti-fibrinolytics (an equiv. of TXA), mortality outcomes, and explicitly states that analyses will examine variation by time to treatment (Ninjurytime), it is a statistical analysis plan with no empirical results. It does not present any statistical evidence (interaction p-values, subgroup effect estimates, or direction of effect) demonstrating that treatment effect differs by time-to-injury, nor any causal/directional data consistent with the proposed mechanism that earlier TXA stabilizes coagulation and prevents irreversible imbalance. Therefore it cannot support a heterogeneous treatment effect claim for Ninjurytime.",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "High heart rates are indicative of high shock states and often portend negative outcomes without urgent intervention.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"heart rate\" OR pulse OR tachycardia OR bradycardia) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract studies tranexamic acid (TXA) (treatment alignment OK), it does not evaluate the requested outcome (death due to bleeding / mortality) \u2014 it reports rebleeding rates and functional outcome (mRS). Crucially, the abstract contains no analysis or interaction testing involving the target feature \u201cIhr\u201d (no mention of heart rate or related shock state), and the reported interaction is with time-to-treatment, not with Ihr. The proposed mechanism (high heart rates indicating shock leading to differential TXA effect) is neither tested nor supported; thus the abstract fails mandatory Outcome (B), Feature (C), and Mechanism (D) alignment gates and must be classified IRRELEVANT.",
+          "evidence_quote": "\u201cWe assessed confounders, hazard ratio (HR) of rebleeding and odds ratio (OR) of good outcome (modified Rankin Scale 0-3) at 6\u2009months, and investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6\u2009h). \u2026 Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)\u2026\u201d",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Treatment alignment (TXA) and outcome alignment (mortality mentioned) are met, but the abstract contains no evaluation of the specified feature \"Ihr\" (or heart rate). Subgroup analyses reported relate to surgical technique, route and dose of TXA (on-pump vs off-pump, topical vs intravenous, high- vs low-dose), not to heart rate or the proposed shock/high-HR mechanism. Because the abstract neither tests nor describes an interaction between TXA effect and \"Ihr\" (high heart rate) nor provides evidence supporting the proposed mechanism pathway, it fails the feature and mechanism alignment gates and is therefore irrelevant to the requested HTE question.",
+          "evidence_quote": "In subgroup analysis, TXA was effective for both on-pump and off-pump surgeries.",
+          "stance": "neutral",
+          "pmid": "31307381",
+          "title": "Different dose regimes and administration methods of tranexamic acid in cardiac surgery: a meta-analysis of randomized trials.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Altered heart rate modifies oxygen delivery and systemic stress that may impact the systemic response to TXA.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"heart rate\" OR pulse OR tachycardia OR bradycardia) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A: Passed \u2014 the trial evaluates tranexamic acid (TXA). Gate B: Failed \u2014 the abstract reports rebleeding and functional outcome (modified Rankin Scale) but does not report death due to bleeding or mortality outcomes, so outcome alignment fails. Gate C: Failed \u2014 the target feature 'Ihr' is not mentioned anywhere; the reported interaction is with time to start of TXA, not 'Ihr'. Gate D: Failed \u2014 the proposed mechanism (heart rate altering oxygen delivery/systemic stress) is not assessed or supported by the abstract. Because the required outcome and the specified feature/mechanism are not present, the abstract is irrelevant to assessing an HTE by 'Ihr'.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate C (FEATURE ALIGNMENT) fails: the abstract does not mention the target feature 'Ihr' (or heart rate) nor report any subgroup or interaction analyses by that feature. Gates A and B largely align (TXA evaluated; mortality mentioned), but the mandatory requirement to evaluate interaction with 'Ihr' is unmet. Gate D (MECHANISM ALIGNMENT) also fails because no data or analyses relating heart rate, oxygen delivery, or a plausible mechanism linking heart rate to TXA effect are presented. Therefore the abstract cannot support or refute a heterogeneous treatment effect by 'Ihr'.",
+          "evidence_quote": "TXA usage did not increase risk of mortality, myocardial infarction, stroke, pulmonary embolism and renal dysfunction, but was associated with a significantly increase in seizure attack (RR 3.21, 95% CI 1.04 to 9.90, P = 0.04).",
+          "stance": "neutral",
+          "pmid": "31307381",
+          "title": "Different dose regimes and administration methods of tranexamic acid in cardiac surgery: a meta-analysis of randomized trials.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Increased heart rate can potentially influence drug delivery due to altered circulation dynamics, but evidence on this specifically for TXA is lacking and speculative.",
+        "evidence_level": "speculative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"heart rate\" OR pulse OR tachycardia OR bradycardia) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment) passes because the abstract evaluates tranexamic acid (TXA). Gate B (outcome) fails: the abstract reports rebleeding and functional outcome (modified Rankin Scale) but does not evaluate death due to bleeding or mortality outcomes as specified. Gate C (feature) fails: the target feature is \"Ihr\" but the abstract contains no mention or analysis of \"Ihr\"; the reported interaction is with time-to-start of TXA, not with the feature \"Ihr.\" Gate D (mechanism) therefore fails because the abstract gives no evidence supporting the proposed mechanism linking \"Ihr\" (presumed heart rate) to TXA effect or drug delivery. Because the required feature and mechanism alignments are not met, the abstract is irrelevant to the posed HTE question.",
+          "evidence_quote": "\"Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h.\"",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Gate A (treatment) and Gate B (mortality outcome) pass: the abstract evaluates tranexamic acid (TXA) and reports mortality. Gate C (feature alignment) fails: the abstract contains no mention or subgroup analysis of the target feature 'Ihr' (no heart rate or 'Ihr' interaction reported). Gate D (mechanism alignment) therefore also fails because there is no evidence addressing the proposed mechanism (effect modification via increased heart rate). Because the abstract does not evaluate or report any interaction with 'Ihr', it cannot support HTE for that feature.",
+          "evidence_quote": "No mention of 'Ihr' or heart rate interactions in the abstract.",
+          "stance": "neutral",
+          "pmid": "31307381",
+          "title": "Different dose regimes and administration methods of tranexamic acid in cardiac surgery: a meta-analysis of randomized trials.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

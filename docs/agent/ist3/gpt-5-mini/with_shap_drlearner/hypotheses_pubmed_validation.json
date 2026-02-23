@@ -1,0 +1,2327 @@
+{
+  "dataset": "ist3",
+  "total_mechanisms_analyzed": 13,
+  "total_abstracts_retrieved": 207,
+  "overall_support_count": 10,
+  "overall_conflict_count": 0,
+  "overall_neutral_count": 197,
+  "mechanism_results": [
+    {
+      "feature_name": "nihss",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Higher NIHSS suggests larger ischemic cores and penumbra, reducing alteplase effectiveness due to its rapid occlusion and limited perfusion capacity within the therapeutic window.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (NIHSS OR \"stroke severity\" OR \"neurological deficit\" OR \"infarct volume\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 19,
+      "support_percentage": 5.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.05,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates endovascular thrombectomy, not rt-TPA/alteplase (intravenous thrombolysis), which fails the Treatment Alignment gate. Additionally, while the abstract mentions NIHSS as a baseline stroke severity measure, it does not evaluate the interaction of treatment effect specifically with NIHSS, failing the Feature Alignment gate.",
+          "evidence_quote": "The abstract does not provide any quote or evidence regarding the interaction of treatment effect with NIHSS.",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It discusses the use of alteplase in patients with mild neurological deficits, which may imply low NIHSS scores, but it does not provide evidence of a treatment effect interaction with NIHSS. The analysis focuses on functional outcomes and safety without explicitly addressing NIHSS as a modifying factor.",
+          "evidence_quote": "Alteplase is increasingly used for treating ischemic stroke cases with low NIHSS scores, but the guidelines and evidence regarding outcomes are lacking.",
+          "stance": "neutral",
+          "pmid": "35148589",
+          "title": "Intravenous Alteplase Treatment of Acute Ischemic Stroke Patients Exhibiting Mild Neurological Deficits.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with NIHSS. It mentions subgroup analysis for severe strokes and early signs of cerebral ischaemia but does not provide evidence of interaction with NIHSS scores.",
+          "evidence_quote": "Subgroup analysis suggests that even patients with severe strokes and early signs of cerebral ischaemia on CT may benefit from treatment, albeit to a lesser degree.",
+          "stance": "neutral",
+          "pmid": "12365827",
+          "title": "Intravenous rt-PA for stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with NIHSS. It focuses on the efficacy of Chinese herbal medicines as an adjunct to tPA thrombolysis in experimental stroke, without mentioning NIHSS or its interaction with treatment outcomes.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of NIHSS or its interaction with treatment effects.",
+          "stance": "neutral",
+          "pmid": "35349833",
+          "title": "Efficacy of Chinese herbal medicine for tPA thrombolysis in experimental stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with NIHSS specifically. It focuses on sex differences in treatment and outcomes, and while NIHSS is mentioned as a baseline characteristic, there is no analysis of treatment effect heterogeneity based on NIHSS scores.",
+          "evidence_quote": "There were no significant sex differences in clinical outcome, measured by the NIHSS, the modified Rankin Scale, intracranial hemorrhage and mortality.",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates the effect of erythropoietin (EPO) on acute ischemic stroke patients, not rt-TPA/alteplase. Although it mentions NIHSS as an outcome measure, it does not evaluate the interaction of NIHSS with rt-TPA/alteplase treatment. Therefore, it fails the Treatment Alignment gate.",
+          "evidence_quote": "The abstract discusses EPO treatment and its outcomes, not the interaction of NIHSS with rt-TPA/alteplase.",
+          "stance": "neutral",
+          "pmid": "27549753",
+          "title": "Erythropoietin Treatment in Patients with Acute Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates endovascular therapy (ET) compared to intravenous thrombolysis, but the focus is on ET rather than rt-TPA/alteplase specifically. Additionally, while the abstract mentions NIHSS, it does so in the context of stroke severity rather than as a specific interaction with rt-TPA/alteplase. Therefore, it fails the Treatment Alignment and Feature Alignment gates.",
+          "evidence_quote": "Subgroup analysis, ET was found to have better outcomes in patients with severe stroke (National Institutes of Health Stroke Scale score \u226520).",
+          "stance": "neutral",
+          "pmid": "24079677",
+          "title": "Endovascular therapy for acute ischemic stroke: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It focuses on the ASPECTS score and its interaction with treatment type, not NIHSS.",
+          "evidence_quote": "The abstract discusses the association of ASPECTS with outcomes and whether these associations were modified by thrombolytic type, with no mention of NIHSS interaction.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with NIHSS. Instead, it focuses on the interaction between treatment effects and systolic blood pressure (SBP) in relation to early neurological deterioration (END). NIHSS is only mentioned as a measure for defining END, not as a feature for interaction analysis.",
+          "evidence_quote": "Primary outcome was END, defined as an increase of \u22652 in the NIHSS score from baseline within 24\u2009h.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on nerinetide, which is a different drug class. Additionally, the abstract does not specifically evaluate the interaction with NIHSS. Therefore, it fails the mandatory alignment gates for treatment and feature interaction.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It discusses outcomes related to atrial fibrillation and thrombolysis but does not mention NIHSS as a factor in the analysis.",
+          "evidence_quote": "Thrombolysis in ischemic stroke patients with AF should be carefully considered based on clinical factors such as NIHSS score, age, and the type of AF.",
+          "stance": "neutral",
+          "pmid": "33573619",
+          "title": "Efficacy and safety of thrombolysis for acute ischemic stroke with atrial fibrillation: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract provides explicit statistical evidence of a treatment effect interaction with NIHSS, as indicated by the significant interaction effect (P = 0.048) between baseline NIHSS and treatment for the primary outcome. This suggests that the benefit of DAPT versus alteplase is affected by the degree of neurological deficit on admission, with DAPT favored in patients with a mild neurologic deficit and alteplase favored in patients with a higher degree of neurologic deficit.",
+          "evidence_quote": "A significant interaction effect was identified between the baseline NIHSS and treatment for the primary outcome (P = 0.048).",
+          "stance": "support",
+          "pmid": "40760234",
+          "title": "Dual Antiplatelet Therapy Versus Alteplase for Mild Stroke with Admission NIHSS Score 0-3 Versus 4-5: A Secondary Analysis of the ARAMIS Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It mentions adjustments for NIHSS but does not provide evidence of a treatment effect differing by NIHSS. Therefore, it fails the Feature Alignment gate.",
+          "evidence_quote": "Ordinal logistic and binary regression analyses using intravenous tPA as an interaction term were performed with adjustments for potential confounders, including age, baseline NIHSS score, occlusion site, and ASPECTS.",
+          "stance": "neutral",
+          "pmid": "38182456",
+          "title": "The role of intravenous thrombolysis before mechanical Thrombectomy: A subgroup analysis of the RESILIENT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily discusses the interaction between onset-to-treatment time (OTT) and treatment outcomes, adjusting for NIHSS as a covariate. It does not evaluate the interaction specifically with NIHSS as the target feature for heterogeneous treatment effect. The focus is on OTT-treatment interaction, not NIHSS-treatment interaction.",
+          "evidence_quote": "For 3-month favorable outcome, the NIHSS met criteria for a masking confounder. After adjusting for NIHSS as a covariate, an OTT-treatment interaction was detected (p = 0.09).",
+          "stance": "neutral",
+          "pmid": "11113218",
+          "title": "Early stroke treatment associated with better outcome: the NINDS rt-PA stroke study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily compares tenecteplase and alteplase, focusing on early neurological improvement and safety outcomes. Although it mentions NIHSS in the context of serious stroke at baseline, the primary focus is not on the interaction of NIHSS with alteplase treatment alone. The study does not provide evidence of a heterogeneous treatment effect specifically for alteplase based on NIHSS.",
+          "evidence_quote": "In serious stroke at baseline (National Institutes of Health Stroke Scale [NIHSS] >12) subgroup, tenecteplase showed a dramatic early neurological improvement (P=0.002) and low risks of any intracranial hemorrhage (ICH) (P=0.027).",
+          "stance": "neutral",
+          "pmid": "30013325",
+          "title": "Different doses of tenecteplase vs alteplase in thrombolysis therapy of acute ischemic stroke: evidence from randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. Instead, it focuses on the interaction between infarct growth speed and treatment allocation. NIHSS is mentioned only as a baseline characteristic, not as a feature for interaction analysis.",
+          "evidence_quote": "The primary analysis, the study population was dichotomized into slow and fast progressors using median infarct growth velocity.",
+          "stance": "neutral",
+          "pmid": "37055063",
+          "title": "Interaction between intravenous thrombolysis and clinical outcome between slow and fast progressors undergoing mechanical thrombectomy: a post-hoc analysis of the SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with NIHSS. It focuses on the timing of DOAC initiation and prior reperfusion therapy, not on rt-TPA/alteplase or NIHSS specifically.",
+          "evidence_quote": "The abstract mentions adjusting for NIHSS but does not evaluate an interaction with it.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of tirofiban following intravenous thrombolysis, not rt-TPA/alteplase alone. Therefore, it fails the Treatment Alignment gate as it involves a different drug class (antiplatelet vs thrombolytic).",
+          "evidence_quote": "The safety and efficacy of tirofiban administration following intravenous thrombolysis (IVT) in patients with acute ischemic stroke (AIS) remain controversial in clinical practice.",
+          "stance": "neutral",
+          "pmid": "41197575",
+          "title": "The safety and efficacy of tirofiban therapy after intravenous thrombolysis in patients with acute ischemic stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction between treatment effect and NIHSS. It mentions stroke severity but does not provide evidence of an interaction with NIHSS. The analysis adjusts for stroke severity but does not explicitly test for interaction with NIHSS.",
+          "evidence_quote": "Neither age nor stroke severity significantly influenced the slope of the relationship between benefit and time to treatment initiation.",
+          "stance": "neutral",
+          "pmid": "27507856",
+          "title": "Effects of Alteplase for Acute Stroke on the Distribution of Functional Outcomes: A Pooled Analysis of 9 Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with NIHSS. It mentions that no pretreatment information, including NIHSS, significantly affected patients' response to t-PA. The analysis focused on other variables and interactions, such as age-by-deficit severity interaction, diabetes, age-by-blood pressure interaction, and early CT findings, which altered long-term patient outcomes irrespective of t-PA treatment.",
+          "evidence_quote": "No pretreatment information significantly affected patients response to t-PA.",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "nihss",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Patients with severe occlusions indicated by high NIHSS scores may not respond well to alteplase due to insufficient recanalization.",
+        "evidence_level": "strong"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (NIHSS OR \"stroke severity\" OR \"neurological deficit\" OR \"infarct volume\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 19,
+      "support_percentage": 5.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.05,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on endovascular thrombectomy, which is a different intervention. Additionally, while the abstract mentions adjustment for NIHSS, it does not specifically evaluate the interaction of treatment effect with NIHSS scores.",
+          "evidence_quote": "Subgroup analysis of the primary endpoint showed no heterogeneity of treatment effect across prespecified subgroups for reduced disability (pinteraction=0.43).",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It focuses on mild ischemic stroke patients, which implies low NIHSS scores, but does not provide evidence of treatment effect differences based on NIHSS scores. The analysis is centered on the general efficacy of rt-PA in mild cases, not on the interaction with NIHSS.",
+          "evidence_quote": "Alteplase is increasingly used for treating ischemic stroke cases with low NIHSS scores, but the guidelines and evidence regarding outcomes are lacking.",
+          "stance": "neutral",
+          "pmid": "35148589",
+          "title": "Intravenous Alteplase Treatment of Acute Ischemic Stroke Patients Exhibiting Mild Neurological Deficits.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with NIHSS. It mentions subgroup analysis for patients with severe strokes but does not explicitly link this to NIHSS scores or provide evidence of interaction based on NIHSS.",
+          "evidence_quote": "Subgroup analysis suggests that even patients with severe strokes and early signs of cerebral ischaemia on CT may benefit from treatment, albeit to a lesser degree.",
+          "stance": "neutral",
+          "pmid": "12365827",
+          "title": "Intravenous rt-PA for stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with NIHSS scores. It focuses on the efficacy of Chinese herbal medicines as an adjunct to tPA thrombolysis in experimental stroke, without mentioning NIHSS or its interaction with treatment outcomes.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of NIHSS scores or their interaction with treatment effects.",
+          "stance": "neutral",
+          "pmid": "35349833",
+          "title": "Efficacy of Chinese herbal medicine for tPA thrombolysis in experimental stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with NIHSS scores specifically. It focuses on sex differences in treatment and outcomes, and while NIHSS is mentioned, it is not analyzed as an interaction term with treatment effect. The study evaluates sex as the primary feature of interest, not NIHSS.",
+          "evidence_quote": "Heterogeneity in treatment was evaluated by including an interaction term in the model. There were no significant sex differences in clinical outcome, measured by the NIHSS, the modified Rankin Scale, intracranial hemorrhage and mortality.",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of rt-TPA/alteplase with NIHSS scores. Instead, it focuses on the effects of erythropoietin (EPO) in acute ischemic stroke patients, with a mention of NIHSS as an outcome measure, but not as a feature for interaction analysis with rt-TPA/alteplase.",
+          "evidence_quote": "The abstract discusses EPO treatment and mentions NIHSS as a primary outcome measure, but does not analyze interaction with rt-TPA/alteplase based on NIHSS.",
+          "stance": "neutral",
+          "pmid": "27549753",
+          "title": "Erythropoietin Treatment in Patients with Acute Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates endovascular therapy (ET) compared to intravenous thrombolysis, not specifically rt-TPA/alteplase. Although it mentions NIHSS in the context of stroke severity, the focus is on ET's effectiveness rather than the interaction of NIHSS with rt-TPA/alteplase treatment. Therefore, it fails the Treatment Alignment gate.",
+          "evidence_quote": "ET was found to have better outcomes in patients with severe stroke (National Institutes of Health Stroke Scale score \u226520), showing a dose-response gradient and improving excellent, good, and fair outcomes by an additional 4%, 7%, and 13%, respectively, compared with IV thrombolysis.",
+          "stance": "neutral",
+          "pmid": "24079677",
+          "title": "Endovascular therapy for acute ischemic stroke: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It focuses on ASPECTS as the feature of interest and its interaction with treatment type, not NIHSS.",
+          "evidence_quote": "The abstract evaluates the association of ASPECTS with outcomes and if these associations were modified by thrombolytic type, not NIHSS.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'nihss'. Instead, it focuses on the interaction between treatment effects and systolic blood pressure (SBP) on early neurological deterioration (END). The NIHSS is only mentioned as part of the definition of END, not as a feature for interaction analysis.",
+          "evidence_quote": "Primary outcome was END, defined as an increase of \u22652 in the NIHSS score from baseline within 24\u2009h.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it discusses nerinetide, which is a different drug class. Additionally, the abstract does not specifically evaluate the interaction with NIHSS scores. Therefore, it fails the Treatment Alignment and Feature Alignment gates.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It discusses outcomes related to atrial fibrillation and thrombolysis but does not mention NIHSS or its interaction with treatment effects.",
+          "evidence_quote": "Thrombolysis in ischemic stroke patients with AF should be carefully considered based on clinical factors such as NIHSS score, age, and the type of AF.",
+          "stance": "neutral",
+          "pmid": "33573619",
+          "title": "Efficacy and safety of thrombolysis for acute ischemic stroke with atrial fibrillation: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract provides explicit statistical evidence of a significant interaction between the treatment effect and NIHSS scores, with a P-value of 0.048. This indicates that the treatment effect of alteplase versus DAPT differs based on the NIHSS score, which is the target feature.",
+          "evidence_quote": "A significant interaction effect was identified between the baseline NIHSS and treatment for the primary outcome (P = 0.048).",
+          "stance": "support",
+          "pmid": "40760234",
+          "title": "Dual Antiplatelet Therapy Versus Alteplase for Mild Stroke with Admission NIHSS Score 0-3 Versus 4-5: A Secondary Analysis of the ARAMIS Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction between the treatment effect and NIHSS scores. It only mentions adjusting for NIHSS as a potential confounder, which does not meet the requirement for feature alignment. Therefore, it fails the feature alignment gate.",
+          "evidence_quote": "Ordinal logistic and binary regression analyses using intravenous tPA as an interaction term were performed with adjustments for potential confounders, including age, baseline NIHSS score, occlusion site, and ASPECTS.",
+          "stance": "neutral",
+          "pmid": "38182456",
+          "title": "The role of intravenous thrombolysis before mechanical Thrombectomy: A subgroup analysis of the RESILIENT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It mentions adjusting for NIHSS as a covariate but does not provide evidence of a treatment effect interaction specifically with NIHSS. The focus is on onset-to-treatment time (OTT) interaction with treatment, not NIHSS.",
+          "evidence_quote": "For 3-month favorable outcome, the NIHSS met criteria for a masking confounder. After adjusting for NIHSS as a covariate, an OTT-treatment interaction was detected (p = 0.09).",
+          "stance": "neutral",
+          "pmid": "11113218",
+          "title": "Early stroke treatment associated with better outcome: the NINDS rt-PA stroke study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily compares tenecteplase with alteplase, not focusing solely on alteplase as required by the treatment alignment gate. Additionally, while NIHSS is mentioned, the primary focus is on the comparison between two drugs rather than the interaction of NIHSS with alteplase treatment specifically.",
+          "evidence_quote": "In serious stroke at baseline (National Institutes of Health Stroke Scale [NIHSS] >12) subgroup, tenecteplase showed a dramatic early neurological improvement (P=0.002) and low risks of any intracranial hemorrhage (ICH) (P=0.027).",
+          "stance": "neutral",
+          "pmid": "30013325",
+          "title": "Different doses of tenecteplase vs alteplase in thrombolysis therapy of acute ischemic stroke: evidence from randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. Instead, it focuses on the interaction between treatment and infarct growth speed, which is a different feature. NIHSS is mentioned only as a baseline characteristic, not as a variable of interaction.",
+          "evidence_quote": "The primary analysis, the study population was dichotomized into slow and fast progressors using median infarct growth velocity.",
+          "stance": "neutral",
+          "pmid": "37055063",
+          "title": "Interaction between intravenous thrombolysis and clinical outcome between slow and fast progressors undergoing mechanical thrombectomy: a post-hoc analysis of the SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment effect of rt-TPA/alteplase (intravenous thrombolysis) on functional outcomes after stroke, nor does it specifically analyze the interaction with NIHSS scores. Instead, it focuses on the timing of DOAC initiation in relation to prior reperfusion therapy, which is not aligned with the target feature or treatment.",
+          "evidence_quote": "The abstract does not provide any evidence or quote related to NIHSS interaction with rt-TPA/alteplase treatment.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of tirofiban, an antiplatelet agent, following intravenous thrombolysis, not the effect of rt-TPA/alteplase alone. Therefore, it fails the Treatment Alignment gate as it involves a different drug class.",
+          "evidence_quote": "The safety and efficacy of tirofiban administration following intravenous thrombolysis (IVT) in patients with acute ischemic stroke (AIS) remain controversial in clinical practice.",
+          "stance": "neutral",
+          "pmid": "41197575",
+          "title": "The safety and efficacy of tirofiban therapy after intravenous thrombolysis in patients with acute ischemic stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not provide specific evidence of interaction with NIHSS. It mentions stroke severity but does not explicitly evaluate the interaction with NIHSS scores. The analysis adjusts for stroke severity, but there is no explicit statement about NIHSS interaction.",
+          "evidence_quote": "Neither age nor stroke severity significantly influenced the slope of the relationship between benefit and time to treatment initiation.",
+          "stance": "neutral",
+          "pmid": "27507856",
+          "title": "Effects of Alteplase for Acute Stroke on the Distribution of Functional Outcomes: A Pooled Analysis of 9 Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with NIHSS. It mentions that no pretreatment information, which would include NIHSS, significantly affected patients' response to t-PA. The analysis focused on other variables such as age-by-deficit severity interaction, diabetes, age-by-blood pressure interaction, and early CT findings, none of which are NIHSS.",
+          "evidence_quote": "No pretreatment information significantly affected patients response to t-PA.",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "nihss",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Mismatch in ischemic damage versus therapeutic effect timeline lessens alteplase's functional independence recovery in severe strokes.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (NIHSS OR \"stroke severity\" OR \"neurological deficit\" OR \"infarct volume\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 2,
+      "conflict_count": 0,
+      "neutral_count": 18,
+      "support_percentage": 10.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.1,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on endovascular thrombectomy, which is a different intervention. Therefore, it fails the Treatment Alignment gate.",
+          "evidence_quote": "Endovascular thrombectomy led to significantly reduced disability at 90 days compared with control (adjusted cOR 2.49, 95% CI 1.76-3.53; p<0.0001).",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'nihss'. It focuses on mild ischemic stroke patients, which implies low NIHSS scores, but does not provide evidence of treatment effect differences based on NIHSS scores. The analysis is centered on the general efficacy of rt-PA in mild cases, not on NIHSS as a variable affecting treatment outcomes.",
+          "evidence_quote": "Alteplase is increasingly used for treating ischemic stroke cases with low NIHSS scores, but the guidelines and evidence regarding outcomes are lacking.",
+          "stance": "neutral",
+          "pmid": "35148589",
+          "title": "Intravenous Alteplase Treatment of Acute Ischemic Stroke Patients Exhibiting Mild Neurological Deficits.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with 'nihss'. It mentions subgroup analysis for severe strokes but does not explicitly discuss 'nihss' as a feature of interaction.",
+          "evidence_quote": "Subgroup analysis suggests that even patients with severe strokes and early signs of cerebral ischaemia on CT may benefit from treatment, albeit to a lesser degree.",
+          "stance": "neutral",
+          "pmid": "12365827",
+          "title": "Intravenous rt-PA for stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'nihss'. It focuses on the efficacy of Chinese herbal medicines as an adjunct to tPA thrombolysis in experimental stroke, assessing outcomes like neurological score and infarct volume, but does not mention 'nihss' or its interaction with treatment.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'nihss' as a feature of interaction.",
+          "stance": "neutral",
+          "pmid": "35349833",
+          "title": "Efficacy of Chinese herbal medicine for tPA thrombolysis in experimental stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It discusses sex differences and mentions NIHSS in the context of baseline stroke severity, but does not analyze treatment effect heterogeneity based on NIHSS scores.",
+          "evidence_quote": "Women were admitted with more severe stroke (National Institutes of Health Stroke Scale [NIHSS] score 6.2 \u00b1 5.6 vs. 5.3 \u00b1 5.1; p = 0.01).",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of rt-TPA/alteplase with NIHSS. Instead, it focuses on erythropoietin (EPO) treatment and its effects on acute ischemic stroke outcomes. Although NIHSS is mentioned as a primary outcome measure, the study does not investigate the interaction between rt-TPA and NIHSS.",
+          "evidence_quote": "The abstract discusses EPO treatment and mentions NIHSS as a primary outcome measure, but does not evaluate the interaction of rt-TPA with NIHSS.",
+          "stance": "neutral",
+          "pmid": "27549753",
+          "title": "Erythropoietin Treatment in Patients with Acute Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates endovascular therapy (ET) compared to intravenous thrombolysis, not specifically rt-TPA/alteplase. Although it mentions NIHSS in the context of stroke severity, the focus is on ET's effectiveness rather than the interaction of rt-TPA/alteplase with NIHSS. Therefore, it fails the Treatment Alignment gate.",
+          "evidence_quote": "ET was found to have better outcomes in patients with severe stroke (National Institutes of Health Stroke Scale score \u226520), showing a dose-response gradient and improving excellent, good, and fair outcomes by an additional 4%, 7%, and 13%, respectively, compared with IV thrombolysis.",
+          "stance": "neutral",
+          "pmid": "24079677",
+          "title": "Endovascular therapy for acute ischemic stroke: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It focuses on the ASPECTS score and its interaction with treatment type, not NIHSS.",
+          "evidence_quote": "Mixed-effects logistic regression was used to assess the association of ASPECTS (continuous and categorical (0-4 vs 5-7 vs 8-10)) with outcomes and if these associations were modified by thrombolytic type after adjusting for age, sex, and baseline stroke severity.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'nihss' as the target feature. Instead, it focuses on the interaction between treatment effects and systolic blood pressure (SBP) subgroups. Although NIHSS is mentioned as part of the outcome definition, the interaction analysis is based on SBP, not NIHSS.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on nerinetide. Additionally, the abstract does not assess functional outcomes after stroke, such as mRS, dependency, or death, nor does it evaluate the interaction specifically with NIHSS. Therefore, it fails the mandatory alignment gates for treatment, outcome, and feature.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with NIHSS. It discusses outcomes related to atrial fibrillation and thrombolysis but does not mention NIHSS as a factor in the analysis.",
+          "evidence_quote": "Thrombolysis in ischemic stroke patients with AF should be carefully considered based on clinical factors such as NIHSS score, age, and the type of AF.",
+          "stance": "neutral",
+          "pmid": "33573619",
+          "title": "Efficacy and safety of thrombolysis for acute ischemic stroke with atrial fibrillation: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract provides explicit statistical evidence of a significant interaction between the treatment effect and NIHSS score, with a P-value of 0.048. This indicates that the treatment effect of alteplase versus DAPT differs based on the NIHSS score, which aligns with the target feature of interest.",
+          "evidence_quote": "A significant interaction effect was identified between the baseline NIHSS and treatment for the primary outcome (P = 0.048).",
+          "stance": "support",
+          "pmid": "40760234",
+          "title": "Dual Antiplatelet Therapy Versus Alteplase for Mild Stroke with Admission NIHSS Score 0-3 Versus 4-5: A Secondary Analysis of the ARAMIS Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'nihss'. It only mentions adjusting for baseline NIHSS score as a potential confounder, which does not meet the requirement for feature alignment. The analysis focuses on the effect of intravenous thrombolysis on mechanical thrombectomy outcomes, not on the interaction with NIHSS.",
+          "evidence_quote": "Ordinal logistic and binary regression analyses using intravenous tPA as an interaction term were performed with adjustments for potential confounders, including age, baseline NIHSS score, occlusion site, and ASPECTS.",
+          "stance": "neutral",
+          "pmid": "38182456",
+          "title": "The role of intravenous thrombolysis before mechanical Thrombectomy: A subgroup analysis of the RESILIENT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract discusses an OTT-treatment interaction with NIHSS as a covariate, indicating a potential interaction between treatment effect and NIHSS. However, the p-value for the interaction is 0.09, which is above the conventional threshold of 0.05, suggesting a trend rather than strong evidence.",
+          "evidence_quote": "For 3-month favorable outcome, the NIHSS met criteria for a masking confounder. After adjusting for NIHSS as a covariate, an OTT-treatment interaction was detected (p = 0.09).",
+          "stance": "support",
+          "pmid": "11113218",
+          "title": "Early stroke treatment associated with better outcome: the NINDS rt-PA stroke study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates tenecteplase versus alteplase, not focusing solely on alteplase as required by the treatment alignment gate. Additionally, while NIHSS is mentioned, the primary focus is on tenecteplase's effects rather than alteplase's interaction with NIHSS.",
+          "evidence_quote": "In serious stroke at baseline (National Institutes of Health Stroke Scale [NIHSS] >12) subgroup, tenecteplase showed a dramatic early neurological improvement (P=0.002) and low risks of any intracranial hemorrhage (ICH) (P=0.027).",
+          "stance": "neutral",
+          "pmid": "30013325",
+          "title": "Different doses of tenecteplase vs alteplase in thrombolysis therapy of acute ischemic stroke: evidence from randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'nihss'. Instead, it focuses on the interaction between treatment and infarct growth speed, which is a different feature. The abstract does not provide evidence of a heterogeneous treatment effect based on 'nihss'.",
+          "evidence_quote": "The primary analysis, the study population was dichotomized into slow and fast progressors using median infarct growth velocity.",
+          "stance": "neutral",
+          "pmid": "37055063",
+          "title": "Interaction between intravenous thrombolysis and clinical outcome between slow and fast progressors undergoing mechanical thrombectomy: a post-hoc analysis of the SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment effect of rt-TPA / alteplase (intravenous thrombolysis) on functional outcomes after stroke. Instead, it focuses on the timing of DOAC initiation in patients with atrial fibrillation and acute ischemic stroke. Additionally, while NIHSS is mentioned as an adjustment factor, there is no specific evaluation of interaction with NIHSS.",
+          "evidence_quote": "We performed logistic regression adjusted for age, hypertension, infarct location/size, pre-modified Rankin Scale, NIHSS, and hemorrhagic transformation, including the interaction term between treatment groups (early versus late DOAC) and reperfusion strategy.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of tirofiban, an antiplatelet agent, following intravenous thrombolysis, not rt-TPA/alteplase, which is a thrombolytic. This fails the Treatment Alignment gate as the drug class is different. Additionally, while NIHSS scores are mentioned, the abstract does not provide evidence of a heterogeneous treatment effect specifically related to NIHSS in the context of rt-TPA/alteplase.",
+          "evidence_quote": "The safety and efficacy of tirofiban administration following intravenous thrombolysis (IVT) in patients with acute ischemic stroke (AIS) remain controversial in clinical practice.",
+          "stance": "neutral",
+          "pmid": "41197575",
+          "title": "The safety and efficacy of tirofiban therapy after intravenous thrombolysis in patients with acute ischemic stroke: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with 'nihss'. It mentions stroke severity but does not provide evidence of an interaction between treatment effect and 'nihss'. Instead, it adjusts for stroke severity without specifying 'nihss' as an interaction term.",
+          "evidence_quote": "Neither age nor stroke severity significantly influenced the slope of the relationship between benefit and time to treatment initiation.",
+          "stance": "neutral",
+          "pmid": "27507856",
+          "title": "Effects of Alteplase for Acute Stroke on the Distribution of Functional Outcomes: A Pooled Analysis of 9 Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'nihss'. It mentions that no pretreatment information, including stroke severity, significantly affected patients' response to t-PA. The analysis did not find any interaction with 'nihss' or any other specific feature that would guide patient selection for t-PA therapy.",
+          "evidence_quote": "No pretreatment information significantly affected patients response to t-PA.",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Pre-existing platelet inhibition from antiplatelets may augment alteplase efficacy by promoting thrombus destabilization.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (antiplatelet OR aspirin OR clopidogrel OR \"platelet inhibition\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 14,
+      "support_count": 3,
+      "conflict_count": 0,
+      "neutral_count": 11,
+      "support_percentage": 21.428571428571427,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.21428571428571427,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of dual antiplatelet therapy (clopidogrel and aspirin) on stroke outcomes, not rt-TPA/alteplase. It does not address the interaction with 'antiplat_rand' in the context of thrombolytic treatment. Therefore, it fails the Treatment Alignment gate.",
+          "evidence_quote": "The abstract discusses clopidogrel and aspirin therapy, not rt-TPA/alteplase.",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'antiplat_rand'. It focuses on the effects of antithrombotic agents on tPA-induced hemorrhagic transformation in preclinical studies, not on the functional outcome after stroke or the specific interaction with pre-existing platelet inhibition.",
+          "evidence_quote": "The abstract does not mention 'antiplat_rand' or any specific interaction with pre-existing platelet inhibition.",
+          "stance": "neutral",
+          "pmid": "33283576",
+          "title": "Antithrombotic Agents for tPA-Induced Cerebral Hemorrhage: A Systematic Review and Meta-Analysis of Preclinical Studies.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'antiplat_rand'. It discusses the overall effects of thrombolysis and mentions aspirin or heparin but does not provide evidence of interaction with pre-existing platelet inhibition from antiplatelets.",
+          "evidence_quote": "The available data do not allow much further subgroup analysis, although there is reasonable evidence to indicate that aspirin or heparin given within 24 hours of thrombolytic therapy causes a significant increase in intracranial hemorrhage and death.",
+          "stance": "neutral",
+          "pmid": "11552059",
+          "title": "Overview of Cochrane thrombolysis meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract evaluates the interaction between prior antiplatelet use and the efficacy of rt-TPA in acute ischemic stroke patients, which aligns with the target feature 'antiplat_rand'. There is a trend towards a reduced probability of a good outcome in prior antiplatelet users, but it is not statistically significant (P = 0.06). This suggests a possible interaction, but the evidence is not strong enough to be conclusive.",
+          "evidence_quote": "Pooled analysis demonstrated a clear trend that previous antiplatelet users had a reduced probability of good outcome, although it was not conventionally statistically significant (OR 0.86; 95% CI 0.73-1.01; P = 0.06).",
+          "stance": "support",
+          "pmid": "25545076",
+          "title": "Prior antiplatelet agent use and outcomes after intravenous thrombolysis with recombinant tissue plasminogen activator in acute ischemic stroke: a meta-analysis of cohort studies and randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) but instead focuses on GP IIb-IIIa inhibitors, which are a different drug class. Additionally, there is no mention of the target feature 'antiplat_rand' or any interaction involving it.",
+          "evidence_quote": "The abstract discusses GP IIb-IIIa inhibitors and their safety profile, not rt-TPA / alteplase or antiplat_rand.",
+          "stance": "neutral",
+          "pmid": "32727211",
+          "title": "Safety of Glycoprotein IIb-IIIa Inhibitors Used in Stroke-Related Treatment: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the target feature 'antiplat_rand'. Instead, it investigates the interaction between treatment effects and systolic blood pressure (SBP) subgroups. The study focuses on the effect of dual antiplatelet versus intravenous alteplase on early neurological deterioration, not on functional outcomes like mRS/dependency/death. Therefore, it fails the feature alignment gate.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract suggests a trend towards improved functional outcomes with antiplatelet pretreatment, indicating a possible interaction with the treatment. However, the association was not statistically significant, and the evidence is not strong enough to confirm a definitive interaction.",
+          "evidence_quote": "In adjusted analysis, the results confirmed a nonsignificant association between antiplatelet pretreatment and a higher risk of sICH and mortality, but demonstrated that antiplatelet pretreatment tended to improve functional independence and favorable functional outcome.",
+          "stance": "support",
+          "pmid": "30807235",
+          "title": "Effect of antiplatelet pretreatment on safety and efficacy outcomes in acute ischemic stroke patients after intravenous thrombolysis: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction between treatment and baseline NIHSS score, not the target feature 'antiplat_rand'. The study focuses on the comparison between dual antiplatelet therapy and alteplase based on stroke severity, not pre-existing platelet inhibition.",
+          "evidence_quote": "A significant interaction effect was identified between the baseline NIHSS and treatment for the primary outcome (P = 0.048).",
+          "stance": "neutral",
+          "pmid": "40760234",
+          "title": "Dual Antiplatelet Therapy Versus Alteplase for Mild Stroke with Admission NIHSS Score 0-3 Versus 4-5: A Secondary Analysis of the ARAMIS Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract evaluates the interaction between alteplase treatment and prior antiplatelet therapy (antiplat_rand) in acute ischemic stroke patients. There is a trend towards better outcomes with low-dose alteplase in patients on prior antiplatelet therapy, but the interaction is not statistically significant (P-trend = 0.053). This suggests a possible interaction that requires further investigation.",
+          "evidence_quote": "Although not significant (P-trend, 0.053), low-dose alteplase tended to have better outcomes than standard-dose alteplase in those on prior APT compared with those not using APT.",
+          "stance": "support",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on dual versus single antiplatelet therapy, which is a different drug class. Additionally, the abstract does not address the interaction with the specific feature 'antiplat_rand'.",
+          "evidence_quote": "The abstract discusses dual antiplatelet therapy (DAPT) versus single antiplatelet therapy (SAPT) and does not mention rt-TPA / alteplase or the feature 'antiplat_rand'.",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment, nor does it assess functional outcomes after stroke. Instead, it focuses on antiplatelet therapy and bleeding outcomes, which do not align with the specified treatment and outcome criteria. Additionally, there is no mention of the target feature 'antiplat_rand'.",
+          "evidence_quote": "There was no interaction of any lipid component level with randomized antiplatelet therapy.",
+          "stance": "neutral",
+          "pmid": "30293332",
+          "title": "[The association of lipid profile and bleeding in patients with minor stroke or transient ischemic attack on antiplatelet therapy: subgroup analysis of CHANCE].",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with 'antiplat_rand'. It mentions the incidence of symptomatic intracranial haemorrhage in relation to previous antiplatelet drug use, but this does not constitute an evaluation of treatment effect heterogeneity with respect to 'antiplat_rand'. The focus is on the incidence of a side effect rather than the functional outcome or treatment efficacy.",
+          "evidence_quote": "The incidence of symptomatic intracranial haemorrhage seemed to be independent of previous antiplatelet drug use (no: 2.41, 1.09-5.33; yes: 2.33, 0.79-6.90; p=0.962)",
+          "stance": "neutral",
+          "pmid": "19850525",
+          "title": "Stroke treatment with alteplase given 3.0-4.5 h after onset of acute ischaemic stroke (ECASS III): additional outcomes and subgroup analysis of a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'antiplat_rand'. It focuses on the timing of alteplase administration in acute myocardial infarction, not on pre-existing platelet inhibition or its interaction with alteplase in stroke patients.",
+          "evidence_quote": "The abstract does not mention 'antiplat_rand' or any interaction with pre-existing platelet inhibition.",
+          "stance": "neutral",
+          "pmid": "8103874",
+          "title": "Late Assessment of Thrombolytic Efficacy (LATE) study with alteplase 6-24 hours after onset of acute myocardial infarction.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment effect of rt-TPA/alteplase in acute ischemic stroke patients, nor does it assess functional outcomes after stroke. Additionally, it does not investigate the interaction with the target feature 'antiplat_rand'. Instead, it focuses on a different population (STEMI patients) and treatment strategy (invasive vs. conservative post-thrombolysis approach).",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "15380963",
+          "title": "Routine invasive strategy within 24 hours of thrombolysis versus ischaemia-guided conservative approach for acute myocardial infarction with ST-segment elevation (GRACIA-1): a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "antiplat_rand",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Patients on antiplatelet agents might have thrombi with properties more amenable to alteplase-mediated clot lysis due to altered composition and reactivity.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (antiplatelet OR aspirin OR clopidogrel OR \"platelet inhibition\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 14,
+      "support_count": 3,
+      "conflict_count": 0,
+      "neutral_count": 11,
+      "support_percentage": 21.428571428571427,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.21428571428571427,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of dual antiplatelet therapy (clopidogrel and aspirin) on stroke outcomes, not rt-TPA/alteplase. Additionally, it does not address the interaction with 'antiplat_rand' but rather focuses on timing of antiplatelet therapy initiation.",
+          "evidence_quote": "The abstract discusses clopidogrel and aspirin therapy, not rt-TPA/alteplase, and does not mention 'antiplat_rand'.",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'antiplat_rand'. It focuses on the effects of antithrombotic agents on tPA-induced hemorrhagic transformation in preclinical studies, not on the functional outcome after stroke or the specific interaction with 'antiplat_rand'.",
+          "evidence_quote": "The abstract does not mention 'antiplat_rand' or any specific interaction with it.",
+          "stance": "neutral",
+          "pmid": "33283576",
+          "title": "Antithrombotic Agents for tPA-Induced Cerebral Hemorrhage: A Systematic Review and Meta-Analysis of Preclinical Studies.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'antiplat_rand'. It discusses the overall effects of thrombolysis and mentions interactions with other variables such as timing of treatment and concurrent use of aspirin or heparin, but not with 'antiplat_rand'.",
+          "evidence_quote": "The available data do not allow much further subgroup analysis, although there is reasonable evidence to indicate that aspirin or heparin given within 24 hours of thrombolytic therapy causes a significant increase in intracranial hemorrhage and death.",
+          "stance": "neutral",
+          "pmid": "11552059",
+          "title": "Overview of Cochrane thrombolysis meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract evaluates the interaction between prior antiplatelet agent use (antiplat_rand) and the treatment with rt-TPA/alteplase in acute ischemic stroke patients. There is a trend towards a reduced probability of a good functional outcome in patients with prior antiplatelet use, but it is not statistically significant (P = 0.06). This suggests a possible interaction, but it does not meet the threshold for strong statistical evidence.",
+          "evidence_quote": "Pooled analysis demonstrated a clear trend that previous antiplatelet users had a reduced probability of good outcome, although it was not conventionally statistically significant (OR 0.86; 95% CI 0.73-1.01; P = 0.06).",
+          "stance": "support",
+          "pmid": "25545076",
+          "title": "Prior antiplatelet agent use and outcomes after intravenous thrombolysis with recombinant tissue plasminogen activator in acute ischemic stroke: a meta-analysis of cohort studies and randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) but instead focuses on GP IIb-IIIa inhibitors, which are a different drug class. Additionally, there is no mention of the target feature 'antiplat_rand' or any interaction involving it.",
+          "evidence_quote": "The abstract discusses GP IIb-IIIa inhibitors and their effects, not rt-TPA / alteplase or antiplat_rand.",
+          "stance": "neutral",
+          "pmid": "32727211",
+          "title": "Safety of Glycoprotein IIb-IIIa Inhibitors Used in Stroke-Related Treatment: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the target feature 'antiplat_rand'. Instead, it investigates the interaction between treatment effects and systolic blood pressure subgroups, which is not aligned with the specified target feature.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract discusses the effect of antiplatelet pretreatment on outcomes after intravenous thrombolysis, which aligns with the target feature 'antiplat_rand'. It mentions a trend towards improved functional outcomes with antiplatelet pretreatment, but does not provide explicit statistical evidence of a significant interaction (P < 0.05) with 'antiplat_rand'. Therefore, it suggests a possible interaction but lacks strong statistical support.",
+          "evidence_quote": "In adjusted analysis, the results confirmed a nonsignificant association between antiplatelet pretreatment and a higher risk of sICH and mortality, but demonstrated that antiplatelet pretreatment tended to improve functional independence and favorable functional outcome.",
+          "stance": "support",
+          "pmid": "30807235",
+          "title": "Effect of antiplatelet pretreatment on safety and efficacy outcomes in acute ischemic stroke patients after intravenous thrombolysis: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction between treatment and stroke severity (NIHSS score), not the target feature 'antiplat_rand'. The study compares dual antiplatelet therapy with alteplase, which does not align with the specific interaction of interest involving 'antiplat_rand'.",
+          "evidence_quote": "A significant interaction effect was identified between the baseline NIHSS and treatment for the primary outcome (P = 0.048).",
+          "stance": "neutral",
+          "pmid": "40760234",
+          "title": "Dual Antiplatelet Therapy Versus Alteplase for Mild Stroke with Admission NIHSS Score 0-3 Versus 4-5: A Secondary Analysis of the ARAMIS Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "reasoning": "The abstract evaluates the interaction between alteplase treatment and prior antiplatelet therapy (antiplat_rand) in acute ischemic stroke patients. Although the interaction P-value is not less than 0.05, there is a trend suggesting that low-dose alteplase may have better outcomes in patients on prior antiplatelet therapy compared to those not on it. This suggests a possible heterogeneous treatment effect related to the target feature.",
+          "evidence_quote": "Although not significant (P-trend, 0.053), low-dose alteplase tended to have better outcomes than standard-dose alteplase in those on prior APT compared with those not using APT (mRS scores of 2-6; OR, 0.84; 95% CI, 0.62-1.12 versus OR, 1.16; 95% CI, 0.99-1.36).",
+          "stance": "support",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of dual versus single antiplatelet therapy, not rt-TPA/alteplase (intravenous thrombolysis), and does not address functional outcomes after stroke. Additionally, it does not specifically evaluate the interaction with 'antiplat_rand'.",
+          "evidence_quote": "The abstract does not mention 'antiplat_rand' or evaluate rt-TPA/alteplase.",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment, nor does it assess functional outcomes after stroke. Instead, it focuses on antiplatelet therapy and bleeding outcomes, which do not align with the specified treatment or outcome criteria. Additionally, the interaction with 'antiplat_rand' is not evaluated.",
+          "evidence_quote": "There was no interaction of any lipid component level with randomized antiplatelet therapy.",
+          "stance": "neutral",
+          "pmid": "30293332",
+          "title": "[The association of lipid profile and bleeding in patients with minor stroke or transient ischemic attack on antiplatelet therapy: subgroup analysis of CHANCE].",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not specifically evaluate the interaction with 'antiplat_rand'. It mentions the independence of symptomatic intracranial haemorrhage from previous antiplatelet drug use, but this does not constitute an evaluation of treatment effect heterogeneity based on 'antiplat_rand'.",
+          "evidence_quote": "The incidence of symptomatic intracranial haemorrhage seemed to be independent of previous antiplatelet drug use (no: 2.41, 1.09-5.33; yes: 2.33, 0.79-6.90; p=0.962).",
+          "stance": "neutral",
+          "pmid": "19850525",
+          "title": "Stroke treatment with alteplase given 3.0-4.5 h after onset of acute ischaemic stroke (ECASS III): additional outcomes and subgroup analysis of a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the target feature 'antiplat_rand'. It focuses on the timing of alteplase administration in acute myocardial infarction, not on acute ischemic stroke or the interaction with antiplatelet use.",
+          "evidence_quote": "The abstract does not mention 'antiplat_rand' or any interaction with antiplatelet agents.",
+          "stance": "neutral",
+          "pmid": "8103874",
+          "title": "Late Assessment of Thrombolytic Efficacy (LATE) study with alteplase 6-24 hours after onset of acute myocardial infarction.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'antiplat_rand'. It focuses on a different clinical context (STEMI) and treatment strategy (invasive vs. conservative post-thrombolysis approach) rather than the effect of rt-TPA/alteplase on functional outcomes after stroke. Additionally, it does not mention or analyze the specific feature 'antiplat_rand'.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'antiplat_rand'.",
+          "stance": "neutral",
+          "pmid": "15380963",
+          "title": "Routine invasive strategy within 24 hours of thrombolysis versus ischaemia-guided conservative approach for acute myocardial infarction with ST-segment elevation (GRACIA-1): a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "TACI strokes are frequently complicated by larger infarct zones and necessitate rapid recanalization to avert severe outcomes.",
+        "evidence_level": "strong"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (\"stroke subtype\" OR cardioembolic OR embolic) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 9,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 9,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on treatment delays as potential effect modifiers, not stroke type.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction involving this specific feature.",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' or the functional outcome after stroke. It focuses on the association of a genetic polymorphism with ischemic stroke risk, not on treatment effects or interactions with Stroke Type: TACI (Total Anterior Circulation Infarct).",
+          "evidence_quote": "The abstract does not mention Stroke Type: TACI (Total Anterior Circulation Infarct) or any treatment effects related to it.",
+          "stance": "neutral",
+          "pmid": "23326456",
+          "title": "The -7351C/T polymorphism in the TPA gene and ischemic stroke risk: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. Instead, it focuses on cardioembolic stroke (CE) patients and does not mention TACI as a feature of interest.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "stance": "neutral",
+          "pmid": "38220173",
+          "title": "Magnetic Resonance Imaging-Guided Intravenous Thrombolysis in Cardioembolic Stroke Patients With Unknown Time of Onset\u3000- Subanalysis of the THAWS Randomized Control Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment rt-TPA / alteplase specifically, nor does it address functional outcomes after stroke or the interaction with Stroke Type: TACI (Total Anterior Circulation Infarct). It focuses on neuroimaging techniques for acute ischemic stroke, which does not align with the required treatment, outcome, or feature interaction.",
+          "evidence_quote": "The abstract discusses advances in neuroimaging for AIS, focusing on penumbral and collateral imaging, without mentioning rt-TPA, functional outcomes, or TACI.",
+          "stance": "neutral",
+          "pmid": "30322595",
+          "title": "Advanced Neuroimaging of Acute Ischemic Stroke: Penumbra and Collateral Assessment.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the effect of intravenous thrombolysis in young patients with ischemic stroke according to etiological subtype and stroke severity, but does not mention TACI specifically.",
+          "evidence_quote": "The subgroup analysis showed that the beneficial effect of IVT on outcomes was significant in moderate-severe strokes (NIHSS \u22658) and in cardioembolism.",
+          "stance": "neutral",
+          "pmid": "23943341",
+          "title": "Intravenous thrombolysis in stroke patients under 55\u00a0years of age: is there a different effect according to etiology and severity?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the timing of DOAC initiation and prior reperfusion therapy, not on the specific stroke type interaction with rt-TPA/alteplase.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction involving this specific feature.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' but instead focuses on antiplatelet therapy (DAPT vs SAPT). Additionally, it does not address the functional outcome after stroke or the specific interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "evidence_quote": "The abstract discusses dual antiplatelet therapy (DAPT) and single antiplatelet therapy (SAPT) in patients with non-cardioembolic stroke, without mention of TACI or thrombolytic treatment.",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the use of heparin during mechanical thrombectomy and its effects, not on rt-TPA/alteplase or the specific stroke type TACI.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction with it.",
+          "stance": "neutral",
+          "pmid": "39326281",
+          "title": "Reevaluating the role of heparin during mechanical thrombectomy for acute ischemic stroke: Increased risks without functional benefit.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It discusses treatment of acute vertebrobasilar occlusion, which is a different stroke type. Additionally, the treatment involves a combination of abciximab and intra-arterial tPA, not the specified intravenous rt-TPA/alteplase.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or evaluate its interaction with the treatment.",
+          "stance": "neutral",
+          "pmid": "11988626",
+          "title": "Acute basilar artery occlusion treated with combined intravenous Abciximab and intra-arterial tissue plasminogen activator: report of 3 cases.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Variability in collateral circulation could impact regenerative therapy success among stroke subtypes.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (\"stroke subtype\" OR cardioembolic OR embolic) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 9,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 9,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on treatment delays as potential effect modifiers, not stroke type.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction involving this specific feature.",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' nor does it assess functional outcomes after stroke. Additionally, it does not specifically address the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. Instead, it focuses on genetic polymorphisms and their association with ischemic stroke risk, which is unrelated to the specified treatment and outcome.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "23326456",
+          "title": "The -7351C/T polymorphism in the TPA gene and ischemic stroke risk: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. Instead, it focuses on cardioembolic stroke (CE) patients and compares them to non-CE patients. There is no mention of TACI or its interaction with the treatment.",
+          "evidence_quote": "The abstract discusses the interaction between treatment and cardioembolic stroke (CE) versus non-CE groups, not TACI.",
+          "stance": "neutral",
+          "pmid": "38220173",
+          "title": "Magnetic Resonance Imaging-Guided Intravenous Thrombolysis in Cardioembolic Stroke Patients With Unknown Time of Onset\u3000- Subanalysis of the THAWS Randomized Control Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' specifically, nor does it address functional outcomes after stroke or the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on neuroimaging techniques for assessing ischemic penumbra and collateral vessels, which does not align with the required treatment, outcome, or feature interaction.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or its interaction with treatment effects.",
+          "stance": "neutral",
+          "pmid": "30322595",
+          "title": "Advanced Neuroimaging of Acute Ischemic Stroke: Penumbra and Collateral Assessment.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the effect of intravenous thrombolysis in young patients with ischemic stroke according to etiological subtype and stroke severity, but does not mention TACI specifically.",
+          "evidence_quote": "The subgroup analysis showed that the beneficial effect of IVT on outcomes was significant in moderate-severe strokes (NIHSS \u22658) and in cardioembolism.",
+          "stance": "neutral",
+          "pmid": "23943341",
+          "title": "Intravenous thrombolysis in stroke patients under 55\u00a0years of age: is there a different effect according to etiology and severity?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the timing of DOAC initiation and prior reperfusion therapy, not on the specific stroke type or its interaction with rt-TPA/alteplase.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction involving this specific feature.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' but instead focuses on antiplatelet therapy. Additionally, it does not address the functional outcome after stroke or the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "evidence_quote": "The abstract discusses dual versus single antiplatelet therapy and does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the effects of heparin during mechanical thrombectomy and its interaction with intravenous thrombolysis, but does not mention or analyze the specific stroke type TACI.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "stance": "neutral",
+          "pmid": "39326281",
+          "title": "Reevaluating the role of heparin during mechanical thrombectomy for acute ischemic stroke: Increased risks without functional benefit.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It discusses treatment of acute vertebrobasilar occlusion with a combination of abciximab and intra-arterial tPA, which does not align with the specified treatment of rt-TPA/alteplase (intravenous thrombolysis) for TACI. Additionally, the abstract does not mention TACI or any interaction with this specific stroke type.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "11988626",
+          "title": "Acute basilar artery occlusion treated with combined intravenous Abciximab and intra-arterial tissue plasminogen activator: report of 3 cases.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "TACI's dense clot burden might be less responsive to alteplase alone, requiring alternative or combinational therapeutic strategies.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (\"stroke subtype\" OR cardioembolic OR embolic) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 9,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 9,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on treatment delays as potential effect modifiers for intravenous thrombolysis before mechanical thrombectomy, without mentioning stroke type as a variable of interest.",
+          "evidence_quote": "The abstract does not provide any quote or evidence involving Stroke Type: TACI (Total Anterior Circulation Infarct).",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' or the functional outcome after stroke. It focuses on the association of a genetic polymorphism with ischemic stroke risk, not on treatment effects or interactions with Stroke Type: TACI.",
+          "evidence_quote": "The abstract does not mention Stroke Type: TACI (Total Anterior Circulation Infarct) or any treatment effects related to it.",
+          "stance": "neutral",
+          "pmid": "23326456",
+          "title": "The -7351C/T polymorphism in the TPA gene and ischemic stroke risk: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on cardioembolic stroke patients and does not mention TACI specifically.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of Stroke Type: TACI (Total Anterior Circulation Infarct).",
+          "stance": "neutral",
+          "pmid": "38220173",
+          "title": "Magnetic Resonance Imaging-Guided Intravenous Thrombolysis in Cardioembolic Stroke Patients With Unknown Time of Onset\u3000- Subanalysis of the THAWS Randomized Control Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment rt-TPA / alteplase specifically, nor does it address functional outcomes after stroke or the interaction with Stroke Type: TACI (Total Anterior Circulation Infarct). It focuses on neuroimaging techniques for acute ischemic stroke, which does not align with the required treatment, outcome, or feature interaction.",
+          "evidence_quote": "The abstract does not mention Stroke Type: TACI (Total Anterior Circulation Infarct) or any interaction with it.",
+          "stance": "neutral",
+          "pmid": "30322595",
+          "title": "Advanced Neuroimaging of Acute Ischemic Stroke: Penumbra and Collateral Assessment.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the effect of intravenous thrombolysis in young patients with ischemic stroke according to etiology and severity, but does not mention TACI as a specific subgroup or feature of interest.",
+          "evidence_quote": "The subgroup analysis showed that the beneficial effect of IVT on outcomes was significant in moderate-severe strokes (NIHSS \u22658) and in cardioembolism.",
+          "stance": "neutral",
+          "pmid": "23943341",
+          "title": "Intravenous thrombolysis in stroke patients under 55\u00a0years of age: is there a different effect according to etiology and severity?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the timing of DOAC initiation in relation to prior reperfusion therapy, not on the treatment effect of rt-TPA/alteplase or its interaction with TACI.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction involving this specific feature.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' but instead focuses on antiplatelet therapy. Additionally, it does not address the functional outcome after stroke or the specific interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It focuses on the use of heparin during mechanical thrombectomy and its effects, not on rt-TPA/alteplase or the specific stroke type TACI.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or any interaction with it.",
+          "stance": "neutral",
+          "pmid": "39326281",
+          "title": "Reevaluating the role of heparin during mechanical thrombectomy for acute ischemic stroke: Increased risks without functional benefit.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'Stroke Type: TACI (Total Anterior Circulation Infarct)'. It discusses treatment of acute vertebrobasilar occlusion with a combination of abciximab and intra-arterial tPA, which is not aligned with the target treatment of intravenous rt-TPA/alteplase. Additionally, the stroke type discussed is not TACI.",
+          "evidence_quote": "The abstract does not mention 'Stroke Type: TACI (Total Anterior Circulation Infarct)' or evaluate its interaction with the treatment.",
+          "stance": "neutral",
+          "pmid": "11988626",
+          "title": "Acute basilar artery occlusion treated with combined intravenous Abciximab and intra-arterial tissue plasminogen activator: report of 3 cases.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Older age correlates with elevated comorbidities and reduced resilience to ischemic injury, complicating recovery.",
+        "evidence_level": "strong"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (age OR elderly OR geriatric) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 20,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates endovascular thrombectomy, not rt-TPA/alteplase (intravenous thrombolysis), which fails the Treatment Alignment gate. Additionally, while the abstract discusses age, it does not specifically evaluate the interaction of age with rt-TPA/alteplase treatment effect.",
+          "evidence_quote": "Endovascular thrombectomy led to significantly reduced disability at 90 days compared with control (adjusted cOR 2.49, 95% CI 1.76-3.53; p<0.0001).",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates dual antiplatelet therapy (clopidogrel and aspirin) rather than rt-TPA/alteplase, which fails the Treatment Alignment gate. Additionally, the abstract does not discuss functional outcomes after stroke or any interaction with age, failing both the Outcome and Feature Alignment gates.",
+          "evidence_quote": "The abstract does not mention rt-TPA/alteplase or any interaction with age.",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It mentions adjustment for age but does not provide evidence of a heterogeneous treatment effect based on age. The primary focus is on the efficacy and safety of nerinetide, not rt-TPA/alteplase, and the interaction observed is related to alteplase use, not age.",
+          "evidence_quote": "The analysis was done in the intention-to-treat population and adjusted for age, sex, baseline National Institutes of Health Stroke Scale score, ASPECTS, occlusion location, site, alteplase use, and declared first device.",
+          "stance": "neutral",
+          "pmid": "32087818",
+          "title": "Efficacy and safety of nerinetide for the treatment of acute ischaemic stroke (ESCAPE-NA1): a multicentre, double-blind, randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on comparing low-dose versus standard-dose tPA and includes a subgroup analysis by ethnicity, but does not mention age as a factor in the analysis.",
+          "evidence_quote": "In a subgroup analysis by ethnicity, there was no significant difference between patients of Asian and non-Asian descent for any of the end points.",
+          "stance": "neutral",
+          "pmid": "29224744",
+          "title": "Low- versus Standard-Dose Intravenous Tissue-Type Plasminogen Activator for Acute Ischemic Stroke: An Updated Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on comparing low-dose versus standard-dose alteplase in terms of efficacy and safety outcomes, without any mention of age as a factor influencing treatment effects.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of age as a variable affecting the treatment outcome.",
+          "stance": "neutral",
+          "pmid": "38185108",
+          "title": "Low-Dose versus Standard-Dose Alteplase in Bridging Therapy for Large Vessel Stroke: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment delays as potential effect modifiers, not age.",
+          "evidence_quote": "We hypothesized that treatment delays might be an effect modifier regarding risks and benefits of intravenous thrombolysis (IVT) before mechanical thrombectomy (MT).",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on endovascular treatment versus medical care alone, including rt-PA, but does not specifically analyze age as a factor influencing treatment outcomes.",
+          "evidence_quote": "The abstract does not mention age as a variable in the analysis of treatment effects.",
+          "stance": "neutral",
+          "pmid": "27091337",
+          "title": "Endovascular treatment versus medical care alone for ischaemic stroke: systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract focuses on sex differences in treatment and outcomes in the NOR-TEST trial, not on age. Although age is mentioned in the context of the proportion of women over 80, there is no evaluation of treatment interaction specifically with age. The study does not provide evidence for a heterogeneous treatment effect based on age.",
+          "evidence_quote": "Of 1100 patients enrolled, 40% were women, and in patients aged >80 years, the proportion of women was greater than men (19% vs. 14%; p = 0.02).",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It only mentions adjusting for baseline age in the analysis but does not provide evidence of a treatment effect interaction with age. The focus is on time-to-randomization and reperfusion, not age.",
+          "evidence_quote": "Ordinal logistic regression adjusted for baseline age and National Institutes of Health Stroke Scale score was used to analyze functional improvement.",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction of treatment effect with the presence of hyperdense artery sign (HAS) rather than age. There is no mention of age as a modifying factor for the treatment effect.",
+          "evidence_quote": "Treatment-by-HAS interaction was observed for the primary outcome (<i>P</i> < .001), whereby a shift in favor of better outcomes with added intravenous alteplase occurred in participants with HAS.",
+          "stance": "neutral",
+          "pmid": "35819327",
+          "title": "CT Hyperdense Artery Sign and the Effect of Alteplase in Endovascular Thrombectomy after Acute Stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates endovascular treatment (EVT) compared to general treatment, which includes rt-PA, but does not focus on the treatment effect of rt-PA alone. Additionally, while age is mentioned as a factor that could improve clinical outcomes following EVT, the abstract does not provide explicit statistical evidence of a heterogeneous treatment effect specifically for rt-PA based on age.",
+          "evidence_quote": "Age\u200a<\u200a70, National Institutes of Health Stroke Scale \u226520 and maximum delay for invention>5\u200ahours could improve clinical outcomes following EVT.",
+          "stance": "neutral",
+          "pmid": "32443338",
+          "title": "Endovascular treatment or general treatment: how should acute ischemic stroke patients choose to benefit from them the most?: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It mentions baseline variables but does not provide any analysis or evidence of treatment effect differing by age. The study focuses on the addition of argatroban or eptifibatide to IV thrombolysis and their effects on outcomes, without addressing age as a modifying factor.",
+          "evidence_quote": "There was no benefit in any subgroup.",
+          "stance": "neutral",
+          "pmid": "41071964",
+          "title": "Thrombolysis Alone vs With Argatroban or Eptifibatide: A Prespecified Subgroup Analysis of the MOST Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on the interaction between vessel status and treatment effect, not age.",
+          "evidence_quote": "Treatment with alteplase was associated with higher odds of favorable outcomes with no heterogeneity of treatment effect between patients with AVO and patent vessel (p = 0.56), or between patients with and without LVO (p = 0.69).",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly states that there were no significant differences in treatment effect across age subgroups (\u2264 65 or > 65). This indicates that the treatment effect was consistent across age groups, thus showing no heterogeneous treatment effect based on age.",
+          "evidence_quote": "Moreover, there were no significant differences in the following of the subgroups assessed: (a) microsphere or microbubble use, (b) Ultrasound frequency (2 MHz or < 2 MHz), (c) transcranial Doppler (TCD) duration (1 h or 2 h), (d) age (\u2264 65 or > 65).",
+          "stance": "neutral",
+          "pmid": "31214876",
+          "title": "Does the administration of sonothrombolysis along with tissue plasminogen activator improve outcomes in acute ischemic stroke? A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It mentions adjusting for age but does not provide evidence of a heterogeneous treatment effect based on age. The focus is on ASPECTS and thrombolytic type, not age.",
+          "evidence_quote": "Mixed-effects logistic regression was used to assess the association of ASPECTS with outcomes and if these associations were modified by thrombolytic type after adjusting for age, sex, and baseline stroke severity.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. Instead, it focuses on the interaction between treatment effects and systolic blood pressure (SBP) in stroke patients. The target feature for interaction in the hypothesis is age, which is not addressed in the abstract.",
+          "evidence_quote": "The abstract investigates the effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the effect of intra-arterial therapy in patients with contraindications for intravenous alteplase, without specifically analyzing age as a factor.",
+          "evidence_quote": "These patients were older and more often had atrial fibrillation or other vascular comorbidity.",
+          "stance": "neutral",
+          "pmid": "27048692",
+          "title": "Treatment in patients who are not eligible for intravenous alteplase: MR CLEAN subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the effect of intravenous glyburide, not rt-TPA/alteplase, and does not specifically analyze the interaction with age. It only mentions age as an independent variable without providing evidence of interaction with treatment effect.",
+          "evidence_quote": "Participants enrolled in CHARM and aged \u226470\u2009years were included if a <125\u2009ml ischemic core lesion volume was measured by computed tomography perfusion or diffusion magnetic resonance imaging.",
+          "stance": "neutral",
+          "pmid": "40476628",
+          "title": "Intravenous Glyburide in Medical and Endovascular-Treated Large-Core Stroke: A Subgroup Analysis of the CHARM Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment effect heterogeneity in patients with tandem lesions and emergent carotid artery stenting, without mentioning age as a factor in the analysis.",
+          "evidence_quote": "No evidence in the abstract discusses age as a variable for interaction analysis.",
+          "stance": "neutral",
+          "pmid": "38409874",
+          "title": "Value of intravenous alteplase before thrombectomy among patients with tandem lesions and emergent carotid artery stenting: A subgroup analysis of the SWIFT DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' but instead focuses on minimally invasive surgery for intracerebral haemorrhage. Additionally, the abstract does not discuss age as a feature of interaction but rather focuses on cerebral small vessel disease features.",
+          "evidence_quote": "The abstract does not mention age as a variable of interest or interaction.",
+          "stance": "neutral",
+          "pmid": "37949482",
+          "title": "Cerebral small vessel disease modifies outcomes after minimally invasive surgery for intracerebral haemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Age-related metabolic changes may modify drug pharmacokinetics, influencing alteplase's clinical benefits.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (age OR elderly OR geriatric) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 20,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates endovascular thrombectomy, not rt-TPA/alteplase (intravenous thrombolysis), which fails the Treatment Alignment gate. Although the outcome of functional status after stroke is aligned, the treatment under investigation is not the same as the one specified in the hypothesis.",
+          "evidence_quote": "Endovascular thrombectomy led to significantly reduced disability at 90 days compared with control (adjusted cOR 2.49, 95% CI 1.76-3.53; p<0.0001).",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) but instead focuses on dual antiplatelet therapy with clopidogrel and aspirin. Additionally, the abstract does not address functional outcomes after stroke, such as mRS/dependency/death, nor does it evaluate the interaction with age. Therefore, it fails the mandatory alignment gates for treatment, outcome, and feature.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It mentions adjustment for age but does not provide evidence of interaction specifically with age. The focus is on nerinetide and its interaction with alteplase, not on age-related effects.",
+          "evidence_quote": "The analysis was done in the intention-to-treat population and adjusted for age, sex, baseline National Institutes of Health Stroke Scale score, ASPECTS, occlusion location, site, alteplase use, and declared first device.",
+          "stance": "neutral",
+          "pmid": "32087818",
+          "title": "Efficacy and safety of nerinetide for the treatment of acute ischaemic stroke (ESCAPE-NA1): a multicentre, double-blind, randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on comparing low-dose versus standard-dose tPA and includes a subgroup analysis by ethnicity, but does not mention age as a factor in the analysis.",
+          "evidence_quote": "In a subgroup analysis by ethnicity, there was no significant difference between patients of Asian and non-Asian descent for any of the end points.",
+          "stance": "neutral",
+          "pmid": "29224744",
+          "title": "Low- versus Standard-Dose Intravenous Tissue-Type Plasminogen Activator for Acute Ischemic Stroke: An Updated Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on comparing low-dose versus standard-dose alteplase in the context of bridging therapy for large vessel occlusion, without mentioning age as a factor in the analysis.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of age-related interaction with the treatment effect.",
+          "stance": "neutral",
+          "pmid": "38185108",
+          "title": "Low-Dose versus Standard-Dose Alteplase in Bridging Therapy for Large Vessel Stroke: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment delays as potential effect modifiers, not age.",
+          "evidence_quote": "We hypothesized that treatment delays might be an effect modifier regarding risks and benefits of intravenous thrombolysis (IVT) before mechanical thrombectomy (MT).",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on endovascular treatment versus medical care alone for ischemic stroke, including intravenous rt-PA, but does not provide any analysis or evidence regarding age as a modifying factor for treatment effect.",
+          "evidence_quote": "The abstract does not mention age as a factor in the analysis of treatment effects.",
+          "stance": "neutral",
+          "pmid": "27091337",
+          "title": "Endovascular treatment versus medical care alone for ischaemic stroke: systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates sex differences in treatment effects and outcomes, not age. Although age is mentioned in the context of patient demographics, there is no analysis or evidence provided regarding the interaction between age and treatment effect.",
+          "evidence_quote": "Of 1100 patients enrolled, 40% were women, and in patients aged >80 years, the proportion of women was greater than men (19% vs. 14%; p = 0.02).",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It only mentions adjusting for baseline age but does not provide evidence of a treatment effect interaction with age.",
+          "evidence_quote": "Ordinal logistic regression adjusted for baseline age and National Institutes of Health Stroke Scale score was used to analyze functional improvement.",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction of treatment effect with the presence of hyperdense artery sign (HAS) rather than age. There is no mention of age as a modifying factor for the treatment effect of alteplase in the study.",
+          "evidence_quote": "Treatment-by-HAS interaction was observed for the primary outcome (<i>P</i> < .001), whereby a shift in favor of better outcomes with added intravenous alteplase occurred in participants with HAS.",
+          "stance": "neutral",
+          "pmid": "35819327",
+          "title": "CT Hyperdense Artery Sign and the Effect of Alteplase in Endovascular Thrombectomy after Acute Stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates endovascular treatment (EVT) compared to general treatment, which includes rt-PA, but does not specifically analyze the treatment effect of rt-PA alone. Additionally, while age is mentioned as a factor for improved outcomes with EVT, the abstract does not provide evidence of a heterogeneous treatment effect specifically for rt-PA based on age.",
+          "evidence_quote": "Age\u200a<\u200a70, National Institutes of Health Stroke Scale \u226520 and maximum delay for invention>5\u200ahours could improve clinical outcomes following EVT.",
+          "stance": "neutral",
+          "pmid": "32443338",
+          "title": "Endovascular treatment or general treatment: how should acute ischemic stroke patients choose to benefit from them the most?: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the addition of argatroban or eptifibatide to IV thrombolysis and does not provide any analysis or evidence regarding age as a modifying factor for treatment effect.",
+          "evidence_quote": "There was no benefit in any subgroup. Outcomes in patients treated with IVT-O were not improved by adding either argatroban or eptifibatide.",
+          "stance": "neutral",
+          "pmid": "41071964",
+          "title": "Thrombolysis Alone vs With Argatroban or Eptifibatide: A Prespecified Subgroup Analysis of the MOST Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on vessel occlusion status as the feature of interest for treatment effect heterogeneity, not age.",
+          "evidence_quote": "Treatment with alteplase was associated with higher odds of favorable outcomes with no heterogeneity of treatment effect between patients with AVO and patent vessel (p = 0.56), or between patients with and without LVO (p = 0.69).",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly states that there were no significant differences in treatment effect across age subgroups (\u2264 65 or > 65). This indicates that the treatment effect of rt-TPA/alteplase was consistent across different age groups, thus showing no heterogeneous treatment effect based on age.",
+          "evidence_quote": "Moreover, there were no significant differences in the following of the subgroups assessed: (a) microsphere or microbubble use, (b) Ultrasound frequency (2 MHz or < 2 MHz), (c) transcranial Doppler (TCD) duration (1 h or 2 h), (d) age (\u2264 65 or > 65).",
+          "stance": "neutral",
+          "pmid": "31214876",
+          "title": "Does the administration of sonothrombolysis along with tissue plasminogen activator improve outcomes in acute ischemic stroke? A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It mentions adjusting for age but does not provide evidence of an interaction between age and treatment effect. The focus is on ASPECTS and thrombolytic type, not age.",
+          "evidence_quote": "Mixed-effects logistic regression was used to assess the association of ASPECTS with outcomes and if these associations were modified by thrombolytic type after adjusting for age, sex, and baseline stroke severity.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. Instead, it focuses on the interaction between treatment effects and systolic blood pressure (SBP) in stroke patients. The target feature for interaction in the hypothesis is age, which is not addressed in the abstract.",
+          "evidence_quote": "The abstract evaluates the effect of dual antiplatelet versus intravenous alteplase on early neurological deterioration in stroke patients based on systolic blood pressure subgroups, not age.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the comparison of intra-arterial therapy effectiveness in patients with and without intravenous alteplase treatment, without specifically analyzing age as a modifying factor.",
+          "evidence_quote": "These patients were older and more often had atrial fibrillation or other vascular comorbidity.",
+          "stance": "neutral",
+          "pmid": "27048692",
+          "title": "Treatment in patients who are not eligible for intravenous alteplase: MR CLEAN subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) but instead focuses on intravenous glyburide. Additionally, while the abstract mentions age as an independent variable, it does not specifically evaluate the interaction of treatment effect with age. Therefore, it fails the Treatment Alignment and Feature Alignment gates.",
+          "evidence_quote": "Participants enrolled in CHARM and aged \u226470\u2009years were included if a <125\u2009ml ischemic core lesion volume was measured by computed tomography perfusion or diffusion magnetic resonance imaging.",
+          "stance": "neutral",
+          "pmid": "40476628",
+          "title": "Intravenous Glyburide in Medical and Endovascular-Treated Large-Core Stroke: A Subgroup Analysis of the CHARM Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment effect heterogeneity in patients with tandem lesions and emergent ICA stenting, without mentioning age as a factor in the analysis.",
+          "evidence_quote": "No evidence in the abstract discusses age as a variable of interaction.",
+          "stance": "neutral",
+          "pmid": "38409874",
+          "title": "Value of intravenous alteplase before thrombectomy among patients with tandem lesions and emergent carotid artery stenting: A subgroup analysis of the SWIFT DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the effects of minimally invasive surgery and cerebral small vessel disease features on outcomes, not on rt-TPA/alteplase or age-related interactions.",
+          "evidence_quote": "The abstract does not mention age as a factor in the analysis of treatment effects.",
+          "stance": "neutral",
+          "pmid": "37949482",
+          "title": "Cerebral small vessel disease modifies outcomes after minimally invasive surgery for intracerebral haemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Age-related shifts in vascular architecture and regulation affect alteplase's impact efficacy and safety profile.",
+        "evidence_level": "strong"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (age OR elderly OR geriatric) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 20,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 20,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates endovascular thrombectomy, not rt-TPA/alteplase (intravenous thrombolysis), which fails the Treatment Alignment gate. Additionally, while the abstract discusses age, it does not evaluate the interaction of age with rt-TPA/alteplase treatment effect.",
+          "evidence_quote": "Endovascular thrombectomy led to significantly reduced disability at 90 days compared with control (adjusted cOR 2.49, 95% CI 1.76-3.53; p<0.0001).",
+          "stance": "neutral",
+          "pmid": "26898852",
+          "title": "Endovascular thrombectomy after large-vessel ischaemic stroke: a meta-analysis of individual patient data from five randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates a different drug class (antiplatelet therapy) and does not involve rt-TPA/alteplase (intravenous thrombolysis). Additionally, it does not assess functional outcomes after stroke or interactions with age.",
+          "evidence_quote": "The abstract discusses clopidogrel and aspirin, not rt-TPA/alteplase, and does not mention age as a factor in treatment interaction.",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of the treatment effect with age. It mentions adjustment for age but does not provide evidence of treatment effect modification specifically by age. The focus is on nerinetide and its interaction with alteplase, not on age-related effects.",
+          "evidence_quote": "The analysis was done in the intention-to-treat population and adjusted for age, sex, baseline National Institutes of Health Stroke Scale score, ASPECTS, occlusion location, site, alteplase use, and declared first device.",
+          "stance": "neutral",
+          "pmid": "32087818",
+          "title": "Efficacy and safety of nerinetide for the treatment of acute ischaemic stroke (ESCAPE-NA1): a multicentre, double-blind, randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on comparing low-dose versus standard-dose tPA and includes a subgroup analysis by ethnicity, but does not mention age as a factor in the analysis.",
+          "evidence_quote": "In a subgroup analysis by ethnicity, there was no significant difference between patients of Asian and non-Asian descent for any of the end points.",
+          "stance": "neutral",
+          "pmid": "29224744",
+          "title": "Low- versus Standard-Dose Intravenous Tissue-Type Plasminogen Activator for Acute Ischemic Stroke: An Updated Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on comparing low-dose versus standard-dose alteplase in the context of bridging therapy for large vessel occlusion, without any mention of age-related analysis or interaction.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of age as a factor in the analysis.",
+          "stance": "neutral",
+          "pmid": "38185108",
+          "title": "Low-Dose versus Standard-Dose Alteplase in Bridging Therapy for Large Vessel Stroke: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment delays as potential effect modifiers, not age. Therefore, it fails the FEATURE ALIGNMENT gate.",
+          "evidence_quote": "We hypothesized that treatment delays might be an effect modifier regarding risks and benefits of intravenous thrombolysis (IVT) before mechanical thrombectomy (MT).",
+          "stance": "neutral",
+          "pmid": "35902234",
+          "title": "Time to treatment with bridging intravenous alteplase before endovascular treatment:subanalysis of the randomized controlled SWIFT-DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on endovascular treatment and its comparison with medical care alone, including rt-PA, but does not specifically analyze age as a factor influencing treatment outcomes.",
+          "evidence_quote": "The abstract does not mention age as a variable of interest or provide any analysis related to age.",
+          "stance": "neutral",
+          "pmid": "27091337",
+          "title": "Endovascular treatment versus medical care alone for ischaemic stroke: systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates sex differences in treatment effects and outcomes, not age. Although age is mentioned in the context of the proportion of women over 80, there is no analysis of treatment interaction specifically with age.",
+          "evidence_quote": "Heterogeneity in treatment was evaluated by including an interaction term in the model. Of 1100 patients enrolled, 40% were women, and in patients aged >80 years, the proportion of women was greater than men (19% vs. 14%; p = 0.02).",
+          "stance": "neutral",
+          "pmid": "34564893",
+          "title": "Sex differences in the Norwegian Tenecteplase Trial (NOR-TEST).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It only mentions adjusting for baseline age but does not provide any evidence of interaction between age and treatment effect. The focus is on time-to-randomization and reperfusion, not age.",
+          "evidence_quote": "Ordinal logistic regression adjusted for baseline age and National Institutes of Health Stroke Scale score was used to analyze functional improvement.",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction of treatment effect with the presence of a hyperdense artery sign (HAS) rather than age. There is no mention of age as a modifying factor for the treatment effect of alteplase in the study.",
+          "evidence_quote": "Treatment-by-HAS interaction was observed for the primary outcome (P < .001), whereby a shift in favor of better outcomes with added intravenous alteplase occurred in participants with HAS.",
+          "stance": "neutral",
+          "pmid": "35819327",
+          "title": "CT Hyperdense Artery Sign and the Effect of Alteplase in Endovascular Thrombectomy after Acute Stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract primarily evaluates endovascular treatment (EVT) compared to general treatment, which includes rt-PA, but does not specifically evaluate the effect of rt-PA alone. Additionally, while age is mentioned as a factor that could improve clinical outcomes following EVT, the abstract does not provide specific evidence of an interaction between age and the effect of rt-PA on functional outcomes.",
+          "evidence_quote": "Age\u200a<\u200a70, National Institutes of Health Stroke Scale \u226520 and maximum delay for invention>5\u200ahours could improve clinical outcomes following EVT.",
+          "stance": "neutral",
+          "pmid": "32443338",
+          "title": "Endovascular treatment or general treatment: how should acute ischemic stroke patients choose to benefit from them the most?: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the addition of argatroban or eptifibatide to IV thrombolysis and does not specifically analyze age as a factor influencing treatment outcomes.",
+          "evidence_quote": "There was no benefit in any subgroup. Outcomes in patients treated with IVT-O were not improved by adding either argatroban or eptifibatide.",
+          "stance": "neutral",
+          "pmid": "41071964",
+          "title": "Thrombolysis Alone vs With Argatroban or Eptifibatide: A Prespecified Subgroup Analysis of the MOST Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on the interaction between vessel occlusion status and treatment effect, not age.",
+          "evidence_quote": "Treatment with alteplase was associated with higher odds of favorable outcomes with no heterogeneity of treatment effect between patients with AVO and patent vessel (p = 0.56), or between patients with and without LVO (p = 0.69).",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly states that there were no significant differences in treatment effect across age subgroups (\u2264 65 or > 65). This indicates that the treatment effect was consistent across age groups, thus showing no heterogeneous treatment effect based on age.",
+          "evidence_quote": "Moreover, there were no significant differences in the following of the subgroups assessed: (a) microsphere or microbubble use, (b) Ultrasound frequency (2 MHz or < 2 MHz), (c) transcranial Doppler (TCD) duration (1 h or 2 h), (d) age (\u2264 65 or > 65).",
+          "stance": "neutral",
+          "pmid": "31214876",
+          "title": "Does the administration of sonothrombolysis along with tissue plasminogen activator improve outcomes in acute ischemic stroke? A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It mentions adjusting for age but does not provide evidence of an interaction between age and treatment effect. The focus is on ASPECTS and thrombolytic type interaction.",
+          "evidence_quote": "Mixed-effects logistic regression was used to assess the association of ASPECTS with outcomes and if these associations were modified by thrombolytic type after adjusting for age, sex, and baseline stroke severity.",
+          "stance": "neutral",
+          "pmid": "39086232",
+          "title": "The treatment effect across ASPECTS in acute ischemic stroke: Analysis from the AcT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with age. It focuses on the interaction between treatment effect and systolic blood pressure, not age. Therefore, it fails the feature alignment gate.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the comparison of intra-arterial therapy effectiveness and safety in patients with and without intravenous alteplase treatment, without specifically analyzing age as a factor.",
+          "evidence_quote": "These patients were older and more often had atrial fibrillation or other vascular comorbidity.",
+          "stance": "neutral",
+          "pmid": "27048692",
+          "title": "Treatment in patients who are not eligible for intravenous alteplase: MR CLEAN subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) but instead focuses on intravenous glyburide. Additionally, while the abstract mentions age as an independent variable, it does not specifically evaluate the interaction of treatment effect with age. Therefore, it fails the Treatment Alignment and Feature Alignment gates.",
+          "evidence_quote": "Participants enrolled in CHARM and aged \u226470\u2009years were included if a <125\u2009ml ischemic core lesion volume was measured by computed tomography perfusion or diffusion magnetic resonance imaging.",
+          "stance": "neutral",
+          "pmid": "40476628",
+          "title": "Intravenous Glyburide in Medical and Endovascular-Treated Large-Core Stroke: A Subgroup Analysis of the CHARM Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with age. It focuses on treatment effect heterogeneity in patients with tandem lesions and emergent carotid artery stenting, without mentioning age as a factor in the analysis.",
+          "evidence_quote": "No evidence in the abstract discusses age as a variable for interaction analysis.",
+          "stance": "neutral",
+          "pmid": "38409874",
+          "title": "Value of intravenous alteplase before thrombectomy among patients with tandem lesions and emergent carotid artery stenting: A subgroup analysis of the SWIFT DIRECT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction of treatment effect with age. It focuses on the effects of minimally invasive surgery and cerebral small vessel disease features on outcomes, not on the use of rt-TPA/alteplase or age-related interactions.",
+          "evidence_quote": "The abstract discusses the interaction of treatment effects with cerebral small vessel disease features, not age.",
+          "stance": "neutral",
+          "pmid": "37949482",
+          "title": "Cerebral small vessel disease modifies outcomes after minimally invasive surgery for intracerebral haemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "dbprand",
+      "mechanism": {
+        "mechanism_type": "physiological",
+        "description": "Elevated BP may elevate hemorrhagic conversion risk post-thrombolysis.",
+        "evidence_level": "strong"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (\"diastolic blood pressure\" OR \"blood pressure\" OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 16,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 16,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses blood pressure management in patients treated with IV tPA, but does not mention 'dbprand' or its interaction with treatment outcomes.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "39819210",
+          "title": "Effects of blood pressure lowering in patients treated with intravenous thrombolysis before endovascular thrombectomy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction of treatment effect with systolic blood pressure (SBP) rather than 'dbprand'. The study focuses on the effect of dual antiplatelet versus intravenous alteplase on early neurological deterioration, not on functional outcomes like mRS/dependency/death. Additionally, the abstract does not mention 'dbprand' as a feature of interest.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It discusses the effects of alteplase dose and blood pressure lowering on outcomes, but the interaction analysis is based on vascular obstruction status/site, not 'dbprand'.",
+          "evidence_quote": "There were no differences in associations of alteplase dose or blood pressure lowering and outcomes across NVO/MVO/LVO groups.",
+          "stance": "neutral",
+          "pmid": "34096413",
+          "title": "Thrombolysis outcomes according to arterial characteristics of acute ischemic stroke by alteplase dose and blood pressure target.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific target feature 'dbprand'. It discusses predictors of excellent outcome after thrombolysis, but 'dbprand' is not mentioned or analyzed as a factor in the study.",
+          "evidence_quote": "Predictors of 3-month mRS \u22641 were no medical history of hypertension (OR 2.43; 95% CI 1.74 to 3.38; p=0.007); no current smoking (OR 2.76; 95%\u2009CI 1.79 to 4.26; p=0.02); onset-to-IVT time (OR 0.47 per hour increase; 95%\u2009CI 0.23 to 0.78; p=0.003); diffusion-weighted imaging (DWI) volume (OR 0.78 per 10\u2009mL increase; 95%\u2009CI 0.68 to 0.89; p=0.0004); presence of susceptibility vessel sign (SVS) (OR 7.89; 95%\u2009CI 1.65 to 37.78; p=0.01) and SVS length (OR 0.87 per mm increase; 95%\u2009CI 0.80 to 0.94; p=0.001).",
+          "stance": "neutral",
+          "pmid": "34103393",
+          "title": "Clinical imaging factors of excellent outcome after thrombolysis in large-vessel stroke: a THRACE subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. Instead, it examines the interaction of systolic blood pressure (SBP) with treatment outcomes, not 'dbprand'.",
+          "evidence_quote": "We assessed whether IVT modified the associations of SBP with these outcomes using multiplicative interaction terms.",
+          "stance": "neutral",
+          "pmid": "37641554",
+          "title": "Admission blood pressure and clinical outcomes in patients with acute ischaemic stroke treated with intravenous alteplase and endovascular treatment versus endovascular treatment alone: A MR CLEAN-NO IV substudy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on nerinetide, which is a different drug class. Additionally, the abstract does not address the functional outcome after stroke or the specific interaction with 'dbprand'.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific target feature 'dbprand'. It focuses on the use of direct oral anticoagulants (DOACs) and their interaction with intravenous thrombolysis, not on blood pressure or its randomization ('dbprand').",
+          "evidence_quote": "The abstract does not mention 'dbprand' or any related blood pressure interaction.",
+          "stance": "neutral",
+          "pmid": "38102548",
+          "title": "Meta-analysis of outcomes following intravenous thrombolysis in patients with ischemic stroke on direct oral anticoagulants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses treatment effects related to intravenous thrombolysis and functional outcomes but does not mention or analyze 'dbprand' as a variable or interaction term.",
+          "evidence_quote": "No mention of 'dbprand' or its interaction with treatment effects in the abstract.",
+          "stance": "neutral",
+          "pmid": "32335550",
+          "title": "Bridging versus Direct Mechanical Thrombectomy in Acute Ischemic Stroke: A Subgroup Pooled Meta-Analysis for Time of Intervention, Eligibility, and Study Design.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. Instead, it focuses on the interaction with prior antiplatelet therapy (APT) use. There is no mention of 'dbprand' or its interaction with the treatment effect.",
+          "evidence_quote": "The abstract discusses the effects of different doses of intravenous alteplase according to prior APT use, not 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific target feature 'dbprand'. It focuses on lipid-lowering pretreatment and its effects on outcomes in acute ischemic stroke patients treated with intravenous thrombolysis, without mentioning 'dbprand'.",
+          "evidence_quote": "No evidence in the abstract discusses 'dbprand' or its interaction with the treatment.",
+          "stance": "neutral",
+          "pmid": "29705803",
+          "title": "Lipid-Lowering Pretreatment and Outcome Following Intravenous Thrombolysis for Acute Ischaemic Stroke: A Post Hoc Analysis of the Enhanced Control of Hypertension and Thrombolysis Stroke Study Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It mentions age-by-blood pressure interaction but does not specify 'dbprand' as a feature. Therefore, it fails the feature alignment gate.",
+          "evidence_quote": "Apart from t-PA therapy, outcome was related to age-by-deficit severity interaction, diabetes, age-by-blood pressure interaction, and early CT findings.",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses general risk factors and treatment outcomes related to stroke but does not provide any evidence or analysis regarding the interaction of 'dbprand' with rt-TPA treatment.",
+          "evidence_quote": "The abstract does not mention 'dbprand' or any interaction with it.",
+          "stance": "neutral",
+          "pmid": "9745637",
+          "title": "Stroke and the aging of the brain and the arteries.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'dbprand'. It focuses on the timing of DOAC initiation and prior reperfusion therapy, not on the effect of rt-TPA/alteplase or the specific feature 'dbprand'.",
+          "evidence_quote": "The abstract did not mention 'dbprand' or evaluate its interaction with the treatment.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' but rather focuses on a different intervention related to intracerebral hemorrhage evacuation. Additionally, the abstract does not mention or evaluate the interaction with the specific feature 'dbprand'.",
+          "evidence_quote": "The abstract discusses factors associated with DWI lesions and outcomes in the context of intracerebral hemorrhage, not ischemic stroke or the specific feature 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "38040993",
+          "title": "Mechanistic Evaluation of Diffusion Weighted Hyperintense Lesions After Large Spontaneous Intracerebral Hemorrhage: A Subgroup Analysis of MISTIE III.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' nor does it address the functional outcome after stroke. Additionally, it does not mention or evaluate the interaction with the target feature 'dbprand'. Instead, it discusses the influence of ejection fraction on biomarker expression and response to spironolactone in heart failure patients.",
+          "evidence_quote": "The abstract discusses the influence of ejection fraction on biomarker expression and response to spironolactone, not related to 'dbprand' or the specified treatment and outcome.",
+          "stance": "neutral",
+          "pmid": "35199421",
+          "title": "Influence of ejection fraction on biomarker expression and response to spironolactone in people at risk of heart failure: findings from the HOMAGE trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It mentions blood pressure management but does not provide evidence of a treatment effect interaction with 'dbprand'.",
+          "evidence_quote": "Blood pressure management is important during the first 24 hours after thrombolysis. Systolic blood pressures between 140 - 150 mmHg correlate with low bleeding rates.",
+          "stance": "neutral",
+          "pmid": "20927688",
+          "title": "[Acute stroke treatment - an update].",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "dbprand",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "BP levels can influence the systemic distribution and metabolization rate of alteplase, altering treatment effectiveness.",
+        "evidence_level": "moderate"
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA) AND (stroke OR \"ischemic stroke\")) AND (\"diastolic blood pressure\" OR \"blood pressure\" OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"subgroup effect\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "strict",
+      "total_abstracts": 16,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 16,
+      "support_percentage": 0.0,
+      "conflict_percentage": 0.0,
+      "support_ratio": 0.0,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses blood pressure management in relation to IV tPA treatment but does not mention 'dbprand' or its interaction with treatment outcomes.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "39819210",
+          "title": "Effects of blood pressure lowering in patients treated with intravenous thrombolysis before endovascular thrombectomy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates the interaction of treatment effect with systolic blood pressure (SBP), not with the target feature 'dbprand'. Additionally, the study compares dual antiplatelet therapy with intravenous alteplase, which does not align with the specified treatment of rt-TPA/alteplase alone.",
+          "evidence_quote": "We investigated effect of dual antiplatelet vs intravenous alteplase on END in SBP subgroups and their interaction effect with subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It discusses the effects of alteplase dose and blood pressure lowering on outcomes, but does not mention 'dbprand' as a feature of interest or interaction term.",
+          "evidence_quote": "There were no differences in associations of alteplase dose or blood pressure lowering and outcomes across NVO/MVO/LVO groups (mRS shift: low versus standard alteplase dose 0.84 [0.54-1.30]/0.48 [0.25-0.91]/0.99 [0.75-2.09], P<sub>interaction</sub>\u2009=\u20090.28; intensive versus standard blood pressure lowering 1.32 [0.74-2.38]/0.78 [0.31-1.94]/1.24 [0.64-2.41], P<sub>interaction</sub>\u2009=\u20090.41), except for a borderline significant difference for intensive blood pressure lowering and increased early neurologic deterioration (0.63 [0.14-2.72]/0.17 [0.02-1.47]/2.69 [0.90-8.04], P<sub>interaction</sub>\u2009=\u20090.05).",
+          "stance": "neutral",
+          "pmid": "34096413",
+          "title": "Thrombolysis outcomes according to arterial characteristics of acute ischemic stroke by alteplase dose and blood pressure target.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses predictors of excellent outcomes after thrombolysis, but none of these predictors include 'dbprand'. Therefore, it fails the Feature Alignment gate.",
+          "evidence_quote": "Predictors of 3-month mRS \u22641 were no medical history of hypertension; no current smoking; onset-to-IVT time; diffusion-weighted imaging (DWI) volume; presence of susceptibility vessel sign (SVS) and SVS length.",
+          "stance": "neutral",
+          "pmid": "34103393",
+          "title": "Clinical imaging factors of excellent outcome after thrombolysis in large-vessel stroke: a THRACE subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It evaluates the interaction of systolic blood pressure (SBP) with outcomes after treatment, but does not mention 'dbprand' as a feature of interest or interaction.",
+          "evidence_quote": "Our main result was that we found no effect modification by IVT (p-values for interaction, mRS\u2009=\u20090.94; sICH\u2009=\u20090.26; successful reperfusion\u2009=\u20090.58).",
+          "stance": "neutral",
+          "pmid": "37641554",
+          "title": "Admission blood pressure and clinical outcomes in patients with acute ischaemic stroke treated with intravenous alteplase and endovascular treatment versus endovascular treatment alone: A MR CLEAN-NO IV substudy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) as the treatment. Instead, it focuses on nerinetide, which is a different drug class. Additionally, the abstract does not mention the target feature 'dbprand' or evaluate functional outcomes after stroke, such as mRS, dependency, or death.",
+          "evidence_quote": "N/A",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It focuses on the use of direct oral anticoagulants (DOACs) and their interaction with intravenous thrombolysis, not blood pressure levels or their influence on treatment effectiveness.",
+          "evidence_quote": "The abstract does not mention 'dbprand' or any related interaction with blood pressure levels.",
+          "stance": "neutral",
+          "pmid": "38102548",
+          "title": "Meta-analysis of outcomes following intravenous thrombolysis in patients with ischemic stroke on direct oral anticoagulants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It focuses on comparing different reperfusion strategies (IVT + EVT vs. dEVT) and does not mention 'dbprand' or its interaction with treatment effects.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "32335550",
+          "title": "Bridging versus Direct Mechanical Thrombectomy in Acute Ischemic Stroke: A Subgroup Pooled Meta-Analysis for Time of Intervention, Eligibility, and Study Design.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It focuses on the interaction with prior antiplatelet therapy (APT) use, which is not the target feature. Therefore, it fails the feature alignment gate.",
+          "evidence_quote": "The abstract discusses the effects of different doses of intravenous alteplase according to prior APT use, not 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific target feature 'dbprand'. Instead, it focuses on the interaction with lipid-lowering pretreatment and its effects on outcomes in acute ischemic stroke patients treated with alteplase. There is no mention of 'dbprand' or its interaction with the treatment.",
+          "evidence_quote": "No differences in key efficacy or safety outcomes were seen in patients with and without lipid-lowering pretreatment between low- and standard-dose alteplase arms.",
+          "stance": "neutral",
+          "pmid": "29705803",
+          "title": "Lipid-Lowering Pretreatment and Outcome Following Intravenous Thrombolysis for Acute Ischaemic Stroke: A Post Hoc Analysis of the Enhanced Control of Hypertension and Thrombolysis Stroke Study Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction specifically with 'dbprand'. It mentions an age-by-blood pressure interaction but does not provide evidence of an interaction with 'dbprand'. Therefore, it fails the Feature Alignment gate.",
+          "evidence_quote": "No pretreatment information significantly affected patients response to t-PA.",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with the specific feature 'dbprand'. It discusses general risk factors and treatment outcomes related to stroke but does not mention or analyze 'dbprand' as a variable influencing treatment effect.",
+          "evidence_quote": "The abstract does not provide any evidence or mention of 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "9745637",
+          "title": "Stroke and the aging of the brain and the arteries.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the interaction with 'dbprand'. It focuses on the timing of DOAC initiation and prior reperfusion therapy, not on the treatment effect of rt-TPA/alteplase or the specific feature 'dbprand'.",
+          "evidence_quote": "The abstract discusses prior reperfusion therapy and timing of DOAC initiation, with no mention of 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' for acute ischemic stroke patients. Instead, it discusses the use of alteplase in the context of intracerebral hemorrhage, which is a different condition. Additionally, the abstract does not mention or evaluate the interaction with the specific feature 'dbprand'.",
+          "evidence_quote": "The abstract does not mention 'dbprand' or evaluate its interaction with the treatment.",
+          "stance": "neutral",
+          "pmid": "38040993",
+          "title": "Mechanistic Evaluation of Diffusion Weighted Hyperintense Lesions After Large Spontaneous Intracerebral Hemorrhage: A Subgroup Analysis of MISTIE III.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate the treatment 'rt-TPA / alteplase (intravenous thrombolysis)' nor does it assess the functional outcome after stroke. Additionally, it does not mention or evaluate the interaction with the target feature 'dbprand'. Instead, it discusses the influence of left ventricular ejection fraction on the response to spironolactone in heart failure patients.",
+          "evidence_quote": "The abstract discusses the influence of ejection fraction on biomarker expression and response to spironolactone, not the interaction with 'dbprand'.",
+          "stance": "neutral",
+          "pmid": "35199421",
+          "title": "Influence of ejection fraction on biomarker expression and response to spironolactone in people at risk of heart failure: findings from the HOMAGE trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not mention 'dbprand' or any interaction with it. It discusses blood pressure management in general but does not evaluate the interaction of 'dbprand' with the treatment effect of rt-TPA/alteplase.",
+          "evidence_quote": "Blood pressure management is important during the first 24 hours after thrombolysis. Systolic blood pressures between 140 - 150 mmHg correlate with low bleeding rates.",
+          "stance": "neutral",
+          "pmid": "20927688",
+          "title": "[Acute stroke treatment - an update].",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

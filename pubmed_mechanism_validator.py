@@ -1,8 +1,13 @@
 """
 PubMed Mechanism Validator
 ===========================
-This script extracts PubMed abstracts and analyzes whether they support or 
+This script extracts PubMed abstracts and analyzes whether they support or
 conflict with proposed mechanisms from hypothesis files.
+
+It uses a tiered search strategy:
+1. Tier 1: Specific Mechanism (Treatment + Feature + Mechanism Keywords)
+2. Tier 2: Strict Interaction (Treatment + Feature + Interaction Terms)
+3. Tier 3: Broader Search (Treatment + Feature + No Interaction Filter)
 
 Usage:
     python pubmed_mechanism_validator.py --input hypotheses_with_shap_XLearner.json --output validation_results.json
@@ -13,9 +18,8 @@ import json
 import argparse
 import time
 import os
-from typing import List, Dict, Any
-from collections import defaultdict
 import re
+from typing import List, Dict, Any, Optional
 
 try:
     from Bio import Entrez
@@ -33,729 +37,738 @@ except ImportError:
 
 
 def load_local_env(env_path: str = ".env") -> None:
-    """Load simple KEY=VALUE pairs from a local .env file into os.environ.
-
-    Existing environment variables are not overwritten.
-    """
+    """Load simple KEY=VALUE pairs from a local .env file into os.environ."""
     if not os.path.exists(env_path):
         return
-
     try:
         with open(env_path, 'r') as f:
             for raw_line in f:
                 line = raw_line.strip()
                 if not line or line.startswith('#') or '=' not in line:
                     continue
-
                 key, value = line.split('=', 1)
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-
-                if key and key not in os.environ:
-                    os.environ[key] = value
+                os.environ[key.strip()] = value.strip().strip('"').strip("'")
     except Exception:
         pass
 
 
 class PubMedMechanismValidator:
     """Validates mechanisms against PubMed literature."""
-    
-    def __init__(self, email: str = "research@example.com", api_key: str = None, max_abstracts: int = 30):
-        """
-        Initialize the validator.
-        
-        Args:
-            email: Email for PubMed API (required by NCBI)
-            api_key: OpenAI API key for LLM-based analysis
-            max_abstracts: Maximum number of abstracts to retrieve per mechanism
-        """
+
+    def __init__(self, email: str = "research@example.com", api_key: str = None, max_abstracts: int = 30, model: str = "gpt-5-mini", api_provider: str = "openai", api_base_url: str = None):
         if Entrez:
             Entrez.email = email
         self.api_key = api_key
         self.max_abstracts = max_abstracts
-        
-        # Initialize OpenAI client if API key provided
+        self.model = model
         self.openai_client = None
-        if api_key and openai_available:
-            self.openai_client = OpenAI(api_key=api_key)
-    
+        if openai_available:
+            if api_provider == "openrouter":
+                resolved_key = api_key or os.environ.get('OPENROUTER_API_KEY')
+                base_url = api_base_url or "https://openrouter.ai/api/v1"
+                if resolved_key:
+                    self.openai_client = OpenAI(api_key=resolved_key, base_url=base_url)
+            elif api_key:
+                kwargs = {"api_key": api_key}
+                if api_base_url:
+                    kwargs["base_url"] = api_base_url
+                self.openai_client = OpenAI(**kwargs)
+
     def load_hypotheses(self, filepath: str) -> Dict[str, Any]:
-        """Load hypotheses from JSON file."""
         with open(filepath, 'r') as f:
             return json.load(f)
-    
-    def construct_search_query(self, feature_name: str, mechanism: Dict[str, Any], dataset: str) -> str:
-        """
-        Construct a highly specific PubMed search query using directional logic 
-        and mechanistic 'bridge' terms to reduce neutral results.
-        """
-        description = mechanism.get('description', '').lower()
-        mechanism_type = mechanism.get('mechanism_type', '').lower()
-        # Extract effect direction from the hypothesis data if available
-        effect_direction = mechanism.get('effect_direction', 'unknown')
 
-        # Enhanced Dataset-specific configurations with mechanistic bridges
+    def get_cohort_trial_context(self, dataset: str) -> Dict[str, str]:
+        """Return original cohort treatment/outcome context used for strict validation."""
+        contexts = {
+            'ist3': {
+                'population': 'acute ischemic stroke patients',
+                'treatment': 'rt-TPA / alteplase (intravenous thrombolysis)',
+                'comparator': 'control/placebo or no rt-TPA',
+                'outcome': 'functional outcome after stroke (e.g., mRS/dependency/death)'
+            },
+            'accord': {
+                'population': 'type 2 diabetes patients at high cardiovascular risk',
+                'treatment': 'intensive blood pressure control strategy',
+                'comparator': 'standard blood pressure control strategy',
+                'outcome': 'major cardiovascular outcomes and mortality'
+            },
+            'crash_2': {
+                'population': 'adult trauma patients with or at risk of significant hemorrhage',
+                'treatment': 'tranexamic acid (TXA)',
+                'comparator': 'placebo/no TXA',
+                'outcome': 'death due to bleeding / mortality outcomes'
+            },
+            'sprint': {
+                'population': 'hypertensive adults at increased cardiovascular risk',
+                'treatment': 'intensive systolic blood pressure target (<120 mmHg)',
+                'comparator': 'standard systolic blood pressure target (<140 mmHg)',
+                'outcome': 'major cardiovascular events and all-cause mortality'
+            }
+        }
+        return contexts.get(dataset, {
+            'population': f'{dataset} cohort population',
+            'treatment': 'cohort treatment strategy',
+            'comparator': 'cohort comparator/control strategy',
+            'outcome': 'cohort primary clinical outcome'
+        })
+
+    def _normalize_text(self, text: str) -> str:
+        """Normalize text for robust fuzzy key matching."""
+        return re.sub(r'[^a-z0-9]+', ' ', text.lower()).strip()
+
+    def _generated_name_to_feature_key(self, feature_name: str) -> str:
+        """Map feature names generated in single_cohort_analysis.py to canonical keys."""
+        normalized = self._normalize_text(feature_name)
+        generated_aliases = {
+            'stroke type taci total anterior circulation infarct': 'stroketype',
+            'stroke type paci partial anterior circulation infarct': 'stroketype',
+            'stroke type laci lacunar infarct': 'stroketype',
+            'stroke type poci posterior circulation infarct': 'stroketype',
+            'stroke type other': 'stroketype',
+            'infarct visible on ct no': 'infarct_0',
+            'infarct visible on ct possibly yes': 'infarct_1',
+            'infarct visible on ct definitely yes': 'infarct_2',
+            'injury type blunt': 'iinjurytype_1',
+            'injury type penetrating': 'iinjurytype_2',
+            'stroke type': 'stroketype',
+            'iinjurytype': 'iinjurytype',
+            'stroke severity nihss score': 'nihss'
+        }
+        return generated_aliases.get(normalized, '')
+
+    def _extract_mechanism_keywords(self, description: str) -> str:
+        """Extract high-value keywords from the mechanism description."""
+        stop_words = {
+            'the', 'and', 'with', 'that', 'this', 'for', 'from', 'are', 'may', 'can',
+            'have', 'has', 'was', 'were', 'but', 'not', 'patients', 'clinical',
+            'outcome', 'effect', 'treatment', 'associated', 'higher', 'lower',
+            'increased', 'decreased', 'risk', 'benefit', 'efficacy', 'likely',
+            'potential', 'potentially', 'due', 'because', 'mechanism', 'level',
+            'study', 'trial', 'analysis', 'group', 'subgroup'
+        }
+
+        # Clean punctuation and split
+        clean_desc = re.sub(r'[^a-zA-Z0-9\s]', '', description.lower())
+        tokens = clean_desc.split()
+
+        # Keep specific words (4+ chars, not stop words)
+        keywords = [t for t in tokens if len(t) > 3 and t not in stop_words]
+
+        # Prioritize unique, longer words as they are usually more specific
+        unique_keywords = sorted(list(set(keywords)), key=len, reverse=True)
+
+        # Take top 5
+        selected = unique_keywords[:5]
+
+        if not selected:
+            return ""
+
+        return ' OR '.join([f'"{kw}"' for kw in selected])
+
+    def _find_feature_query(self, feature_name: str, feature_map: Dict[str, str]) -> str:
+        """Find best feature query from config using exact, alias, and fuzzy matching."""
+        if not feature_name:
+            return ""
+
+        # 1. Exact/Lower match
+        if feature_name in feature_map: return feature_map[feature_name]
+        if feature_name.lower() in feature_map: return feature_map[feature_name.lower()]
+
+        # 2. Mapped generated keys
+        generated_key = self._generated_name_to_feature_key(feature_name)
+        if generated_key and generated_key in feature_map: return feature_map[generated_key]
+
+        # 3. Handle "feature:value"
+        if ':' in feature_name:
+            base_name = feature_name.split(':', 1)[0].strip().lower()
+            if base_name in feature_map: return feature_map[base_name]
+
+        # 4. Alias cues
+        normalized_feature = self._normalize_text(feature_name)
+        alias_checks = [
+            ('nihss', ['nihss', 'stroke severity']),
+            ('time_to_treatment', ['time to treatment', 'onset to treatment', 'treatment delay']),
+            ('ninjurytime', ['time from injury', 'injury to treatment', 'treatment delay']),
+            ('age', ['age', 'elderly', 'older']),
+            ('iage', ['age', 'elderly', 'older']),
+            ('sbprand', ['systolic blood pressure']),
+            ('sbp', ['systolic blood pressure']),
+            ('isbp', ['systolic blood pressure', 'initial blood pressure', 'hypotension']),
+            ('dbprand', ['diastolic blood pressure']),
+            ('dbp', ['diastolic blood pressure']),
+            ('hba1c', ['hba1c', 'glycated hemoglobin']),
+            ('gfr', ['gfr', 'egfr', 'renal function']),
+            ('egfr', ['gfr', 'egfr', 'renal function']),
+            ('glucose', ['glucose', 'hyperglycemia']),
+            ('glur', ['glucose', 'fasting glucose', 'glycemia']),
+            ('fpg', ['fasting plasma glucose', 'fpg', 'glucose']),
+            ('trr', ['triglyceride', 'triglycerides']),
+            ('trig', ['triglyceride', 'triglycerides']),
+            ('vldl', ['vldl', 'very low density lipoprotein']),
+            ('uacr', ['uacr', 'albumin creatinine ratio', 'albuminuria']),
+            ('umalcr', ['umalcr', 'uacr', 'albumin creatinine ratio', 'albuminuria']),
+            ('igcs', ['glasgow coma scale', 'gcs', 'consciousness']),
+            ('irr', ['respiratory rate']),
+            ('ihr', ['heart rate', 'tachycardia', 'bradycardia']),
+            ('iinjurytype', ['injury type', 'blunt', 'penetrating', 'mechanism of injury']),
+            ('isex', ['sex', 'gender', 'male', 'female']),
+            ('cvd_hx_baseline', ['history of cardiovascular disease', 'prior cardiovascular', 'cvd history']),
+            ('prior stroke history', ['prior stroke', 'history of stroke', 'previous stroke']),
+            ('sub_cvd', ['cardiovascular disease', 'cvd', 'heart disease']),
+            ('sub_ckd', ['chronic kidney disease', 'ckd', 'renal impairment'])
+        ]
+        for canonical_key, cues in alias_checks:
+            if canonical_key in feature_map and any(cue in normalized_feature for cue in cues):
+                return feature_map[canonical_key]
+
+        return ""
+
+    def construct_search_query(
+        self,
+        feature_name: str,
+        mechanism: Dict[str, Any],
+        dataset: str,
+        require_interaction: bool = True,
+        include_doc_types: bool = True,
+        use_mechanism_keywords: bool = False
+    ) -> str:
+        """Construct a PubMed query optimized for effect-modifier evidence."""
+
+        # Dataset Configuration
         dataset_config = {
             'ist3': {
-                'context': ['stroke', 'alteplase', 'thrombolysis', '"ischemic stroke"'],
+                'context_terms': ['stroke', '"ischemic stroke"'],
+                'treatment_terms': ['alteplase', '"intravenous thrombolysis"', '"tissue plasminogen activator"', 'rtPA'],
                 'features': {
+                    'stroketype': '"stroke subtype" OR lacunar OR cardioembolic OR "posterior circulation"',
+                    'age': 'age OR elderly OR geriatric',
                     'nihss': 'NIHSS OR "stroke severity" OR "neurological deficit" OR "infarct volume"',
-                    'dbprand': '"diastolic blood pressure" OR "blood pressure" OR "hypertension"',
-                    'sbprand': '"systolic blood pressure" OR "blood pressure" OR "hypertension"',
-                    'weight': 'weight OR BMI OR obesity OR "body mass" OR "pharmacokinetics"',
-                    'antiplat_rand': 'antiplatelet OR aspirin OR clopidogrel OR "platelet inhibition"'
+                    'sbprand': '"systolic blood pressure" OR "blood pressure" OR hypertension',
+                    'dbprand': '"diastolic blood pressure" OR "blood pressure" OR hypertension',
+                    'weight': 'weight OR BMI OR obesity OR "body mass"',
+                    'glucose': 'glucose OR hyperglycemia OR "blood glucose"',
+                    'gcs_score_rand': 'GCS OR "Glasgow Coma Scale" OR "consciousness level"',
+                    'gender': 'sex OR gender OR male OR female',
+                    'antiplat_rand': 'antiplatelet OR aspirin OR clopidogrel OR "platelet inhibition"',
+                    'atrialfib_rand': '"atrial fibrillation" OR AF OR AFib',
+                    'infarct': 'infarct OR ischemic OR "ischemic lesion"',
+                    'stroketype_1': 'TACI OR "total anterior circulation infarct"',
+                    'stroketype_2': 'PACI OR "partial anterior circulation infarct"',
+                    'stroketype_3': 'LACI OR lacunar',
+                    'stroketype_4': 'POCI OR "posterior circulation infarct"',
+                    'stroketype_5': '"other ischemic stroke subtype"',
+                    'diabetes mellitus': 'diabetes OR "diabetes mellitus" OR hyperglycemia OR glucose',
+                    'prior stroke history': '"prior stroke" OR "previous stroke" OR "history of stroke"',
+                    'time_to_treatment': '"time to treatment" OR "onset to treatment" OR "treatment delay"'
                 }
             },
             'accord': {
-                'context': ['diabetes', '"glycemic control"', 'HbA1c', 'cardiovascular'],
+                'context_terms': ['diabetes', '"type 2 diabetes"', 'cardiovascular'],
+                'treatment_terms': [
+                    '"intensive blood pressure control"',
+                    '"intensive systolic blood pressure"',
+                    '"systolic blood pressure target"',
+                    '"tight blood pressure control"',
+                    '"aggressive blood pressure lowering"',
+                    '"blood pressure management"'
+                ],
                 'features': {
                     'hba1c': 'HbA1c OR "glycated hemoglobin" OR "glycemic control"',
                     'sbp': '"systolic blood pressure" OR hypertension',
+                    'dbp': '"diastolic blood pressure" OR hypertension',
                     'age': 'age OR elderly OR geriatric',
-                    'duration': '"diabetes duration" OR "disease duration"'
+                    'baseline_age': 'age OR elderly OR geriatric',
+                    'bmi': 'BMI OR obesity OR "body mass index" OR "body mass" OR overweight OR adiposity OR "abdominal obesity" OR "waist circumference" OR "weight status"',
+                    'duration': '"diabetes duration" OR "disease duration"',
+                    'fpg': '"fasting plasma glucose" OR FPG OR glucose OR hyperglycemia',
+                    'gfr': 'GFR OR eGFR OR "renal function"',
+                    'screat': 'creatinine OR "serum creatinine"',
+                    'uacr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
+                    'chol': 'cholesterol OR "total cholesterol"',
+                    'trig': 'triglyceride OR triglycerides',
+                    'vldl': 'VLDL OR lipoprotein',
+                    'ldl': 'LDL OR "low density lipoprotein"',
+                    'hdl': 'HDL OR "high density lipoprotein"',
+                    'hr': '"heart rate" OR pulse OR tachycardia OR bradycardia',
+                    'bp_med': '"blood pressure medication" OR antihypertensive',
+                    'female': 'female OR sex OR gender',
+                    'raceclass': '"Continental Population Groups"[Mesh] OR "Black"[tiab] OR "White"[tiab] OR race[tiab]',
+                    'statin': 'statin OR lipid-lowering',
+                    'aspirin': 'aspirin OR antiplatelet',
+                    'x4smoke': 'smoking OR smoker OR tobacco',
+                    'cvd_hx_baseline': '"history of cardiovascular disease" OR "prior cardiovascular disease" OR "prior MI" OR "prior stroke"',
+                    'anti_coag': 'anticoagulant OR anticoagulation OR warfarin OR heparin OR "blood thinner" OR coagulation OR "anticoagulant therapy" OR "oral anticoagulant" OR apixaban OR rivaroxaban OR dabigatran OR "thrombin inhibitor" OR "factor Xa inhibitor" OR "coagulation status" OR "thrombotic risk" OR "antithrombotic"'
                 }
             },
             'crash_2': {
-                'context': ['trauma', '"tranexamic acid"', 'TXA', 'bleeding', 'hemorrhage'],
+                'context_terms': ['trauma', 'bleeding', 'hemorrhage'],
+                'treatment_terms': ['"tranexamic acid"', 'TXA', '"anti-fibrinolytic"'],
                 'features': {
-                    'sbp': '"systolic blood pressure" OR "blood pressure" OR hypertension OR hypotension',
-                    'isbp': '"systolic blood pressure" OR "blood pressure" OR "initial blood pressure" OR hypotension',
-                    'gcs': 'GCS OR "Glasgow Coma Scale" OR "consciousness level" OR coma',
-                    'igcs': 'GCS OR "Glasgow Coma Scale" OR "consciousness level" OR coma',
-                    'age': 'age OR elderly OR geriatric',
-                    'hr': '"heart rate" OR tachycardia OR bradycardia OR pulse',
-                    'ihr': '"heart rate" OR "initial heart rate" OR tachycardia OR bradycardia OR pulse',
-                    'rr': '"respiratory rate" OR breathing OR ventilation',
-                    'time_to_treatment': '"time to treatment" OR "treatment delay" OR "early treatment"',
-                    'ninjurytime': '"time to treatment" OR "treatment delay" OR "injury time" OR "time from injury"',
-                    'iinjurytype': '"injury type" OR "penetrating injury" OR "blunt trauma" OR "mechanism of injury"',
-                    'injury type': '"injury type" OR "penetrating injury" OR "blunt trauma" OR "mechanism of injury"',
-                    'penetrating': '"penetrating injury" OR "penetrating trauma" OR gunshot OR stabbing',
-                    'blunt': '"blunt trauma" OR "blunt injury" OR "closed trauma"',
-                    'icc': '"clotting capacity" OR coagulopathy OR "coagulation" OR INR OR "prothrombin time" OR fibrinogen'
+                    'iage': 'age OR elderly OR geriatric',
+                    'isbp': '"systolic blood pressure" OR "initial blood pressure" OR hypotension OR hypertension',
+                    'irr': '"respiratory rate" OR breathing',
+                    'icc': '"capillary refill" OR perfusion OR shock',
+                    'ihr': '"heart rate" OR pulse OR tachycardia OR bradycardia',
+                    'ninjurytime': '"time from injury" OR "injury-to-treatment time" OR "treatment delay" OR "time to treatment" OR "early treatment" OR "delayed treatment" OR "treatment timing"',
+                    'igcs': 'GCS OR "Glasgow Coma Scale" OR "consciousness level"',
+                    'isex': 'sex OR gender OR male OR female',
+                    'iinjurytype': '"injury type" OR "penetrating injury" OR "blunt trauma" OR "mechanism of injury" OR "penetrating trauma" OR "blunt injury" OR "injury mechanism" OR "injury pattern"',
+                    'iinjurytype_1': '"blunt trauma" OR "blunt injury"',
+                    'iinjurytype_2': '"penetrating injury" OR "penetrating trauma" OR gunshot OR stabbing'
                 }
             },
             'sprint': {
-                'context': ['hypertension', '"blood pressure"', 'cardiovascular', '"intensive treatment"'],
+                'context_terms': ['hypertension', '"blood pressure"', 'cardiovascular'],
+                'treatment_terms': [
+                    '"intensive blood pressure control"',
+                    '"intensive systolic blood pressure"',
+                    '"systolic blood pressure target"',
+                    '"tight blood pressure control"',
+                    '"aggressive blood pressure lowering"',
+                    '"blood pressure management"'
+                ],
                 'features': {
-                    'sbp': '"systolic blood pressure" OR "blood pressure" OR hypertension',
                     'age': 'age OR elderly OR geriatric',
-                    'cvd': '"cardiovascular disease" OR CVD OR "heart disease"',
-                    'ckd': '"chronic kidney disease" OR CKD OR "renal function"'
+                    'sbp': '"systolic blood pressure" OR "blood pressure"',
+                    'dbp': '"diastolic blood pressure" OR "blood pressure"',
+                    'n_agents': '"number of antihypertensive agents" OR polypharmacy OR antihypertensive',
+                    'egfr': 'eGFR OR GFR OR "renal function"',
+                    'screat': 'creatinine OR "serum creatinine"',
+                    'chr': 'cholesterol OR "total cholesterol"',
+                    'glur': 'glucose OR "fasting glucose" OR glycemia OR hyperglycemia',
+                    'hdl': 'HDL OR "high density lipoprotein"',
+                    'trr': 'triglyceride OR triglycerides',
+                    'umalcr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
+                    'bmi': 'BMI OR obesity OR "body mass index" OR "body mass" OR overweight OR adiposity OR "abdominal obesity" OR "waist circumference" OR "weight status"',
+                    'female': 'female OR sex OR gender',
+'                   race_black': '"African Americans"[Mesh] OR "Black"[tiab] OR "African American"[tiab]',
+                    'smoke_3cat': 'smoking OR smoker OR tobacco',
+                    'aspirin': 'aspirin OR antiplatelet',
+                    'statin': 'statin OR lipid-lowering',
+                    'sub_cvd': '"cardiovascular disease" OR CVD OR "heart disease"',
+                    'sub_ckd': '"chronic kidney disease" OR CKD OR "renal impairment"'
                 }
             }
         }
 
-        config = dataset_config.get(dataset, {'context': [], 'features': {}})
-        context_terms = config['context']
-        
+        config = dataset_config.get(dataset, {
+            'context_terms': [], 'treatment_terms': [], 'features': {}
+        })
+
         query_parts = []
-        
-        # 1. Add context (e.g., stroke AND alteplase)
-        if context_terms:
-            query_parts.append(f"({' OR '.join(context_terms)})")
-        
-        # 2. Add Feature Query
-        # First try to find in config (for actual database feature names)
-        feature_query = config['features'].get(feature_name)
-        
-        if not feature_query:
-            # Try lowercase version
-            feature_query = config['features'].get(feature_name.lower())
-        
-        if not feature_query and ':' in feature_name:
-            # Handle categorical features like "Injury Type: Penetrating"
-            parts = feature_name.split(':', 1)
-            base_name = parts[0].strip().lower()
-            value_name = parts[1].strip().lower()
-            feature_query = config['features'].get(base_name) or config['features'].get(value_name)
-            
+
+        # 1. Clinical Context
+        context_parts = []
+        if config['treatment_terms']: context_parts.append(f"({' OR '.join(config['treatment_terms'])})")
+        if config['context_terms']: context_parts.append(f"({' OR '.join(config['context_terms'])})")
+        if context_parts: query_parts.append(f"({' AND '.join(context_parts)})")
+
+        # 2. The Feature
+        feature_query = self._find_feature_query(feature_name, config['features'])
         if feature_query:
-            # Use configured mapping
             query_parts.append(f"({feature_query})")
         else:
-            # For without_shap clinical concepts or unmapped features, use as-is
-            # This handles cases like "Timing of Administration", "Severity of Bleeding", etc.
-            query_parts.append(f'"{feature_name}"')
+            clean = self._normalize_text(feature_name)
+            query_parts.append(f'"{clean.replace(" ", " AND ")}"')
 
-        # 3. Add Mechanistic "Bridge" Terms
-        # These terms force PubMed to find 'how' or 'why' rather than just 'what'
-        mech_bridges = {
-            'biological': '("pathophysiology" OR "mechanism" OR "causal" OR "etiology" OR "interaction")',
-            'physiological': '("physiology" OR "pathogenesis" OR "homeostasis")',
-            'pharmacological': '("pharmacokinetics" OR "pharmacodynamics" OR "dose-response" OR "clearance")',
-            'statistical': '("independent predictor" OR "confounding" OR "interaction effect")'
-        }
-        if mechanism_type in mech_bridges:
-            query_parts.append(mech_bridges[mechanism_type])
+        # 3. Mechanism Specifics (New)
+        if use_mechanism_keywords:
+            mech_desc = mechanism.get('description', '')
+            mech_keywords = self._extract_mechanism_keywords(mech_desc)
+            if mech_keywords:
+                query_parts.append(f"({mech_keywords})")
 
-        # 4. Add Directional Logic
-        # Based on effect_direction, add terms that reflect the hypothesis stance
-        if effect_direction == "negative":
-            query_parts.append('("reduced efficacy" OR "worse outcomes" OR "resistance" OR "poor prognosis" OR "complication")')
-        elif effect_direction == "positive":
-            query_parts.append('("enhanced" OR "benefit" OR "synergy" OR "improved" OR "favorable")')
+        # 4. Interaction Terms
+        if require_interaction:
+            interaction_terms = [
+                '"effect modification"[tiab]', '"treatment effect heterogeneity"[tiab]',
+                '"heterogeneous treatment effect"[tiab]', '"treatment interaction"[tiab]',
+                '"interaction effect"[tiab]', '"subgroup analysis"[tiab]', 
+                '"differential treatment effect"[tiab]', '"treatment-by"[tiab]', 
+                '"predictive factor"[tiab]', '"interaction term"[tiab]',
+                '"forest plot"[tiab]', 'HTE[tiab]' # Added common abbreviation and visualization
+            ]
+            query_parts.append(f"({' OR '.join(interaction_terms)})")
+        full_query = ' AND '.join(query_parts)
 
-        # 5. Extract specific medical keywords from description dynamically
-        # This makes the query more mechanism-specific
-        excluded_words = {
-            'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-            'of', 'with', 'by', 'from', 'as', 'is', 'are', 'was', 'were', 'be',
-            'can', 'may', 'could', 'would', 'should', 'which', 'that', 'this',
-            'have', 'has', 'had', 'not', 'more', 'less', 'than', 'when', 'where',
-            'who', 'what', 'how', 'why', 'their', 'they', 'them', 'these', 'those'
-        }
-        
-        # Extract meaningful clinical terms from description (3+ chars)
-        words = re.findall(r'\b[a-z]{3,}\b', description)
-        mechanism_keywords = [
-            word for word in words 
-            if word not in excluded_words and len(word) >= 4
-        ]
-        
-        # Get top 3-5 most distinctive terms (longer words tend to be more specific)
-        mechanism_keywords = sorted(set(mechanism_keywords), key=len, reverse=True)[:5]
-        
-        if mechanism_keywords:
-            # Add these mechanism-specific terms to narrow the search
-            keyword_query = ' OR '.join([f'"{kw}"' for kw in mechanism_keywords[:3]])
-            query_parts.append(f"({keyword_query})")
+        # 5. Document Types
+        if include_doc_types:
+            doc_types = ['Clinical Trial[PT]', 'Randomized Controlled Trial[PT]', 'Meta-Analysis[PT]', 'Review[PT]']
+            full_query += f" AND ({' OR '.join(doc_types)})"
 
-        # Combine with AND logic for high specificity
-        if query_parts:
-            query = ' AND '.join(query_parts)
-            # Add publication type filters
-            query += ' AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])'
-        else:
-            # Fallback if no query parts were generated
-            query = f'"{feature_name.replace("_", " ")}" AND (Clinical Trial[PT] OR Review[PT] OR Meta-Analysis[PT])'
-        
-        return query
-    
+        return full_query
+
     def search_pubmed(self, query: str, max_results: int = None) -> List[str]:
-        """
-        Search PubMed and return list of PMIDs.
-        
-        Args:
-            query: PubMed search query
-            max_results: Maximum number of results to return
-            
-        Returns:
-            List of PubMed IDs
-        """
-        if not Entrez:
-            print("Warning: BioPython not available. Skipping PubMed search.")
-            return []
-        
+        if not Entrez: return []
         max_results = max_results or self.max_abstracts
-        
-        try:
-            handle = Entrez.esearch(db="pubmed", term=query, retmax=max_results, sort="relevance")
-            record = Entrez.read(handle)
-            handle.close()
-            return record.get("IdList", [])
-        except Exception as e:
-            print(f"Error searching PubMed: {e}")
-            return []
-    
+
+        # Retry logic for transient PubMed errors
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                handle = Entrez.esearch(db="pubmed", term=query, retmax=max_results, sort="relevance")
+                record = Entrez.read(handle)
+                handle.close()
+                return record.get("IdList", [])
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    print(f"PubMed error (attempt {attempt+1}/{max_retries}): {e}")
+                    print(f"  Retrying in {wait_time}s...")
+                    time.sleep(wait_time)
+                else:
+                    print(f"Error searching PubMed after {max_retries} attempts: {e}")
+                    return []
+        return []
+
     def fetch_abstracts(self, pmids: List[str]) -> List[Dict[str, str]]:
-        """
-        Fetch abstracts for given PMIDs.
-        
-        Args:
-            pmids: List of PubMed IDs
-            
-        Returns:
-            List of dictionaries with pmid, title, and abstract
-        """
-        if not Entrez or not pmids:
-            return []
-        
+        if not Entrez or not pmids: return []
         abstracts = []
-        
         try:
-            # Fetch in batches to avoid overwhelming the server
             batch_size = 10
             for i in range(0, len(pmids), batch_size):
                 batch_pmids = pmids[i:i+batch_size]
-                handle = Entrez.efetch(db="pubmed", id=batch_pmids, rettype="abstract", retmode="xml")
-                records = Entrez.read(handle)
-                handle.close()
-                
+
+                # Retry logic for transient errors
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        handle = Entrez.efetch(db="pubmed", id=batch_pmids, rettype="abstract", retmode="xml")
+                        records = Entrez.read(handle)
+                        handle.close()
+                        break  # Success, exit retry loop
+                    except Exception as e:
+                        if attempt < max_retries - 1:
+                            wait_time = 2 ** attempt
+                            print(f"  Fetch error (attempt {attempt+1}/{max_retries}): {e}")
+                            time.sleep(wait_time)
+                        else:
+                            print(f"  Failed to fetch batch after {max_retries} attempts: {e}")
+                            records = {'PubmedArticle': []}  # Empty result
+
                 for record in records.get('PubmedArticle', []):
                     try:
                         article = record['MedlineCitation']['Article']
                         pmid = str(record['MedlineCitation']['PMID'])
                         title = article.get('ArticleTitle', '')
-                        
-                        # Extract abstract text
-                        abstract_text = ''
+                        text = ''
                         if 'Abstract' in article:
-                            abstract_parts = article['Abstract'].get('AbstractText', [])
-                            if isinstance(abstract_parts, list):
-                                abstract_text = ' '.join([str(part) for part in abstract_parts])
-                            else:
-                                abstract_text = str(abstract_parts)
-                        
-                        abstracts.append({
-                            'pmid': pmid,
-                            'title': title,
-                            'abstract': abstract_text
-                        })
-                    except Exception as e:
-                        print(f"Error parsing article: {e}")
-                        continue
-                
-                # Be nice to NCBI servers
+                            parts = article['Abstract'].get('AbstractText', [])
+                            text = ' '.join([str(p) for p in parts]) if isinstance(parts, list) else str(parts)
+                        abstracts.append({'pmid': pmid, 'title': title, 'abstract': text})
+                    except Exception: continue
                 time.sleep(0.34)
-                
         except Exception as e:
             print(f"Error fetching abstracts: {e}")
-        
         return abstracts
-    
-    def analyze_abstract_with_llm(self, abstract: Dict[str, str], mechanism: Dict[str, Any]) -> Dict[str, Any]:
+
+    def analyze_abstract_with_llm(self, abstract: Dict[str, str], mechanism: Dict[str, Any], feature_name: str, dataset: str) -> Dict[str, Any]:
         """
-        Use LLM to analyze whether an abstract supports or conflicts with a mechanism.
-        
-        Args:
-            abstract: Dictionary with abstract text
-            mechanism: Mechanism dictionary
-            
-        Returns:
-            Dictionary with analysis results
+        Analyze abstract with Strict Feature Alignment to prevent false positives.
         """
         if not self.openai_client:
             return self.analyze_abstract_keyword(abstract, mechanism)
-        
-        prompt = f"""You are analyzing whether a scientific abstract provides evidence for or against a specific proposed mechanism.
 
-                    PROPOSED MECHANISM:
-                    Type: {mechanism.get('mechanism_type', 'unknown')}
-                    Description: {mechanism.get('description', '')}
-                    Effect Direction: {mechanism.get('effect_direction', 'unknown')}
-                    Evidence Level: {mechanism.get('evidence_level', 'unknown')}
+        cohort_context = self.get_cohort_trial_context(dataset)
+        mech_desc = mechanism.get('description', '')
+        mech_dir = mechanism.get('effect_direction', 'unknown')
+        feature_concept = feature_name.replace("_", " ").title()
 
-                    ABSTRACT TO ANALYZE:
-                    Title: {abstract.get('title', '')}
-                    Text: {abstract.get('abstract', '')}
+        prompt = f"""
+        You are an expert Biostatistician and Medical Researcher.
 
-                    CLASSIFICATION CRITERIA:
-                    - SUPPORT: The abstract provides evidence that directly supports this specific mechanism (e.g., shows the same relationship, validates the pathway, demonstrates the effect)
-                    - CONFLICT: The abstract provides evidence that contradicts this mechanism (e.g., shows opposite effect, refutes the pathway, shows no association where mechanism predicts one)
-                    - NEUTRAL: The abstract is tangentially related but doesn't specifically validate or refute this mechanism, OR discusses the general topic without addressing the specific mechanistic claim
+        YOUR TASK: Evaluate if the Clinical Abstract provides evidence supporting the proposed Mechanism.
+        ---
+        1. THE HYPOTHESIS:
+           - Trial Context: {dataset.upper()} ({cohort_context['treatment']} vs {cohort_context['comparator']})
+           - Outcome: {cohort_context['outcome']}
+           - TARGET FEATURE: "{feature_concept}"
+           - Mechanism: {mech_desc}
+           - Expected Direction: {mech_dir}
 
-                    Be STRICT: Only classify as "support" or "conflict" if the abstract specifically addresses elements of this mechanism. Most abstracts will be neutral.
+        2. THE ABSTRACT:
+           - Title: {abstract.get('title', '')}
+           - Text: {abstract.get('abstract', '')}
 
-                    Respond with ONLY a JSON object:
-                    {{
-                        "stance": "support|conflict|neutral",
-                        "confidence": "high|medium|low",
-                        "reasoning": "Brief explanation focusing on mechanism-specific evidence",
-                        "key_findings": "Specific findings from abstract relevant to this mechanism"
-                    }}
-                    """
+        ---
+        3. STEP 1: RELEVANCE GATES (Pass/Fail)
+        (A) Treatment Check: Is {cohort_context['treatment']} (or class equivalent) evaluated?
+        (B) Outcome Alignment: Must evaluate '{cohort_context['outcome']}' or surrogate.
+        (C) Feature Check: Is {feature_concept} explicitly analyzed for outcome association?
+
+            - REJECT if feature is missing.
+            - REJECT if feature is only a covariate/baseline stat, but not linked to outcome.
+
+        -> If (A) or (B) or (C) fails, output: [F] IRRELEVANT.
+        ---
+        4. STEP 2: EVIDENCE EVALUATION (The "Mechanism Test")
+            If the abstract passes Step 1, compare the REPORTED RESULTS against the EXPECTED CLINICAL OUTCOME.
+
+            [A] SUPPORT_INTERACTION (Mechanism Supported):
+                - Core Requirement: Explicit statement that the magnitude of treatment benefit is SIGNIFICANTLY DIFFERENT between subgroups defined by {feature_concept}.
+                - Directionality: The difference must match the expected direction (e.g., "Greater benefit in High-Risk group" if that was your hypothesis).
+                - Statistical Evidence:
+                    * Includes explicit numeric evidence (e.g., "Interaction P < 0.05").
+                    * Includes strong textual claims (e.g., "Treatment efficacy was significantly superior in [subgroup] compared to [other subgroup]").
+                    * Note: A statement like "Patients with X had longer survival" is insufficient unless it adds "...specifically in the treatment arm" or "...compared to placebo."
+                * Mechanism Independence: The abstract does NOT need to explain the biological "why." If the clinical numbers match your prediction, it counts.
+
+            [B] SUPPORT_WEAK (Mechanism Consistent):
+                - Core Requirement: The abstract describes a numerical trend or subgroup observation that favors the mechanism, but explicitly notes it is not statistically significant or is hypothesis-generating only.
+                - Key Indicators:
+                   * P-values for interaction are > 0.05 (e.g., $p=0.09$, $p=0.12$).
+                   * Language like "numeric trend," "suggests a benefit," "exploratory analysis," or "promising signal."
+                   * Post-hoc analyses not originally powered for significance.
+                - Differentiation from [D] (Null):
+                  * [B] says "There is a signal, but we can't prove it yet." (e.g., HR 0.7 vs HR 0.9, p=0.15).
+                  * [D] says "There is NO signal." (e.g., HR 0.8 vs HR 0.8, p=0.90).
+                - Differentiation from [F] (Irrelevant):
+                  * [B] must still show data relevant to the specific feature/drug pair. A general statement that "more research is needed" without data is [F].
+
+            [C] PROGNOSTIC_MAIN_EFFECT (Mechanism Unclear):
+                - Core Rule: Evidence that the feature predicts the Outcome (e.g., Survival) generally, but NOT the response to the specific drug.
+                  * Scenario 1: The feature is a general risk factor (e.g., "Old age predicted higher mortality in both arms").
+                  * Scenario 2: The abstract mentions the feature's effect on survival but is silent on whether it changed the drug's efficacy.
+
+            [D] NO_INTERACTION (Mechanism Inactive):
+                - Core Rule: Explicit statement that the feature does NOT modify the treatment effect.
+                  * Key Phrases: "Outcomes were similar regardless of status," "Interaction p > 0.05," "Consistent benefit across subgroups."
+                  * Note: A non-significant trend (p=0.15) often falls here unless the author explicitly calls it "promising" (which moves it to [B]).
+
+            [E] CONFLICT (Mechanism Contradicted):
+                - Core Rule: The abstract reports a Significant Interaction in the OPPOSITE direction of the hypothesis.
+                  * Example: You predicted the feature would enhance drug efficacy, but the data shows it reduces efficacy or causes harm relative to the control group.
+                  * Crucial Distinction: The drug must perform worse than the comparator in this subgroup (or significantly worse than in the other subgroup). If the subgroup just has a poor baseline prognosis but the drug still helps them a little, that is [C], not [E].
+
+            5. OUTPUT FORMAT:
+            Return a valid JSON object with the following fields:
+            {{
+                "classification": "SUPPORT_INTERACTION | SUPPORT_WEAK | PROGNOSTIC_MAIN_EFFECT | NO_INTERACTION | CONFLICT | IRRELEVANT",
+                "confidence": "high | medium | low",
+                "reasoning": "Explain why it matches the TARGET FEATURE and whether it supports the specific mechanism claim.",
+                "evidence_quote": "Quote proving the interaction involves {feature_concept}."
+            }}
+            """
+
         try:
-            response = self.openai_client.chat.completions.create(
-                model="gpt-5.1-2025-11-13",
-                messages=[
-                    {"role": "system", "content": "You are a medical research expert analyzing scientific literature. Respond only with valid JSON."},
+            request_kwargs = {
+                "model": self.model,
+                "messages": [
+                    {"role": "system", "content": "You are an evidence-based medicine evaluator. Be calibrated and avoid overly strict judgments. Output valid JSON only."},
                     {"role": "user", "content": prompt}
                 ],
-                # temperature=0.3,
-            )
-            
+                "response_format": {"type": "json_object"}
+            }
+
+            model_lc = str(self.model).lower()
+            if not model_lc.startswith("gpt-5"):
+                request_kwargs["temperature"] = 0.0
+
+            response = self.openai_client.chat.completions.create(**request_kwargs)
             content = response.choices[0].message.content.strip()
-            
-            # Extract JSON if wrapped in markdown code blocks
-            if '```json' in content:
-                content = content.split('```json')[1].split('```')[0].strip()
-            elif '```' in content:
-                content = content.split('```')[1].split('```')[0].strip()
-            
+            if content.startswith("```json"): content = content.split("```json")[1].split("```")[0].strip()
+            elif content.startswith("```"): content = content.split("```")[1].split("```")[0].strip()
+
             result = json.loads(content)
+
+            # Normalize classification to canonical labels
+            classification_raw = str(result.get('classification', 'IRRELEVANT')).strip()
+            classification_key = classification_raw.upper()
+            letter_to_label = {
+                'A': 'SUPPORT_INTERACTION',
+                'B': 'SUPPORT_WEAK',
+                'C': 'PROGNOSTIC_MAIN_EFFECT',
+                'D': 'NO_INTERACTION',
+                'E': 'CONFLICT',
+                'F': 'IRRELEVANT',
+            }
+            allowed_labels = {
+                'SUPPORT_INTERACTION',
+                'SUPPORT_WEAK',
+                'PROGNOSTIC_MAIN_EFFECT',
+                'NO_INTERACTION',
+                'CONFLICT',
+                'IRRELEVANT',
+            }
+
+            if classification_key in letter_to_label:
+                classification = letter_to_label[classification_key]
+            elif classification_key == 'PROGNOSTIC_ONLY':
+                classification = 'PROGNOSTIC_MAIN_EFFECT'
+            elif classification_key in allowed_labels:
+                classification = classification_key
+            else:
+                classification = 'IRRELEVANT'
+
+            result['classification'] = classification
+
+            # Map to stance
+            cls = result.get('classification', 'IRRELEVANT')
+            if cls in ['SUPPORT_INTERACTION', 'SUPPORT_WEAK']: stance = 'support'
+            elif cls == 'CONFLICT': stance = 'conflict'
+            else: stance = 'neutral'
+
+            result['stance'] = stance
             result['pmid'] = abstract.get('pmid', '')
             result['title'] = abstract.get('title', '')
-            result['analysis_method'] = 'llm'
-            
+            result['analysis_method'] = 'llm_strict_v2'
             return result
-            
         except Exception as e:
             print(f"Error with LLM analysis: {e}")
             return self.analyze_abstract_keyword(abstract, mechanism)
-    
+
     def analyze_abstract_keyword(self, abstract: Dict[str, str], mechanism: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Simple keyword-based analysis as fallback.
-        
-        Args:
-            abstract: Dictionary with abstract text
-            mechanism: Mechanism dictionary
-            
-        Returns:
-            Dictionary with analysis results
-        """
+        """Simple keyword fallback."""
         text = (abstract.get('title', '') + ' ' + abstract.get('abstract', '')).lower()
         description = mechanism.get('description', '').lower()
-        
-        # Extract key medical terms from mechanism description
-        mechanism_terms = []
-        common_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 
-                       'of', 'with', 'by', 'from', 'as', 'is', 'are', 'was', 'were', 'be',
-                       'can', 'may', 'could', 'would', 'should', 'which', 'that', 'this'}
-        
-        # Extract meaningful words from description (4+ characters for better specificity)
-        words = re.findall(r'\b[a-z]{4,}\b', description)
-        mechanism_terms = [w for w in words if w not in common_words][:15]
-        
-        # Count how many mechanism terms appear in abstract (with partial matching)
-        term_matches = 0
-        for term in mechanism_terms:
-            if term in text:
-                term_matches += 1
-            # Also check for partial matches (e.g., "hemorrhagic" matches "hemorrhage")
-            elif any(term in word or word in term for word in text.split() if len(word) > 5):
-                term_matches += 0.5
-        
-        term_match_ratio = term_matches / len(mechanism_terms) if mechanism_terms else 0
-        
-        # Support keywords (expanded and more specific)
-        support_keywords = [
-            'confirm', 'support', 'consistent', 'demonstrate', 'show', 'evidence', 
-            'associated with', 'correlation', 'related to', 'linked to',
-            'increase', 'decrease', 'improve', 'reduce', 'enhance',
-            'significant', 'significantly', 'positively', 'negatively',
-            'found that', 'indicates', 'suggests', 'proves', 'validates'
-        ]
-        
-        # Conflict keywords (expanded)
-        conflict_keywords = [
-            'contradict', 'conflict', 'contrary', 'however', 'nevertheless',
-            'no association', 'not associated', 'no evidence', 'lack of',
-            'no significant', 'not significant', 'fail', 'failed', 'unable',
-            'did not', 'does not', 'no effect', 'no difference', 'no relationship',
-            'unlikely', 'disputed', 'questioned', 'refute', 'challenge'
-        ]
-        
-        # Count occurrences with phrase matching
-        support_count = 0
-        for keyword in support_keywords:
-            support_count += text.count(keyword)
-        
-        conflict_count = 0
-        for keyword in conflict_keywords:
-            conflict_count += text.count(keyword)
-        
-        # Determine stance with improved logic
-        # If abstract is topically relevant (term matches) and has more support/conflict signals
-        if term_match_ratio > 0.15:  # At least 15% of mechanism terms present (lowered threshold)
-            if support_count > conflict_count and support_count >= 1:
-                stance = 'support'
-                confidence = 'high' if support_count >= 5 and term_match_ratio > 0.3 else 'medium' if support_count >= 3 else 'low'
-            elif conflict_count > support_count and conflict_count >= 1:
-                stance = 'conflict'
-                confidence = 'high' if conflict_count >= 5 and term_match_ratio > 0.3 else 'medium' if conflict_count >= 3 else 'low'
-            else:
-                stance = 'neutral'
-                confidence = 'low'
-        else:
-            # Low topical relevance - be more conservative
-            if support_count >= 5:
-                stance = 'support'
-                confidence = 'low'
-            elif conflict_count >= 5:
-                stance = 'conflict'
-                confidence = 'low'
-            else:
-                stance = 'neutral'
-                confidence = 'low'
-        
-        reasoning = f"Keyword analysis: {support_count} support signals, {conflict_count} conflict signals, {term_match_ratio:.1%} term match"
-        
+        mech_terms = [w for w in re.findall(r'\b[a-z]{4,}\b', description) if w not in {'with', 'that', 'from'}]
+
+        matches = sum(1 for t in mech_terms if t in text)
+        ratio = matches / len(mech_terms) if mech_terms else 0
+
+        support_kws = ['interaction', 'modifies', 'subgroup', 'heterogeneity', 'differential', 'predictive']
+        has_support = any(k in text for k in support_kws)
+
+        stance = 'support' if has_support and ratio > 0.2 else 'neutral'
         return {
-            'pmid': abstract.get('pmid', ''),
-            'title': abstract.get('title', ''),
-            'stance': stance,
-            'confidence': confidence,
-            'reasoning': reasoning,
-            'key_findings': f"Matched {term_matches}/{len(mechanism_terms)} mechanism terms",
-            'analysis_method': 'keyword'
+            'pmid': abstract.get('pmid', ''), 'title': abstract.get('title', ''),
+            'stance': stance, 'confidence': 'low', 'analysis_method': 'keyword',
+            'reasoning': f"Keyword match ratio: {ratio:.2f}"
         }
-    
-    def validate_mechanism(self, feature_name: str, mechanism: Dict[str, Any], 
-                          dataset: str, use_llm: bool = True) -> Dict[str, Any]:
-        """
-        Validate a single mechanism against PubMed literature.
-        
-        Args:
-            feature_name: Feature name
-            mechanism: Mechanism dictionary
-            dataset: Dataset name
-            use_llm: Whether to use LLM for analysis
-            
-        Returns:
-            Dictionary with validation results
-        """
+
+    def validate_mechanism(self, feature_name: str, mechanism: Dict[str, Any], dataset: str, use_llm: bool = True) -> Dict[str, Any]:
         print(f"\nValidating mechanism for {feature_name} ({mechanism.get('mechanism_type', 'unknown')})")
-        
-        # Construct search query
-        query = self.construct_search_query(feature_name, mechanism, dataset)
-        print(f"Search query: {query}")
-        
-        # Search PubMed
-        pmids = self.search_pubmed(query)
-        print(f"Found {len(pmids)} articles")
-        
+
+        # Tiered Search Strategy
+        tiers = [
+            ("tier_1_mechanism_specific", self.construct_search_query(feature_name, mechanism, dataset, True, True, True)),
+            ("tier_2_strict_interaction", self.construct_search_query(feature_name, mechanism, dataset, True, True, False)),
+            ("tier_3_broad_fallback", self.construct_search_query(feature_name, mechanism, dataset, True, False, False))
+        ]
+
+        pmids = []
+        used_tier = ""
+        query = ""
+
+        for tier_name, tier_query in tiers:
+            print(f"  Search [{tier_name}]: {tier_query[:100]}...")
+            # Tier 1 is very specific, so we accept fewer results to avoid noise
+            limit = 15 if "mechanism" in tier_name else self.max_abstracts
+            found = self.search_pubmed(tier_query, max_results=limit)
+            print(f"    Found {len(found)} articles.")
+            # Require minimum 3 abstracts except for the last tier (broad fallback)
+            min_threshold = 5 if tier_name != "tier_3_broad_fallback" else 1
+            if len(found) >= min_threshold:
+                pmids = found
+                used_tier = tier_name
+                query = tier_query
+                break
+
         if not pmids:
-            return {
-                'feature_name': feature_name,
-                'mechanism': mechanism,
-                'query': query,
-                'total_abstracts': 0,
-                'support_count': 0,
-                'conflict_count': 0,
-                'neutral_count': 0,
-                'abstracts_analyzed': []
-            }
-        
-        # Fetch abstracts
+            return {'feature_name': feature_name, 'mechanism': mechanism, 'total_abstracts': 0,
+                    'support_count': 0, 'conflict_count': 0, 'neutral_count': 0, 'abstracts_analyzed': []}
+
         abstracts = self.fetch_abstracts(pmids)
-        print(f"Retrieved {len(abstracts)} abstracts")
-        
-        # Analyze each abstract
         analyses = []
-        support_count = 0
-        conflict_count = 0
-        neutral_count = 0
-        
-        for abstract in abstracts:
-            if use_llm and self.openai_client:
-                analysis = self.analyze_abstract_with_llm(abstract, mechanism)
-                time.sleep(1)  # Rate limiting for API
+
+        for abs_data in abstracts:
+            if use_llm:
+                # Pass feature_name explicitly
+                res = self.analyze_abstract_with_llm(abs_data, mechanism, feature_name, dataset)
+                time.sleep(0.5)
             else:
-                analysis = self.analyze_abstract_keyword(abstract, mechanism)
-            
-            analyses.append(analysis)
-            
-            # Count stances
-            stance = analysis.get('stance', 'neutral')
-            if stance == 'support':
-                support_count += 1
-            elif stance == 'conflict':
-                conflict_count += 1
-            else:
-                neutral_count += 1
-        
-        # Calculate support ratio S/(S+C+N)
-        support_ratio = None
-        total_count = support_count + conflict_count + neutral_count
-        if total_count > 0:
-            support_ratio = support_count / total_count
-        
+                res = self.analyze_abstract_keyword(abs_data, mechanism)
+            analyses.append(res)
+
+        support = sum(1 for a in analyses if a['stance'] == 'support')
+        conflict = sum(1 for a in analyses if a['stance'] == 'conflict')
+        neutral = len(analyses) - support - conflict
+
         return {
             'feature_name': feature_name,
             'mechanism': mechanism,
             'query': query,
-            'total_abstracts': len(abstracts),
-            'support_count': support_count,
-            'conflict_count': conflict_count,
-            'neutral_count': neutral_count,
-            'support_percentage': (support_count / len(abstracts) * 100) if abstracts else 0,
-            'conflict_percentage': (conflict_count / len(abstracts) * 100) if abstracts else 0,
-            'support_ratio': support_ratio,
+            'query_tier_used': used_tier,
+            'total_abstracts': len(analyses),
+            'support_count': support,
+            'conflict_count': conflict,
+            'neutral_count': neutral,
             'abstracts_analyzed': analyses
         }
-    
+
     def validate_all_mechanisms(self, hypotheses_file: str, use_llm: bool = True) -> Dict[str, Any]:
-        """
-        Validate all mechanisms in a hypotheses file.
-        
-        Args:
-            hypotheses_file: Path to hypotheses JSON file
-            use_llm: Whether to use LLM for analysis
-            
-        Returns:
-            Dictionary with all validation results
-        """
-        # Load hypotheses
         hypotheses = self.load_hypotheses(hypotheses_file)
-        dataset = hypotheses.get('dataset', 'unknown')
-        
-        print(f"Validating mechanisms for dataset: {dataset}")
-        print(f"Analysis method: {'LLM' if use_llm and self.openai_client else 'Keyword-based'}")
-        
-        # Process each feature and its mechanisms
+        dataset = hypotheses.get('dataset', 'unknown').lower().replace('-', '_')
         all_results = []
-        
-        for feature_hypothesis in hypotheses.get('feature_hypotheses', []):
-            feature_name = feature_hypothesis.get('feature_name', 'unknown')
-            mechanisms = feature_hypothesis.get('mechanisms', [])
-            
-            for mechanism in mechanisms:
-                result = self.validate_mechanism(feature_name, mechanism, dataset, use_llm)
-                all_results.append(result)
-        
-        # Create summary
-        summary = {
+
+        for feat_hyp in hypotheses.get('feature_hypotheses', []):
+            feat_name = feat_hyp.get('feature_name', 'unknown')
+            for mech in feat_hyp.get('mechanisms', []):
+                all_results.append(self.validate_mechanism(feat_name, mech, dataset, use_llm))
+
+        return {
             'dataset': dataset,
             'total_mechanisms_analyzed': len(all_results),
             'total_abstracts_retrieved': sum(r['total_abstracts'] for r in all_results),
             'overall_support_count': sum(r['support_count'] for r in all_results),
             'overall_conflict_count': sum(r['conflict_count'] for r in all_results),
-            'overall_neutral_count': sum(r['neutral_count'] for r in all_results),
+            'evaluator_model': self.model,
             'mechanism_results': all_results
         }
-        
-        return summary
-    
+
     def generate_report(self, results: Dict[str, Any], output_file: str = None):
-        """
-        Generate a report from validation results.
-        
-        Args:
-            results: Validation results dictionary
-            output_file: Optional output file path
-        """
-        print("\n" + "="*80)
-        print(f"PUBMED VALIDATION REPORT: {results['dataset'].upper()}")
-        print("="*80)
-        
-        print(f"\nTotal Mechanisms Analyzed: {results['total_mechanisms_analyzed']}")
-        print(f"Total Abstracts Retrieved: {results['total_abstracts_retrieved']}")
-        print(f"\nOverall Stance Distribution:")
-        print(f"  Supporting: {results['overall_support_count']}")
-        print(f"  Conflicting: {results['overall_conflict_count']}")
-        print(f"  Neutral: {results['overall_neutral_count']}")
-        
-        # Calculate average rates across all mechanisms
-        total_abstracts = results['total_abstracts_retrieved']
-        if total_abstracts > 0:
-            avg_support_rate = (results['overall_support_count'] / total_abstracts) * 100
-            avg_conflict_rate = (results['overall_conflict_count'] / total_abstracts) * 100
-            avg_neutral_rate = (results['overall_neutral_count'] / total_abstracts) * 100
-            print(f"\nAverage Rates Across All Mechanisms:")
-            print(f"  Support Rate: {avg_support_rate:.2f}%")
-            print(f"  Conflict Rate: {avg_conflict_rate:.2f}%")
-            print(f"  Neutral Rate: {avg_neutral_rate:.2f}%")
-            
-            # Calculate average support ratio
-            avg_support_ratio = results['overall_support_count'] / total_abstracts
-            print(f"  Average Support Ratio S/(S+C+N): {avg_support_ratio:.3f}")
-        
-        # Calculate average rates per feature
-        feature_stats = {}
-        for result in results['mechanism_results']:
-            feature_name = result['feature_name']
-            if feature_name not in feature_stats:
-                feature_stats[feature_name] = {
-                    'support': 0, 'conflict': 0, 'neutral': 0, 'total': 0
-                }
-            feature_stats[feature_name]['support'] += result['support_count']
-            feature_stats[feature_name]['conflict'] += result['conflict_count']
-            feature_stats[feature_name]['neutral'] += result['neutral_count']
-            feature_stats[feature_name]['total'] += result['total_abstracts']
-        
-        # Calculate average across features
-        if feature_stats:
-            feature_support_rates = []
-            feature_conflict_rates = []
-            feature_neutral_rates = []
-            feature_support_ratios = []
-            
-            for feature_name, stats in feature_stats.items():
-                if stats['total'] > 0:
-                    feature_support_rates.append((stats['support'] / stats['total']) * 100)
-                    feature_conflict_rates.append((stats['conflict'] / stats['total']) * 100)
-                    feature_neutral_rates.append((stats['neutral'] / stats['total']) * 100)
-                    feature_support_ratios.append(stats['support'] / stats['total'])
-            
-            if feature_support_rates:
-                print(f"\nAverage Rates Across Features (n={len(feature_support_rates)}):")
-                print(f"  Avg Support Rate per Feature: {sum(feature_support_rates)/len(feature_support_rates):.2f}%")
-                print(f"  Avg Conflict Rate per Feature: {sum(feature_conflict_rates)/len(feature_conflict_rates):.2f}%")
-                print(f"  Avg Neutral Rate per Feature: {sum(feature_neutral_rates)/len(feature_neutral_rates):.2f}%")
-                print(f"  Avg Support Ratio per Feature: {sum(feature_support_ratios)/len(feature_support_ratios):.3f}")
-        
-        print("\n" + "-"*80)
-        print("MECHANISM-SPECIFIC RESULTS")
-        print("-"*80)
-        
-        for result in results['mechanism_results']:
-            print(f"\nFeature: {result['feature_name']}")
-            print(f"Mechanism Type: {result['mechanism']['mechanism_type']}")
-            print(f"Description: {result['mechanism']['description'][:100]}...")
-            print(f"Abstracts Found: {result['total_abstracts']}")
-            if result['total_abstracts'] > 0:
-                print(f"  Support: {result['support_count']} ({result['support_percentage']:.1f}%)")
-                print(f"  Conflict: {result['conflict_count']} ({result['conflict_percentage']:.1f}%)")
-                print(f"  Neutral: {result['neutral_count']}")
-                if result['support_ratio'] is not None:
-                    print(f"  Support Ratio S/(S+C): {result['support_ratio']:.3f}")
-        
-        # Save detailed results
+        print("\n" + "="*60)
+        print(f"VALIDATION REPORT: {results['dataset'].upper()}")
+        print(f"Support: {results['overall_support_count']} | Conflict: {results['overall_conflict_count']}")
+        print("="*60)
+
+        for r in results['mechanism_results']:
+            if r['total_abstracts'] > 0:
+                print(f"\nFeature: {r['feature_name']}")
+                print(f"Tier Used: {r.get('query_tier_used', 'N/A')}")
+                print(f"Stance: {r['support_count']} Support / {r['neutral_count']} Neutral / {r['conflict_count']} Conflict")
+
         if output_file:
             with open(output_file, 'w') as f:
                 json.dump(results, f, indent=2)
-            print(f"\nDetailed results saved to: {output_file}")
-
+            print(f"\nSaved to: {output_file}")
 
 def main():
     load_local_env()
-
-    parser = argparse.ArgumentParser(description='Validate mechanisms against PubMed literature')
-    parser.add_argument('--input', type=str, help='Path to hypotheses JSON file')
-    parser.add_argument('--cohort', type=str, choices=['ist3', 'accord', 'crash_2', 'sprint'],
-                       help='Cohort name (alternative to --input)')
-    parser.add_argument('--output', type=str, help='Output file path for results')
-    parser.add_argument('--email', type=str, default='research@example.com',
-                       help='Email for PubMed API')
-    parser.add_argument('--api-key', type=str, help='OpenAI API key for LLM analysis')
-    parser.add_argument('--max-abstracts', type=int, default=30,
-                       help='Maximum abstracts per mechanism')
-    parser.add_argument('--no-llm', action='store_true',
-                       help='Use keyword-based analysis instead of LLM')
-    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', type=str, required=True)
+    parser.add_argument('--output', type=str)
+    parser.add_argument('--dataset', type=str, default='ist3')
+    parser.add_argument('--email', type=str, default='research@example.com')
+    parser.add_argument('--api-key', type=str)
+    parser.add_argument('--max-abstracts', type=int, default=30)
+    parser.add_argument('--model', type=str, default='gpt-5-mini')
+    parser.add_argument('--api-provider', type=str, default='openai', choices=['openai', 'openrouter'])
+    parser.add_argument('--api-base-url', type=str, default=None)
     args = parser.parse_args()
-    
-    # Determine input file
-    if args.input:
-        input_file = args.input
-    elif args.cohort:
-        input_file = f'/homes/gws/mingyulu/shap_IPW/docs/agent/{args.cohort}/hypotheses_with_shap_XLearner.json'
+
+    if args.api_provider == 'openrouter':
+        api_key = args.api_key  # constructor will resolve OPENROUTER_API_KEY from env
     else:
-        print("Error: Must specify either --input or --cohort")
-        return
-    
-    # Check if file exists
-    if not os.path.exists(input_file):
-        print(f"Error: File not found: {input_file}")
-        return
-    
-    # Get API key from environment if not provided
-    api_key = args.api_key or os.environ.get('OPENAI_API_KEY')
-    
-    # Determine output file
-    if args.output:
-        output_file = args.output
-    else:
-        base_name = os.path.splitext(os.path.basename(input_file))[0]
-        output_dir = os.path.dirname(input_file)
-        output_file = os.path.join(output_dir, f"{base_name}_pubmed_validation.json")
-    
-    # Create validator
+        api_key = args.api_key or os.environ.get('OPENAI_API_KEY')
     validator = PubMedMechanismValidator(
         email=args.email,
         api_key=api_key,
-        max_abstracts=args.max_abstracts
+        max_abstracts=args.max_abstracts,
+        model=args.model,
+        api_provider=args.api_provider,
+        api_base_url=args.api_base_url,
     )
-    
-    # Run validation
-    use_llm = not args.no_llm
-    results = validator.validate_all_mechanisms(input_file, use_llm=use_llm)
-    
-    # Generate report
-    validator.generate_report(results, output_file)
 
+    results = validator.validate_all_mechanisms(args.input, use_llm=True)
+
+    # Default output path: same directory as input file, independent of eval model
+    output_path = args.output or os.path.join(
+        os.path.dirname(os.path.abspath(args.input)),
+        "hypotheses_pubmed_validation.json"
+    )
+    validator.generate_report(results, output_path)
 
 if __name__ == '__main__':
     main()

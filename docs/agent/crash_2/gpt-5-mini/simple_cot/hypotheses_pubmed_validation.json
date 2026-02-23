@@ -1,0 +1,811 @@
+{
+  "dataset": "crash_2",
+  "total_mechanisms_analyzed": 15,
+  "total_abstracts_retrieved": 58,
+  "overall_support_count": 4,
+  "overall_conflict_count": 2,
+  "mechanism_results": [
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Age-related differences in coagulation and fibrinolysis pathways could alter TXA effectiveness. Older adults may have impaired coagulation which could decrease TXA benefits.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (age OR elderly OR geriatric) AND (\"effectiveness\" OR \"fibrinolysis\" OR \"differences\" OR \"coagulation\" OR \"agerelated\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 9,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 9,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) but reports postoperative seizures in adult cardiac surgery patients, not death due to bleeding or mortality outcomes (Relevance gate B failed). It also does not analyze Age as a moderator or subgroup of outcome\u2014Age is not examined or reported in relation to seizures or treatment effect (Relevance gate C failed). Therefore the abstract does not provide evidence relevant to the hypothesis about age-modified TXA effects on bleeding/mortality.",
+          "evidence_quote": "\"Eligible studies were RCTs and non-randomized observational studies on TXA versus control ... enrolling adult patients undergoing cardiac surgery and reporting the postoperative incidence of seizures as an outcome.\"",
+          "stance": "neutral",
+          "pmid": "28263046",
+          "title": "Seizures associated with tranexamic acid for cardiac surgery: a meta-analysis of randomized and non-randomized studies.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although tranexamic acid is evaluated (topical TXA) and mortality is reported, the abstract does not analyze Age as a feature or present any age-stratified outcomes or interaction tests. The population is described as elderly patients with hip fractures, but no subgroup analyses by age or statements linking age to differences in TXA effectiveness are reported. Because the TARGET FEATURE (Age) is not evaluated as a predictor or modifier of treatment effect, the abstract cannot provide evidence for or against the proposed age-related mechanism.",
+          "evidence_quote": "\"Hip fractures are a major health concern, especially among older adults.\" ... \"there was no significant difference in hematocrit loss, total blood loss, deep vein thrombosis (DVT) rates, mortality, hospital stays, or surgery duration compared to placebo.\"",
+          "stance": "neutral",
+          "pmid": "39912079",
+          "title": "Efficacy and Safety of Topical Tranexamic Acid in Elderly Hip Fractures Undergoing Surgical Treatment: Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid and reports bleeding and functional outcomes, it contains no analysis, subgrouping, or mention of Age as a factor modifying treatment effect. The post-hoc analysis focuses on time-to-treatment strata (0-3, 3-6, >6 h) and does not report any age-related interaction with TXA. Because the target feature (Age) is missing as an analyzed modifier of outcome, the abstract cannot provide evidence for or against the proposed age-related mechanism.",
+          "evidence_quote": "This post-hoc analysis ... investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6\u2009h).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Fails relevance gates: although the trial evaluates TXA, the reported outcomes are estimated blood loss and postpartum hemorrhage endpoints, not death due to bleeding or mortality. Age is reported only as an inclusion descriptor ('aged 21 years or older') and is not analyzed as a modifier of treatment effect or linked to outcomes. Therefore the abstract provides no evidence regarding the proposed age-related mechanism affecting TXA effectiveness on mortality.",
+          "evidence_quote": "Multiethnic women aged 21\u2009years or older undergoing elective caesarean section.",
+          "stance": "neutral",
+          "pmid": "36852501",
+          "title": "Tranexamic acid, as an adjunct to oxytocin prophylaxis, in the prevention of postpartum haemorrhage in women undergoing elective caesarean section: A single-centre double-blind randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid but the reported outcomes are total blood loss and transfusion rates, not death due to bleeding or mortality (the required outcome). Although the study population is described as \"elderly patients,\" age is not analyzed as a modifier of TXA effect nor are subgroup interactions by age reported. Therefore the abstract does not provide evidence relevant to the mechanism linking age-related coagulation changes to TXA effectiveness for mortality outcomes.",
+          "evidence_quote": "Title: \"Single dose of tranexamic acid effectively reduces blood loss and transfusion rates in elderly patients undergoing surgery for hip fracture\"; \"Elderly patients who undergo intramedullary nailing for an IT fracture can benefit from a single dose of 15 mg/kg TXA before the onset of surgery.\"",
+          "stance": "neutral",
+          "pmid": "33641430",
+          "title": "Single dose of tranexamic acid effectively reduces blood loss and transfusion rates in elderly patients undergoing surgery for hip fracture: a randomized controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial evaluates tranexamic acid, the abstract does not report mortality or death due to bleeding (primary outcomes are blood loss, Hb drop, transfusion rate, CRP, D-dimer, complications). Age is only reported as the sample range (patients aged 60\u201380) and described generally as 'elderly patients,' but there is no analysis or interaction testing showing that Age modifies TXA effect on mortality or the reported outcomes. Because the required outcome (mortality/death due to bleeding) and an age-by-treatment interaction are not present, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "The study included 56 male and 244 female patients aged 60-80\u2009years. ... Three doses of postoperative IV-TXA decreased blood loss and diminished the postoperative inflammatory and fibrinolytic response more than a single dose or two doses in elderly patients following TKA without increasing the incidence of adverse events.",
+          "stance": "neutral",
+          "pmid": "33295133",
+          "title": "Effect of Multiple Doses of Intravenous Tranexamic Acid on Perioperative Blood Loss in Total Knee Arthroplasty: A Randomized Controlled Study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although tranexamic acid is evaluated, the abstract does not report mortality or death-from-bleeding outcomes (it reports blood loss, transfusion rate, hemoglobin drop, hospital stay, and thromboembolic events). Critically, Age is not analyzed as a predictor or subgroup nor is any interaction by age reported. Therefore the abstract provides no evidence relevant to the proposed mechanism (age modifying TXA effect on bleeding/mortality).",
+          "evidence_quote": "No age-specific analysis or interaction reported in the abstract; reported outcomes are: \"total blood loss, intraoperative blood loss, postoperative blood loss, hemoglobin drop, transfusion rate, and average hospital stay\" (no mortality or age-interaction mentioned).",
+          "stance": "neutral",
+          "pmid": "29384974",
+          "title": "Efficacy and safety of tranexamic acid in total hip replacement: A PRISMA-compliant meta-analysis of 25 randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not meet the relevance gates. (A) It evaluates prehospital hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran 70, and normal saline), not tranexamic acid (TXA) or an equivalent antifibrinolytic. (B) The reported outcomes are coagulation and fibrinolysis biomarkers and hypocoagulability/hyperfibrinolysis measures, not death due to bleeding or mortality endpoints. (C) Age is not mentioned, nor are subgroup analyses by age reported. Because the drug, the clinical outcome, and the target feature (age) are all absent or unlinked to treatment effect in this abstract, it cannot provide evidence for the hypothesized age-related modification of TXA effectiveness.",
+          "evidence_quote": "The abstract contains no mention of age or age-related analyses; it reports: \"Thirty-four patients were included: 9 HS, 8 HSD, 17 NS.\"",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does evaluate tranexamic acid dosing, but it does not report mortality or bleeding-death outcomes (it reports perioperative plasma concentrations and dosing variability). It also does not analyze Age as a modifier of outcome; the subgroup analyses focus on renal insufficiency, not age. Therefore the abstract cannot provide evidence for or against an age-related interaction with TXA on death due to bleeding/mortality.",
+          "evidence_quote": "Among patients receiving the standard dosing regimen, those with renal insufficiency had lower tranexamic acid concentration at 5 minutes on cardiopulmonary bypass (p = 0.003).",
+          "stance": "neutral",
+          "pmid": "18375325",
+          "title": "A preliminary study of a new tranexamic acid dosing schedule for cardiac surgery.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Age affects pharmacokinetics and pharmacodynamics, modifying TXA metabolism or clearance rates, potentially reducing drug efficacy or increasing side effects.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (age OR elderly OR geriatric) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 20,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 20,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates TXA and reports mortality outcomes, but it contains no analysis or subgroup results by Age. Age is neither reported as a subgroup nor described as modifying treatment effect\u2014only dosing groups and ICH status are analyzed. Because the target feature (Age) is not examined in relation to outcome or treatment effect, the abstract cannot provide evidence for or against the proposed pharmacokinetic/pharmacodynamic mechanism.",
+          "evidence_quote": "The abstract contains no mention of age-related analyses or age-based subgroups; e.g., 'This analysis included the subgroup with ICH on initial CT' and 'randomized adults with moderate/severe TBI...' with no further age-stratified results.",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Step 1 fails key relevance gates. While the intervention (TXA) is evaluated (PASS), the reported primary outcome is functional outcome (modified Rankin Scale) rather than death due to bleeding or mortality (FAIL). Crucially, Age is not analyzed or mentioned as a subgroup or modifier anywhere in the abstract; the subgroup analysis is by WFNS admission grade, not age (FAIL). Because the target feature (Age) is missing and the outcome does not match the required mortality outcome, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "The primary outcome was clinical outcome assessed by the modified Rankin scale (mRS). This post hoc subgroup analysis included only ULTRA participants with confirmed aSAH and available World Federation of Neurosurgical Societies (WFNS) grade on admission. Patients were categorized into those with good-grade (WFNS 1-3) and poor-grade (WFNS 4-5) aSAH.",
+          "stance": "neutral",
+          "pmid": "38788175",
+          "title": "Ultra-Early and Short-Term Tranexamic Acid Treatment in Patients With Good- and Poor-Grade Aneurysmal Subarachnoid Hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates topical tranexamic acid in total knee arthroplasty and reports outcomes of drain output, total blood loss, hemoglobin drop, transfusion requirements, and thromboembolic events. It does not report mortality or death due to bleeding, nor does it analyze age as a modifier of treatment effect. Therefore it fails the Outcome Alignment and Feature Check and cannot provide evidence about age modifying TXA pharmacokinetics/pharmacodynamics in the CRASH_2 context.",
+          "evidence_quote": "Our meta-analysis indicated that when compared with the control group, topical application of TA limited significantly postoperative drain output (mean difference: -268.36ml), total blood loss (mean difference=-220.08ml), Hb drop (mean difference=-0.94g/dL) and lowered the risk of transfusion requirements (risk ratio=0.47, 95CI=0.26-0.84), without increased risk of thromboembolic events.",
+          "stance": "neutral",
+          "pmid": "23815893",
+          "title": "Topical tranexamic acid in total knee replacement: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract studies tranexamic acid, it does not address the required outcome (death due to bleeding or mortality) \u2014 it reports seizures after cardiac surgery \u2014 and it does not analyze Age as a modifier of treatment effect. The target feature (Age) is absent as an analyzed factor linked to the outcome, so the abstract cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "The pooled analysis demonstrated that TXA therapy was associated with a statistically significant increase in the seizures incidence (OR=4.13; 95% CI: 2.59 to 6.57). No age-related analyses or subgroup results by age are reported in the abstract.",
+          "stance": "neutral",
+          "pmid": "28263046",
+          "title": "Seizures associated with tranexamic acid for cardiac surgery: a meta-analysis of randomized and non-randomized studies.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid in an elderly hip fracture population, its outcomes are peri\u2011operative blood loss, transfusion rates, and thromboembolic events \u2014 not death due to bleeding or mortality. Crucially, the abstract does not report any age-stratified analyses, interaction tests, or subgroup comparisons by age. Age is only referenced as the population descriptor ('elderly patients'), not as a feature analyzed for modifying TXA effect. Therefore it cannot provide evidence for the proposed mechanism that age alters TXA pharmacokinetics/pharmacodynamics to change mortality outcomes.",
+          "evidence_quote": "'The objective of this study was to assess the efficacy and safety of intravenous TXA administration in elderly patients undergoing hip fracture surgery...' (No age-stratified results or interaction analyses reported in the abstract.)",
+          "stance": "neutral",
+          "pmid": "34689986",
+          "title": "Efficacy and safety of tranexamic acid in hip fracture surgery. How does dosage affect outcomes: A meta-analysis of randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid and reports mortality outcomes, it does not analyze Age as a modifier of treatment effect. The population is described as 'elderly patients' (a cohort-level characteristic), but no subgroup or interaction analyses by age are reported. Subgroup analyses mentioned address surgery type and administration route only, so the abstract provides no evidence linking age to differential TXA efficacy or pharmacokinetics.",
+          "evidence_quote": "\"Subgroup analysis indicated that surgery types and administration routes did not change the overall tendency.\"",
+          "stance": "neutral",
+          "pmid": "36797125",
+          "title": "Efficacy and safety of tranexamic acid in elderly patients with femoral neck fracture treated with hip arthroplasty: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid and reports mortality, it does not report any analysis of Age as a modifier of TXA effect. The population is described as elderly patients, but there are no age-stratified results, no subgroup analyses by age, and no interaction p-values or statements that link Age to differences in treatment effect or mortality. Because the TARGET FEATURE (Age) is not explicitly analyzed in relation to outcomes or treatment effect, the abstract cannot provide evidence for the proposed pharmacokinetic/pharmacodynamic mechanism.",
+          "evidence_quote": "Efficacy and Safety of Topical Tranexamic Acid in Elderly Hip Fractures Undergoing Surgical Treatment: Meta-Analysis of Randomized Controlled Trials.",
+          "stance": "neutral",
+          "pmid": "39912079",
+          "title": "Efficacy and Safety of Topical Tranexamic Acid in Elderly Hip Fractures Undergoing Surgical Treatment: Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid and reports effects on rebleeding and functional outcome (a surrogate for bleeding-related harm), so treatment and outcome relevance are present. However, the abstract contains no mention or analysis of Age as a predictor or effect modifier \u2014 no subgroup analyses by age, no age-stratified results, and no interaction p-values involving age. Because the target feature (Age) is not analyzed in relation to outcome or treatment effect, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does evaluate tranexamic acid, but it does not report mortality or death-from-bleeding outcomes (it reports recurrence and complications), and it does not analyze Age as a modifier of treatment effect. Age is only reported as a baseline characteristic with no subgroup or interaction analysis linking age to outcomes or TXA efficacy. Therefore the abstract cannot inform the proposed mechanism (age-related PK/PD altering TXA effect).",
+          "evidence_quote": "There were no significant difference between baseline data in groups regarding to age, gender, use of antiplatelet or anticoagulants, smoking, alcoholism, systemic arterial hypertension, diabetes mellitus, hematoma laterality, hematoma thickness, and drain use.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although tranexamic acid was evaluated and blood-loss outcomes (surrogate for bleeding-related harm) were reported, the abstract contains no analysis of Age as a modifier of treatment effect. Age is only reported as an inclusion criterion (participants aged \u226521 years) and is not analyzed as a subgroup, covariate linked to outcomes, or tested for interaction (no interaction p-values or age-stratified results). Because the TARGET FEATURE (Age) is not examined with respect to treatment effect, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "Multiethnic women aged 21\u2009years or older undergoing elective caesarean section.",
+          "stance": "neutral",
+          "pmid": "36852501",
+          "title": "Tranexamic acid, as an adjunct to oxytocin prophylaxis, in the prevention of postpartum haemorrhage in women undergoing elective caesarean section: A single-centre double-blind randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial evaluates tranexamic acid (IV vs PO), the abstract does not report mortality or death due to bleeding (the specified outcome) nor analyze Age as a modifier of treatment effect. Age is only reported as a baseline descriptor (mean age 62 \u00b1 13 years) and is not linked to outcomes or subgroup/interaction analyses. Therefore the abstract cannot inform whether Age modifies TXA pharmacokinetics/pharmacodynamics or treatment efficacy for bleeding-related mortality.",
+          "evidence_quote": "\"The primary outcome was the reduction of hemoglobin.\" ; \"The average age was 62 \u00b1 13 years (mean \u00b1 SD).\"",
+          "stance": "neutral",
+          "pmid": "34224510",
+          "title": "Oral Is as Effective as Intravenous Tranexamic Acid at Reducing Blood Loss in Thoracolumbar Spinal Fusions: A Prospective Randomized Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "While the trial evaluates tranexamic acid, it does not report mortality or death due to bleeding outcomes (primary outcomes are total blood loss and transfusion rates), and it does not analyze Age as a modifier of treatment effect. The study population is described as \"elderly patients,\" but no age-stratified or interaction analyses are presented linking age to TXA efficacy or safety. Therefore the abstract does not provide evidence relevant to the proposed mechanism that age alters TXA pharmacokinetics/pharmacodynamics and modifies mortality benefit.",
+          "evidence_quote": "\"elderly patients undergoing surgery for a hip fracture\"; \"The primary outcomes were the total blood loss and the rate of transfusion from the time of surgery to the fourth postoperative day.\"",
+          "stance": "neutral",
+          "pmid": "33641430",
+          "title": "Single dose of tranexamic acid effectively reduces blood loss and transfusion rates in elderly patients undergoing surgery for hip fracture: a randomized controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid, it does not report mortality or death-from-bleeding outcomes (it reports blood loss, hemoglobin drop, transfusion rate, hospital stay, and thromboembolic events). Nor does it analyze Age as a modifier of treatment effect \u2014 Age is only implicitly referenced as the population being elderly but there is no subgroup or interaction analysis by age. Because the required outcome (death due to bleeding/mortality) and the feature-specific analysis (Age modifying TXA effect) are both absent, the abstract cannot provide evidence for or against the proposed pharmacokinetic/pharmacodynamic mechanism.",
+          "evidence_quote": "\"The pooled results illustrated that total blood loss, intraoperative blood loss, postoperative blood loss, hemoglobin drop, transfusion rate, and average hospital stay were significantly lower than controls...\"",
+          "stance": "neutral",
+          "pmid": "29384974",
+          "title": "Efficacy and safety of tranexamic acid in total hip replacement: A PRISMA-compliant meta-analysis of 25 randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid and reports bleeding-related surrogate outcomes (blood loss, transfusion rate), it does not analyze Age as a modifier of treatment effect. Age is reported only as an inclusion characteristic (patients aged 60\u201380 years) and the study population is effectively restricted to older patients, with no subgroup or interaction analysis by age and no mortality or death-from-bleeding outcomes reported. Therefore the abstract provides no evidence for or against the proposed mechanism that age alters TXA pharmacokinetics/pharmacodynamics and modifies its effect on mortality.",
+          "evidence_quote": "The study included 56 male and 244 female patients aged 60-80\u2009years. ... Three doses of postoperative IV-TXA decreased blood loss and diminished the postoperative inflammatory and fibrinolytic response more than a single dose or two doses in elderly patients following TKA without increasing the incidence of adverse events.",
+          "stance": "neutral",
+          "pmid": "33295133",
+          "title": "Effect of Multiple Doses of Intravenous Tranexamic Acid on Perioperative Blood Loss in Total Knee Arthroplasty: A Randomized Controlled Study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract is not relevant to the hypothesis. Although tranexamic acid (TXA) is the treatment studied, the study concerns TXA for menorrhagia in women using intrauterine devices \u2014 an efficacy/symptom trial \u2014 and does not report mortality or death due to bleeding outcomes. Additionally, the abstract contains no analysis of Age as a predictor or effect modifier; Age is not examined for association with outcomes or treatment interaction. Because either the outcome (mortality) or the feature (Age interaction) is missing, the abstract fails the relevance gates and cannot support the proposed mechanism.",
+          "evidence_quote": "Title: \"[Treatment by tranexamic acid in menorrhagia in women using intrauterine devices].\" Abstract text: No mention of age-related analyses or mortality/death due to bleeding outcomes.",
+          "stance": "neutral",
+          "pmid": "5129410",
+          "title": "[Treatment by tranexamic acid in menorrhagia in women using intrauterine devices].",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial evaluates tranexamic acid (TXA), the reported outcomes are intraoperative blood loss and related perioperative measures in orthognathic surgery \u2014 not death due to bleeding or mortality. Age is listed among baseline variables but is not analyzed or reported as modifying any outcome or treatment effect. Therefore the abstract provides no evidence relevant to the hypothesis that Age modifies TXA's effect on mortality via altered pharmacokinetics/pharmacodynamics.",
+          "evidence_quote": "\"Age, gender, operation duration, the amount of irrigation solution used, and preoperative hemoglobin, hematocrit, and weight were the variables that were studied.\"",
+          "stance": "neutral",
+          "pmid": "25443384",
+          "title": "Effect of tranexamic acid irrigation on perioperative blood loss during orthognathic surgery: a double-blind, randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although tranexamic acid was tested and bleeding outcomes (surrogates for mortality) were reported, the abstract contains no analysis of Age as a predictor or effect modifier. Age appears only as an eligibility/baseline descriptor (patients aged 18\u201385) and there is no subgroup, interaction p-value, or statement linking Age to treatment effect or outcomes. Therefore the abstract does not provide evidence for or against the proposed mechanism that Age alters TXA pharmacokinetics/pharmacodynamics.",
+          "evidence_quote": "Patients eligible for randomization were 1173 men and women aged 18 to 85 years undergoing primary and isolated on-pump CABG; 570 adults were randomized and 552 were analyzed.",
+          "stance": "neutral",
+          "pmid": "23426385",
+          "title": "Protective effects of tranexamic acid on clopidogrel before coronary artery bypass grafting: a multicenter randomized trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not meet the relevance gates. (A) Treatment check fails: tranexamic acid (TXA) or an equivalent antifibrinolytic is not evaluated; the study assesses hypertonic fluids (7.5% NaCl, 7.5% NaCl/6% Dextran, or normal saline). (B) Outcome alignment fails: the reported outcomes are coagulation parameters and hyperfibrinolysis after resuscitation, not death due to bleeding or mortality/endpoints related to TXA efficacy. (C) Feature check fails: Age is not mentioned or analyzed as a predictor or effect modifier. Because at least one of A/B/C is unmet (in fact all three), the abstract is irrelevant to assessing whether Age modifies TXA treatment effects.",
+          "evidence_quote": "N/A \u2014 Age is not mentioned in the abstract.",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial tests tranexamic acid, the outcomes are prevention of alveolar osteitis and postoperative pain after tooth extraction \u2014 not death due to bleeding or mortality-related outcomes. Age is only mentioned as a baseline characteristic that groups were standardized on and is not analyzed as a predictor or effect modifier of treatment effect. Therefore the abstract does not provide evidence relevant to the proposed mechanism (age altering TXA pharmacokinetics/pharmacodynamics affecting mortality).",
+          "evidence_quote": "The patients were randomly assigned to two groups and standardized in terms of gender, age, level of difficulty of surgery, smoking status, and intake of oral contraceptives.",
+          "stance": "neutral",
+          "pmid": "39905606",
+          "title": "Efficacy of a Biodegradable Dressing Containing Tranexamic Acid for Prevention of Alveolar Osteitis: A Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Step 1 checks: (A) Treatment: PASS \u2014 CRASH-3 evaluated tranexamic acid. (B) Outcome: PASS \u2014 the abstract reports effects on death/head\u2011injury death. (C) Feature (Age): FAIL \u2014 the abstract does not analyze or report results stratified by age, nor mention age as modifying treatment effect. Because the proposed mechanism concerns age-related PK/PD modifying TXA efficacy, and the abstract contains no age-specific analyses or interaction tests, it cannot provide evidence for or against the mechanism.",
+          "evidence_quote": "No mention of age or age-stratified/interaction analyses in the abstract.",
+          "stance": "neutral",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Age could proxy for baseline health status or the presence of comorbidities, influencing the observed treatment effect indirectly.",
+        "evidence_level": "weak"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (age OR elderly OR geriatric) AND (\"comorbidities\" OR \"influencing\" OR \"indirectly\" OR \"presence\" OR \"observed\") AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 5,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 5,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates tranexamic acid and reports clinical outcomes, it does not analyze Age as a feature or report any age-treatment interaction. The subgrouping and interaction analyses are based on WFNS admission grade (good vs poor) and the abstract contains no mention of age as a covariate, subgroup, or modifier of treatment effect. Because the target feature (Age) is missing from the outcome/interaction analyses, the abstract cannot provide evidence for or against the proposed mechanism that age proxies baseline health/comorbidities and modifies TXA effect.",
+          "evidence_quote": "This post hoc subgroup analysis included only ULTRA participants with confirmed aSAH and available World Federation of Neurosurgical Societies (WFNS) grade on admission. Patients were categorized into those with good-grade (WFNS 1-3) and poor-grade (WFNS 4-5) aSAH.",
+          "stance": "neutral",
+          "pmid": "38788175",
+          "title": "Ultra-Early and Short-Term Tranexamic Acid Treatment in Patients With Good- and Poor-Grade Aneurysmal Subarachnoid Hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does evaluate tranexamic acid (topical TA), so treatment check partially passes, but it does not assess the outcome of interest (death due to bleeding or mortality) \u2014 outcomes reported are blood loss, hemoglobin drop, transfusion requirements, and thromboembolic events. Crucially, Age is not analyzed as a predictor or effect modifier anywhere in the abstract (only a general statement that studies enrolled adults). Because the target feature (Age) is not linked to outcomes or subgroup effects in this abstract, it cannot inform the proposed mechanism.",
+          "evidence_quote": "\"The studies enrolled adults undergoing a primary TKA, where topical TA was used.\"",
+          "stance": "neutral",
+          "pmid": "23815893",
+          "title": "Topical tranexamic acid in total knee replacement: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid in elderly patients for peri\u2011operative blood loss, transfusion, and thromboembolic events, but does not report mortality or death due to bleeding (the target outcome). Although the population is described as 'elderly patients', Age is not analyzed as a modifier of treatment effect (no age subgroup or interaction results are presented). Therefore the abstract does not provide evidence relevant to the proposed mechanism that Age proxies baseline health/comorbidity and modifies TXA's effect on mortality.",
+          "evidence_quote": "\"The objective of this study was to assess the efficacy and safety of intravenous TXA administration in elderly patients undergoing hip fracture surgery focusing on the effect of various dosages.\"",
+          "stance": "neutral",
+          "pmid": "34689986",
+          "title": "Efficacy and safety of tranexamic acid in hip fracture surgery. How does dosage affect outcomes: A meta-analysis of randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does evaluate tranexamic acid, but it does not assess mortality or death due to bleeding (it reports rebleeding rates and functional outcome mRS 0-3 at 6 months). Critically, Age is not analyzed or mentioned as a subgroup, covariate effect, or modifier of treatment in the abstract \u2014 the interaction analysis is by time-to-treatment, not by age. Therefore the abstract provides no evidence relevant to the proposed mechanism that age (as a proxy for baseline health/comorbidity) modifies TXA's effect on mortality.",
+          "evidence_quote": "\"We assessed confounders, hazard ratio (HR) of rebleeding and odds ratio (OR) of good outcome (modified Rankin Scale 0-3) at 6\u2009months, and investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6\u2009h).\"",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract studies tranexamic acid but in a dental context (prevention of alveolar osteitis and pain after third molar extraction), not the CRASH-2 context of TXA for bleeding/mortality. The outcome evaluated (incidence of AO and postoperative pain) does not align with the required outcome (death due to bleeding / mortality). Age is only mentioned as a baseline characteristic that was standardized between groups and is not analyzed or reported as predicting outcome or interacting with treatment. There are no subgroup analyses or interaction p-values involving Age. Therefore the abstract does not provide evidence relevant to the proposed mechanism that Age proxies baseline health/comorbidity and modifies TXA's effect on mortality.",
+          "evidence_quote": "\u201cThe patients were randomly assigned to two groups and standardized in terms of gender, age, level of difficulty of surgery, smoking status, and intake of oral contraceptives.\u201d",
+          "stance": "neutral",
+          "pmid": "39905606",
+          "title": "Efficacy of a Biodegradable Dressing Containing Tranexamic Acid for Prevention of Alveolar Osteitis: A Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "time to treatment",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Early TXA administration may interrupt hyperfibrinolysis, which is most active shortly after trauma, improving outcome potentials significantly compared to later administration.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND \"time AND to AND treatment\" AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 1,
+      "conflict_count": 1,
+      "neutral_count": 0,
+      "abstracts_analyzed": [
+        {
+          "classification": "CONFLICT",
+          "confidence": "medium",
+          "reasoning": "The abstract examines TXA and time-to-treatment and reports a statistically significant interaction for rebleeding (p < 0.001) showing a protective effect only when TXA was started >6 hours after hemorrhage. This is the opposite of the hypothesized mechanism (that earlier TXA would be more beneficial by interrupting early hyperfibrinolysis). Overall rebleeding was modestly lower in the TXA group (HR 0.86, 95% CI 0.62-1.19) but not clearly clinically important, and TXA had no effect on 6-month functional outcome (OR 0.96, 95% CI 0.72-1.27) with no interaction by time (p = 0.53). Because the only significant time-treatment interaction reported favors later treatment rather than earlier treatment, the clinical data in this abstract contradict the proposed mechanism. Confidence is tempered because this is a post-hoc analysis and the reported benefit is described as clinically non-relevant and did not translate into improved functional outcomes.",
+          "evidence_quote": "\"Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%). ... Tranexamic acid treatment showed no effect on good outcome (OR 0.96, 95% CI: 0.72-1.27) with no evidence of effect modification on the time to start of TXA (p = 0.53).\"",
+          "stance": "conflict",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly reports a statistically significant time-by-treatment interaction and states that early treatment is most beneficial in mild/moderate TBI. It provides numeric evidence: an interaction term whose 95% CI excludes 1 (1.15, 95% CI 1.03\u20131.27, and 1.16, 95% CI 1.05\u20131.28 after using monitored times) and treatment effect estimates at 1 hour showing substantial benefit (ORs \u22480.58\u20130.63 with CIs excluding 1). Adjustment for measurement error had minimal impact, so the observed interaction is robust to timing inaccuracies. These findings match the proposed mechanism that earlier TXA yields greater benefit.",
+          "evidence_quote": "In mild and moderate TBI, there is a time to treatment interaction, with early treatment being most beneficial. The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81) than for clinician-recorded times OR = 0.63 (95% CI 0.48, 0.83). Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "time to treatment",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Timing influences the pharmacodynamics of TXA, where early administration aligns with peak therapeutic windows and prevents significant fibrinolysis better than later dosing.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND \"time AND to AND treatment\" AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 1,
+      "conflict_count": 1,
+      "neutral_count": 0,
+      "abstracts_analyzed": [
+        {
+          "classification": "CONFLICT",
+          "confidence": "medium",
+          "reasoning": "The abstract reports a highly significant interaction by time-to-treatment for the rebleeding outcome (p < 0.001) but the observed benefit is confined to TXA started >6 hours after hemorrhage, not earlier. The stated mechanism (early TXA aligns with a therapeutic window and should be more protective) predicts greater benefit with earlier treatment; the trial shows the opposite timing pattern and the benefit is described as clinically non\u2011relevant (absolute reduction 1.4%). Additionally, there was no effect of TXA on functional outcome and no interaction by time for that endpoint (p = 0.53). Although the analysis is post\u2011hoc and uses rebleeding as a surrogate rather than direct mortality, the reported significant interaction is in the opposite direction to the hypothesized early\u2011treatment benefit, so the abstract contradicts the proposed mechanism.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p\u2009<\u20090.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6\u2009h (absolute rate reduction 1.4%).",
+          "stance": "conflict",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "reasoning": "The abstract explicitly analyzes Time To Treatment and reports a statistically significant time-by-treatment interaction and stronger treatment effect with earlier treatment. The reported interaction term (1.15, 95% CI 1.03\u20131.27; adjusted 1.16, 95% CI 1.05\u20131.28) excludes the null, and the odds ratios at 1 hour show substantial benefit (OR \u22480.58\u20130.63). These findings indicate the magnitude of TXA's benefit differs by time to treatment, with greater benefit when given earlier\u2014consistent with the proposed pharmacodynamic mechanism. The authors also note adjustment for time measurement error had minimal impact, strengthening confidence in the interaction signal.",
+          "evidence_quote": "The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81) than for clinician-recorded times OR = 0.63 (95% CI 0.48, 0.83). For Bayesian methods, the treatment effect at 1 h was OR = 0.58 (95% CI 0.43, 0.78). Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "time to treatment",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Treatment delay might proxy for severity of trauma or delays in healthcare access, reflecting systemic factors more than biological effect alone.",
+        "evidence_level": "weak"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND \"time AND to AND treatment\" AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\")",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 2,
+      "support_count": 2,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": [
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "reasoning": "The abstract explicitly tests Time To Treatment and reports a statistically significant interaction: \"Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)\". The treatment effect on the bleeding-related surrogate (rebleeding) differs by time strata and was observed only when TXA was started after 6 h (albeit a clinically non-relevant absolute reduction). This significant interaction supports the claim that time-to-treatment modifies observed efficacy and is consistent with the proposed mechanism that timing may reflect non-biological/systemic factors (severity or access) rather than a straightforward biological time-dependent benefit. However, this is a post-hoc subgroup analysis, the effect size is small/clinically non-relevant, mortality was not reported, and functional outcomes showed no interaction, so causal mechanistic inference is limited\u2014hence medium confidence.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h.",
+          "stance": "support",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "reasoning": "The abstract reports a statistically significant time-by-treatment interaction: the time-treatment interaction term is >1 with a 95% CI excluding 1, and early treatment estimates (at 1 hour) show stronger benefit (ORs <1). The authors also state that adjustment for measurement error had minimal impact, and monitored times produced very similar or slightly stronger interaction estimates, which supports that time-to-treatment modifies TXA's effect. However, the abstract does not provide direct evidence that treatment delay is primarily a proxy for severity of trauma or for healthcare-system delays (the proposed mechanism). Although the analysis restricted to GCS 9\u201315 (reducing some severity confounding) and notes greater timing variability in low-/middle-income countries, it does not present analyses that separate a biological time-dependent effect from confounding by severity or access. Thus the data support a genuine time-treatment interaction, but do not specifically support the mechanism that delay mainly reflects systemic/severity confounding.",
+          "evidence_quote": "Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "injury severity score (ISS)",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Severe injuries might trigger extensive fibrinolysis, making TXA more essential; however, very severe injuries could overwhelm any potential benefits due to irreversible damage.",
+        "evidence_level": "strong"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "injury severity score (ISS)",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "In more severe injuries, altered physiology may affect TXA distribution and effectiveness, potentially requiring dosage adjustments.",
+        "evidence_level": "moderate"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "injury severity score (ISS)",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "ISS could act as a surrogate for other factors such as site of injury or comorbidities, which might independently alter TXA's effectiveness.",
+        "evidence_level": "weak"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "systolic blood pressure (SBP) upon admission",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Lower SBP may indicate shock, causing different coagulation and fibrinolytic activities that modify TXA impact.",
+        "evidence_level": "strong"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial evaluates tranexamic acid and reports mortality outcomes, the abstract does not analyze or report systolic blood pressure (SBP) upon admission as a predictor or effect modifier of TXA efficacy. SBP is only mentioned as an inclusion criterion (SBP \u2265 90 mm Hg); there are no subgroup analyses, interaction tests, or outcome associations reported by SBP. Therefore the abstract cannot be used to evaluate the proposed mechanism linking admission SBP to differential TXA effect.",
+          "evidence_quote": "randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus...",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) but the primary outcomes are intraoperative blood loss, hemoglobin/hematocrit, and operating time in orthognathic surgery\u2014not death due to bleeding or mortality. Systolic blood pressure on admission is not mentioned or analyzed as a predictor or effect modifier. Because the required outcome (mortality/death due to bleeding) and the target feature (Sbp upon admission) are absent, the abstract cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "No mention of systolic blood pressure (Sbp) or admission blood pressure in the abstract; outcomes reported are intraoperative blood loss, hemoglobin/hematocrit, and operating time.",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) for recurrence and complications after chronic subdural hematoma surgery, not mortality or death due to bleeding. It also does not mention or analyze Systolic Blood Pressure (Sbp) upon admission as a predictor or effect modifier. Because the outcome (death due to bleeding/mortality) and the TARGET FEATURE (admission SBP) are both absent, the abstract cannot inform the proposed mechanism.",
+          "evidence_quote": "Systolic blood pressure (SBP) upon admission is not mentioned in the abstract; outcomes reported are recurrence and complications rather than mortality.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid and reports mortality outcomes (including 90-day mortality), but it does not analyze or report results stratified by Systolic Blood Pressure on admission. Subgroup analyses are reported (time window, spot sign, hypertensive ICH, NOAC-associated ICH) but none involve admission SBP or an interaction between SBP and TXA effect. Because the target feature (Sbp upon admission) is not examined as a moderator of treatment effect, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"Another subgroup analysis based on study populations revealed a significant effect of TXA on hematoma volume in studies involving sICH without a specific subgroup classification. However, no significant effect was observed in other subgroups, including sICH with spot sign, hypertensive ICH, and NOAC-associated ICH.\"",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate tranexamic acid (TXA) or an equivalent antifibrinolytic (Treatment Check fails). It reports coagulation and fibrinolysis biomarkers after prehospital hypertonic vs normal saline resuscitation, not mortality or death due to bleeding (Outcome Alignment fails). Although systolic blood pressure on admission is mentioned (and restricted in enrollment to \u226470 mmHg and reported as differing between fluid arms), SBP is not analyzed as a predictor of mortality or as a modifier of a TXA treatment effect (Feature Check fails). Therefore the abstract is not relevant to testing whether admission SBP modifies TXA's effect on death due to bleeding.",
+          "evidence_quote": "\u201csingle-bolus (250 mL) hypertonic fluid resuscitation of hemorrhagic shock trauma patients (systolic blood pressure, \u226470 mmHg).\u201d and \"Treatment with HS/HSD led to higher admission systolic blood pressure\"",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate tranexamic acid (no treatment effect or comparison reported; only a reported administration rate), does not report death due to bleeding or mortality outcomes, and does not analyze or report systolic blood pressure on admission as a predictor or effect modifier. The only related item is that 'hypotension' is included in the severe PPH definition, but SBP on admission is neither measured nor linked to outcomes or to TXA effect. Therefore it cannot inform whether admission SBP modifies TXA's effect on bleeding mortality.",
+          "evidence_quote": "\u201cManagement of severe PPH (blood loss \u22651,000ml or \u2265500ml with hypotension or at least three transfusions) was evaluated\u2026\u201d  \u201c...tranexamic acid in 4.9% (n = 5/103[missing 117]).\u201d",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "systolic blood pressure (SBP) upon admission",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Low SBP affects drug distribution and perfusion, potentially altering TXA pharmacokinetics and effectiveness.",
+        "evidence_level": "moderate"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the trial evaluated tranexamic acid and mortality outcomes, the abstract does not analyze or report any association or interaction between systolic blood pressure (SBP) on admission and treatment effect. SBP appears only as an inclusion criterion (SBP \u2265 90 mm Hg), not as a subgroup or covariate linked to differential TXA efficacy. Therefore the abstract provides no evidence for or against the proposed mechanism relating low SBP to altered TXA effectiveness.",
+          "evidence_quote": "\"randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus...\"",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although tranexamic acid (TXA) is evaluated, the abstract does not assess death due to bleeding or mortality (it evaluates intraoperative blood loss, hemoglobin/hematocrit, and operating time). Systolic blood pressure upon admission is not analyzed as a predictor or subgroup; the stated predictor variables are hemostatic measures, and references to 'hypotensive anesthetic regimens' are about intraoperative technique, not admission SBP or its interaction with TXA. Therefore the abstract provides no evidence relevant to whether admission SBP modifies TXA's effect on mortality or bleeding-related death.",
+          "evidence_quote": "\"The predictor variable was the hemostatic measures, and the main outcome variable was the total IOB volume.\"",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does evaluate tranexamic acid (A = pass), but it does not assess death due to bleeding or mortality outcomes (B = fail) and does not analyze or report systolic blood pressure on admission or its association with outcomes (C = fail). The trial concerns recurrence of chronic subdural hematoma and postoperative complications in a small surgical cohort; no subgroup or interaction analysis involving admission SBP is presented. Therefore it cannot provide evidence for or against the proposed mechanism relating admission SBP to TXA effectiveness.",
+          "evidence_quote": "\"We evaluated image and clinical recurrence of CSDH at follow up of 6 months ... There were no significant difference between baseline data in groups regarding to age, gender, use of antiplatelet or anticoagulants, smoking, alcoholism, systemic arterial hypertension, diabetes mellitus, hematoma laterality, hematoma thickness, and drain use.\"",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid and reports mortality outcomes (90-day mortality), so treatment and outcome gates pass. However, systolic blood pressure (SBP) upon admission is not mentioned or analyzed anywhere in the abstract\u2014no subgroup, interaction, or covariate analyses involving SBP are reported. Because the target feature (SBP on admission) is missing, the abstract cannot provide evidence for or against the proposed mechanism linking low SBP to altered TXA effectiveness.",
+          "evidence_quote": "N/A - systolic blood pressure (SBP) upon admission is not mentioned in the abstract.",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate tranexamic acid (TXA) or any antifibrinolytic agent, nor does it report mortality or death due to bleeding outcomes. Although systolic blood pressure on admission is mentioned and compared between fluid groups, the study examines effects of hypertonic fluids on coagulation, not TXA treatment effects or TXA-by-SBP interactions on mortality. Therefore it cannot provide evidence for the proposed mechanism linking admission SBP to TXA efficacy on bleeding mortality.",
+          "evidence_quote": "\u201csingle-bolus (250 mL) hypertonic fluid resuscitation of hemorrhagic shock trauma patients (systolic blood pressure, \u226470 mmHg).\u201d and \u201cTreatment with HS/HSD led to higher admission systolic blood pressure...\u201d",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract fails the relevance gates. Although tranexamic acid is mentioned as being given to a small proportion of severe PPH cases, this is an observational audit of management, not a randomized comparison of TXA versus placebo/no TXA, and no treatment effect estimates are reported. The outcome of interest for the mechanism (death due to bleeding / mortality) is not reported. Systolic blood pressure on admission is not explicitly analyzed; the abstract only uses the term 'hypotension' within a composite severe-PPH definition and does not present systolic BP values, subgroup analyses, or interactions. Therefore there is no evidence in this abstract to evaluate whether admission SBP modifies TXA effectiveness.",
+          "evidence_quote": "\"severe PPH (blood loss \u22651,000ml or \u2265500ml with hypotension or at least three transfusions)\"; \"A criteria-based audit revealed ... tranexamic acid in 4.9% (n = 5/103[missing 117])\"",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "systolic blood pressure (SBP) upon admission",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "SBP may correlate with other unmeasured factors such as fluid resuscitation needs or unrecorded comorbidities, influencing treatment outcomes.",
+        "evidence_level": "weak"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\") AND (trauma OR bleeding OR hemorrhage)) AND (\"systolic blood pressure\" OR \"initial blood pressure\" OR hypotension OR hypertension) AND (\"effect modification\" OR \"treatment effect heterogeneity\" OR \"heterogeneous treatment effect\" OR \"treatment interaction\" OR \"interaction effect\" OR \"subgroup analysis\" OR \"differential treatment effect\" OR \"treatment-by\" OR \"predictive factor\" OR \"interaction term\") AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 6,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 6,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "Although the abstract evaluates TXA and mortality outcomes in TBI patients, Systolic Blood Pressure (SBP) is only referenced as an enrollment criterion (SBP \u2265 90 mm Hg) and is not analyzed or reported as a predictor, subgroup, or effect modifier for mortality or treatment benefit. The TARGET_FEATURE requires SBP upon admission to be explicitly linked to outcome or treatment interaction; that condition is not met, so the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "randomized adults with moderate/severe TBI (Glasgow Coma Scale score < 13) and systolic blood pressure \u2265 90 mm Hg within 2 hours of injury to a 2-g out-of-hospital TXA bolus...",
+          "stance": "neutral",
+          "pmid": "38685481",
+          "title": "The effects of prehospital TXA on mortality and neurologic outcomes in patients with traumatic intracranial hemorrhage: A subgroup analysis from the prehospital TXA for TBI trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates tranexamic acid (TXA) but in the context of orthognathic surgery with primary outcomes of intraoperative blood loss, hemoglobin/hematocrit, and operating time. It does not assess mortality or death due to bleeding (the required outcome), nor does it mention or analyze systolic blood pressure upon admission as a predictor or effect modifier. Therefore it cannot provide evidence for the proposed mechanism linking admission SBP to differential TXA treatment effects on mortality.",
+          "evidence_quote": "\"The predictor variable was the hemostatic measures, and the main outcome variable was the total IOB volume.\"",
+          "stance": "neutral",
+          "pmid": "26073131",
+          "title": "Prevention of Bleeding in Orthognathic Surgery--A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract evaluates postoperative TXA for chronic subdural hematoma recurrence and complications, not death due to bleeding or mortality outcomes required by the mechanism test. Additionally, Systolic Blood Pressure (Sbp) upon admission is not analyzed or reported as a predictor or effect modifier. Because the required outcome and the target feature are absent, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "There were no significant difference between baseline data in groups regarding to age, gender, use of antiplatelet or anticoagulants, smoking, alcoholism, systemic arterial hypertension, diabetes mellitus, hematoma laterality, hematoma thickness, and drain use.",
+          "stance": "neutral",
+          "pmid": "37071217",
+          "title": "Effect of postoperative tranexamic acid on recurrence rate and complications in chronic subdural hematomas patients: preliminary results of a randomized controlled clinical trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract reports a meta-analysis of TXA in spontaneous intracerebral hemorrhage with outcomes including hematoma volume, functional outcomes, 90-day mortality, thromboembolic events, and quality of life. It does not mention systolic blood pressure on admission, nor present any subgroup or interaction analyses defined by admission SBP. Because the target feature (Sbp upon admission) is not analyzed or linked to outcomes or treatment effect in the abstract, it cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "No mention of Systolic Blood Pressure (Sbp) Upon Admission in the abstract.",
+          "stance": "neutral",
+          "pmid": "40719896",
+          "title": "Tranexamic acid for spontaneous intracerebral hemorrhage: hematoma control without clinical\u00a0benefits? A meta-analysis of RCTs.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not evaluate tranexamic acid (TXA) or an equivalent antifibrinolytic (Treatment Check fails). It reports effects of different prehospital fluids on coagulation biomarkers and coagulopathy, not on death due to bleeding or mortality outcomes (Outcome Alignment fails). Although systolic blood pressure (SBP) is mentioned (it was an inclusion criterion and compared across treatment groups), SBP is only reported as a baseline/admission measure and not analyzed as a predictor of mortality or as a modifier of treatment effect (Feature Check fails). Because at least one of the Step 1 gates failed (in fact A and B, and C as a modifier), the abstract is irrelevant to testing the proposed mechanism in the CRASH_2/TXA context.",
+          "evidence_quote": "\"systolic blood pressure, \u226470 mmHg\"; \"Treatment with HS/HSD led to higher admission systolic blood pressure, sodium, chloride, and osmolarity\"",
+          "stance": "neutral",
+          "pmid": "25784523",
+          "title": "Prehospital Resuscitation of Traumatic Hemorrhagic Shock with Hypertonic Solutions Worsens Hypocoagulation and Hyperfibrinolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "reasoning": "The abstract does not meet the required relevance gates. While tranexamic acid is mentioned as being administered to a small fraction of patients (so A is partially met), the paper does not report death due to bleeding or other mortality outcomes (B fails). Crucially, systolic blood pressure on admission is not analyzed or even mentioned as a predictor or subgroup (C fails). Because the target feature (admission SBP) and the mortality outcome needed to evaluate the proposed mechanism are absent, the abstract cannot provide evidence for or against an interaction between TXA effect and admission SBP.",
+          "evidence_quote": "\"Risk indicators associated with severe PPH included being of African descent (Maroon aOR 2.1[95%CI 1.3-3.3], Creole aOR 1.8[95%CI 1.1-3.0]), multiple pregnancy (aOR 3.4[95%CI 1.7-7.1]), delivery in Hospital D (aOR 2.4[95%CI 1.7-3.4]), cesarean section (aOR 3.9[95%CI 2.9-5.3]), stillbirth (aOR 6.4 [95%CI 3.4-12.2]), preterm birth (aOR 2.1[95%CI 1.3-3.2]), and macrosomia (aOR 2.8 [95%CI 1.5-5.0]).\"",
+          "stance": "neutral",
+          "pmid": "33338049",
+          "title": "Postpartum hemorrhage in Suriname: A national descriptive study of hospital births and an audit of case management.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "pre-existing antiplatelet therapy",
+      "mechanism": {
+        "mechanism_type": "biological",
+        "description": "Patients on antiplatelet therapy might benefit more from TXA due to a greater initial bleeding risk; TXA helps stabilize clots that such therapies make fragile.",
+        "evidence_level": "strong"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "pre-existing antiplatelet therapy",
+      "mechanism": {
+        "mechanism_type": "pharmacological",
+        "description": "Antiplatelet agents may modify TXA pharmacodynamics, requiring dose adjustments but potentially amplifying benefit through synergistic stabilizing effects.",
+        "evidence_level": "moderate"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "pre-existing antiplatelet therapy",
+      "mechanism": {
+        "mechanism_type": "statistical",
+        "description": "Antiplatelet use could proxy for cardiovascular comorbidities, affecting both the need and benefit for TXA treatment independently.",
+        "evidence_level": "weak"
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    }
+  ]
+}

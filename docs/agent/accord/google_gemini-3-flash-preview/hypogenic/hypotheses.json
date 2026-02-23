@@ -1,0 +1,453 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "accord",
+    "treatment": "Intensive glucose control (HbA1c target <6.0%)",
+    "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+    "population": "Adults with type 2 diabetes and high cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 65,
+    "top_k": 15,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": [
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_004",
+        "title": "Pre-existing CVD and Intensive Therapy Friction",
+        "hypothesis_statement": "In patients with established CVD (36% of difficult samples), the cardiac strain of achieving an HbA1c <6.0% outweighs the preventative benefits.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "cvd_hx_baseline",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Positive baseline cardiovascular disease history"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Existing structural heart disease (indicated by history) increases vulnerability to the sympathoadrenal surge associated with aggressive glucose management."
+        },
+        "mechanism": "Intensive therapy increases hypoglycemic episodes which trigger catecholamine release, leading to arrhythmias or demand ischemia in scarred myocardia.",
+        "evidence_basis": [
+          "36% of failed cases had positive CVD_HX",
+          "Low potassium (mean -0.12) in these samples increases risk of repolarization abnormalities"
+        ],
+        "testable_prediction": "Patients with prior MI will show shorter time-to-event in the intensive arm compared to the standard arm."
+      },
+      "acc": 0.5430463576158938,
+      "num_visits": 151,
+      "reward": 0.6367055729666143
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_001",
+        "title": "The Metabolic Resilience Paradox",
+        "hypothesis_statement": "Patients with elevated triglycerides but low baseline age and high HDL exhibit resistance to the intensive control benefit due to metabolic adaptation and hypoglycemia risk.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "trig",
+            "operator": ">",
+            "threshold": 0.3,
+            "category": null,
+            "description": "Baseline triglycerides significantly above the standardized mean."
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "The high triglyceride mean in difficult samples suggests these patients may experience greater metabolic volatility and hypoglycemia-induced cardiovascular stress under intensive targets."
+        },
+        "mechanism": "Hypertriglyceridemia in younger patients may signal insulin resistance patterns that are prone to glycemic variability; intensive insulinization to reach HbA1c <6.0% increases the frequency of severe hypoglycemic events which trigger sympathetic surges and MI.",
+        "evidence_basis": [
+          "Mean trig 0.32 in difficult samples",
+          "Negative mean age -0.38 in difficult samples",
+          "Positive mean hdl 0.12"
+        ],
+        "testable_prediction": "In patients with trig > 0.3 and age < mean, intensive treatment will show higher rates of nonfatal MI compared to standard care."
+      },
+      "acc": 0.5298013245033112,
+      "num_visits": 151,
+      "reward": 0.6234605398540317
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_001",
+        "title": "Triglyceride-Driven Metabolic Sensitivity",
+        "hypothesis_statement": "Patients with significantly elevated baseline triglycerides and metabolic syndrome markers (lower BMI but higher FPG) show paradoxical harm with intensive control due to rapid glycogenolysis/lipolysis interactions.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "trig",
+            "operator": ">",
+            "threshold": 0.32,
+            "category": null,
+            "description": "Baseline triglycerides significantly above the sample mean"
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "High triglyceride levels in this difficult-to-predict subgroup likely signal metabolic inflexibility, where intensive insulin/medication escalation increases risk of fatty acid mobilization and cardiac stress."
+        },
+        "mechanism": "Elevated triglycerides act as a marker for insulin resistance that, when challenged with aggressive glucose lowering, precipitates autonomic instability and pro-inflammatory lipid signaling.",
+        "evidence_basis": [
+          "Mean trig in difficult samples is 0.32 vs expected lower population averages",
+          "High FPG (mean 0.15) suggests glycemic volatility"
+        ],
+        "testable_prediction": "Patients in the high-triglyceride subgroup will show higher rates of sudden cardiac death rather than stroke when randomized to intensive treatment."
+      },
+      "acc": 0.5231788079470198,
+      "num_visits": 151,
+      "reward": 0.6168380232977403
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "ACC_DIF_001",
+        "title": "Metabolic Flux and Triglyceride Sensitivity",
+        "hypothesis_statement": "Patients with high baseline triglycerides and elevated fasting plasma glucose are at increased risk of nocturnal hypoglycemic events during intensive control, negating cardiovascular benefits.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "trig",
+            "operator": ">",
+            "threshold": 0.32,
+            "category": null,
+            "description": "Baseline triglyceride levels significantly above the cohort mean."
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "High triglycerides in this sample denote metabolic inflexibility where intensive glucose lowering may outpace the rate of gluconeogenesis, leading to dangerous glycemic variability."
+        },
+        "mechanism": "The 'difficult' samples show high mean triglycerides (0.32). High TG levels often correlate with increased ectopic fat and impaired hepatic autoregulation, making intensive insulin-sensitizing or secretagogue therapy more likely to cause erratic glucose swings.",
+        "evidence_basis": [
+          "ACCORD subgroup analysis suggesting harm in high TG/low HDL clusters",
+          "Observation of high mean TG in standard-model-failure cases"
+        ],
+        "testable_prediction": "Patients in this subgroup will demonstrate higher standard deviation in daily glucose readings during the intensive phase."
+      },
+      "acc": 0.5231788079470198,
+      "num_visits": 151,
+      "reward": 0.6168380232977403
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_003",
+        "title": "Low BMI-High FPG Discordance",
+        "hypothesis_statement": "Leaner patients with high fasting plasma glucose (FPG) are at risk of over-treatment with intensive protocols, leading to hypoglycemic injury.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "bmi",
+            "operator": "<=",
+            "threshold": 0.09,
+            "category": null,
+            "description": "Relatively lower BMI compared to the difficult sample mean"
+          },
+          "recommendation": "control",
+          "expected_benefit": "low",
+          "rationale": "Leaner diabetic patients often have reduced counter-regulatory capacity; when combined with high FPG, they receive higher drug doses while having less metabolic 'buffer'."
+        },
+        "mechanism": "Relative insulin deficiency in lower-BMI type 2 diabetics makes them more prone to glycemic excursions and iatrogenic hypoglycemia during intensive therapy.",
+        "evidence_basis": [
+          "Mean BMI in failure cases is near-zero (0.09) while FPG is elevated (0.15)",
+          "Difficult samples show lower heart rates (mean -0.11), potentially masks early hypoglycemia signs"
+        ],
+        "testable_prediction": "The risk of non-fatal MI will be higher in the intensive arm for patients with BMI < 27 and baseline FPG > 150 mg/dL."
+      },
+      "acc": 0.4966887417218543,
+      "num_visits": 151,
+      "reward": 0.5903479570725748
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_005",
+        "title": "The Hepatic-Metabolic Congestion Syndrome",
+        "hypothesis_statement": "Low ALT (reflecting low metabolic turnover) combined with high FPG identifies a group where intensive control fails to improve outcomes due to fixed vascular stiffness.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "alt",
+            "operator": "<",
+            "threshold": -0.2,
+            "category": null,
+            "description": "Low baseline Alanine Aminotransferase levels."
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Low ALT in the presence of high FPG may indicate a state of 'burnt-out' metabolic flexibility where aggressive glucose lowering is poorly tolerated."
+        },
+        "mechanism": "Low ALT can sometimes reflect low muscle mass or impaired gluconeogenesis capacity in late-stage diabetes; forcing glucose into cells via intensive insulin/sulfonylureas leads to intracellular metabolic stress rather than vascular protection.",
+        "evidence_basis": [
+          "Median alt -0.24 in difficult samples",
+          "Mean fpg 0.15",
+          "Median cpk -0.26"
+        ],
+        "testable_prediction": "Patients with alt < -0.2 and fpg > 0.1 will experience a higher rate of treatment-related adverse events in the intensive arm."
+      },
+      "acc": 0.47682119205298035,
+      "num_visits": 151,
+      "reward": 0.5704804074037009
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_002",
+        "title": "Renal Stability and Nutrient Signaling",
+        "hypothesis_statement": "Stable renal function (low UACR) combined with high BMI creates a profile where intensive treatment benefits are negated by weight-gain side effects of intensive regimens.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "uacr",
+            "operator": "<=",
+            "threshold": -0.2,
+            "category": null,
+            "description": "Low baseline urinary albumin-to-creatinine ratio (normoalbuminuria)."
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "Patients with preserved renal integrity (low UACR) in this cohort do not see the microvascular-to-macrovascular crossover benefits sufficient to outweigh treatment burden."
+        },
+        "mechanism": "Low UACR indicates a lack of advanced diabetic end-organ damage; in these patients, the aggressive pharmacological escalation (often including TZDs or high-dose insulin) leads to weight gain and fluid retention, counteracting CV benefits.",
+        "evidence_basis": [
+          "Median uacr -0.245 in difficult samples",
+          "Positive mean BMI 0.093",
+          "Lower baseline SBP mean -0.026"
+        ],
+        "testable_prediction": "Patients with uacr <= -0.2 will show no significant difference in MACE between intensive and standard arms, but higher rates of heart failure."
+      },
+      "acc": 0.47019867549668876,
+      "num_visits": 151,
+      "reward": 0.5638578908474092
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "871ca073-d466-4cb4-bfed-4d995272756e",
+        "title": "Baseline CVD History and Intensive Control",
+        "hypothesis_statement": "Intensive glucose control provides greater cardiovascular benefit to patients without a history of clinical CVD at baseline compared to those with established CVD.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "cvd_hx_baseline",
+            "operator": "==",
+            "threshold": 0.0,
+            "category": "No CVD history",
+            "description": "Patients without clinical cardiovascular disease at baseline."
+          },
+          "recommendation": "treat",
+          "expected_benefit": "high",
+          "rationale": "Patients with established macrovascular disease may have less reversible atherosclerosis and higher risk of maladaptive cardiovascular responses to hypoglycemia."
+        },
+        "mechanism": "The 'Metabolic Memory' or legacy effect suggests glycemic control is more effective in primary prevention before advanced plaque formation and autonomic dysfunction occur.",
+        "evidence_basis": [
+          "ACCORD primary trial subgroup analysis",
+          "UKPDS long-term follow-up",
+          "ADVANCE trial subgroup data"
+        ],
+        "testable_prediction": "The hazard ratio for MACE in the intensive group vs standard group will be significantly lower (<1.0) for patients with cvd_hx_baseline == 0 than for those with cvd_hx_baseline == 1."
+      },
+      "acc": 0.4650000000000001,
+      "num_visits": 200,
+      "reward": 0.5463811815359365
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "5f8c7efa-c11e-4757-b629-f55512918197",
+        "title": "Renal Function and Hypoglycemia Risk",
+        "hypothesis_statement": "Intensive glucose control is associated with increased CV mortality in patients with impaired renal function (GFR < 60).",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "gfr",
+            "operator": "<",
+            "threshold": 60.0,
+            "category": "Impaired Renal Function",
+            "description": "Patients with stage 3 chronic kidney disease or worse."
+          },
+          "recommendation": "control",
+          "expected_benefit": "harm",
+          "rationale": "Reduced clearance of glucose-lowering drugs increases risk of severe hypoglycemia, which can trigger fatal arrhythmias."
+        },
+        "mechanism": "Reduced GFR prolongs the half-life of insulin and certain sulfonylureas, increasing glycemic variability and the incidence of autonomic-stress-inducing hypoglycemia.",
+        "evidence_basis": [
+          "ACCORD mortality subgroup post-hoc analysis",
+          "Clinical pharmacokinetics of antihyperglycemics"
+        ],
+        "testable_prediction": "Interaction term between treatment group and baseline GFR will show increased MACE risk in the intensive arm as GFR decreases."
+      },
+      "acc": 0.4650000000000001,
+      "num_visits": 200,
+      "reward": 0.5463811815359365
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "6dd8cc6f-f8f8-403f-9e4b-3ceefe72212f",
+        "title": "Baseline Obesity and Cardiovascular Resilience",
+        "hypothesis_statement": "Patients with lower BMI (< 30) benefit less from intensive control than patients with higher BMI due to different underlying diabetes phenotypes.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "bmi",
+            "operator": ">=",
+            "threshold": 30.0,
+            "category": "Obese",
+            "description": "Patients categorized as obese by Body Mass Index."
+          },
+          "recommendation": "treat",
+          "expected_benefit": "moderate",
+          "rationale": "Obese patients often have more pronounced insulin resistance where aggressive sensitization/control may yield higher metabolic returns."
+        },
+        "mechanism": "In obese patients, glucose toxicity and lipotoxicity are primary drivers of vascular damage; intensive control addresses these more effectively than in leaner patients with beta-cell failure.",
+        "evidence_basis": [
+          "Look AHEAD study metabolic outcomes",
+          "ProActive trial subgroup analyses"
+        ],
+        "testable_prediction": "Subgroup analysis will show a higher absolute risk reduction in the intensive arm for BMI >= 30 than for BMI < 30."
+      },
+      "acc": 0.4650000000000001,
+      "num_visits": 200,
+      "reward": 0.5463811815359365
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_004",
+        "title": "Lipid-Glucose Decoupling in Statin Users",
+        "hypothesis_statement": "In patients already optimized on statins with low LDL, intensive glucose control provides diminishing returns and potential harm due to mitochondrial toxicity interactions.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "statin",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Patient is on statin therapy."
+          },
+          "recommendation": "control",
+          "expected_benefit": "none",
+          "rationale": "68% of difficult samples were on statins with low LDL; for these patients, the LDL-driven risk is already mitigated, leaving only the risks of glucose intensive care."
+        },
+        "mechanism": "When LDL is low due to statins, the marginal benefit of intensive glucose control on atherosclerosis is minimal, while the risk of severe hypoglycemia and sudden cardiac death remains constant or increases.",
+        "evidence_basis": [
+          "Statin usage 68%",
+          "Median ldl -0.19",
+          "CVD history baseline 0.36"
+        ],
+        "testable_prediction": "Statin users with standardized LDL < 0 will show a hazard ratio > 1.0 for the intensive treatment arm regarding CV death."
+      },
+      "acc": 0.4304635761589404,
+      "num_visits": 151,
+      "reward": 0.5241227915096609
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_005",
+        "title": "Statin-Intensive Control Interaction",
+        "hypothesis_statement": "Statin use (68% prevalence) masks the lipid-lowering signals, making HbA1c a less reliable sole target for cardiovascular risk reduction.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "statin",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Current statin use"
+          },
+          "recommendation": "control",
+          "expected_benefit": "moderate",
+          "rationale": "For patients already on statins, the marginal benefit of intensive glucose control is minimized while the metabolic side effects of polypharmacy increase."
+        },
+        "mechanism": "Statin-induced increases in insulin resistance might be countered by aggressive glucose therapy in a way that creates 'metabolic noise' rather than cardiovascular stabilization.",
+        "evidence_basis": [
+          "68% statin use in failure cases",
+          "Relatively high HDL (mean 0.12) suggests a lipid-stabilized subgroup where glucose isn't the primary driver"
+        ],
+        "testable_prediction": "Statin users will show no significant difference in MACE between intensive and standard arms, but higher rates of adverse events."
+      },
+      "acc": 0.4304635761589404,
+      "num_visits": 151,
+      "reward": 0.5241227915096609
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "H_003",
+        "title": "The Female Sympathetic Sensitivity Subgroup",
+        "hypothesis_statement": "Female patients with lower baseline heart rates are at higher risk of adverse outcomes from intensive glucose control due to autonomic sensitivity to hypoglycemia.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Patient is female."
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "The high proportion of females (48%) in the difficult samples, paired with lower heart rates, suggests a potential for autonomic dysfunction that masks hypoglycemia."
+        },
+        "mechanism": "Females may have different thresholds for catecholamine release during hypoglycemia; intensive targets increase 'silent' hypoglycemic episodes in those with low baseline heart rates, increasing mortality risk.",
+        "evidence_basis": [
+          "Female mean 0.48 (higher than general ACCORD proportion)",
+          "Mean heart rate -0.113",
+          "Mean BP meds -0.32"
+        ],
+        "testable_prediction": "Females with baseline HR < median will have higher cardiovascular mortality in the intensive arm than the standard arm."
+      },
+      "acc": 0.0,
+      "num_visits": 151,
+      "reward": 0.09365921535072053
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "HYP_002",
+        "title": "Female Protective/Risk Paradox in Glycemic Control",
+        "hypothesis_statement": "Women in high-risk categories (48% of the difficult sample) experience attenuated cardiovascular benefit from intensive control compared to men due to differing microvascular responses.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Female sex"
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "none",
+          "rationale": "The high prevalence of females in the failure cases suggests that the standard intensive protocol does not address female-specific cardiovascular risk drivers such as microvascular dysfunction."
+        },
+        "mechanism": "Estrogen-related pathways may modulate glycemic impact on large vessels differently, making aggressive HbA1c targets less effective for macrovascular outcomes in women.",
+        "evidence_basis": [
+          "Female representation is 48% in difficult samples, higher than typical male-dominant CVD trials",
+          "Lower baseline age (mean -0.38) suggests a younger, female cohort is being misclassified"
+        ],
+        "testable_prediction": "Intensive control will show zero or negative hazard ratio for MACE in women with duration of diabetes >10 years."
+      },
+      "acc": 0.0,
+      "num_visits": 151,
+      "reward": 0.09365921535072053
+    },
+    {
+      "hypothesis": {
+        "hypothesis_id": "ACC_DIF_002",
+        "title": "Female Cardioprotective Resilience vs Glycemic Stress",
+        "hypothesis_statement": "Female patients in the ACCORD trial respond differently to intensive control due to distinct hormonal influences on vascular tone and MI presentation.",
+        "treatment_recommendation": {
+          "subgroup_rule": {
+            "feature": "female",
+            "operator": "==",
+            "threshold": null,
+            "category": "1.0",
+            "description": "Patient identifies as female."
+          },
+          "recommendation": "unclear",
+          "expected_benefit": "low",
+          "rationale": "Difficult samples show a high female proportion (48% vs trial average 38%), suggesting standard intensive guidelines fail to capture their specific risk-benefit profile."
+        },
+        "mechanism": "Intensive control may induce autonomic stress that affects female microvascular function differently than males, potentially masking or accelerating non-fatal MI signals.",
+        "evidence_basis": [
+          "Gender-divergent results in large cardiovascular trials",
+          "Higher mean female ratio in the outlier sample pool"
+        ],
+        "testable_prediction": "Intensive glucose lowering will show a higher hazard ratio for stroke specifically in women compared to men."
+      },
+      "acc": 0.0,
+      "num_visits": 151,
+      "reward": 0.09365921535072053
+    }
+  ],
+  "summary": {
+    "total_hypotheses": 15,
+    "avg_reward": 0.47912634589460706,
+    "avg_accuracy": 0.3879227373068433
+  }
+}
