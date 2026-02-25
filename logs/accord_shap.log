@@ -1,859 +1,0 @@
-wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
-wandb: Currently logged in as: mingyulu (data_att) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
-wandb: Tracking run with wandb version 0.19.7
-wandb: Run data is saved locally in /data/mingyulu/wandb/wandb/run-20260218_102839-eanfyv3y
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run fragrant-universe-9
-wandb: ⭐️ View project at https://wandb.ai/data_att/Convergence%20for%20Shapley%20value%20accord
-wandb: 🚀 View run at https://wandb.ai/data_att/Convergence%20for%20Shapley%20value%20accord/runs/eanfyv3y
-Namespace(num_trials=30, cohort_name='accord', baseline=False, wandb=True, relative_change_threshold=0.05, top_n_features=5, device='cuda:0', learner='DRLearner')
-Using device: cuda:0
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.012050986289978, train_loss: 1.0724154710769653
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4693209230899811, train_loss: 0.41178619861602783
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3751814067363739, train_loss: 0.24763810634613037
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.37180569767951965, train_loss: 0.21638533473014832
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.37173864245414734, train_loss: 0.21868079900741577
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6549487709999084, train_loss: 0.6618380546569824
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3302326798439026, train_loss: 0.30050480365753174
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2740730941295624, train_loss: 0.22778332233428955
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.26622650027275085, train_loss: 0.18137960135936737
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2661495506763458, train_loss: 0.17973840236663818
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6191360354423523, train_loss: 0.6392912864685059
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.34040939807891846, train_loss: 0.2905658185482025
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.30717912316322327, train_loss: 0.22589465975761414
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3067680597305298, train_loss: 0.19861899316310883
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.30701568722724915, train_loss: 0.1922108232975006
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7107554078102112, train_loss: 0.7053214907646179
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3463723957538605, train_loss: 0.3023409843444824
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2937457859516144, train_loss: 0.2071833610534668
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2904146611690521, train_loss: 0.17553627490997314
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2906806468963623, train_loss: 0.17894932627677917
-[te_estimator] Epoch: 0, current validation loss: 0.5496830344200134, train_loss: 0.6196857690811157
-[te_estimator] Epoch: 50, current validation loss: 0.41493549942970276, train_loss: 0.30021288990974426
-[te_estimator] Epoch: 100, current validation loss: 0.41557469964027405, train_loss: 0.29731065034866333
-[te_estimator] Epoch: 150, current validation loss: 0.41657862067222595, train_loss: 0.28454357385635376
-[te_estimator] Epoch: 200, current validation loss: 0.4171665608882904, train_loss: 0.28274399042129517
-Trial 1/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 301/3001 [00:00<00:04, 601.39it/s]Shapley Value Sampling attribution:  20%|██        | 615/3001 [00:01<00:03, 616.60it/s]Shapley Value Sampling attribution:  31%|███       | 930/3001 [00:01<00:03, 622.08it/s]Shapley Value Sampling attribution:  42%|████▏     | 1246/3001 [00:02<00:02, 625.31it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1561/3001 [00:02<00:02, 626.49it/s]Shapley Value Sampling attribution:  63%|██████▎   | 1877/3001 [00:03<00:01, 627.68it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2192/3001 [00:03<00:01, 628.36it/s]Shapley Value Sampling attribution:  84%|████████▎ | 2507/3001 [00:04<00:00, 628.85it/s]Shapley Value Sampling attribution:  94%|█████████▍| 2822/3001 [00:04<00:00, 628.86it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 626.27it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6155015826225281, train_loss: 0.6264227032661438
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.36631548404693604, train_loss: 0.328705370426178
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3052081763744354, train_loss: 0.24557606875896454
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2860356569290161, train_loss: 0.20634379982948303
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.2795303761959076, train_loss: 0.18132545053958893
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6273115277290344, train_loss: 0.6251208782196045
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.32179558277130127, train_loss: 0.30472639203071594
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2801496684551239, train_loss: 0.22214731574058533
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.27652451395988464, train_loss: 0.18696734309196472
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2763996422290802, train_loss: 0.1867925226688385
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8437466025352478, train_loss: 0.8336238265037537
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4134465754032135, train_loss: 0.3729233741760254
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34872350096702576, train_loss: 0.2516518533229828
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3463808298110962, train_loss: 0.2210364043712616
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34701451659202576, train_loss: 0.21803949773311615
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5342182517051697, train_loss: 0.5285943746566772
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.34183016419410706, train_loss: 0.2582111954689026
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3265862762928009, train_loss: 0.19429835677146912
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3266231417655945, train_loss: 0.18718847632408142
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.326993852853775, train_loss: 0.18779949843883514
-[te_estimator] Epoch: 0, current validation loss: 0.6200712323188782, train_loss: 0.69781893491745
-[te_estimator] Epoch: 50, current validation loss: 0.3926829993724823, train_loss: 0.3083651661872864
-[te_estimator] Epoch: 100, current validation loss: 0.3941791355609894, train_loss: 0.29842615127563477
-[te_estimator] Epoch: 150, current validation loss: 0.3952993154525757, train_loss: 0.29389768838882446
-[te_estimator] Epoch: 200, current validation loss: 0.39654234051704407, train_loss: 0.2875162661075592
-Trial 2/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 295/3001 [00:00<00:04, 589.94it/s]Shapley Value Sampling attribution:  20%|██        | 610/3001 [00:01<00:03, 613.21it/s]Shapley Value Sampling attribution:  31%|███       | 925/3001 [00:01<00:03, 620.67it/s]Shapley Value Sampling attribution:  41%|████▏     | 1240/3001 [00:02<00:02, 623.78it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1554/3001 [00:02<00:02, 625.07it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1869/3001 [00:03<00:01, 626.23it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2184/3001 [00:03<00:01, 627.08it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2499/3001 [00:04<00:00, 627.32it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2813/3001 [00:04<00:00, 627.45it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 624.42it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8134852647781372, train_loss: 0.8161510229110718
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4243680238723755, train_loss: 0.34734639525413513
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3650675117969513, train_loss: 0.25102412700653076
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.36160513758659363, train_loss: 0.21406158804893494
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3618970811367035, train_loss: 0.2073366641998291
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.573501467704773, train_loss: 0.596947431564331
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.33434560894966125, train_loss: 0.30037984251976013
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.30048516392707825, train_loss: 0.2317940890789032
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2970447540283203, train_loss: 0.2025327980518341
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2971687614917755, train_loss: 0.19568710029125214
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6766467690467834, train_loss: 0.6850522756576538
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4003138840198517, train_loss: 0.31393206119537354
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.37614262104034424, train_loss: 0.23362848162651062
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.37651100754737854, train_loss: 0.2178996503353119
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.376967191696167, train_loss: 0.21433603763580322
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7341784238815308, train_loss: 0.7632627487182617
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38044774532318115, train_loss: 0.3146839737892151
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3204732835292816, train_loss: 0.2073671668767929
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3138050436973572, train_loss: 0.16803322732448578
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.31406232714653015, train_loss: 0.15755707025527954
-[te_estimator] Epoch: 0, current validation loss: 0.5877227783203125, train_loss: 0.6664655208587646
-[te_estimator] Epoch: 50, current validation loss: 0.37410280108451843, train_loss: 0.31934985518455505
-[te_estimator] Epoch: 100, current validation loss: 0.374438613653183, train_loss: 0.31298360228538513
-[te_estimator] Epoch: 150, current validation loss: 0.3750994801521301, train_loss: 0.3056463897228241
-[te_estimator] Epoch: 200, current validation loss: 0.3761688768863678, train_loss: 0.3010626435279846
-Trial 3/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 315/3001 [00:00<00:04, 629.75it/s]Shapley Value Sampling attribution:  21%|██        | 630/3001 [00:01<00:03, 629.42it/s]Shapley Value Sampling attribution:  31%|███▏      | 945/3001 [00:01<00:03, 628.39it/s]Shapley Value Sampling attribution:  42%|████▏     | 1260/3001 [00:02<00:02, 628.69it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1575/3001 [00:02<00:02, 628.97it/s]Shapley Value Sampling attribution:  63%|██████▎   | 1890/3001 [00:03<00:01, 629.07it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2205/3001 [00:03<00:01, 629.21it/s]Shapley Value Sampling attribution:  84%|████████▍ | 2520/3001 [00:04<00:00, 629.35it/s]Shapley Value Sampling attribution:  94%|█████████▍| 2835/3001 [00:04<00:00, 629.44it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 629.16it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6791538596153259, train_loss: 0.7261889576911926
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3820975124835968, train_loss: 0.342556357383728
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3285556435585022, train_loss: 0.24373331665992737
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3207874894142151, train_loss: 0.20146608352661133
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.32039907574653625, train_loss: 0.1933867186307907
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5794448852539062, train_loss: 0.5940408706665039
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.31043922901153564, train_loss: 0.2944708466529846
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.26610955595970154, train_loss: 0.2212710976600647
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.26102977991104126, train_loss: 0.1851833164691925
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2611428201198578, train_loss: 0.17960810661315918
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7811883687973022, train_loss: 0.7687148451805115
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.430118590593338, train_loss: 0.3698465824127197
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3539162278175354, train_loss: 0.26399290561676025
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.34498798847198486, train_loss: 0.2149866670370102
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34500882029533386, train_loss: 0.21540625393390656
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.87946617603302, train_loss: 0.8872979879379272
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4184785783290863, train_loss: 0.35734760761260986
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.34325480461120605, train_loss: 0.23401328921318054
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.33828410506248474, train_loss: 0.20583757758140564
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3382112681865692, train_loss: 0.19148097932338715
-[te_estimator] Epoch: 0, current validation loss: 0.5351734757423401, train_loss: 0.6699874997138977
-[te_estimator] Epoch: 50, current validation loss: 0.3928338885307312, train_loss: 0.3312288522720337
-[te_estimator] Epoch: 100, current validation loss: 0.3928651809692383, train_loss: 0.32276612520217896
-[te_estimator] Epoch: 150, current validation loss: 0.39393118023872375, train_loss: 0.31598901748657227
-[te_estimator] Epoch: 200, current validation loss: 0.39494845271110535, train_loss: 0.3045012950897217
-Trial 4/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 306/3001 [00:00<00:04, 611.03it/s]Shapley Value Sampling attribution:  21%|██        | 620/3001 [00:01<00:03, 620.20it/s]Shapley Value Sampling attribution:  31%|███       | 933/3001 [00:01<00:03, 622.52it/s]Shapley Value Sampling attribution:  42%|████▏     | 1247/3001 [00:02<00:02, 624.12it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1561/3001 [00:02<00:02, 624.95it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1875/3001 [00:03<00:01, 625.27it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2189/3001 [00:03<00:01, 625.74it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2502/3001 [00:04<00:00, 625.80it/s]Shapley Value Sampling attribution:  94%|█████████▍| 2816/3001 [00:04<00:00, 626.11it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 624.62it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.0039820671081543, train_loss: 1.041843056678772
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.45835596323013306, train_loss: 0.4191824793815613
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34931614995002747, train_loss: 0.2612224221229553
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3382507562637329, train_loss: 0.20703338086605072
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3377436101436615, train_loss: 0.20430263876914978
-[po_estimator_0_impute_pos] Epoch: 250, current validation loss: 0.33761534094810486, train_loss: 0.19413451850414276
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6091823577880859, train_loss: 0.610924482345581
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.37128952145576477, train_loss: 0.265753835439682
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.35602739453315735, train_loss: 0.18845486640930176
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3565617501735687, train_loss: 0.18929556012153625
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3575325906276703, train_loss: 0.17394143342971802
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.184953212738037, train_loss: 1.1779417991638184
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.522068440914154, train_loss: 0.4572572708129883
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3611316382884979, train_loss: 0.26856815814971924
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3347173035144806, train_loss: 0.21279725432395935
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.33210766315460205, train_loss: 0.20153489708900452
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8262578845024109, train_loss: 0.8479366302490234
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3988964855670929, train_loss: 0.3566443920135498
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.32818689942359924, train_loss: 0.25014328956604004
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3185679316520691, train_loss: 0.20007357001304626
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.31897103786468506, train_loss: 0.18941180408000946
-[te_estimator] Epoch: 0, current validation loss: 0.7355667352676392, train_loss: 0.7597013115882874
-[te_estimator] Epoch: 50, current validation loss: 0.4758360683917999, train_loss: 0.3153008222579956
-[te_estimator] Epoch: 100, current validation loss: 0.47725316882133484, train_loss: 0.28255000710487366
-[te_estimator] Epoch: 150, current validation loss: 0.479381799697876, train_loss: 0.2812931537628174
-[te_estimator] Epoch: 200, current validation loss: 0.4807826280593872, train_loss: 0.2746947407722473
-Trial 5/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 313/3001 [00:00<00:04, 624.36it/s]Shapley Value Sampling attribution:  21%|██        | 626/3001 [00:01<00:03, 624.53it/s]Shapley Value Sampling attribution:  31%|███▏      | 939/3001 [00:01<00:03, 624.59it/s]Shapley Value Sampling attribution:  42%|████▏     | 1252/3001 [00:02<00:02, 624.82it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1565/3001 [00:02<00:02, 624.68it/s]Shapley Value Sampling attribution:  63%|██████▎   | 1878/3001 [00:03<00:01, 624.67it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2191/3001 [00:03<00:01, 624.77it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2504/3001 [00:04<00:00, 624.32it/s]Shapley Value Sampling attribution:  94%|█████████▍| 2817/3001 [00:04<00:00, 624.23it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 624.39it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7083154320716858, train_loss: 0.713674008846283
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3973751366138458, train_loss: 0.3581225574016571
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.33872154355049133, train_loss: 0.26271677017211914
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.32964542508125305, train_loss: 0.21341601014137268
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3299749493598938, train_loss: 0.1875619888305664
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8840392827987671, train_loss: 0.8532840013504028
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38138556480407715, train_loss: 0.3621031641960144
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.27452588081359863, train_loss: 0.2569945454597473
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2467706948518753, train_loss: 0.20873212814331055
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.23851950466632843, train_loss: 0.180267795920372
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6356313824653625, train_loss: 0.6380905508995056
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.39613789319992065, train_loss: 0.328386127948761
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34917256236076355, train_loss: 0.254739910364151
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.34102216362953186, train_loss: 0.2090764045715332
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34155160188674927, train_loss: 0.2037634402513504
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7452800273895264, train_loss: 0.7464131116867065
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.36168089509010315, train_loss: 0.3269302546977997
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.29903528094291687, train_loss: 0.24500957131385803
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.28898996114730835, train_loss: 0.19308289885520935
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2892643213272095, train_loss: 0.19055545330047607
-[te_estimator] Epoch: 0, current validation loss: 0.557435154914856, train_loss: 0.6257428526878357
-[te_estimator] Epoch: 50, current validation loss: 0.4059130847454071, train_loss: 0.32539764046669006
-[te_estimator] Epoch: 100, current validation loss: 0.4066418707370758, train_loss: 0.317592054605484
-[te_estimator] Epoch: 150, current validation loss: 0.40779510140419006, train_loss: 0.3105776607990265
-[te_estimator] Epoch: 200, current validation loss: 0.4096447229385376, train_loss: 0.30684375762939453
-Trial 6/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 296/3001 [00:00<00:04, 591.58it/s]Shapley Value Sampling attribution:  20%|██        | 609/3001 [00:01<00:03, 611.58it/s]Shapley Value Sampling attribution:  31%|███       | 922/3001 [00:01<00:03, 617.68it/s]Shapley Value Sampling attribution:  41%|████      | 1234/3001 [00:02<00:02, 620.17it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1545/3001 [00:02<00:02, 620.79it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1858/3001 [00:03<00:01, 622.10it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2171/3001 [00:03<00:01, 622.75it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2484/3001 [00:04<00:00, 623.09it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2797/3001 [00:04<00:00, 623.59it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.78it/s]
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8223374485969543, train_loss: 0.8610918521881104
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.44140684604644775, train_loss: 0.35086190700531006
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.393981009721756, train_loss: 0.2260524034500122
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3940486013889313, train_loss: 0.2067406177520752
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3945772051811218, train_loss: 0.20286503434181213
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6122604608535767, train_loss: 0.5949844121932983
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3454327881336212, train_loss: 0.2665197253227234
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3165722191333771, train_loss: 0.1850854754447937
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3170880377292633, train_loss: 0.17421472072601318
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.31780585646629333, train_loss: 0.16232135891914368
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6987215280532837, train_loss: 0.6939690113067627
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3851151764392853, train_loss: 0.32893073558807373
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34346407651901245, train_loss: 0.23789644241333008
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3426024913787842, train_loss: 0.20049767196178436
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3428642153739929, train_loss: 0.20333987474441528
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.9607990980148315, train_loss: 1.0486819744110107
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.46760523319244385, train_loss: 0.3861410319805145
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3900113105773926, train_loss: 0.23292386531829834
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.39100030064582825, train_loss: 0.19739477336406708
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3922072947025299, train_loss: 0.19031600654125214
-[te_estimator] Epoch: 0, current validation loss: 0.5623772144317627, train_loss: 0.5310544967651367
-[te_estimator] Epoch: 50, current validation loss: 0.4363083243370056, train_loss: 0.297638475894928
-[te_estimator] Epoch: 100, current validation loss: 0.4369824528694153, train_loss: 0.28805679082870483
-[te_estimator] Epoch: 150, current validation loss: 0.4384367763996124, train_loss: 0.28474950790405273
-[te_estimator] Epoch: 200, current validation loss: 0.43980056047439575, train_loss: 0.2785906493663788
-Trial 7/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 312/3001 [00:00<00:04, 623.98it/s]Shapley Value Sampling attribution:  21%|██        | 624/3001 [00:01<00:03, 623.33it/s]Shapley Value Sampling attribution:  31%|███       | 936/3001 [00:01<00:03, 622.88it/s]Shapley Value Sampling attribution:  42%|████▏     | 1248/3001 [00:02<00:02, 623.02it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1560/3001 [00:02<00:02, 622.84it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1872/3001 [00:03<00:01, 622.80it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2184/3001 [00:03<00:01, 622.79it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2496/3001 [00:04<00:00, 622.95it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2808/3001 [00:04<00:00, 623.04it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 622.98it/s]
-Trial 7: Average Relative Change in Mean Local SHAP Explanations = 1.653560 cosine sim: 0.9750032874745196
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.1157841682434082, train_loss: 1.1462348699569702
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.49841126799583435, train_loss: 0.4302504062652588
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.36411190032958984, train_loss: 0.23116788268089294
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.35401421785354614, train_loss: 0.17638254165649414
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.354365736246109, train_loss: 0.17203491926193237
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 1.0264644622802734, train_loss: 1.1045588254928589
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.5032882690429688, train_loss: 0.4080064296722412
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.4108738899230957, train_loss: 0.2253866046667099
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.40949907898902893, train_loss: 0.19725899398326874
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.410052090883255, train_loss: 0.19318662583827972
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6246464252471924, train_loss: 0.6229352951049805
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3723903000354767, train_loss: 0.3427656292915344
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34449291229248047, train_loss: 0.27713924646377563
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.34424713253974915, train_loss: 0.2672286033630371
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34396281838417053, train_loss: 0.2533688247203827
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7791208028793335, train_loss: 0.8012745380401611
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3505612313747406, train_loss: 0.3369515836238861
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.27036917209625244, train_loss: 0.23740500211715698
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2536461055278778, train_loss: 0.18918178975582123
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.25239840149879456, train_loss: 0.16563045978546143
-[te_estimator] Epoch: 0, current validation loss: 0.522462010383606, train_loss: 0.6213288307189941
-[te_estimator] Epoch: 50, current validation loss: 0.3736783266067505, train_loss: 0.3275948762893677
-[te_estimator] Epoch: 100, current validation loss: 0.37405458092689514, train_loss: 0.31999069452285767
-[te_estimator] Epoch: 150, current validation loss: 0.37449875473976135, train_loss: 0.3129803538322449
-[te_estimator] Epoch: 200, current validation loss: 0.37548914551734924, train_loss: 0.30497509241104126
-Trial 8/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 296/3001 [00:00<00:04, 591.81it/s]Shapley Value Sampling attribution:  20%|██        | 609/3001 [00:01<00:03, 610.74it/s]Shapley Value Sampling attribution:  31%|███       | 921/3001 [00:01<00:03, 616.76it/s]Shapley Value Sampling attribution:  41%|████      | 1234/3001 [00:02<00:02, 619.91it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1547/3001 [00:02<00:02, 621.43it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1860/3001 [00:03<00:01, 622.28it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2173/3001 [00:03<00:01, 623.10it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2486/3001 [00:04<00:00, 623.51it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2799/3001 [00:04<00:00, 623.75it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.93it/s]
-Trial 8: Average Relative Change in Mean Local SHAP Explanations = 1.629071 cosine sim: 0.979746589585347
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.727163553237915, train_loss: 0.7136447429656982
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.39784231781959534, train_loss: 0.323923796415329
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3406495153903961, train_loss: 0.24111992120742798
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3325701951980591, train_loss: 0.2056599110364914
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3331681787967682, train_loss: 0.18520842492580414
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8218598961830139, train_loss: 0.8385822176933289
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38342955708503723, train_loss: 0.33856233954429626
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3131033778190613, train_loss: 0.23399017751216888
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3029673993587494, train_loss: 0.19294393062591553
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3024735152721405, train_loss: 0.1792091429233551
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.881324827671051, train_loss: 0.8650738000869751
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.42939895391464233, train_loss: 0.3759286403656006
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.34935346245765686, train_loss: 0.25598978996276855
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3406376838684082, train_loss: 0.20665311813354492
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34096282720565796, train_loss: 0.20836195349693298
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6342193484306335, train_loss: 0.6245631575584412
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.32896700501441956, train_loss: 0.28519028425216675
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2972513437271118, train_loss: 0.21651741862297058
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.29639071226119995, train_loss: 0.187850221991539
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.29685306549072266, train_loss: 0.18126878142356873
-[te_estimator] Epoch: 0, current validation loss: 0.5927460789680481, train_loss: 0.5682149529457092
-[te_estimator] Epoch: 50, current validation loss: 0.44758671522140503, train_loss: 0.30169999599456787
-[te_estimator] Epoch: 100, current validation loss: 0.44926318526268005, train_loss: 0.29412856698036194
-[te_estimator] Epoch: 150, current validation loss: 0.4507835805416107, train_loss: 0.2872784733772278
-[te_estimator] Epoch: 200, current validation loss: 0.4525807201862335, train_loss: 0.27977290749549866
-Trial 9/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 313/3001 [00:00<00:04, 625.77it/s]Shapley Value Sampling attribution:  21%|██        | 626/3001 [00:01<00:03, 625.07it/s]Shapley Value Sampling attribution:  31%|███▏      | 939/3001 [00:01<00:03, 624.46it/s]Shapley Value Sampling attribution:  42%|████▏     | 1252/3001 [00:02<00:02, 624.08it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1565/3001 [00:02<00:02, 623.86it/s]Shapley Value Sampling attribution:  63%|██████▎   | 1878/3001 [00:03<00:01, 623.93it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2190/3001 [00:03<00:01, 623.90it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2503/3001 [00:04<00:00, 624.10it/s]Shapley Value Sampling attribution:  94%|█████████▍| 2816/3001 [00:04<00:00, 624.02it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 623.91it/s]
-Trial 9: Average Relative Change in Mean Local SHAP Explanations = 1.757186 cosine sim: 0.9839210055750616
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.578056812286377, train_loss: 0.5902951955795288
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.36499589681625366, train_loss: 0.3147769272327423
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.33328890800476074, train_loss: 0.24304358661174774
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3304232656955719, train_loss: 0.2067817747592926
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3308013081550598, train_loss: 0.20946498215198517
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.9346655607223511, train_loss: 0.9465054869651794
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4195391535758972, train_loss: 0.3572049140930176
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.31912752985954285, train_loss: 0.21576210856437683
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.307689905166626, train_loss: 0.16214190423488617
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.30815771222114563, train_loss: 0.1602102816104889
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7497535347938538, train_loss: 0.818171501159668
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.41687726974487305, train_loss: 0.3484897017478943
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3760856091976166, train_loss: 0.25125062465667725
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.37703561782836914, train_loss: 0.22635573148727417
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3773823380470276, train_loss: 0.221144899725914
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8218173384666443, train_loss: 0.8306607007980347
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.37054142355918884, train_loss: 0.33545562624931335
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.29168128967285156, train_loss: 0.24122193455696106
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2811115086078644, train_loss: 0.19059666991233826
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.28043586015701294, train_loss: 0.18719248473644257
-[te_estimator] Epoch: 0, current validation loss: 0.7314223647117615, train_loss: 0.9446933269500732
-[te_estimator] Epoch: 50, current validation loss: 0.4096320867538452, train_loss: 0.30201274156570435
-[te_estimator] Epoch: 100, current validation loss: 0.4105929732322693, train_loss: 0.29578351974487305
-[te_estimator] Epoch: 150, current validation loss: 0.4119560718536377, train_loss: 0.28379595279693604
-[te_estimator] Epoch: 200, current validation loss: 0.41339853405952454, train_loss: 0.2780015468597412
-Trial 10/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 299/3001 [00:00<00:04, 596.55it/s]Shapley Value Sampling attribution:  20%|██        | 610/3001 [00:01<00:03, 611.26it/s]Shapley Value Sampling attribution:  31%|███       | 921/3001 [00:01<00:03, 615.88it/s]Shapley Value Sampling attribution:  41%|████      | 1232/3001 [00:02<00:02, 618.21it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1544/3001 [00:02<00:02, 619.68it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1856/3001 [00:03<00:01, 620.53it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2168/3001 [00:03<00:01, 621.09it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2480/3001 [00:04<00:00, 621.68it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2791/3001 [00:04<00:00, 621.68it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 619.32it/s]
-Trial 10: Average Relative Change in Mean Local SHAP Explanations = 1.304825 cosine sim: 0.9859799136662276
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.617782711982727, train_loss: 0.6238582730293274
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.38125452399253845, train_loss: 0.34309107065200806
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3358134329319, train_loss: 0.26077961921691895
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3278332054615021, train_loss: 0.2212602198123932
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3276737332344055, train_loss: 0.20529131591320038
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.4328065812587738, train_loss: 0.451617568731308
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.28776097297668457, train_loss: 0.26056843996047974
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2723207473754883, train_loss: 0.20631806552410126
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.27258920669555664, train_loss: 0.18923525512218475
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2729675769805908, train_loss: 0.18739348649978638
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.9067897796630859, train_loss: 0.9204627871513367
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.46659937500953674, train_loss: 0.40485841035842896
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3523014783859253, train_loss: 0.25923359394073486
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3287326991558075, train_loss: 0.1996111422777176
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.32805150747299194, train_loss: 0.18305610120296478
-[po_estimator_0_impute_pos] Epoch: 250, current validation loss: 0.3274901807308197, train_loss: 0.17757022380828857
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7052516341209412, train_loss: 0.6951059103012085
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38206490874290466, train_loss: 0.3177453875541687
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.34220579266548157, train_loss: 0.22455525398254395
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3412678837776184, train_loss: 0.20391076803207397
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3415345251560211, train_loss: 0.1944248378276825
-[te_estimator] Epoch: 0, current validation loss: 0.5733203887939453, train_loss: 0.6020989418029785
-[te_estimator] Epoch: 50, current validation loss: 0.4187520444393158, train_loss: 0.3307994306087494
-[te_estimator] Epoch: 100, current validation loss: 0.4191558361053467, train_loss: 0.3159106373786926
-[te_estimator] Epoch: 150, current validation loss: 0.4199571907520294, train_loss: 0.31652429699897766
-[te_estimator] Epoch: 200, current validation loss: 0.421272873878479, train_loss: 0.3045584559440613
-Trial 11/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 311/3001 [00:00<00:04, 620.42it/s]Shapley Value Sampling attribution:  21%|██        | 622/3001 [00:01<00:03, 620.54it/s]Shapley Value Sampling attribution:  31%|███       | 933/3001 [00:01<00:03, 620.26it/s]Shapley Value Sampling attribution:  41%|████▏     | 1244/3001 [00:02<00:02, 620.49it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1555/3001 [00:02<00:02, 620.43it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1866/3001 [00:03<00:01, 620.30it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2177/3001 [00:03<00:01, 620.59it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2488/3001 [00:04<00:00, 620.68it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2799/3001 [00:04<00:00, 619.73it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.24it/s]
-Trial 11: Average Relative Change in Mean Local SHAP Explanations = 1.120656 cosine sim: 0.9877948423122789
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6895480155944824, train_loss: 0.7033149003982544
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3934207558631897, train_loss: 0.3232264220714569
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3377499580383301, train_loss: 0.23670201003551483
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3303166925907135, train_loss: 0.18785466253757477
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3302590847015381, train_loss: 0.19180209934711456
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6959488987922668, train_loss: 0.7346714735031128
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.37399822473526, train_loss: 0.2832772135734558
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3469836711883545, train_loss: 0.18688832223415375
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.34860026836395264, train_loss: 0.17654672265052795
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.34982621669769287, train_loss: 0.1809822916984558
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8313319087028503, train_loss: 0.8660284280776978
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4409593939781189, train_loss: 0.39428314566612244
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.35573244094848633, train_loss: 0.2823525369167328
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3379310071468353, train_loss: 0.24132251739501953
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.33620911836624146, train_loss: 0.2144385576248169
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6533075571060181, train_loss: 0.6574523448944092
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3260614573955536, train_loss: 0.3004724979400635
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2654266357421875, train_loss: 0.21375831961631775
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.25356361269950867, train_loss: 0.17051896452903748
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.25389429926872253, train_loss: 0.16212180256843567
-[te_estimator] Epoch: 0, current validation loss: 0.8493283987045288, train_loss: 0.8869620561599731
-[te_estimator] Epoch: 50, current validation loss: 0.4254331588745117, train_loss: 0.2941763997077942
-[te_estimator] Epoch: 100, current validation loss: 0.42604437470436096, train_loss: 0.2823045253753662
-[te_estimator] Epoch: 150, current validation loss: 0.4269150197505951, train_loss: 0.27872562408447266
-[te_estimator] Epoch: 200, current validation loss: 0.4280335605144501, train_loss: 0.26771730184555054
-Trial 12/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 293/3001 [00:00<00:04, 585.35it/s]Shapley Value Sampling attribution:  20%|██        | 604/3001 [00:01<00:03, 606.20it/s]Shapley Value Sampling attribution:  31%|███       | 916/3001 [00:01<00:03, 613.63it/s]Shapley Value Sampling attribution:  41%|████      | 1228/3001 [00:02<00:02, 617.07it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1540/3001 [00:02<00:02, 618.98it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1851/3001 [00:03<00:01, 619.89it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2163/3001 [00:03<00:01, 620.88it/s]Shapley Value Sampling attribution:  82%|████████▏ | 2475/3001 [00:04<00:00, 621.50it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2787/3001 [00:04<00:00, 621.78it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 618.40it/s]
-Trial 12: Average Relative Change in Mean Local SHAP Explanations = 3.069799 cosine sim: 0.9881390373414971
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7684862613677979, train_loss: 0.7825818061828613
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.42913198471069336, train_loss: 0.3581254482269287
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.35738909244537354, train_loss: 0.23724141716957092
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.34588027000427246, train_loss: 0.18268615007400513
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.34603750705718994, train_loss: 0.17732052505016327
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6037982702255249, train_loss: 0.6047722101211548
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.32839900255203247, train_loss: 0.29276323318481445
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2810210585594177, train_loss: 0.2191123068332672
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.27246716618537903, train_loss: 0.17641589045524597
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.27251994609832764, train_loss: 0.1662580370903015
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.0288667678833008, train_loss: 1.0271692276000977
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.5212268233299255, train_loss: 0.4628293216228485
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.38019055128097534, train_loss: 0.29552870988845825
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.35260793566703796, train_loss: 0.23196358978748322
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3515411913394928, train_loss: 0.2158719152212143
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5874961018562317, train_loss: 0.5789578557014465
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.34834998846054077, train_loss: 0.2568802237510681
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.32753825187683105, train_loss: 0.1899486780166626
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3283008337020874, train_loss: 0.17451803386211395
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3289432227611542, train_loss: 0.1690455675125122
-[te_estimator] Epoch: 0, current validation loss: 0.4895074963569641, train_loss: 0.5393757820129395
-[te_estimator] Epoch: 50, current validation loss: 0.38209769129753113, train_loss: 0.31057003140449524
-[te_estimator] Epoch: 100, current validation loss: 0.3823987543582916, train_loss: 0.30416250228881836
-[te_estimator] Epoch: 150, current validation loss: 0.3831823766231537, train_loss: 0.29609838128089905
-[te_estimator] Epoch: 200, current validation loss: 0.3840097486972809, train_loss: 0.2920893728733063
-Trial 13/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 311/3001 [00:00<00:04, 621.33it/s]Shapley Value Sampling attribution:  21%|██        | 622/3001 [00:01<00:03, 620.95it/s]Shapley Value Sampling attribution:  31%|███       | 933/3001 [00:01<00:03, 621.42it/s]Shapley Value Sampling attribution:  41%|████▏     | 1245/3001 [00:02<00:02, 621.82it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1557/3001 [00:02<00:02, 621.96it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1868/3001 [00:03<00:01, 621.62it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2179/3001 [00:03<00:01, 621.70it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2490/3001 [00:04<00:00, 621.04it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2802/3001 [00:04<00:00, 621.36it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 621.50it/s]
-Trial 13: Average Relative Change in Mean Local SHAP Explanations = 1.479240 cosine sim: 0.9930795943507459
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5333800911903381, train_loss: 0.556592583656311
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3281063139438629, train_loss: 0.3151686489582062
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.28815990686416626, train_loss: 0.24059541523456573
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2766164243221283, train_loss: 0.20148299634456635
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.27440178394317627, train_loss: 0.17847314476966858
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6970611214637756, train_loss: 0.6978232264518738
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.33356189727783203, train_loss: 0.30146607756614685
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.27862313389778137, train_loss: 0.21152815222740173
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.26899123191833496, train_loss: 0.16799375414848328
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2691326141357422, train_loss: 0.15708027780056
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.9382633566856384, train_loss: 0.9131110906600952
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4122634828090668, train_loss: 0.40596503019332886
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.30704817175865173, train_loss: 0.2788877487182617
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2868465483188629, train_loss: 0.2443557232618332
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28451618552207947, train_loss: 0.221303328871727
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5408873558044434, train_loss: 0.5379357933998108
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3427005112171173, train_loss: 0.2780500054359436
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3168514668941498, train_loss: 0.20864711701869965
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.31723496317863464, train_loss: 0.19504281878471375
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.31741151213645935, train_loss: 0.1876755952835083
-[te_estimator] Epoch: 0, current validation loss: 1.661867380142212, train_loss: 1.7257452011108398
-[te_estimator] Epoch: 50, current validation loss: 0.46553683280944824, train_loss: 0.3185673654079437
-[te_estimator] Epoch: 100, current validation loss: 0.4669036567211151, train_loss: 0.30903518199920654
-[te_estimator] Epoch: 150, current validation loss: 0.4672214984893799, train_loss: 0.30417266488075256
-[te_estimator] Epoch: 200, current validation loss: 0.46873268485069275, train_loss: 0.29394546151161194
-Trial 14/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 299/3001 [00:00<00:04, 596.24it/s]Shapley Value Sampling attribution:  20%|██        | 610/3001 [00:01<00:03, 611.17it/s]Shapley Value Sampling attribution:  31%|███       | 922/3001 [00:01<00:03, 616.27it/s]Shapley Value Sampling attribution:  41%|████      | 1233/3001 [00:02<00:02, 618.35it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1545/3001 [00:02<00:02, 619.81it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1857/3001 [00:03<00:01, 620.51it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2168/3001 [00:03<00:01, 620.60it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2479/3001 [00:04<00:00, 620.83it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2790/3001 [00:04<00:00, 620.92it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 619.02it/s]
-Trial 14: Average Relative Change in Mean Local SHAP Explanations = 1.098085 cosine sim: 0.9928295388188317
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.9851149916648865, train_loss: 0.9861985445022583
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4789004921913147, train_loss: 0.4446634352207184
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.33300164341926575, train_loss: 0.287433922290802
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2972775399684906, train_loss: 0.2263941615819931
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.286916047334671, train_loss: 0.1918354034423828
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6097609400749207, train_loss: 0.619482159614563
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3730320334434509, train_loss: 0.3006857633590698
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.35851362347602844, train_loss: 0.2276502549648285
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.35931575298309326, train_loss: 0.21610191464424133
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.36039358377456665, train_loss: 0.2165711373090744
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7770159244537354, train_loss: 0.7654523253440857
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3968077003955841, train_loss: 0.3779955208301544
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3069007396697998, train_loss: 0.2787081003189087
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2841740548610687, train_loss: 0.22672198712825775
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28159064054489136, train_loss: 0.20139780640602112
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.646328330039978, train_loss: 0.6690832376480103
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3145306706428528, train_loss: 0.3196156620979309
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2523547112941742, train_loss: 0.24223832786083221
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.23868027329444885, train_loss: 0.20094065368175507
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.23716679215431213, train_loss: 0.1796635389328003
-[te_estimator] Epoch: 0, current validation loss: 0.6613084077835083, train_loss: 0.8101019859313965
-[te_estimator] Epoch: 50, current validation loss: 0.4029289782047272, train_loss: 0.3440770208835602
-[te_estimator] Epoch: 100, current validation loss: 0.40395405888557434, train_loss: 0.335088312625885
-[te_estimator] Epoch: 150, current validation loss: 0.40513676404953003, train_loss: 0.33040618896484375
-[te_estimator] Epoch: 200, current validation loss: 0.40686488151550293, train_loss: 0.3248767554759979
-Trial 15/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 312/3001 [00:00<00:04, 623.61it/s]Shapley Value Sampling attribution:  21%|██        | 624/3001 [00:01<00:03, 622.25it/s]Shapley Value Sampling attribution:  31%|███       | 936/3001 [00:01<00:03, 622.27it/s]Shapley Value Sampling attribution:  42%|████▏     | 1248/3001 [00:02<00:02, 622.29it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1560/3001 [00:02<00:02, 622.44it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1872/3001 [00:03<00:01, 622.60it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2184/3001 [00:03<00:01, 622.66it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2496/3001 [00:04<00:00, 622.84it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2808/3001 [00:04<00:00, 622.95it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 622.71it/s]
-Trial 15: Average Relative Change in Mean Local SHAP Explanations = 0.765110 cosine sim: 0.994311196793733
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.0214534997940063, train_loss: 1.049587607383728
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.5254074931144714, train_loss: 0.4460979998111725
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.41341355443000793, train_loss: 0.2906847596168518
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3974718749523163, train_loss: 0.2315920889377594
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.39685896039009094, train_loss: 0.214574933052063
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8005204200744629, train_loss: 0.8078770637512207
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.33010804653167725, train_loss: 0.3316354751586914
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2396870106458664, train_loss: 0.23321974277496338
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2140377163887024, train_loss: 0.19385862350463867
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.20600435137748718, train_loss: 0.16220635175704956
-[po_estimator_1_impute_pos] Epoch: 250, current validation loss: 0.2039208561182022, train_loss: 0.13978751003742218
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.9978688955307007, train_loss: 1.0032755136489868
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.49279311299324036, train_loss: 0.45142021775245667
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3450087904930115, train_loss: 0.28048864006996155
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.311458557844162, train_loss: 0.21946649253368378
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.30473312735557556, train_loss: 0.18192480504512787
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7962702512741089, train_loss: 0.8033547401428223
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38427385687828064, train_loss: 0.3299133777618408
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3233815133571625, train_loss: 0.2193140685558319
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3199957013130188, train_loss: 0.18491685390472412
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3205259442329407, train_loss: 0.1724490374326706
-[te_estimator] Epoch: 0, current validation loss: 0.5998084545135498, train_loss: 9.404135704040527
-[te_estimator] Epoch: 50, current validation loss: 0.4400840103626251, train_loss: 8.770718574523926
-[te_estimator] Epoch: 100, current validation loss: 0.4402502477169037, train_loss: 8.716044425964355
-[te_estimator] Epoch: 150, current validation loss: 0.44082894921302795, train_loss: 8.656733512878418
-[te_estimator] Epoch: 200, current validation loss: 0.44233134388923645, train_loss: 8.569790840148926
-Trial 16/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 296/3001 [00:00<00:04, 591.15it/s]Shapley Value Sampling attribution:  20%|██        | 607/3001 [00:01<00:03, 609.10it/s]Shapley Value Sampling attribution:  31%|███       | 918/3001 [00:01<00:03, 614.90it/s]Shapley Value Sampling attribution:  41%|████      | 1230/3001 [00:02<00:02, 617.84it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1542/3001 [00:02<00:02, 619.62it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1854/3001 [00:03<00:01, 620.61it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2166/3001 [00:03<00:01, 621.38it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2478/3001 [00:04<00:00, 621.82it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2789/3001 [00:04<00:00, 621.31it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 618.95it/s]
-Trial 16: Average Relative Change in Mean Local SHAP Explanations = 1.570472 cosine sim: 0.993247677341603
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7104133367538452, train_loss: 0.7224323749542236
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3911036252975464, train_loss: 0.3501818776130676
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3137523829936981, train_loss: 0.2628960609436035
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2921309173107147, train_loss: 0.2252432405948639
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.2865873873233795, train_loss: 0.1878281682729721
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6663304567337036, train_loss: 0.6791309118270874
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3421313762664795, train_loss: 0.2825656831264496
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.29318273067474365, train_loss: 0.18268316984176636
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.29208308458328247, train_loss: 0.16234831511974335
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2922697067260742, train_loss: 0.1526508927345276
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7087264060974121, train_loss: 0.745410144329071
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.42407068610191345, train_loss: 0.3598845899105072
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3739328980445862, train_loss: 0.24911527335643768
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.36575958132743835, train_loss: 0.20754294097423553
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3655011057853699, train_loss: 0.19727419316768646
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.535318911075592, train_loss: 0.534805953502655
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3449341654777527, train_loss: 0.28749847412109375
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3268733322620392, train_loss: 0.2214568853378296
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.32788580656051636, train_loss: 0.2043973207473755
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.32870620489120483, train_loss: 0.20879590511322021
-[te_estimator] Epoch: 0, current validation loss: 0.5557765364646912, train_loss: 0.6941525340080261
-[te_estimator] Epoch: 50, current validation loss: 0.39926648139953613, train_loss: 0.31419092416763306
-[te_estimator] Epoch: 100, current validation loss: 0.39949169754981995, train_loss: 0.3071751296520233
-[te_estimator] Epoch: 150, current validation loss: 0.4003988206386566, train_loss: 0.3012359142303467
-[te_estimator] Epoch: 200, current validation loss: 0.40119820833206177, train_loss: 0.29356658458709717
-Trial 17/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 312/3001 [00:00<00:04, 622.54it/s]Shapley Value Sampling attribution:  21%|██        | 624/3001 [00:01<00:03, 618.84it/s]Shapley Value Sampling attribution:  31%|███       | 934/3001 [00:01<00:03, 618.30it/s]Shapley Value Sampling attribution:  41%|████▏     | 1244/3001 [00:02<00:02, 618.76it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1555/3001 [00:02<00:02, 619.54it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1866/3001 [00:03<00:01, 619.81it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2177/3001 [00:03<00:01, 620.38it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2488/3001 [00:04<00:00, 620.61it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2799/3001 [00:04<00:00, 620.58it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.14it/s]
-Trial 17: Average Relative Change in Mean Local SHAP Explanations = 0.921953 cosine sim: 0.993825325689582
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7829863429069519, train_loss: 0.8013202548027039
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.41050538420677185, train_loss: 0.39997920393943787
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.32400041818618774, train_loss: 0.28418025374412537
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.30190160870552063, train_loss: 0.2400728315114975
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.29872116446495056, train_loss: 0.21276307106018066
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5537793040275574, train_loss: 0.5503355264663696
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.34826651215553284, train_loss: 0.28028881549835205
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3264153301715851, train_loss: 0.21137800812721252
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3265160322189331, train_loss: 0.19855985045433044
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.32667747139930725, train_loss: 0.19794175028800964
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5260719060897827, train_loss: 0.520878791809082
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3226178288459778, train_loss: 0.295686811208725
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.2929674983024597, train_loss: 0.2266736477613449
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2872465252876282, train_loss: 0.20093373954296112
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28716111183166504, train_loss: 0.19190602004528046
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6305764317512512, train_loss: 0.6317506432533264
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3796910345554352, train_loss: 0.2833242118358612
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3526739776134491, train_loss: 0.2009851187467575
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3525446057319641, train_loss: 0.18935959041118622
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.35316550731658936, train_loss: 0.18454115092754364
-[te_estimator] Epoch: 0, current validation loss: 0.6140974760055542, train_loss: 0.6767852306365967
-[te_estimator] Epoch: 50, current validation loss: 0.4176715910434723, train_loss: 0.3486860692501068
-[te_estimator] Epoch: 100, current validation loss: 0.4191538393497467, train_loss: 0.34091871976852417
-[te_estimator] Epoch: 150, current validation loss: 0.42042484879493713, train_loss: 0.33030182123184204
-[te_estimator] Epoch: 200, current validation loss: 0.4226315915584564, train_loss: 0.32160717248916626
-Trial 18/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 295/3001 [00:00<00:04, 589.48it/s]Shapley Value Sampling attribution:  20%|██        | 605/3001 [00:01<00:03, 607.35it/s]Shapley Value Sampling attribution:  31%|███       | 916/3001 [00:01<00:03, 613.54it/s]Shapley Value Sampling attribution:  41%|████      | 1227/3001 [00:02<00:02, 616.37it/s]Shapley Value Sampling attribution:  51%|█████     | 1538/3001 [00:02<00:02, 617.96it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1849/3001 [00:03<00:01, 618.86it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2159/3001 [00:03<00:01, 619.22it/s]Shapley Value Sampling attribution:  82%|████████▏ | 2469/3001 [00:04<00:00, 619.43it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2780/3001 [00:04<00:00, 619.83it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 617.12it/s]
-Trial 18: Average Relative Change in Mean Local SHAP Explanations = 0.870841 cosine sim: 0.9948933274654621
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 1.0017391443252563, train_loss: 1.022672414779663
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.49001428484916687, train_loss: 0.40283533930778503
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3815849721431732, train_loss: 0.24655000865459442
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.36711034178733826, train_loss: 0.19340607523918152
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.367729514837265, train_loss: 0.18225917220115662
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5292533040046692, train_loss: 0.5256159901618958
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.33830565214157104, train_loss: 0.28439614176750183
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.305451899766922, train_loss: 0.2097436487674713
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.30376559495925903, train_loss: 0.18067698180675507
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3041047751903534, train_loss: 0.17710469663143158
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6252595782279968, train_loss: 0.6080595850944519
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3679470419883728, train_loss: 0.305726557970047
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.33222436904907227, train_loss: 0.23790886998176575
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3299843966960907, train_loss: 0.19902753829956055
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.33007198572158813, train_loss: 0.20372430980205536
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5224494338035583, train_loss: 0.5384660959243774
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.31873443722724915, train_loss: 0.2996015250682831
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.28891679644584656, train_loss: 0.22893737256526947
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.283781498670578, train_loss: 0.19069217145442963
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.28392767906188965, train_loss: 0.18067888915538788
-[te_estimator] Epoch: 0, current validation loss: 0.7742195725440979, train_loss: 0.7389285564422607
-[te_estimator] Epoch: 50, current validation loss: 0.4373800456523895, train_loss: 0.30194875597953796
-[te_estimator] Epoch: 100, current validation loss: 0.43794310092926025, train_loss: 0.29520586133003235
-[te_estimator] Epoch: 150, current validation loss: 0.4385497272014618, train_loss: 0.29017990827560425
-[te_estimator] Epoch: 200, current validation loss: 0.4396326541900635, train_loss: 0.2859558165073395
-Trial 19/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 311/3001 [00:00<00:04, 621.56it/s]Shapley Value Sampling attribution:  21%|██        | 623/3001 [00:01<00:03, 622.64it/s]Shapley Value Sampling attribution:  31%|███       | 935/3001 [00:01<00:03, 622.89it/s]Shapley Value Sampling attribution:  42%|████▏     | 1247/3001 [00:02<00:02, 623.15it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1559/3001 [00:02<00:02, 623.11it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1871/3001 [00:03<00:01, 622.95it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2183/3001 [00:03<00:01, 622.95it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2495/3001 [00:04<00:00, 623.19it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2807/3001 [00:04<00:00, 623.38it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 623.05it/s]
-Trial 19: Average Relative Change in Mean Local SHAP Explanations = 0.948217 cosine sim: 0.9961207393372145
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6758996248245239, train_loss: 0.7047601342201233
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3648281693458557, train_loss: 0.3417978286743164
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.29946085810661316, train_loss: 0.2429191619157791
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.28259941935539246, train_loss: 0.1954997032880783
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28042247891426086, train_loss: 0.1641656458377838
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7126239538192749, train_loss: 0.7159230709075928
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.358479380607605, train_loss: 0.30907654762268066
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2939985692501068, train_loss: 0.22355085611343384
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.28470543026924133, train_loss: 0.16581615805625916
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2848969101905823, train_loss: 0.16185566782951355
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8591659069061279, train_loss: 0.8514030575752258
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4656711518764496, train_loss: 0.38846296072006226
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.39115720987319946, train_loss: 0.27331075072288513
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.38296663761138916, train_loss: 0.22911424934864044
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3831293284893036, train_loss: 0.22227655351161957
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5615302324295044, train_loss: 0.545242190361023
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38285136222839355, train_loss: 0.25500035285949707
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3770432472229004, train_loss: 0.1993027627468109
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3779025673866272, train_loss: 0.19097547233104706
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.37916117906570435, train_loss: 0.18509873747825623
-[te_estimator] Epoch: 0, current validation loss: 0.6585127711296082, train_loss: 0.760265052318573
-[te_estimator] Epoch: 50, current validation loss: 0.38075804710388184, train_loss: 0.3167584240436554
-[te_estimator] Epoch: 100, current validation loss: 0.3811621367931366, train_loss: 0.30820757150650024
-[te_estimator] Epoch: 150, current validation loss: 0.38128462433815, train_loss: 0.2999328672885895
-[te_estimator] Epoch: 200, current validation loss: 0.38272279500961304, train_loss: 0.2936009466648102
-Trial 20/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 313/3001 [00:00<00:04, 624.33it/s]Shapley Value Sampling attribution:  21%|██        | 626/3001 [00:01<00:03, 623.38it/s]Shapley Value Sampling attribution:  31%|███▏      | 938/3001 [00:01<00:03, 623.19it/s]Shapley Value Sampling attribution:  42%|████▏     | 1250/3001 [00:02<00:02, 622.40it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1562/3001 [00:02<00:02, 622.41it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1874/3001 [00:03<00:01, 622.57it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2186/3001 [00:03<00:01, 622.63it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2498/3001 [00:04<00:00, 622.71it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2810/3001 [00:04<00:00, 622.46it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 622.62it/s]
-Trial 20: Average Relative Change in Mean Local SHAP Explanations = 1.187875 cosine sim: 0.9959302144204191
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7238366007804871, train_loss: 0.737466037273407
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4225628674030304, train_loss: 0.3564591109752655
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.36174067854881287, train_loss: 0.2505209147930145
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.35496190190315247, train_loss: 0.20667865872383118
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.35507339239120483, train_loss: 0.20516057312488556
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6554833650588989, train_loss: 0.6738592982292175
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3287885785102844, train_loss: 0.3039511442184448
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.27492162585258484, train_loss: 0.21959125995635986
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.26871567964553833, train_loss: 0.18211838603019714
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2689949572086334, train_loss: 0.17211072146892548
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5930371284484863, train_loss: 0.6163835525512695
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3459012806415558, train_loss: 0.3526405394077301
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.2850511968135834, train_loss: 0.285187304019928
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.26474422216415405, train_loss: 0.2331192046403885
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.2573532462120056, train_loss: 0.20665693283081055
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 1.0407224893569946, train_loss: 1.0666708946228027
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.47706836462020874, train_loss: 0.4263163208961487
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.36197465658187866, train_loss: 0.2422342300415039
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.35539209842681885, train_loss: 0.19437381625175476
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3558855354785919, train_loss: 0.19296050071716309
-[te_estimator] Epoch: 0, current validation loss: 0.7295406460762024, train_loss: 0.7151013612747192
-[te_estimator] Epoch: 50, current validation loss: 0.5064470171928406, train_loss: 0.306613028049469
-[te_estimator] Epoch: 100, current validation loss: 0.5078145265579224, train_loss: 0.29794541001319885
-[te_estimator] Epoch: 150, current validation loss: 0.5094107389450073, train_loss: 0.29080820083618164
-[te_estimator] Epoch: 200, current validation loss: 0.5107874274253845, train_loss: 0.2865738570690155
-Trial 21/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 294/3001 [00:00<00:04, 587.02it/s]Shapley Value Sampling attribution:  20%|██        | 604/3001 [00:01<00:03, 606.36it/s]Shapley Value Sampling attribution:  30%|███       | 914/3001 [00:01<00:03, 612.37it/s]Shapley Value Sampling attribution:  41%|████      | 1225/3001 [00:02<00:02, 615.51it/s]Shapley Value Sampling attribution:  51%|█████     | 1535/3001 [00:02<00:02, 616.97it/s]Shapley Value Sampling attribution:  61%|██████▏   | 1845/3001 [00:03<00:01, 617.93it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2156/3001 [00:03<00:01, 618.95it/s]Shapley Value Sampling attribution:  82%|████████▏ | 2466/3001 [00:04<00:00, 619.08it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2777/3001 [00:04<00:00, 619.62it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 616.62it/s]
-Trial 21: Average Relative Change in Mean Local SHAP Explanations = 0.657606 cosine sim: 0.9969582373855256
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.950314462184906, train_loss: 0.9728766679763794
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.45982998609542847, train_loss: 0.43833595514297485
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.32503780722618103, train_loss: 0.27571743726730347
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2913505733013153, train_loss: 0.2206050455570221
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28143584728240967, train_loss: 0.17994782328605652
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8410805463790894, train_loss: 0.8328646421432495
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4116494953632355, train_loss: 0.3409583568572998
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3392682671546936, train_loss: 0.22774812579154968
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3344353437423706, train_loss: 0.19348299503326416
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3349018394947052, train_loss: 0.1880078762769699
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7653396725654602, train_loss: 0.7756503224372864
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4160504937171936, train_loss: 0.37337857484817505
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3433498740196228, train_loss: 0.2622170150279999
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.33108049631118774, train_loss: 0.21787038445472717
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.33089423179626465, train_loss: 0.2118338793516159
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.9148203134536743, train_loss: 0.9379593729972839
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4215172231197357, train_loss: 0.35872119665145874
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3400269150733948, train_loss: 0.21425971388816833
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3355163335800171, train_loss: 0.173975870013237
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3361075222492218, train_loss: 0.16595697402954102
-[te_estimator] Epoch: 0, current validation loss: 0.5393018126487732, train_loss: 0.6021285057067871
-[te_estimator] Epoch: 50, current validation loss: 0.40513694286346436, train_loss: 0.30991435050964355
-[te_estimator] Epoch: 100, current validation loss: 0.4059562087059021, train_loss: 0.3025335371494293
-[te_estimator] Epoch: 150, current validation loss: 0.40661194920539856, train_loss: 0.2932208478450775
-[te_estimator] Epoch: 200, current validation loss: 0.40773478150367737, train_loss: 0.28760582208633423
-Trial 22/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 312/3001 [00:00<00:04, 622.25it/s]Shapley Value Sampling attribution:  21%|██        | 624/3001 [00:01<00:03, 622.24it/s]Shapley Value Sampling attribution:  31%|███       | 936/3001 [00:01<00:03, 622.27it/s]Shapley Value Sampling attribution:  42%|████▏     | 1248/3001 [00:02<00:02, 621.87it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1559/3001 [00:02<00:02, 621.51it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1870/3001 [00:03<00:01, 620.44it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2182/3001 [00:03<00:01, 621.05it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2494/3001 [00:04<00:00, 621.47it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2805/3001 [00:04<00:00, 621.45it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 621.51it/s]
-Trial 22: Average Relative Change in Mean Local SHAP Explanations = 0.787506 cosine sim: 0.9972329596013412
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8312904238700867, train_loss: 0.8313180208206177
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.39221423864364624, train_loss: 0.3349475562572479
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3266994059085846, train_loss: 0.22953292727470398
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.32038649916648865, train_loss: 0.195387065410614
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.32057422399520874, train_loss: 0.1902589648962021
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8721514940261841, train_loss: 0.9026727080345154
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4051632583141327, train_loss: 0.3478313386440277
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.32967719435691833, train_loss: 0.230253666639328
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3230014741420746, train_loss: 0.18482455611228943
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.32371556758880615, train_loss: 0.1815805435180664
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5296097993850708, train_loss: 0.5388021469116211
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.361614465713501, train_loss: 0.30028414726257324
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3513264060020447, train_loss: 0.24849198758602142
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3517371714115143, train_loss: 0.23400764167308807
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.35212191939353943, train_loss: 0.23491358757019043
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6711225509643555, train_loss: 0.66854327917099
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.34708625078201294, train_loss: 0.2861955165863037
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3037869930267334, train_loss: 0.19762572646141052
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.30181118845939636, train_loss: 0.16693834960460663
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3020128011703491, train_loss: 0.1630038470029831
-[te_estimator] Epoch: 0, current validation loss: 0.6811472177505493, train_loss: 0.7419140934944153
-[te_estimator] Epoch: 50, current validation loss: 0.41513702273368835, train_loss: 0.3305429518222809
-[te_estimator] Epoch: 100, current validation loss: 0.4156392812728882, train_loss: 0.3194561302661896
-[te_estimator] Epoch: 150, current validation loss: 0.4166889786720276, train_loss: 0.3124256730079651
-[te_estimator] Epoch: 200, current validation loss: 0.41800457239151, train_loss: 0.30308762192726135
-Trial 23/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 298/3001 [00:00<00:04, 595.08it/s]Shapley Value Sampling attribution:  20%|██        | 609/3001 [00:01<00:03, 610.84it/s]Shapley Value Sampling attribution:  31%|███       | 921/3001 [00:01<00:03, 616.36it/s]Shapley Value Sampling attribution:  41%|████      | 1232/3001 [00:02<00:02, 618.08it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1544/3001 [00:02<00:02, 619.86it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1856/3001 [00:03<00:01, 621.26it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2168/3001 [00:03<00:01, 621.96it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2480/3001 [00:04<00:00, 622.43it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2792/3001 [00:04<00:00, 622.73it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 619.90it/s]
-Trial 23: Average Relative Change in Mean Local SHAP Explanations = 0.709925 cosine sim: 0.9961464831164435
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.49291738867759705, train_loss: 0.5295776128768921
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.2965869903564453, train_loss: 0.2967756390571594
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.2749435603618622, train_loss: 0.23933419585227966
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.27464303374290466, train_loss: 0.21628312766551971
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.2750251293182373, train_loss: 0.21299974620342255
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8347653746604919, train_loss: 0.8705897331237793
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.42512476444244385, train_loss: 0.3354972004890442
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3672414720058441, train_loss: 0.21160730719566345
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3661213219165802, train_loss: 0.18262752890586853
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.36669811606407166, train_loss: 0.18072718381881714
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6465559005737305, train_loss: 0.6736051440238953
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.36781683564186096, train_loss: 0.3461034893989563
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.33111003041267395, train_loss: 0.2856484651565552
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3297260105609894, train_loss: 0.23363296687602997
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.33000051975250244, train_loss: 0.22858932614326477
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8147405385971069, train_loss: 0.8321651220321655
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.37644219398498535, train_loss: 0.3397781550884247
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.30235791206359863, train_loss: 0.22957763075828552
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2886837422847748, train_loss: 0.18375848233699799
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2886993885040283, train_loss: 0.17868992686271667
-[te_estimator] Epoch: 0, current validation loss: 0.5409406423568726, train_loss: 0.5659484267234802
-[te_estimator] Epoch: 50, current validation loss: 0.40421023964881897, train_loss: 0.3331218659877777
-[te_estimator] Epoch: 100, current validation loss: 0.4045023024082184, train_loss: 0.3233396112918854
-[te_estimator] Epoch: 150, current validation loss: 0.40545105934143066, train_loss: 0.31997641921043396
-[te_estimator] Epoch: 200, current validation loss: 0.40671566128730774, train_loss: 0.31158581376075745
-Trial 24/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 313/3001 [00:00<00:04, 624.93it/s]Shapley Value Sampling attribution:  21%|██        | 626/3001 [00:01<00:03, 623.90it/s]Shapley Value Sampling attribution:  31%|███▏      | 938/3001 [00:01<00:03, 623.72it/s]Shapley Value Sampling attribution:  42%|████▏     | 1250/3001 [00:02<00:02, 623.73it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1562/3001 [00:02<00:02, 623.75it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1874/3001 [00:03<00:01, 623.78it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2186/3001 [00:03<00:01, 623.72it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2498/3001 [00:04<00:00, 623.78it/s]Shapley Value Sampling attribution:  94%|█████████▎| 2811/3001 [00:04<00:00, 623.86it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 623.90it/s]
-Trial 24: Average Relative Change in Mean Local SHAP Explanations = 0.489603 cosine sim: 0.9976556779855099
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6985874772071838, train_loss: 0.7157313823699951
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.41104498505592346, train_loss: 0.34810805320739746
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.37167418003082275, train_loss: 0.2546192705631256
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3711567521095276, train_loss: 0.2328881323337555
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3713723123073578, train_loss: 0.23346324265003204
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5547917485237122, train_loss: 0.5770013928413391
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.31954237818717957, train_loss: 0.2925274670124054
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2960908114910126, train_loss: 0.22770389914512634
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.29672035574913025, train_loss: 0.2050783634185791
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.29739072918891907, train_loss: 0.21274083852767944
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6522316932678223, train_loss: 0.6512200236320496
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.35211944580078125, train_loss: 0.29933077096939087
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3007142245769501, train_loss: 0.20638695359230042
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.2944240868091583, train_loss: 0.18435953557491302
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.2942706346511841, train_loss: 0.18267254531383514
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.7787616848945618, train_loss: 0.7995227575302124
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.36924928426742554, train_loss: 0.32583093643188477
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3082094192504883, train_loss: 0.2325025498867035
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.30229055881500244, train_loss: 0.1902080476284027
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.3022526204586029, train_loss: 0.18571123480796814
-[te_estimator] Epoch: 0, current validation loss: 0.6593833565711975, train_loss: 0.7531452178955078
-[te_estimator] Epoch: 50, current validation loss: 0.4178592264652252, train_loss: 0.31681355834007263
-[te_estimator] Epoch: 100, current validation loss: 0.4188437759876251, train_loss: 0.30764880776405334
-[te_estimator] Epoch: 150, current validation loss: 0.4204298257827759, train_loss: 0.30405178666114807
-[te_estimator] Epoch: 200, current validation loss: 0.421863317489624, train_loss: 0.2972150146961212
-Trial 25/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|▉         | 300/3001 [00:00<00:04, 599.01it/s]Shapley Value Sampling attribution:  20%|██        | 611/3001 [00:01<00:03, 611.66it/s]Shapley Value Sampling attribution:  31%|███       | 923/3001 [00:01<00:03, 617.28it/s]Shapley Value Sampling attribution:  41%|████      | 1235/3001 [00:02<00:02, 619.90it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1548/3001 [00:02<00:02, 621.31it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1861/3001 [00:03<00:01, 622.32it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2173/3001 [00:03<00:01, 622.78it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2485/3001 [00:04<00:00, 622.92it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2797/3001 [00:04<00:00, 621.85it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.44it/s]
-Trial 25: Average Relative Change in Mean Local SHAP Explanations = 0.697051 cosine sim: 0.997005016029228
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7622957825660706, train_loss: 0.7665408849716187
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3741452693939209, train_loss: 0.34627246856689453
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3108111619949341, train_loss: 0.2416681945323944
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.30176904797554016, train_loss: 0.19859322905540466
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3023185729980469, train_loss: 0.18831786513328552
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8812397122383118, train_loss: 0.8911156058311462
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4236605167388916, train_loss: 0.3507242202758789
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.355979323387146, train_loss: 0.22431537508964539
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3534162640571594, train_loss: 0.18541741371154785
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.35410600900650024, train_loss: 0.18136630952358246
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.6634323000907898, train_loss: 0.6617752313613892
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3501613736152649, train_loss: 0.32076790928840637
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3104580342769623, train_loss: 0.259171724319458
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.30476245284080505, train_loss: 0.21795415878295898
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3048841059207916, train_loss: 0.21203389763832092
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8254221677780151, train_loss: 0.8545966148376465
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3901556432247162, train_loss: 0.34149855375289917
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.314363032579422, train_loss: 0.22941792011260986
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3057490289211273, train_loss: 0.17474105954170227
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.30686450004577637, train_loss: 0.17203018069267273
-[te_estimator] Epoch: 0, current validation loss: 0.9067925214767456, train_loss: 0.934044599533081
-[te_estimator] Epoch: 50, current validation loss: 0.46252915263175964, train_loss: 0.2809201776981354
-[te_estimator] Epoch: 100, current validation loss: 0.4646012783050537, train_loss: 0.2669505774974823
-[te_estimator] Epoch: 150, current validation loss: 0.4656725823879242, train_loss: 0.26044729351997375
-[te_estimator] Epoch: 200, current validation loss: 0.46708565950393677, train_loss: 0.25648701190948486
-Trial 26/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 310/3001 [00:00<00:04, 619.45it/s]Shapley Value Sampling attribution:  21%|██        | 620/3001 [00:01<00:03, 619.68it/s]Shapley Value Sampling attribution:  31%|███       | 931/3001 [00:01<00:03, 620.07it/s]Shapley Value Sampling attribution:  41%|████▏     | 1242/3001 [00:02<00:02, 620.47it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1553/3001 [00:02<00:02, 620.71it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1864/3001 [00:03<00:01, 620.61it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2175/3001 [00:03<00:01, 620.70it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2486/3001 [00:04<00:00, 620.94it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2797/3001 [00:04<00:00, 621.14it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.67it/s]
-Trial 26: Average Relative Change in Mean Local SHAP Explanations = 0.835495 cosine sim: 0.997768157271922
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7599284648895264, train_loss: 0.7793964743614197
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.4128299355506897, train_loss: 0.328554630279541
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.3654864430427551, train_loss: 0.22821269929409027
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3635219633579254, train_loss: 0.19947540760040283
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.363868772983551, train_loss: 0.18672367930412292
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6101662516593933, train_loss: 0.614987850189209
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.37811800837516785, train_loss: 0.29567763209342957
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3571297526359558, train_loss: 0.21558412909507751
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.357616126537323, train_loss: 0.19800496101379395
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.358272910118103, train_loss: 0.19864332675933838
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.4832126796245575, train_loss: 0.48626935482025146
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.33434832096099854, train_loss: 0.2690510153770447
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.32100188732147217, train_loss: 0.2176019251346588
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.32137900590896606, train_loss: 0.212808296084404
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3215782940387726, train_loss: 0.21342769265174866
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5880126953125, train_loss: 0.5883523225784302
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.32558128237724304, train_loss: 0.2689623236656189
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.28325986862182617, train_loss: 0.19049480557441711
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2794356942176819, train_loss: 0.1524278223514557
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2799985408782959, train_loss: 0.14252591133117676
-[te_estimator] Epoch: 0, current validation loss: 0.7956633567810059, train_loss: 1.099302887916565
-[te_estimator] Epoch: 50, current validation loss: 0.3752414882183075, train_loss: 0.31312623620033264
-[te_estimator] Epoch: 100, current validation loss: 0.37603554129600525, train_loss: 0.30027976632118225
-[te_estimator] Epoch: 150, current validation loss: 0.3764135241508484, train_loss: 0.29164233803749084
-[te_estimator] Epoch: 200, current validation loss: 0.3771224021911621, train_loss: 0.28632235527038574
-Trial 27/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 303/3001 [00:00<00:04, 604.26it/s]Shapley Value Sampling attribution:  20%|██        | 614/3001 [00:01<00:03, 614.54it/s]Shapley Value Sampling attribution:  31%|███       | 923/3001 [00:01<00:03, 615.98it/s]Shapley Value Sampling attribution:  41%|████      | 1234/3001 [00:02<00:02, 617.85it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1545/3001 [00:02<00:02, 619.00it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1856/3001 [00:03<00:01, 619.86it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2167/3001 [00:03<00:01, 620.23it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2478/3001 [00:04<00:00, 619.96it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2789/3001 [00:04<00:00, 620.47it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 618.89it/s]
-Trial 27: Average Relative Change in Mean Local SHAP Explanations = 0.840140 cosine sim: 0.9970653859467586
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5580461621284485, train_loss: 0.6207783818244934
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.2944129705429077, train_loss: 0.3406709134578705
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.25278985500335693, train_loss: 0.282562792301178
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.24402716755867004, train_loss: 0.2448083609342575
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.24396178126335144, train_loss: 0.22944645583629608
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5614978671073914, train_loss: 0.5779973864555359
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3260655403137207, train_loss: 0.2649889886379242
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.29803159832954407, train_loss: 0.19110092520713806
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.29708051681518555, train_loss: 0.1776030957698822
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.29713109135627747, train_loss: 0.16830748319625854
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7531307935714722, train_loss: 0.7574900388717651
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3695846498012543, train_loss: 0.3601522147655487
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.29300007224082947, train_loss: 0.2737896740436554
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.27631545066833496, train_loss: 0.2355099618434906
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.27303555607795715, train_loss: 0.20404434204101562
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.5874165892601013, train_loss: 0.5947122573852539
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3159341812133789, train_loss: 0.2810732126235962
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2754167914390564, train_loss: 0.21845942735671997
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.27338892221450806, train_loss: 0.18603187799453735
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.27367886900901794, train_loss: 0.18264368176460266
-[te_estimator] Epoch: 0, current validation loss: 1.411758542060852, train_loss: 1.5890588760375977
-[te_estimator] Epoch: 50, current validation loss: 0.38089898228645325, train_loss: 0.3129560053348541
-[te_estimator] Epoch: 100, current validation loss: 0.37989646196365356, train_loss: 0.3029989004135132
-[te_estimator] Epoch: 150, current validation loss: 0.37948358058929443, train_loss: 0.29716411232948303
-[te_estimator] Epoch: 200, current validation loss: 0.3791857063770294, train_loss: 0.289021760225296
-Trial 28/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 310/3001 [00:00<00:04, 619.46it/s]Shapley Value Sampling attribution:  21%|██        | 621/3001 [00:01<00:03, 619.92it/s]Shapley Value Sampling attribution:  31%|███       | 932/3001 [00:01<00:03, 620.43it/s]Shapley Value Sampling attribution:  41%|████▏     | 1243/3001 [00:02<00:02, 620.65it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1554/3001 [00:02<00:02, 620.78it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1866/3001 [00:03<00:01, 621.16it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2177/3001 [00:03<00:01, 621.21it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2488/3001 [00:04<00:00, 621.45it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2799/3001 [00:04<00:00, 620.90it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.92it/s]
-Trial 28: Average Relative Change in Mean Local SHAP Explanations = 0.871410 cosine sim: 0.9969414828599301
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5652692914009094, train_loss: 0.582472562789917
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.3274895250797272, train_loss: 0.2960069179534912
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.2894097864627838, train_loss: 0.2231508195400238
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.283887654542923, train_loss: 0.18686065077781677
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.28415390849113464, train_loss: 0.17878113687038422
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.941273033618927, train_loss: 0.9740066528320312
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.45761168003082275, train_loss: 0.4196294844150543
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.31183233857154846, train_loss: 0.2386467456817627
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.2770961821079254, train_loss: 0.1748417764902115
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.27035143971443176, train_loss: 0.14138054847717285
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.5869956016540527, train_loss: 0.6189757585525513
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.378828763961792, train_loss: 0.32310348749160767
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.37032902240753174, train_loss: 0.2572896480560303
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.37088677287101746, train_loss: 0.24856901168823242
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3717857301235199, train_loss: 0.23507419228553772
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8148103356361389, train_loss: 0.8127992153167725
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.38299718499183655, train_loss: 0.36244797706604004
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2995529770851135, train_loss: 0.2531284689903259
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.27817708253860474, train_loss: 0.21059465408325195
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.27266716957092285, train_loss: 0.17768242955207825
-[te_estimator] Epoch: 0, current validation loss: 1.1158719062805176, train_loss: 1.3917564153671265
-[te_estimator] Epoch: 50, current validation loss: 0.39794933795928955, train_loss: 0.31841668486595154
-[te_estimator] Epoch: 100, current validation loss: 0.3981112837791443, train_loss: 0.30746009945869446
-[te_estimator] Epoch: 150, current validation loss: 0.39814668893814087, train_loss: 0.2964681088924408
-[te_estimator] Epoch: 200, current validation loss: 0.39893314242362976, train_loss: 0.294842928647995
-Trial 29/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 302/3001 [00:00<00:04, 603.92it/s]Shapley Value Sampling attribution:  20%|██        | 613/3001 [00:01<00:03, 613.76it/s]Shapley Value Sampling attribution:  31%|███       | 923/3001 [00:01<00:03, 616.06it/s]Shapley Value Sampling attribution:  41%|████      | 1234/3001 [00:02<00:02, 617.87it/s]Shapley Value Sampling attribution:  51%|█████▏    | 1544/3001 [00:02<00:02, 618.29it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1855/3001 [00:03<00:01, 619.25it/s]Shapley Value Sampling attribution:  72%|███████▏  | 2166/3001 [00:03<00:01, 619.66it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2477/3001 [00:04<00:00, 619.99it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2788/3001 [00:04<00:00, 620.18it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 618.59it/s]
-Trial 29: Average Relative Change in Mean Local SHAP Explanations = 0.595325 cosine sim: 0.997684661000549
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.8361654877662659, train_loss: 0.8499919176101685
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.41391521692276, train_loss: 0.3976961076259613
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.30243751406669617, train_loss: 0.2693342864513397
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.27561265230178833, train_loss: 0.21371321380138397
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.27088651061058044, train_loss: 0.18698570132255554
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.8271051645278931, train_loss: 0.8472565412521362
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.4134496748447418, train_loss: 0.35226523876190186
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.3455561399459839, train_loss: 0.23781684041023254
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.3409828841686249, train_loss: 0.2018427848815918
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.34161633253097534, train_loss: 0.18917393684387207
-[po_estimator_0_impute_pos] Epoch: 0, current validation loss: 0.7621951103210449, train_loss: 0.7687792181968689
-[po_estimator_0_impute_pos] Epoch: 50, current validation loss: 0.42780447006225586, train_loss: 0.37484923005104065
-[po_estimator_0_impute_pos] Epoch: 100, current validation loss: 0.36239293217658997, train_loss: 0.27368101477622986
-[po_estimator_0_impute_pos] Epoch: 150, current validation loss: 0.3541828393936157, train_loss: 0.21805481612682343
-[po_estimator_0_impute_pos] Epoch: 200, current validation loss: 0.3540445566177368, train_loss: 0.21286988258361816
-[po_estimator_1_impute_pos] Epoch: 0, current validation loss: 0.6497725248336792, train_loss: 0.6692299842834473
-[po_estimator_1_impute_pos] Epoch: 50, current validation loss: 0.3244624137878418, train_loss: 0.2888006865978241
-[po_estimator_1_impute_pos] Epoch: 100, current validation loss: 0.2694464921951294, train_loss: 0.20712308585643768
-[po_estimator_1_impute_pos] Epoch: 150, current validation loss: 0.25772935152053833, train_loss: 0.16397851705551147
-[po_estimator_1_impute_pos] Epoch: 200, current validation loss: 0.2572682201862335, train_loss: 0.1505926251411438
-[te_estimator] Epoch: 0, current validation loss: 0.7135090827941895, train_loss: 0.7296052575111389
-[te_estimator] Epoch: 50, current validation loss: 0.4420543313026428, train_loss: 0.30562669038772583
-[te_estimator] Epoch: 100, current validation loss: 0.442954421043396, train_loss: 0.30267173051834106
-[te_estimator] Epoch: 150, current validation loss: 0.4446723163127899, train_loss: 0.2932198643684387
-[te_estimator] Epoch: 200, current validation loss: 0.4461566209793091, train_loss: 0.28610581159591675
-Trial 30/30 - Computing SHAP values
-Shapley Value Sampling attribution:   0%|          | 0/3001 [00:00<?, ?it/s]Shapley Value Sampling attribution:  10%|█         | 311/3001 [00:00<00:04, 621.10it/s]Shapley Value Sampling attribution:  21%|██        | 622/3001 [00:01<00:03, 620.92it/s]Shapley Value Sampling attribution:  31%|███       | 933/3001 [00:01<00:03, 619.98it/s]Shapley Value Sampling attribution:  41%|████▏     | 1244/3001 [00:02<00:02, 620.24it/s]Shapley Value Sampling attribution:  52%|█████▏    | 1555/3001 [00:02<00:02, 620.44it/s]Shapley Value Sampling attribution:  62%|██████▏   | 1866/3001 [00:03<00:01, 620.54it/s]Shapley Value Sampling attribution:  73%|███████▎  | 2177/3001 [00:03<00:01, 620.62it/s]Shapley Value Sampling attribution:  83%|████████▎ | 2488/3001 [00:04<00:00, 620.41it/s]Shapley Value Sampling attribution:  93%|█████████▎| 2799/3001 [00:04<00:00, 619.99it/s]Shapley Value Sampling attribution: 100%|██████████| 3001/3001 [00:04<00:00, 620.37it/s]
-Trial 30: Average Relative Change in Mean Local SHAP Explanations = 0.502885 cosine sim: 0.998007136424387
-SHAP computation completed. Results saved to: results/accord/shapley
-JSON summary written to: results/accord/shapley/accord_shap_summary_False.json
-
-Top 5 features by mean absolute SHAP value (categorical features aggregated):
-  1. anti_coag: 0.0421
-  2. bmi: 0.0400
-  3. baseline_age: 0.0374
-  4. ldl: 0.0373
-  5. potassium: 0.0357
-[1;34mwandb[0m: 
-[1;34mwandb[0m: 🚀 View run [33mfragrant-universe-9[0m at: [34mhttps://wandb.ai/data_att/Convergence%20for%20Shapley%20value%20accord/runs/eanfyv3y[0m
-[1;34mwandb[0m: Find logs at: [1;35m../../../../data/mingyulu/wandb/wandb/run-20260218_102839-eanfyv3y/logs[0m
