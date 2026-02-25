@@ -18,7 +18,6 @@ from captum.attr import (
     ShapleyValueSampling,
 )
 from captum.attr._core.lime import get_exp_kernel_similarity_function
-from shapreg import games, removal, shapley_sampling
 from sklift.metrics import qini_auc_score
 from torch import nn
 
@@ -229,37 +228,6 @@ class Explainer:
 
             return self._check_tensor(test_values)
 
-        # Explain with missingness
-        def explain_with_missingness_cbk(x_test: torch.Tensor) -> torch.Tensor:
-
-            test_values = np.zeros((x_test.size()))
-
-            for test_ind in range(len(x_test)):
-                instance = x_test[test_ind, :][None, :]
-                game = games.CateGame(instance, model)
-                explanation = shapley_sampling.ShapleySampling(game, batch_size=128)
-                test_values[test_ind] = explanation.values
-
-            return self._check_tensor(test_values)
-
-        def marginal_shap_cbk(x_test: torch.Tensor) -> torch.Tensor:
-
-            test_values = np.zeros((x_test.size()))
-            x_test = x_test.detach().cpu().numpy()
-            baseline = self.baseline.detach().cpu().numpy()
-
-            marginal_extension = removal.MarginalExtension(baseline, model)
-
-            for test_ind in range(len(x_test)):
-                instance = x_test[test_ind]
-                game = games.PredictionGame(marginal_extension, instance)
-                explanation = shapley_sampling.ShapleySampling(
-                    game, thresh=0.01, batch_size=128
-                )
-                test_values[test_ind] = explanation.values.reshape(-1, x_test.shape[1])
-
-            return self._check_tensor(test_values)
-
         def dummy_cbk(x_test: torch.Tensor) -> torch.Tensor:
             """Dummy function, returns zero tensor"""
             return torch.zeros((x_test.size()))
@@ -289,8 +257,6 @@ class Explainer:
             "marginal_shapley_value_sampling": marginal_shapley_value_sampling_cbk,
             "kernel_shap": kernel_shap_cbk,
             "gradient_shap": gradient_shap_cbk,
-            "explain_with_missingness": explain_with_missingness_cbk,
-            "marginal_shap": marginal_shap_cbk,
             "saliency": saliency_cpk,
             "loco": dummy_cbk,
             "permucate": dummy_cbk,
