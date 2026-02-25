@@ -12,6 +12,10 @@ Core CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets
 
 Computes SHAP values for CATE models on a single cohort using bootstrapped trials and exports JSON summaries compatible with `clinical_agent.py`.
 
+For the current ALEX pipeline, place/expect SHAP summaries under:
+
+`ALEX/results/<cohort>/shapley/<cohort>_shap_summary_<baseline>.json`
+
 Example:
 
 ```bash
@@ -24,15 +28,15 @@ python single_cohort_analysis.py \
     --top_n_features 15
 ```
 
-### `clinical_agent.py`
+### `ALEX/clinical_agent.py`
 
 Generates clinical mechanism hypotheses from SHAP summaries.
 
 Example:
 
 ```bash
-python clinical_agent.py \
-    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
+python ALEX/clinical_agent.py \
+    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
     --out_json docs/agent/crash_2/hypotheses_with_shap_XLearner.json \
     --trial_name crash_2 \
     --n_features 15 \
@@ -57,6 +61,47 @@ python run_experiment_clinical_data.py \
 ### `summarize_feature_scores.py`
 
 Summarizes and visualizes feature scores from clinical agent outputs.
+
+## End-to-End ALEX Pipeline (Example)
+
+```bash
+# 1) Compute SHAP summary
+python single_cohort_analysis.py \
+    --num_trials 20 \
+    --cohort_name crash_2 \
+    --baseline \
+    --wandb \
+    --relative_change_threshold 0.05 \
+    --top_n_features 15
+
+# 2) Generate hypotheses (with verifier)
+python ALEX/clinical_agent.py \
+    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --out_json docs/agent/crash_2/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses.json \
+    --trial_name crash_2 \
+    --seed 0 \
+    --n_features 15 \
+    --n_hypotheses 8 \
+    --model gpt-5-mini \
+    --api_provider openai \
+    --enable_verifier
+
+# 3) Independent judge scoring
+python ALEX/judge_feature_hypotheses.py \
+    --hypotheses_json docs/agent/crash_2/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
+    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --trial_name crash_2 \
+    --model gpt-5-mini \
+    --api_provider openai
+
+# 4) PubMed mechanism validation
+python ALEX/pubmed_mechanism_validator.py \
+    --input docs/agent/crash_2/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
+    --dataset crash_2 \
+    --model gpt-5-mini \
+    --api-provider openai \
+    --max-abstracts 20
+```
 
 ### `tools/summarize_classification_percentages.py`
 
@@ -106,7 +151,7 @@ Feature-level labels are then computed as the dominant mechanism label per featu
 
 ## PubMed Mechanism Validator
 
-`pubmed_mechanism_validator.py` validates hypothesis mechanisms against PubMed literature by:
+`ALEX/pubmed_mechanism_validator.py` validates hypothesis mechanisms against PubMed literature by:
 
 1. Searching PubMed for relevant abstracts
 2. Classifying abstracts as support/conflict/neutral
@@ -121,38 +166,37 @@ pip install -r pubmed_requirements.txt
 ### Basic Usage
 
 ```bash
-python pubmed_mechanism_validator.py --cohort ist3
-python pubmed_mechanism_validator.py --cohort accord
-python pubmed_mechanism_validator.py --cohort crash_2
-python pubmed_mechanism_validator.py --cohort sprint
+python ALEX/pubmed_mechanism_validator.py \
+    --input docs/agent/ist3/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
+    --dataset ist3
+
+python ALEX/pubmed_mechanism_validator.py \
+    --input docs/agent/accord/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
+    --dataset accord
 ```
 
 ### Advanced Usage
 
 ```bash
 # Custom input file
-python pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3
 
 # Custom output
-python pubmed_mechanism_validator.py --cohort ist3 --output my_validation.json
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --output my_validation.json
 
 # LLM analysis (reads OPENAI_API_KEY from environment or .env)
-python pubmed_mechanism_validator.py --cohort ist3
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3
 
 # Explicit API key override
-python pubmed_mechanism_validator.py --cohort ist3 --api-key "your-api-key-here"
-
-# Keyword-only mode
-python pubmed_mechanism_validator.py --cohort ist3 --no-llm
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --api-key "your-api-key-here"
 
 # More abstracts per mechanism
-python pubmed_mechanism_validator.py --cohort ist3 --max-abstracts 50
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --max-abstracts 50
 ```
 
 ### Analysis Modes
 
-- **LLM-based analysis** (recommended): more nuanced support/conflict classification.
-- **Keyword-based analysis**: no API key required, faster but less precise.
+- **LLM-based analysis** (recommended): nuanced support/conflict classification using the configured model.
 
 ### Output
 
@@ -165,9 +209,8 @@ Outputs `<input_basename>_pubmed_validation.json` (unless `--output` is provided
 ### Best Practices
 
 1. Use LLM mode for final reporting.
-2. Use keyword mode for quick screening.
-3. Tune `--max-abstracts` for depth vs speed.
-4. Review constructed queries when retrieval quality is low.
+2. Tune `--max-abstracts` for depth vs speed.
+3. Review constructed queries when retrieval quality is low.
 
 ### Troubleshooting
 
