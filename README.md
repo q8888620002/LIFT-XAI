@@ -8,7 +8,7 @@ Core CATE models are based on [CATENets](https://github.com/AliciaCurth/CATENets
 
 ## Core Scripts
 
-### `single_cohort_analysis.py`
+### `ensemble_shap_compute/single_cohort_analysis.py`
 
 Computes SHAP values for CATE models on a single cohort using bootstrapped trials and exports JSON summaries compatible with `clinical_agent.py`.
 
@@ -19,7 +19,7 @@ For the current ALEX pipeline, place/expect SHAP summaries under:
 Example:
 
 ```bash
-python single_cohort_analysis.py \
+python ensemble_shap_compute/single_cohort_analysis.py \
     --num_trials 20 \
     --cohort_name crash_2 \
     --baseline \
@@ -43,19 +43,20 @@ python ALEX/clinical_agent.py \
     --n_hypotheses 8
 ```
 
-### `run_experiment_clinical_data.py`
+### `ensemble_shap_compute/run_clinical_experiments.py`
 
 Runs ensemble explanation experiments with knowledge distillation.
 
 Example:
 
 ```bash
-python run_experiment_clinical_data.py \
+python ensemble_shap_compute/run_clinical_experiments.py \
     --dataset crash_2 \
     --shuffle \
     --num_trials 10 \
     --learner XLearner \
-    --top_n_features 10
+    --top_n_features 10 \
+    --device cuda:0
 ```
 
 ### `summarize_feature_scores.py`
@@ -66,7 +67,7 @@ Summarizes and visualizes feature scores from clinical agent outputs.
 
 ```bash
 # 1) Compute SHAP summary
-python single_cohort_analysis.py \
+python ensemble_shap_compute/single_cohort_analysis.py \
     --num_trials 20 \
     --cohort_name crash_2 \
     --baseline \
