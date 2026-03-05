@@ -152,22 +152,22 @@ function getDisplayFeatureName(featureName) {
 const ratingGates = [
     {
         id: 'is_biologically_coherent',
-        label: 'Gate 1: Logical Coherence',
+        label: 'Q1: Logical Coherence',
         description: 'Is the proposed mechanism logically coherent? Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? FALSE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
     },
     {
         id: 'is_causally_plausible',
-        label: 'Gate 2: Causal Plausibility',
+        label: 'Q2: Causal Plausibility',
         description: 'Is the proposed mechanism causally plausible? TRUE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." FALSE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also FALSE for post-treatment variables, reverse causality, or trivial severity proxies.'
     },
     {
         id: 'is_clinically_actionable',
-        label: 'Gate 3: Clinical Actionability',
+        label: 'Q3: Clinical Actionability',
         description: 'Is the hypothesis clinically actionable? Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
         id: 'is_literature_backed',
-        label: 'Gate 4: External Evidence',
+        label: 'Q4: External Evidence',
         description: 'Based on your knowledge, is this specific feature × treatment interaction supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? TRUE if you are aware of supporting evidence; FALSE if you have never encountered this interaction in the literature or clinical practice.'
     }
 ];
@@ -315,8 +315,8 @@ function createHypothesisCard(hypothesis, index) {
         </div>
 
         <div class="rating-section">
-            <h4>Gate Evaluation</h4>
-            <p class="gate-instructions">For each gate, select TRUE or FALSE. Gates are evaluated independently.</p>
+            <h4>Your Assessment</h4>
+            <p class="gate-instructions">For each criterion, select TRUE or FALSE.</p>
             ${createGateInputs(index)}
 
             <div class="rating-group">
