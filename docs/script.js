@@ -142,13 +142,13 @@ const ratingGates = [
     },
     {
         id: 'is_causally_plausible',
-        label: 'Gate 2: Genuine HTE vs Statistical Artifact',
-        description: 'Is this a true treatment effect modifier — the drug works differently in this subgroup — rather than a statistical artifact? FALSE if the sole argument is absolute-risk amplification (higher baseline risk × constant RRR), post-treatment variable, reverse causality, or trivial severity proxy.'
+        label: 'Gate 2: Causal Plausibility',
+        description: 'Is the proposed mechanism causally plausible? TRUE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." FALSE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also FALSE for post-treatment variables, reverse causality, or trivial severity proxies.'
     },
     {
         id: 'is_clinically_actionable',
-        label: 'Gate 3: Practical Utility',
-        description: 'Does this propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
+        label: 'Gate 3: Clinical Actionability',
+        description: 'Is the hypothesis clinically actionable? Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
         id: 'is_literature_backed',
