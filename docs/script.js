@@ -1,9 +1,30 @@
-// Method display names
-const methodDisplayNames = {
-    with_shap_drlearner: 'ALEX',
-    cot: 'CoT',
-    hypogenic: 'HypoGeniC',
-    researchagent: 'ResearchAgent'
+// Blinded method mapping (randomized per cohort to prevent systematic bias)
+// DO NOT SHARE THIS MAPPING WITH RATERS
+const methodMapping = {
+    crash_2: {
+        method_a: 'with_shap_drlearner',
+        method_b: 'hypogenic',
+        method_c: 'cot',
+        method_d: 'researchagent'
+    },
+    ist3: {
+        method_a: 'cot',
+        method_b: 'with_shap_drlearner',
+        method_c: 'researchagent',
+        method_d: 'hypogenic'
+    },
+    sprint: {
+        method_a: 'researchagent',
+        method_b: 'cot',
+        method_c: 'hypogenic',
+        method_d: 'with_shap_drlearner'
+    },
+    accord: {
+        method_a: 'hypogenic',
+        method_b: 'researchagent',
+        method_c: 'with_shap_drlearner',
+        method_d: 'cot'
+    }
 };
 
 // Trial metadata
@@ -130,14 +151,14 @@ const ratingGates = [
         description: 'Is this a true treatment effect modifier — the drug works differently in this subgroup — rather than a statistical artifact? FALSE if the sole argument is absolute-risk amplification (higher baseline risk × constant RRR), post-treatment variable, reverse causality, or trivial severity proxy.'
     },
     {
-        id: 'is_literature_backed',
-        label: 'Gate 4: External Evidence',
-        description: 'Is this specific feature × treatment interaction supported by published clinical literature (ideally RCT subgroup analyses or meta-analyses)?'
+        id: 'is_clinically_actionable',
+        label: 'Gate 4: Practical Utility',
+        description: 'Does this propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
-        id: 'is_clinically_actionable',
-        label: 'Gate 5: Practical Utility',
-        description: 'Does this propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
+        id: 'is_literature_backed',
+        label: 'Gate 5: External Evidence',
+        description: 'Is this specific feature × treatment interaction supported by published clinical literature (ideally RCT subgroup analyses or meta-analyses)?'
     }
 ];
 
@@ -157,7 +178,7 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
     const cohort = document.getElementById('cohort-select').value;
-    const method = document.getElementById('method-select').value;
+    const methodBlind = document.getElementById('method-select').value;
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
 
@@ -176,6 +197,8 @@ async function loadHypotheses() {
         return;
     }
 
+    // Map blinded label to actual method based on cohort
+    const method = methodMapping[cohort][methodBlind];
     const filePath = `agent/${cohort}/gpt-5-mini/${method}/seed_0/hypotheses.json`;
 
     try {
@@ -189,7 +212,7 @@ async function loadHypotheses() {
         const hypotheses = normalizeHypotheses(data, method);
 
         displayTrialInfo(cohort);
-        displayHypotheses(hypotheses, cohort, method, expertise, specialty);
+        displayHypotheses(hypotheses, cohort, methodBlind, expertise, specialty);
 
     } catch (error) {
         const container = document.getElementById('hypotheses-container');
@@ -238,7 +261,6 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty) {
         specialty: specialty,
         cohort: cohort,
         method: method,
-        method_display: methodDisplayNames[method] || method,
         timestamp: new Date().toISOString(),
         ratings: []
     };
