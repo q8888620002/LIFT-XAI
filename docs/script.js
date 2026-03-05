@@ -295,15 +295,6 @@ function createHypothesisCard(hypothesis, index) {
     card.className = 'hypothesis-card';
     card.id = `hyp-${index}`;
 
-    // Build subgroup rule display for HypoGeniC
-    const subgroupHTML = hypothesis.subgroup_rule ? `
-            <div class="content-section">
-                <h4>Subgroup Rule</h4>
-                <p><code>${hypothesis.subgroup_rule.feature} ${hypothesis.subgroup_rule.operator} ${hypothesis.subgroup_rule.threshold}</code>
-                — ${hypothesis.subgroup_rule.description || ''}
-                (Recommendation: <strong>${hypothesis.recommendation || 'N/A'}</strong>)</p>
-            </div>` : '';
-
     card.innerHTML = `
         <div class="hypothesis-header">
             <div class="hypothesis-title">${getDisplayFeatureName(hypothesis.feature_name)}</div>
@@ -321,7 +312,6 @@ function createHypothesisCard(hypothesis, index) {
                     </div>
                 `).join('')}
             </div>
-            ${subgroupHTML}
         </div>
 
         <div class="rating-section">
