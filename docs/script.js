@@ -32,22 +32,30 @@ const trialInfo = {
     crash_2: {
         treatment: "Tranexamic acid (TXA)",
         outcome: "All-cause mortality at 28 days or in-hospital death",
-        population: "Trauma patients with significant bleeding or at risk of significant hemorrhage"
+        population: "Trauma patients with significant bleeding or at risk of significant hemorrhage",
+        description: "CRASH-2 was a large international randomised placebo-controlled trial (N=20,211) evaluating the effect of early administration of tranexamic acid on death, vascular occlusive events, and blood transfusion in adult trauma patients with or at risk of significant bleeding, conducted across 274 hospitals in 40 countries.",
+        link: "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(10)60835-5/fulltext"
     },
     ist3: {
         treatment: "IV alteplase (recombinant tissue plasminogen activator)",
         outcome: "Alive and independent (Oxford Handicap Score 0-2) at 6 months",
-        population: "Acute ischemic stroke patients within 6 hours of symptom onset"
+        population: "Acute ischemic stroke patients within 6 hours of symptom onset",
+        description: "IST-3 was an international randomised open-label trial (N=3,035) testing whether IV alteplase (0.9 mg/kg) given within 6 hours of acute ischaemic stroke improved functional outcome at 6 months, enrolling patients across 156 hospitals in 12 countries, including those over 80 years of age.",
+        link: "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(12)60768-5/fulltext"
     },
     sprint: {
         treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
         outcome: "Composite of major cardiovascular events (MI, stroke, heart failure, cardiovascular death)",
-        population: "Non-diabetic adults aged ≥50 with hypertension and increased cardiovascular risk"
+        population: "Non-diabetic adults aged ≥50 with hypertension and increased cardiovascular risk",
+        description: "SPRINT was a multicentre open-label randomised trial (N=9,361) comparing intensive systolic BP target (<120 mmHg) to standard target (<140 mmHg) in non-diabetic adults aged ≥50 with hypertension and at least one additional cardiovascular risk factor, conducted at 102 clinical sites in the United States.",
+        link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939"
     },
     accord: {
-        treatment: "Intensive glucose control (HbA1c target <6.0%)",
+        treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
         outcome: "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
-        population: "Adults with type 2 diabetes and high cardiovascular risk"
+        population: "Adults with type 2 diabetes and high cardiovascular risk",
+        description: "ACCORD-BP was a randomised trial (N=4,733) embedded within the ACCORD study, comparing intensive systolic BP target (<120 mmHg) to standard target (<140 mmHg) in adults with type 2 diabetes and high cardiovascular risk, conducted at 77 clinical sites across the United States and Canada.",
+        link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286"
     }
 };
 
@@ -246,6 +254,10 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-treatment').textContent = info.treatment;
     document.getElementById('trial-outcome').textContent = info.outcome;
     document.getElementById('trial-population').textContent = info.population;
+    document.getElementById('trial-description').textContent = info.description;
+    const linkEl = document.getElementById('trial-link');
+    linkEl.href = info.link;
+    linkEl.textContent = 'View Publication';
     document.getElementById('trial-info').style.display = 'block';
 }
 
