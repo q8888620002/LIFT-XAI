@@ -83,7 +83,7 @@ const featureNameMap = {
     'iage': 'Age',
     'isbp': 'Systolic Blood Pressure',
     'irr': 'Respiratory Rate',
-    'icc': 'Central Capillary Refill Time',
+    'icc': 'Injury Classification Code',
     'ihr': 'Heart Rate',
     'igcs': 'Glasgow Coma Scale',
     'ninjurytime': 'Time from Injury to Treatment',
@@ -136,8 +136,15 @@ const featureNameMap = {
 };
 
 function getDisplayFeatureName(featureName) {
-    // Return mapped name if exists, otherwise return original name
-    return featureNameMap[featureName] || featureName;
+    // Check direct mapping first
+    if (featureNameMap[featureName]) return featureNameMap[featureName];
+
+    // Strip parenthesized raw variable names, e.g. "Injury classification code (icc)" -> "Injury classification code"
+    const stripped = featureName.replace(/\s*\([^)]*\)\s*$/, '').trim();
+    if (featureNameMap[stripped]) return featureNameMap[stripped];
+
+    // Return the cleaned name (without raw variable in parentheses)
+    return stripped;
 }
 
 // Rating criteria: 4 robustness gates + novelty bonus
