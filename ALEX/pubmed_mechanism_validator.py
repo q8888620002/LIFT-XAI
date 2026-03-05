@@ -22,7 +22,13 @@ import re
 import hashlib
 from typing import List, Dict, Any, Optional
 
-from src.agent_utils import load_json_file, load_local_env, write_json_file
+from src.agent_utils import (
+    _convert_hypogenic_to_feature_format,
+    _is_hypogenic_format,
+    load_json_file,
+    load_local_env,
+    write_json_file,
+)
 
 try:
     from Bio import Entrez
@@ -38,16 +44,39 @@ except ImportError:
     OpenAI = None
     openai_available = False
 
+
 class PubMedMechanismValidator:
     """Validates mechanisms against PubMed literature."""
 
-    def __init__(self, email: str = "research@example.com", api_key: str = None, max_abstracts: int = 30, model: str = "gpt-5-mini", api_provider: str = "openai", api_base_url: str = None, llm_delay: float = 0.5):
+    # PMIDs permanently excluded from all validation runs.
+    # Use only for papers that cannot be fixed via prompt (e.g., metadata so ambiguous
+    # that no gate catches it). Prefer fixing the evaluator prompt (Gate E) instead.
+    PMID_BLACKLIST: set = {
+        # IST3 / nihss feature
+        "27507856",  # 9-RCT pooled analysis (Emberson 2016): abstract conclusion says
+                     # "neither age nor stroke severity significantly influenced" the
+                     # time-benefit slope, triggering NO_INTERACTION (-4 pts). The actual
+                     # absolute risk data (22 vs 4 per 1000 by severity quintile) is buried
+                     # in the full results section, not the abstract. Re-enable once
+                     # --full-text is active.
+        "40760234",  # ARAMIS secondary analysis (DAPT vs alteplase NIHSS 0-5):
+                     # compares two active treatments (wrong control arm for alteplase
+                     # vs placebo/no-treatment mechanism). Still retrieved by the
+                     # nihss tier-1 query despite antiplat_rand fix.
+        "35369376",  # SPRINT / DBP paper ("Baseline Diastolic Blood Pressure and
+                     # Cardiovascular Outcomes"): a DBP-focused observational analysis
+                     # that reports no interaction, but is wrongly retrieved for the
+                     # sub_ckd and dbp queries. Not a CKD×BP-lowering RCT subgroup.
+    }
+
+    def __init__(self, email: str = "research@example.com", api_key: str = None, max_abstracts: int = 30, model: str = "gpt-5-mini", api_provider: str = "openai", api_base_url: str = None, llm_delay: float = 0.5, full_text: bool = False):
         if Entrez:
             Entrez.email = email
         self.api_key = api_key
         self.max_abstracts = max_abstracts
         self.model = model
         self.llm_delay = max(0.0, float(llm_delay))
+        self.full_text = full_text
         self._search_cache: Dict[tuple, List[str]] = {}
         self._abstract_batch_cache: Dict[tuple, List[Dict[str, str]]] = {}
         self._llm_eval_cache: Dict[str, Dict[str, Any]] = {}
@@ -65,7 +94,8 @@ class PubMedMechanismValidator:
                 self.openai_client = OpenAI(**kwargs)
 
     def load_hypotheses(self, filepath: str) -> Dict[str, Any]:
-        return load_json_file(filepath)
+        data = load_json_file(filepath)
+        return _convert_hypogenic_to_feature_format(data) if _is_hypogenic_format(data) else data
 
     def get_cohort_trial_context(self, dataset: str) -> Dict[str, str]:
         """Return original cohort treatment/outcome context used for strict validation."""
@@ -137,8 +167,8 @@ class PubMedMechanismValidator:
             'study', 'trial', 'analysis', 'group', 'subgroup'
         }
 
-        # Clean punctuation and split
-        clean_desc = re.sub(r'[^a-zA-Z0-9\s]', '', description.lower())
+        # Replace punctuation/hyphens with spaces so "treatment-response" → "treatment response"
+        clean_desc = re.sub(r'[^a-zA-Z0-9]+', ' ', description.lower())
         tokens = clean_desc.split()
 
         # Keep specific words (4+ chars, not stop words)
@@ -184,7 +214,7 @@ class PubMedMechanismValidator:
             ('sbprand', ['systolic blood pressure']),
             ('sbp', ['systolic blood pressure']),
             ('isbp', ['systolic blood pressure', 'initial blood pressure', 'hypotension']),
-            ('dbprand', ['diastolic blood pressure']),
+            ('dbprand', ['diastolic blood pressure', 'dbprand', 'diastolic bp']),
             ('dbp', ['diastolic blood pressure']),
             ('hba1c', ['hba1c', 'glycated hemoglobin']),
             ('gfr', ['gfr', 'egfr', 'renal function']),
@@ -201,6 +231,8 @@ class PubMedMechanismValidator:
             ('irr', ['respiratory rate']),
             ('ihr', ['heart rate', 'tachycardia', 'bradycardia']),
             ('iinjurytype', ['injury type', 'blunt', 'penetrating', 'mechanism of injury']),
+            ('icc', ['capillary refill', 'injury classification code', 'circulation code', 'peripheral perfusion']),
+            ('antiplat_rand', ['antiplatelet', 'antiplat', 'prior antiplatelet', 'platelet inhibition', 'antithrombotic']),
             ('isex', ['sex', 'gender', 'male', 'female']),
             ('cvd_hx_baseline', ['history of cardiovascular disease', 'prior cardiovascular', 'cvd history']),
             ('prior stroke history', ['prior stroke', 'history of stroke', 'previous stroke']),
@@ -228,18 +260,18 @@ class PubMedMechanismValidator:
         dataset_config = {
             'ist3': {
                 'context_terms': ['stroke', '"ischemic stroke"'],
-                'treatment_terms': ['alteplase', '"intravenous thrombolysis"', '"tissue plasminogen activator"', 'rtPA'],
+                'treatment_terms': ['alteplase', '"intravenous thrombolysis"', '"tissue plasminogen activator"', 'rtPA', 'tPA'],
                 'features': {
                     'stroketype': '"stroke subtype" OR lacunar OR cardioembolic OR "posterior circulation"',
                     'age': 'age OR elderly OR geriatric',
                     'nihss': 'NIHSS OR "stroke severity" OR "neurological deficit" OR "infarct volume"',
                     'sbprand': '"systolic blood pressure" OR "blood pressure" OR hypertension',
-                    'dbprand': '"diastolic blood pressure" OR "blood pressure" OR hypertension',
+                    'dbprand': '"diastolic blood pressure" OR "blood pressure" OR hypertension OR "baseline blood pressure"',
                     'weight': 'weight OR BMI OR obesity OR "body mass"',
                     'glucose': 'glucose OR hyperglycemia OR "blood glucose"',
                     'gcs_score_rand': 'GCS OR "Glasgow Coma Scale" OR "consciousness level"',
                     'gender': 'sex OR gender OR male OR female',
-                    'antiplat_rand': 'antiplatelet OR aspirin OR clopidogrel OR "platelet inhibition"',
+                    'antiplat_rand': 'antiplatelet OR aspirin OR clopidogrel OR "prior antiplatelet" OR "antiplatelet therapy" OR "platelet inhibition" OR "antithrombotic pretreatment" OR "antiplatelet pretreatment" OR "pretreatment antiplatelet"',
                     'atrialfib_rand': '"atrial fibrillation" OR AF OR AFib',
                     'infarct': 'infarct OR ischemic OR "ischemic lesion"',
                     'stroketype_1': 'TACI OR "total anterior circulation infarct"',
@@ -249,7 +281,7 @@ class PubMedMechanismValidator:
                     'stroketype_5': '"other ischemic stroke subtype"',
                     'diabetes mellitus': 'diabetes OR "diabetes mellitus" OR hyperglycemia OR glucose',
                     'prior stroke history': '"prior stroke" OR "previous stroke" OR "history of stroke"',
-                    'time_to_treatment': '"time to treatment" OR "onset to treatment" OR "treatment delay"'
+                    'time_to_treatment': '"time to treatment" OR "onset to treatment" OR "treatment delay" OR "door-to-needle" OR "symptom onset"'
                 }
             },
             'accord': {
@@ -260,7 +292,9 @@ class PubMedMechanismValidator:
                     '"systolic blood pressure target"',
                     '"tight blood pressure control"',
                     '"aggressive blood pressure lowering"',
-                    '"blood pressure management"'
+                    '"blood pressure management"',
+                    '"intensive antihypertensive therapy"',
+                    '"antihypertensive intensification"',
                 ],
                 'features': {
                     'hba1c': 'HbA1c OR "glycated hemoglobin" OR "glycemic control"',
@@ -292,12 +326,12 @@ class PubMedMechanismValidator:
             },
             'crash_2': {
                 'context_terms': ['trauma', 'bleeding', 'hemorrhage'],
-                'treatment_terms': ['"tranexamic acid"', 'TXA', '"anti-fibrinolytic"'],
+                'treatment_terms': ['"tranexamic acid"', 'TXA', '"anti-fibrinolytic"', 'CRASH-2'],
                 'features': {
                     'iage': 'age OR elderly OR geriatric',
-                    'isbp': '"systolic blood pressure" OR "initial blood pressure" OR hypotension OR hypertension',
-                    'irr': '"respiratory rate" OR breathing',
-                    'icc': '"capillary refill" OR perfusion OR shock',
+                    'isbp': '"systolic blood pressure" OR "initial blood pressure" OR hypotension OR "hemorrhagic shock" OR "shock index"',
+                    'irr': '"respiratory rate" OR breathing OR tachypnea',
+                    'icc': '"capillary refill" OR perfusion OR shock OR "peripheral perfusion" OR "shock severity"',
                     'ihr': '"heart rate" OR pulse OR tachycardia OR bradycardia',
                     'ninjurytime': '"time from injury" OR "injury-to-treatment time" OR "treatment delay" OR "time to treatment" OR "early treatment" OR "delayed treatment" OR "treatment timing"',
                     'igcs': 'GCS OR "Glasgow Coma Scale" OR "consciousness level"',
@@ -315,12 +349,15 @@ class PubMedMechanismValidator:
                     '"systolic blood pressure target"',
                     '"tight blood pressure control"',
                     '"aggressive blood pressure lowering"',
-                    '"blood pressure management"'
+                    '"blood pressure management"',
+                    '"intensive antihypertensive therapy"',
+                    '"antihypertensive intensification"',
+                    'SPRINT'
                 ],
                 'features': {
-                    'age': 'age OR elderly OR geriatric',
-                    'sbp': '"systolic blood pressure" OR "blood pressure"',
-                    'dbp': '"diastolic blood pressure" OR "blood pressure"',
+                    'age': 'age OR elderly OR geriatric OR "older adults"',
+                    'sbp': '"baseline systolic blood pressure" OR "pre-randomization SBP" OR "initial SBP" OR "J-curve" OR "SBP threshold"',
+                    'dbp': '"baseline diastolic blood pressure" OR "low diastolic BP" OR "pulse pressure" OR "diastolic J-curve" OR "DBP threshold"',
                     'n_agents': '"number of antihypertensive agents" OR polypharmacy OR antihypertensive',
                     'egfr': 'eGFR OR GFR OR "renal function"',
                     'screat': 'creatinine OR "serum creatinine"',
@@ -344,6 +381,18 @@ class PubMedMechanismValidator:
         config = dataset_config.get(dataset, {
             'context_terms': [], 'treatment_terms': [], 'features': {}
         })
+
+        # Per-dataset competing-intervention exclusion terms
+        negative_filters: Dict[str, List[str]] = {
+            'ist3':    ['tenecteplase[tiab]', 'sonothrombolysis[tiab]',
+                        '"mechanical thrombectomy"[tiab]', '"endovascular thrombectomy"[tiab]',
+                        'thrombectomy[tiab]', 'urokinase[tiab]', 'desmoteplase[tiab]'],
+            'crash_2': ['aminocaproic[tiab]', 'aprotinin[tiab]',
+                        '"epsilon-aminocaproic"[tiab]', 'fibrinogen[tiab]'],
+            'accord':  ['fenofibrate[tiab]', '"intensive glycemic"[tiab]',
+                        '"glycemic arm"[tiab]'],
+            'sprint':  [],
+        }
 
         query_parts = []
 
@@ -386,6 +435,12 @@ class PubMedMechanismValidator:
             doc_types = ['Clinical Trial[PT]', 'Randomized Controlled Trial[PT]', 'Meta-Analysis[PT]', 'Review[PT]']
             full_query += f" AND ({' OR '.join(doc_types)})"
 
+        # 6. Exclude competing interventions (tier-1 and tier-2 only)
+        if include_doc_types:  # proxy: tier-1 / tier-2 have doc_types; tier-3 doesn't
+            excl = negative_filters.get(dataset, [])
+            if excl:
+                full_query += f" NOT ({' OR '.join(excl)})"
+
         return full_query
 
     def search_pubmed(self, query: str, max_results: int = None) -> List[str]:
@@ -418,12 +473,93 @@ class PubMedMechanismValidator:
                     return []
         return []
 
+    def _fetch_pmc_full_text(self, pmids: List[str]) -> Dict[str, str]:
+        """Return {pmid: full_text} for PMIDs available in PubMed Central (PMC-OA).
+        Extracts title + abstract + results/discussion sections from JATS XML.
+        Falls back silently for paywalled articles not in PMC."""
+        if not Entrez or not pmids:
+            return {}
+        try:
+            import xml.etree.ElementTree as ET
+        except ImportError:
+            return {}
+
+        pmc_map: Dict[str, str] = {}  # pmid -> full text
+
+        # Step 1: resolve PMIDs -> PMC IDs via elink
+        pmid_to_pmcid: Dict[str, str] = {}
+        try:
+            handle = Entrez.elink(dbfrom="pubmed", db="pmc", id=pmids, linkname="pubmed_pmc")
+            linksets = Entrez.read(handle)
+            handle.close()
+            for ls in linksets:
+                src_pmid = str(ls.get("IdList", ["?"])[0])
+                for lsdb in ls.get("LinkSetDb", []):
+                    if lsdb.get("LinkName") == "pubmed_pmc":
+                        for link in lsdb.get("Link", []):
+                            pmid_to_pmcid[src_pmid] = str(link["Id"])
+                            break
+            time.sleep(0.34)
+        except Exception as e:
+            print(f"  PMC elink error: {e}")
+            return {}
+
+        if not pmid_to_pmcid:
+            return {}
+
+        # Step 2: fetch JATS XML for each PMC ID and extract relevant sections
+        RELEVANT_SECTIONS = {"results", "discussion", "conclusions", "abstract", "methods"}
+        for pmid, pmcid in pmid_to_pmcid.items():
+            try:
+                handle = Entrez.efetch(db="pmc", id=pmcid, rettype="full", retmode="xml")
+                raw_xml = handle.read()
+                handle.close()
+                time.sleep(0.34)
+
+                root = ET.fromstring(raw_xml)
+                parts: List[str] = []
+
+                # Title
+                for t in root.iter("article-title"):
+                    parts.append(ET.tostring(t, encoding="unicode", method="text").strip())
+                    break
+
+                # Abstract
+                for ab in root.iter("abstract"):
+                    parts.append(ET.tostring(ab, encoding="unicode", method="text").strip())
+
+                # Body sections: only keep results/discussion/conclusions
+                for sec in root.iter("sec"):
+                    sec_type = (sec.get("sec-type") or "").lower()
+                    # also check first <title> child text
+                    title_el = sec.find("title")
+                    title_text = (ET.tostring(title_el, encoding="unicode", method="text").strip().lower()
+                                  if title_el is not None else "")
+                    if any(kw in sec_type or kw in title_text for kw in RELEVANT_SECTIONS):
+                        parts.append(ET.tostring(sec, encoding="unicode", method="text").strip())
+
+                full_text = "\n\n".join(parts)
+                # Truncate to ~12 000 chars to stay within LLM context window
+                pmc_map[pmid] = full_text[:12000]
+                print(f"  [PMC full-text] PMID {pmid} -> PMC{pmcid}: {len(full_text)} chars fetched")
+            except Exception as e:
+                print(f"  [PMC full-text] PMID {pmid} fetch error: {e}")
+
+        return pmc_map
+
     def fetch_abstracts(self, pmids: List[str]) -> List[Dict[str, str]]:
         if not Entrez or not pmids: return []
 
         cache_key = tuple(pmids)
         if cache_key in self._abstract_batch_cache:
             return self._abstract_batch_cache[cache_key]
+
+        # Optional: pre-fetch PMC full text for articles that have it
+        pmc_full_text: Dict[str, str] = {}
+        if self.full_text:
+            print(f"  [PMC full-text] resolving {len(pmids)} PMIDs via elink...")
+            pmc_full_text = self._fetch_pmc_full_text(pmids)
+            print(f"  [PMC full-text] {len(pmc_full_text)}/{len(pmids)} articles found in PMC")
 
         abstracts = []
         try:
@@ -457,6 +593,9 @@ class PubMedMechanismValidator:
                         if 'Abstract' in article:
                             parts = article['Abstract'].get('AbstractText', [])
                             text = ' '.join([str(p) for p in parts]) if isinstance(parts, list) else str(parts)
+                        # Replace abstract with PMC full text if available
+                        if pmid in pmc_full_text:
+                            text = pmc_full_text[pmid]
                         abstracts.append({'pmid': pmid, 'title': title, 'abstract': text})
                     except Exception: continue
                 time.sleep(0.34)
@@ -522,7 +661,19 @@ class PubMedMechanismValidator:
             - REJECT if feature is missing.
             - REJECT if feature is only a covariate/baseline stat, but not linked to outcome.
 
-        -> If (A) or (B) or (C) fails, output: [F] IRRELEVANT.
+        (D) Intervention Match: The abstract must test {cohort_context['treatment']} (or a direct class equivalent) as a PRIMARY arm — not merely as a comparator arm when the study is actually evaluating a different agent.
+            - REJECT if the study primarily evaluates a DIFFERENT intervention (e.g., a competing drug, device, or technique) that happens to use {cohort_context['treatment']} as control.
+            - Example REJECT: A meta-analysis of tenecteplase vs alteplase should be IRRELEVANT for an alteplase vs placebo mechanism, even if it reports NIHSS subgroups.
+            - Example PASS: A pooled analysis of alteplase RCTs, or a secondary analysis of a trial where alteplase was the active arm.
+
+        (E) Population Context: The study population must be reasonably comparable to: {cohort_context['population']}.
+            - REJECT if the abstract studies a fundamentally DIFFERENT disease entity, even if the same drug is used.
+            - Different severity, age range, or geography within the same disease is acceptable.
+            - Example REJECT (crash_2): A TXA study in aneurysmal subarachnoid hemorrhage (SAH) — a neurological condition — is IRRELEVANT for a trauma-hemorrhage mechanism because the underlying coagulation pathophysiology and clinical context differ fundamentally from traumatic bleeding.
+            - Example REJECT (ist3): A thrombolysis study exclusively in hemorrhagic stroke patients is IRRELEVANT for an ischemic stroke mechanism.
+            - Example PASS: A TXA study in post-partum hemorrhage or surgical bleeding may be relevant to a crash_2 trauma mechanism if the coagulation dynamics are directly analogous and the authors explicitly discuss generalizability.
+
+        -> If (A) or (B) or (C) or (D) or (E) fails, output: [F] IRRELEVANT.
         ---
         4. STEP 2: EVIDENCE EVALUATION (The "Mechanism Test")
             If the abstract passes Step 1, compare the REPORTED RESULTS against the EXPECTED CLINICAL OUTCOME.
@@ -534,6 +685,7 @@ class PubMedMechanismValidator:
                     * Includes explicit numeric evidence (e.g., "Interaction P < 0.05").
                     * Includes strong textual claims (e.g., "Treatment efficacy was significantly superior in [subgroup] compared to [other subgroup]").
                     * Note: A statement like "Patients with X had longer survival" is insufficient unless it adds "...specifically in the treatment arm" or "...compared to placebo."
+                - ABSOLUTE vs RELATIVE SCALE: Both count. A paper reporting consistent relative benefit (similar OR/RR across subgroups) but explicitly noting greater ABSOLUTE benefit (larger ARR, lower NNT) in the predicted subgroup is SUPPORT_INTERACTION for an absolute-benefit mechanism. SHAP captures absolute treatment effect — so evidence of greater absolute risk reduction in the predicted subgroup qualifies as SUPPORT_INTERACTION even if the relative risk ratio is consistent across subgroups.
                 * Mechanism Independence: The abstract does NOT need to explain the biological "why." If the clinical numbers match your prediction, it counts.
 
             [B] SUPPORT_WEAK (Mechanism Consistent):
@@ -557,17 +709,34 @@ class PubMedMechanismValidator:
                 - Core Rule: Explicit statement that the feature does NOT modify the treatment effect.
                   * Key Phrases: "Outcomes were similar regardless of status," "Interaction p > 0.05," "Consistent benefit across subgroups."
                   * Note: A non-significant trend (p=0.15) often falls here unless the author explicitly calls it "promising" (which moves it to [B]).
+                - SCALE CAVEAT: If the mechanism is framed as an ABSOLUTE benefit interaction, a paper reporting only consistent relative benefit (same OR/RR across strata) should be [C] PROGNOSTIC_MAIN_EFFECT rather than [D] — absolute benefit still differs by baseline risk even when relative benefit is constant. Only classify [D] if the paper explicitly states absolute benefit was also equivalent across the relevant subgroups.
 
             [E] CONFLICT (Mechanism Contradicted):
                 - Core Rule: The abstract reports a Significant Interaction in the OPPOSITE direction of the hypothesis.
                   * Example: You predicted the feature would enhance drug efficacy, but the data shows it reduces efficacy or causes harm relative to the control group.
                   * Crucial Distinction: The drug must perform worse than the comparator in this subgroup (or significantly worse than in the other subgroup). If the subgroup just has a poor baseline prognosis but the drug still helps them a little, that is [C], not [E].
+                  * Intervention Requirement: The conflicting result must come from a trial/analysis where {cohort_context['treatment']} is the active treatment arm — not a related drug being compared against {cohort_context['treatment']}. A study showing a competing agent outperforms {cohort_context['treatment']} in high-NIHSS patients is NOT a CONFLICT for {cohort_context['treatment']}; it is IRRELEVANT.
 
-            5. OUTPUT FORMAT:
+            5. STEP 3: STUDY DESIGN CLASSIFICATION
+            Classify the study based solely on the abstract:
+
+            "RCT"                       — Primary randomized controlled trial (original allocation)
+            "RCT_secondary"             — Secondary / post-hoc / subgroup analysis of an RCT
+            "systematic_review_meta_analysis" — Pooled evidence synthesis (SR or MA)
+            "prospective_cohort"        — Prospective observational cohort
+            "retrospective_cohort"      — Retrospective observational cohort or registry
+            "case_control"              — Case-control study
+            "cross_sectional"           — Cross-sectional or survey study
+            "case_series"               — Case series or case report
+            "narrative_review"          — Expert opinion, narrative or scoping review
+            "other"                     — Cannot determine or does not fit above
+
+            6. OUTPUT FORMAT:
             Return a valid JSON object with the following fields:
             {{
                 "classification": "SUPPORT_INTERACTION | SUPPORT_WEAK | PROGNOSTIC_MAIN_EFFECT | NO_INTERACTION | CONFLICT | IRRELEVANT",
                 "confidence": "high | medium | low",
+                "study_design": "RCT | RCT_secondary | systematic_review_meta_analysis | prospective_cohort | retrospective_cohort | case_control | cross_sectional | case_series | narrative_review | other",
                 "reasoning": "Explain why it matches the TARGET FEATURE and whether it supports the specific mechanism claim.",
                 "evidence_quote": "Quote proving the interaction involves {feature_concept}."
             }}
@@ -635,6 +804,16 @@ class PubMedMechanismValidator:
             result['pmid'] = abstract.get('pmid', '')
             result['title'] = abstract.get('title', '')
             result['analysis_method'] = 'llm_strict_v2'
+
+            # Normalise study_design to allowed values
+            valid_study_designs = {
+                'rct', 'rct_secondary', 'systematic_review_meta_analysis',
+                'prospective_cohort', 'retrospective_cohort', 'case_control',
+                'cross_sectional', 'case_series', 'narrative_review', 'other',
+            }
+            raw_design = str(result.get('study_design', 'other')).lower().strip()
+            result['study_design'] = raw_design if raw_design in valid_study_designs else 'other'
+
             self._llm_eval_cache[cache_key] = dict(result)
             return result
         except Exception as e:
@@ -688,6 +867,9 @@ class PubMedMechanismValidator:
                 query = tier_query
                 break
 
+        # Remove permanently blacklisted PMIDs before fetching
+        pmids = [p for p in pmids if p not in self.PMID_BLACKLIST]
+
         if not pmids:
             return {'feature_name': feature_name, 'mechanism': mechanism, 'total_abstracts': 0,
                     'support_count': 0, 'conflict_count': 0, 'neutral_count': 0, 'abstracts_analyzed': []}
@@ -704,6 +886,48 @@ class PubMedMechanismValidator:
             else:
                 res = self.analyze_abstract_keyword(abs_data, mechanism)
             analyses.append(res)
+
+        # ── Adaptive budget ───────────────────────────────────────────────
+        # If fewer than 2 abstracts passed relevance gates, expand to next tiers
+        MIN_RELEVANT = 2
+        relevant_count = sum(
+            1 for a in analyses
+            if a.get('classification', 'IRRELEVANT') != 'IRRELEVANT'
+        )
+        if relevant_count < MIN_RELEVANT:
+            tier_idx = next(
+                (i for i, t in enumerate(tiers) if t[0] == used_tier), -1
+            )
+            seen_pmids = set(pmids)
+            for next_tier_name, next_tier_query in tiers[tier_idx + 1:]:
+                print(f"  Adaptive expansion [{next_tier_name}]: "
+                      f"only {relevant_count} relevant found, expanding...")
+                extra_found = self.search_pubmed(
+                    next_tier_query, max_results=self.max_abstracts
+                )
+                extra_pmids = [p for p in extra_found if p not in seen_pmids and p not in self.PMID_BLACKLIST]
+                if not extra_pmids:
+                    continue
+                seen_pmids.update(extra_pmids)
+                extra_abstracts = self.fetch_abstracts(extra_pmids)
+                for abs_data in extra_abstracts:
+                    if use_llm:
+                        res = self.analyze_abstract_with_llm(
+                            abs_data, mechanism, feature_name, dataset
+                        )
+                        if self.llm_delay > 0:
+                            time.sleep(self.llm_delay)
+                    else:
+                        res = self.analyze_abstract_keyword(abs_data, mechanism)
+                    analyses.append(res)
+                relevant_count = sum(
+                    1 for a in analyses
+                    if a.get('classification', 'IRRELEVANT') != 'IRRELEVANT'
+                )
+                used_tier = next_tier_name
+                query = next_tier_query
+                if relevant_count >= MIN_RELEVANT:
+                    break
 
         support = sum(1 for a in analyses if a['stance'] == 'support')
         conflict = sum(1 for a in analyses if a['stance'] == 'conflict')
@@ -753,6 +977,15 @@ class PubMedMechanismValidator:
                 print(f"Tier Used: {r.get('query_tier_used', 'N/A')}")
                 print(f"Stance: {r['support_count']} Support / {r['neutral_count']} Neutral / {r['conflict_count']} Conflict")
 
+                # Study design breakdown
+                designs: Dict[str, int] = {}
+                for a in r.get('abstracts_analyzed', []):
+                    d = a.get('study_design', 'other')
+                    designs[d] = designs.get(d, 0) + 1
+                if designs:
+                    design_str = ', '.join(f"{k}: {v}" for k, v in sorted(designs.items()))
+                    print(f"Study Designs: {design_str}")
+
         if output_file:
             write_json_file(output_file, results)
             print(f"\nSaved to: {output_file}")
@@ -770,6 +1003,7 @@ def main():
     parser.add_argument('--api-provider', type=str, default='openai', choices=['openai', 'openrouter'])
     parser.add_argument('--api-base-url', type=str, default=None)
     parser.add_argument('--llm-delay', type=float, default=0.5, help='Seconds to sleep between LLM abstract evaluations (set 0 for max speed).')
+    parser.add_argument('--full-text', action='store_true', default=False, help='Fetch full article text from PubMed Central (PMC-OA) where available, falling back to abstract.')
     args = parser.parse_args()
 
     if args.api_provider == 'openrouter':
@@ -784,6 +1018,7 @@ def main():
         api_provider=args.api_provider,
         api_base_url=args.api_base_url,
         llm_delay=args.llm_delay,
+        full_text=args.full_text,
     )
 
     results = validator.validate_all_mechanisms(args.input, use_llm=True)

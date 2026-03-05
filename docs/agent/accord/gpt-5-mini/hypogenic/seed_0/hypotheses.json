@@ -1,0 +1,92 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "accord",
+    "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+    "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+    "population": "Adults with type 2 diabetes and high cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 5,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": {
+    "Adults younger than 65 years benefit more from intensive SBP target <120 mmHg because they tolerate lower blood pressures better and have fewer competing risks that could blunt long-term cardiovascular benefit.": {
+      "hypothesis": "Adults younger than 65 years benefit more from intensive SBP target <120 mmHg because they tolerate lower blood pressures better and have fewer competing risks that could blunt long-term cardiovascular benefit.",
+      "acc": 0.535,
+      "num_visits": 200,
+      "reward": 0.6163811815359365,
+      "subgroup_rule": {
+        "feature": "baseline_age",
+        "operator": "<",
+        "threshold": 65.0,
+        "description": "Age < 65 years"
+      },
+      "recommendation": "treat"
+    },
+    "Among adults with type 2 diabetes and high cardiovascular risk, participants with body mass index (BMI) < 25 kg/m\u00b2 will experience greater reduction in major cardiovascular events with intensive blood pressure control (systolic target <120 mmHg) compared to standard control.": {
+      "hypothesis": "Among adults with type 2 diabetes and high cardiovascular risk, participants with body mass index (BMI) < 25 kg/m\u00b2 will experience greater reduction in major cardiovascular events with intensive blood pressure control (systolic target <120 mmHg) compared to standard control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "bmi",
+        "operator": "<",
+        "threshold": 25.0,
+        "description": "BMI < 25 kg/m^2 (normal or underweight)"
+      },
+      "recommendation": "treat"
+    },
+    "Adults with baseline systolic blood pressure >= 140 mmHg will experience greater reduction in major cardiovascular events from intensive blood pressure control (systolic target <120 mmHg) than those with baseline SBP <140 mmHg.": {
+      "hypothesis": "Adults with baseline systolic blood pressure >= 140 mmHg will experience greater reduction in major cardiovascular events from intensive blood pressure control (systolic target <120 mmHg) than those with baseline SBP <140 mmHg.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "sbp",
+        "operator": ">=",
+        "threshold": 140.0,
+        "description": "Baseline systolic blood pressure greater than or equal to 140 mmHg"
+      },
+      "recommendation": "treat"
+    },
+    "In adults with type 2 diabetes and high cardiovascular risk, those with baseline diastolic blood pressure <60 mmHg will have worse major cardiovascular outcomes with intensive systolic BP control (target <120 mmHg) compared with standard treatment.": {
+      "hypothesis": "In adults with type 2 diabetes and high cardiovascular risk, those with baseline diastolic blood pressure <60 mmHg will have worse major cardiovascular outcomes with intensive systolic BP control (target <120 mmHg) compared with standard treatment.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "dbp",
+        "operator": "<",
+        "threshold": 60.0,
+        "description": "Baseline diastolic blood pressure less than 60 mmHg"
+      },
+      "recommendation": "control"
+    },
+    "In adults with type 2 diabetes and high cardiovascular risk, a resting heart rate >= 80 beats per minute is associated with reduced benefit from intensive blood pressure control (systolic target <120 mmHg) for preventing major cardiovascular events compared with those with lower heart rates.": {
+      "hypothesis": "In adults with type 2 diabetes and high cardiovascular risk, a resting heart rate >= 80 beats per minute is associated with reduced benefit from intensive blood pressure control (systolic target <120 mmHg) for preventing major cardiovascular events compared with those with lower heart rates.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "hr",
+        "operator": ">=",
+        "threshold": 80.0,
+        "description": "Resting heart rate greater than or equal to 80 beats per minute"
+      },
+      "recommendation": "control"
+    }
+  },
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 0.12327623630718729,
+    "avg_accuracy": 0.10700000000000001
+  }
+}

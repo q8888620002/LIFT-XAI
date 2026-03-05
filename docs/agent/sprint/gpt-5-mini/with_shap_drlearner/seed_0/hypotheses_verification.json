@@ -1,0 +1,276 @@
+{
+  "overall_verdict": "revise",
+  "summary": "The submitted hypotheses are a strong starting point: they are already framed as treatment\u007fxfeature interaction claims, cite plausible physiologic mechanisms, and identify sensible moderators (frailty, eGFR, medication class, achieved SBP). However each hypothesis can be sharpened with more specific thresholds, clearer alignment to the SPRINT-like trial context (noting exclusions and typical adverse events), stronger and more testable validation plans, and explicit alternative explanations. I recommend retaining all five hypotheses but revising the wording to (a) state which subgroup benefits more (or less) quantitatively where possible, (b) specify conditional moderators (e.g., eGFR/albuminuria, frailty, medication class), (c) propose concrete analyses (interaction term specification, categories and continuous spline approaches, mediation by achieved SBP), and (d) add explicit caveats about selection/measurement and noncausal proxies (race). Confidence in the revised set is medium given limited explainer/model details and small SHAP magnitudes.",
+  "per_feature": [
+    {
+      "feature_name": "Sub cvd (sub_cvd)",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "clinical_interpretation_wrong",
+          "severity": "low",
+          "message": "The current text correctly interprets sub_cvd as prior/subclinical cardiovascular disease but does not define subtypes (CAD, HF, PAD) or timing; this reduces actionability."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation steps are general; recommend specific statistical tests (interaction term in Cox model), categories for timing/type of CVD, and mediation by achieved SBP or treatment discontinuation."
+        },
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Does not note possible low prevalence of some CVD types in SPRINT-like cohorts or selection bias (healthier patients enrolled), which affects generalizability."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "comments": "The mechanism that prior CVD patients derive less net reduction because events are less pressure-sensitive and they are more vulnerable to adverse effects is plausible. It is partly supported by physiology (fixed plaque vs hemodynamic events) and by the concept of competing risks, but the description would benefit from specifying CVD subtypes (e.g., prior symptomatic coronary disease vs prior heart failure) and timing (recent vs remote). It should also be rewritten to emphasize differential treatment effect (who benefits more/less) and the moderators that alter the interaction (frailty, medication intensity, achieved SBP separation).",
+          "suggested_revision": "Patients with prior clinically manifest coronary artery disease or symptomatic heart failure will on average derive a smaller incremental benefit from an intensive SBP target (<120 mmHg) than patients without prior CVD, because a greater share of their events arise from fixed atherosclerotic plaque or pump-failure mechanisms that are less rapidly modifiable by BP lowering and because they have higher susceptibility to hypotension-related harms (myocardial ischemia, syncope) that reduce net benefit. The attenuation is expected to be largest for recent ischemic events or active symptomatic heart failure and smaller for remote, stable atherosclerosis. Assess effect modification by CVD subtype (recent MI within 1 year vs remote MI >1 year vs symptomatic HF) and by measures of frailty/functional status."
+        }
+      ],
+      "suggested_edits": "Define sub_cvd subtypes and timing, require stratified interaction tests (Cox model with treatment*sub_cvd and treatment*subtype), and analyze mediation by achieved SBP and treatment discontinuation. Quantify subgroup comparisons (HRs and absolute risk differences) and consider restricting to non-frail participants to estimate the biologic treatment effect.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "Sub ckd (sub_ckd)",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Current description notes heterogeneity by eGFR/albuminuria but does not specify numeric thresholds or how to treat AKI signal as mediator vs harm."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation suggestions are reasonable but need concrete analytic approaches (interaction term, eGFR categories, spline models, mediation analysis of early GFR decline)."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "verdict": "revise",
+          "plausibility": "high",
+          "comments": "It is plausible that patients with mild\u000bto\u000bmoderate CKD derive greater absolute benefit (higher baseline risk) while advanced CKD experiences more renal harms that could blunt net benefit. SPRINT demonstrated higher rates of acute declines in GFR/AKI with intensive therapy, supporting this conditional mechanism. But the hypothesis should be more specific about eGFR and albuminuria thresholds and explicitly frame as differential treatment effect.",
+          "suggested_revision": "Patients with CKD defined as eGFR 45\t6 mL/min/1.73m2 (moderate CKD) and low-to-moderate albuminuria (ACR <300 mg/g) will derive greater absolute cardiovascular-event reduction from intensive SBP lowering than patients without CKD because of higher baseline rates of BP-sensitive events; in contrast, patients with advanced CKD (eGFR <30 mL/min/1.73m2) or heavy albuminuria (ACR \u007f300 mg/g) are more likely to experience AKI or sustained GFR decline when intensively treated, which may reduce delivered therapy and increase net harms. The magnitude of the treatment effect is therefore moderated by eGFR and albuminuria."
+        }
+      ],
+      "suggested_edits": "Specify eGFR and albuminuria categories (e.g., eGFR \u007f60, 45\t6, 30\t39, <30; ACR <30, 30\u000299, \u007f300 mg/g), test treatment*eGFR and treatment*ACR interactions (continuous with splines and categorical), and examine early GFR decline/AKI as mediators or competing events in causal mediation analyses. Report subgroup HRs and absolute risk differences with NNT/NNH.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "Race black (race_black)",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "overclaiming_certainty",
+          "severity": "medium",
+          "message": "The bidirectional framing is appropriate, but the hypothesis should explicitly acknowledge that race is a complex social/biologic proxy and that SPRINT did not demonstrate strong race-based heterogeneity in primary outcomes; it must avoid implying genetic determinism."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "medium",
+          "message": "Validation should specify adjustment variables (achieved SBP separation, medication classes, socioeconomic proxies) and an approach to disentangle implementation vs biologic effects."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "comments": "The mechanism correctly captures several plausible, conditional pathways (higher baseline stroke risk increasing absolute benefit vs greater adverse events or lower achieved separation reducing net benefit). However, because race is a social construct and a proxy for structural factors, the description should emphasize modifiable mediators (medication class, adherence, access) and note that RCT data (including SPRINT) did not show large qualitative differences, so any observed heterogeneity is likely due to differential implementation or confounding.",
+          "suggested_revision": "Black race per se is not a causal biological modifier; rather, Black participants may experience different net benefit depending on mediators such as baseline event mix (higher stroke risk), antihypertensive regimen (thiazide/CCB vs RAS blocker), achieved SBP separation, and access/adherence. If intensive treatment is delivered with regimens optimized for BP lowering in Black patients (e.g., diuretic/CCB-centered titration) and adherence/support is high, absolute stroke and HF reductions may be larger; conversely, if achieved SBP separation is smaller or hypotension/AKI rates are higher, net benefit can be attenuated."
+        }
+      ],
+      "suggested_edits": "State explicitly that analyses should (1) adjust for socioeconomic indicators and baseline stroke vs coronary-risk, (2) include achieved SBP separation and medication-class covariates to separate implementation from biologic response, (3) estimate effect within race strata while reporting mediators. Use causal mediation or sequential adjustment to quantify how much of any race difference is explained by these mediators.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "effect_direction_unsupported",
+          "severity": "low",
+          "message": "The positive effect_direction (higher SBP -> more benefit) is biologically plausible but should specify ranges and address nonlinearity and stiffness/frailty moderators."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "low",
+          "message": "Validation suggestions should include precise modeling strategies (continuous interactions with splines, categories for baseline SBP) and mediation analysis by achieved SBP separation."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "verdict": "approve",
+          "plausibility": "high",
+          "comments": "The mechanism that higher baseline SBP confers greater opportunity for risk reduction is well grounded; specifying the conditionality (modifiable SBP vs fixed arterial stiffness and frailty) makes it realistic. This is consistent with basic BP-risk relationships and trial experience that greater achieved reductions produce larger absolute benefit.",
+          "suggested_revision": "Baseline SBP modifies the absolute benefit: participants with baseline SBP in the moderately elevated range (e.g., 140\t69 mmHg) will typically gain the largest incremental absolute benefit from intensification to <120 mmHg because they can achieve meaningful SBP reduction. Patients with baseline SBP already near 120\t6 mmHg have limited room for further benefit, and those with very high SBP plus severe arterial stiffness may not realize proportional benefit and may be at higher risk of adverse events when aggressively lowered. Model baseline SBP continuously and with categories (e.g., <130, 130\u000139, 140\u000159, \u007f160) to capture nonlinear effects."
+        }
+      ],
+      "suggested_edits": "Prespecify SBP categories for subgroup analyses and fit continuous treatment*SBP interactions with restricted cubic splines. Perform mediation analyses to quantify how much of treatment effect heterogeneity is explained by achieved SBP separation and by on-treatment SBP variability.",
+      "mechanism_quality": "strong",
+      "confidence": "high"
+    },
+    {
+      "feature_name": "age",
+      "verdict": "revise",
+      "issues": [
+        {
+          "type": "missing_caveats",
+          "severity": "medium",
+          "message": "Age framing is good but must more strongly emphasize moderation by frailty/comorbidity and selection bias from trial enrollment of healthier older adults."
+        },
+        {
+          "type": "validation_plan_weak",
+          "severity": "low",
+          "message": "Validation should specify frailty measures, age cutpoints (e.g., \u007f75), and how to evaluate competing risks (cause-specific hazards, cumulative incidence)."
+        }
+      ],
+      "per_mechanism": [
+        {
+          "verdict": "revise",
+          "plausibility": "moderate",
+          "comments": "Age plausibly modifies benefit because older adults have higher baseline risks of BP-sensitive events, but frailty and competing mortality alter net benefit. SPRINT found benefit in older participants, but the effect is conditional on fitness. The mechanism should clearly state which older subgroup benefits more (fit elders) and which may be harmed (frail, limited life expectancy).",
+          "suggested_revision": "Older adults (particularly those \u007f75 years) with preserved functional status and low frailty are likely to derive larger absolute reductions in CV events from intensive SBP lowering because of higher baseline incidence of BP-sensitive events; by contrast, frail older adults or those with limited life expectancy will have attenuated or negative net benefit because of greater susceptibility to hypotension, falls, AKI, and competing non-CV mortality. Thus age-treatment effect depends on concurrent frailty/comorbidity."
+        }
+      ],
+      "suggested_edits": "Test treatment*age interactions both continuously and with prespecified cutpoints (e.g., <65, 65\u00074, \u007f75), and stratify these by a validated frailty index or gait speed. Use competing-risk methods and report absolute risk differences and NNT by age\u007ffrailty strata.",
+      "mechanism_quality": "moderate",
+      "confidence": "medium"
+    }
+  ],
+  "revised": {
+    "dataset": "sprint",
+    "model": "unknown_learner",
+    "summary": "Refined set of treatment\u007fxfeature hypotheses for heterogeneity of benefit from intensive systolic BP control (<120 mmHg) in non-diabetic adults \u007f50 with increased CV risk. Each hypothesis specifies which subgroup is expected to benefit more (or less), why (mechanism), key moderators (conditional factors), actionable subgroup definitions (where possible), explicit validation analyses (interaction models, mediation by achieved SBP, categories/splines), and important caveats including alternative explanations. Note that SHAP mean absolute values are small (0.046\t0.05), so effects are plausible but likely modest.",
+    "feature_hypotheses": [
+      {
+        "feature_name": "Sub cvd (sub_cvd)",
+        "importance_rank": 1,
+        "shap_value": 0.05,
+        "effect_direction": "negative",
+        "clinical_interpretation": "Binary indicator of prior clinical or subclinical cardiovascular disease (to be disaggregated: recent vs remote myocardial infarction, symptomatic heart failure, peripheral arterial disease, prior revascularization or documented atherosclerosis). The dataset coding should be inspected to separate these subtypes and timing where possible.",
+        "why_important": "Prior clinically manifest CVD increases baseline event rates but shifts the event mix toward fixed atherothrombotic or pump-failure mechanisms and increases vulnerability to hemodynamic adverse effects, potentially attenuating the incremental benefit from an intensive SBP target.",
+        "mechanisms": [
+          {
+            "description": "Patients with prior symptomatic coronary disease or symptomatic heart failure will on average derive LESS incremental benefit from intensive SBP control (<120 mmHg) than patients without prior CVD because: (1) a higher proportion of their events are due to fixed atherosclerosis or structural pump failure that respond less to short-term BP lowering, and (2) they have greater susceptibility to hypotension-related ischemia or decompensation (increasing harms and reducing delivered intensity). The attenuation is expected to be greatest for recent ischemic events or active heart failure and smaller for remote, stable atherosclerosis. This interaction is moderated by frailty, timing of CVD (recent vs remote), and concurrent cardioprotective therapies (statin/antiplatelet use) which may change the preventable fraction."
+          }
+        ],
+        "subgroup_implications": "Expect smaller net benefit (smaller absolute risk reduction and possibly higher NNT) from intensive control among patients with recent MI or symptomatic HF and among frail CVD patients; patients without prior CVD should show larger relative and absolute event reductions. When estimating effects, compare: no CVD vs remote stable CVD vs recent/active CVD.",
+        "validation_suggestions": [
+          "Fit Cox models with treatment*treatment_arm indicator and treatment*sub_cvd interaction; report HRs and absolute risk differences by CVD subtype and timing (recent <1 year, 1\u0005 years, remote).",
+          "Adjust for achieved SBP separation and assess mediation by treatment discontinuation and periods of hypotension (time-dependent covariates).",
+          "Conduct per-protocol/as-treated analyses and examine early events clustering around titration to identify harm signals.",
+          "If sample size permits, estimate effect separately for CAD vs HF vs PAD; if small counts, pool but report confidence intervals and directionality."
+        ],
+        "caveats": [
+          "sub_cvd coding may combine heterogeneous conditions; disaggregation is essential to interpret results.",
+          "Higher baseline absolute risk in CVD patients means absolute benefit could still be meaningful even if relative effect attenuates.",
+          "Selection bias: trial-enrolled CVD patients may be healthier than real-world counterparts, limiting external validity.",
+          "Alternative explanation: observed attenuation could reflect more conservative titration in CVD patients rather than biological unresponsiveness."
+        ]
+      },
+      {
+        "feature_name": "Sub ckd (sub_ckd)",
+        "importance_rank": 2,
+        "shap_value": 0.049,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Presence of chronic kidney disease at baseline; refine to eGFR and albuminuria strata (e.g., eGFR \u007f60, 45\t6, 30\t39, <30 mL/min/1.73m2; ACR <30, 30\u000299, \u007f300 mg/g).",
+        "why_important": "CKD raises baseline cardiovascular risk (more BP-sensitive events) but also increases the risk of renal adverse effects from aggressive BP lowering, producing a conditional interaction where moderate CKD may show more benefit while advanced CKD may show less or net harm.",
+        "mechanisms": [
+          {
+            "description": "Patients with mild-to-moderate CKD (eGFR ~45\t6, ACR <300 mg/g) are likely to derive GREATER absolute cardiovascular benefit from intensive SBP lowering because they have higher baseline rates of stroke and HF that are pressure-sensitive and because moderate BP lowering reduces these events. In contrast, patients with advanced CKD (eGFR <30 mL/min/1.73m2) or heavy albuminuria (ACR \u007f300 mg/g) are more prone to AKI and sustained GFR decline when perfusion pressure is lowered; these renal harms can force dose reductions or cessation and increase competing morbidity, attenuating net benefit or producing net harm. The direction and magnitude of the treatment effect therefore depend on eGFR and albuminuria levels and on how renal adverse events are managed."
+          }
+        ],
+        "subgroup_implications": "Greatest incremental benefit expected in CKD patients with eGFR 45\t6 and lower-range albuminuria; reduced net benefit or increased harm likely in eGFR <30 or very high albuminuria. Clinical decisions should weigh baseline eGFR/ACR, trajectory of kidney function, and ability to monitor renal function closely.",
+        "validation_suggestions": [
+          "Test treatment*eGFR and treatment*ACR interactions using both categorical strata (e.g., eGFR categories above) and continuous restricted cubic splines.",
+          "Estimate subgroup-specific HRs and absolute risk differences for CV outcomes and for renal adverse events (AKI, sustained \u007f30% eGFR decline).",
+          "Perform mediation analysis to quantify the extent to which early GFR decline/AKI mediates any attenuation of long-term CV benefit.",
+          "Conduct sensitivity analyses excluding participants with baseline eGFR <30 if underpowered or pre-specified as high-risk."
+        ],
+        "caveats": [
+          "CKD definitions and measurement timing matter; single eGFR measures can misclassify CKD stage.",
+          "Trial participants with CKD may have been selected to be relatively stable; real-world risks may differ.",
+          "Alternative explanation: observed heterogeneity could reflect differential medication selection (e.g., RAS blocker discontinuation) rather than intrinsic CKD biology."
+        ]
+      },
+      {
+        "feature_name": "Race black (race_black)",
+        "importance_rank": 3,
+        "shap_value": 0.048,
+        "effect_direction": "bidirectional",
+        "clinical_interpretation": "Self-identified Black race; interpret as an aggregate marker of social determinants, baseline risk patterns (higher stroke/HF risk), pharmacologic responsiveness to antihypertensive classes, and access/adherence differences rather than a biological immutable trait.",
+        "why_important": "Race may be associated with a higher baseline incidence of BP-sensitive outcomes (stroke, HF) which could increase absolute benefit, but differential implementation (medication-class choice, adherence) or higher adverse-event rates could attenuate delivered benefit. Thus race acts through modifiable mediators and the net effect is conditional.",
+        "mechanisms": [
+          {
+            "description": "Black participants may derive MORE absolute benefit from intensive SBP lowering when the strategy achieves adequate SBP separation and uses medication classes (e.g., thiazide diuretics, CCBs) that reliably lower BP in this population and when adherence/support systems are robust, because their baseline stroke and HF risk is higher and more BP-responsive. Alternatively, Black participants may derive LESS net benefit if they experience smaller achieved SBP separation, more treatment-limiting adverse events, or face systemic barriers to sustained care. Hence the race\u007ftreatment interaction is bidirectional and primarily mediated by implementation and comorbidity patterns rather than race itself. Note: SPRINT subgroup analyses did not demonstrate a large qualitative race-based treatment effect reversal, so any observed heterogeneity likely reflects mediators."
+          }
+        ],
+        "subgroup_implications": "If intensive therapy is delivered with optimized regimens and adherence support, Black patients may gain larger absolute reductions in stroke/HF; if not, the net benefit may be smaller. Analyses should prioritize adjusting for achieved SBP separation, medication class, socioeconomic proxies, and baseline stroke vs coronary-risk.",
+        "validation_suggestions": [
+          "Estimate treatment effects within race strata and include sequential adjustment: (1) unadjusted, (2) adjust for baseline risk factors, (3) add achieved SBP separation and medication-class variables, (4) add socioeconomic/access proxies. Quantify mediation by achieved SBP and medication class.",
+          "Test interaction terms (treatment*race) and also treatment*race*medication_class to evaluate three-way moderation.",
+          "Report absolute risk differences and NNT per race strata and include measures of adherence/visit frequency if available."
+        ],
+        "caveats": [
+          "Race is a complex social construct; avoid attributing causality to race itself and instead focus on mediators that can be modified (access, regimen, adherence).",
+          "Small SHAP magnitude and SPRINT findings suggest any race effect is likely modest; differential implementation is a probable driver.",
+          "Residual confounding by unmeasured socioeconomic or health-system factors may explain observed differences."
+        ]
+      },
+      {
+        "feature_name": "Systolic blood pressure (sbp)",
+        "importance_rank": 4,
+        "shap_value": 0.047,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Baseline clinic systolic blood pressure (continuous). For subgroup analyses, consider categories such as <130, 130\u000139, 140\u000159, \u007f160 mmHg and continuous modeling with splines.",
+        "why_important": "Baseline SBP determines the achievable decrement and thus the potential absolute risk reduction from intensive lowering; patients with higher, modifiable SBP should realize larger benefits, while those near goal or with fixed arterial stiffness/ frailty may not.",
+        "mechanisms": [
+          {
+            "description": "Higher baseline SBP confers MORE absolute benefit from intensive SBP target because (1) there is more achievable BP reduction (larger on-treatment separation) and (2) a greater proportion of events are pressure-sensitive (stroke, HF). This positive interaction is nonlinear: benefit increases across moderate baseline SBP ranges (e.g., 140\u000159 mmHg) but may plateau or be offset by harms at very high SBP with severe vascular stiffness or in frail patients who tolerate rapid lowering poorly. Achieved SBP separation is a key mediator of the effect."
+          }
+        ],
+        "subgroup_implications": "Expect greatest incremental benefit in patients with baseline SBP in the moderately elevated range (approx. 140\u000159 mmHg) who can be safely lowered; minimal incremental benefit for baseline SBP near 120 mmHg; careful assessment for very high SBP with stiffness/frailty is needed.",
+        "validation_suggestions": [
+          "Model treatment*baseline_SBP interaction continuously using restricted cubic splines and also with prespecified SBP categories; report both multiplicative and additive interaction measures.",
+          "Perform mediation analysis to quantify how much of the heterogeneity is explained by achieved SBP separation (on-treatment mean SBP in each arm).",
+          "Assess safety outcomes (syncope, AKI) by baseline SBP to detect nonlinear harm thresholds."
+        ],
+        "caveats": [
+          "Baseline SBP may proxy for other factors (adherence, prior treatment intensity); adjust for these where possible.",
+          "Nonlinear effects and effect modification by arterial stiffness and frailty should be explicitly tested rather than assumed monotone."
+        ]
+      },
+      {
+        "feature_name": "age",
+        "importance_rank": 5,
+        "shap_value": 0.046,
+        "effect_direction": "positive",
+        "clinical_interpretation": "Chronological age (years); actionable subgrouping should include prespecified cutpoints (e.g., <65, 65\u00074, \u007f75) and incorporation of a frailty metric (gait speed or validated frailty index) to distinguish physiologic from chronological age.",
+        "why_important": "Older patients have higher baseline rates of BP-sensitive events, increasing potential absolute benefit, but higher frailty and competing mortality risks can attenuate net benefit or cause net harm; thus age interacts with treatment conditional on frailty and life expectancy.",
+        "mechanisms": [
+          {
+            "description": "Older adults (especially \u007f75 years) who are fit (low frailty score, preserved gait speed, good life expectancy) will derive MORE absolute cardiovascular benefit from intensive SBP lowering because of greater baseline event rates that are BP-responsive. Conversely, frail older adults or those with limited life expectancy will derive LESS benefit or net harm due to higher rates of adverse events (falls, syncope, AKI) and competing non-CV mortality. Therefore, the age-treatment interaction is moderated by frailty, comorbidity burden, and life expectancy."
+          }
+        ],
+        "subgroup_implications": "Anticipate larger benefit in non-frail older adults; expect smaller or adverse net effects in frail elders. Use age together with frailty to guide individualized decisions rather than age alone.",
+        "validation_suggestions": [
+          "Test treatment*age interactions continuously and by prespecified age categories, but crucially stratify and test treatment*age*frailty interactions (3-way) or stratify age analyses by frailty groups.",
+          "Use competing-risk models to report cause-specific hazards and cumulative incidence for CV vs non-CV events by age/frailty strata.",
+          "Report absolute risk differences and NNT/NNH by age\u007ffrailty combinations."
+        ],
+        "caveats": [
+          "Age alone is an imperfect proxy for physiologic reserve; frailty metrics are essential for interpretation.",
+          "Trial-enrolled older adults may be healthier than the general older population, limiting generalizability of subgroup estimates.",
+          "Observed heterogeneity could reflect differential monitoring intensity or conservative titration in older participants rather than intrinsic age biology."
+        ]
+      }
+    ],
+    "cross_feature_patterns": "Across features, pattern is conditional heterogeneity: many modifiers (age, sub_ckd, sub_cvd, SBP) change effect size only in the presence of secondary moderators (frailty, eGFR/ACR, medication class, achieved SBP separation). Practical next steps: (1) prioritize multivariable interaction tests (treatment*feature with key moderators included) rather than repeated univariate subgrouping, (2) model continuous features with splines, (3) perform mediation analyses for achieved SBP and AKI, and (4) report absolute effects (risk differences, NNT/NNH) to inform clinical decisions."
+  }
+}

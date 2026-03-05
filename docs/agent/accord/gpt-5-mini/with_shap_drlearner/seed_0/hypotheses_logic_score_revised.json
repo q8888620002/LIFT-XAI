@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Baseline age (baseline age) (Baseline age (baseline_age))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'baseline_age' is listed among trial_measured_features so the feature is observed in the dataset. G2: TRUE \u2014 the hypothesis names concrete physiological steps (increased arterial stiffness, orthostatic susceptibility) that plausibly change tolerance to intensive BP lowering and raise rates of specific harms (syncope, AKI). G3: TRUE \u2014 the claim is a genuine treatment-effect modification mechanism (older/frail physiology increases treatment-related harms which can offset benefit), not solely an absolute-risk amplification. G4: TRUE \u2014 the interaction (reduced tolerability and altered risk\u2013benefit in older/frail patients with intensive BP lowering) has support in clinical literature and subgroup analyses (e.g., concerns from RCTs and frailty-focused analyses showing different harm/benefit balances). G5: TRUE \u2014 the hypothesis proposes clear, operational subgroups (age bands and frailty strata) and gives explicit clinical recommendations, so it is actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "All gates passed; decisive was G3 because the hypothesis articulates a physiological mechanism (older/frail patients suffer more treatment-related harms) that makes this a true effect modifier rather than mere baseline-risk amplification.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Body mass index (bmi)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'bmi' is present in trial_measured_features. G2: TRUE \u2014 the hypothesis specifies a concrete mechanism (obesity \u2192 volume-mediated hypertension \u2192 greater responsiveness to diuretics) linking BMI to differential pharmacologic blood-pressure lowering. G3: TRUE \u2014 this describes a plausible PD-mediated effect-modification (greater achievable SBP fall with diuretic regimens in obese patients) rather than only stating higher baseline risk. G4: FALSE \u2014 while physiological studies support obesity-related volume hypertension and diuretic responsiveness, there is limited direct RCT evidence showing a BMI \u00d7 intensive-BP-target interaction on CV outcomes (and ACCORD medication classes were not randomized), so the specific feature\u00d7treatment outcome interaction is not clearly established in trial literature; G4 FALSE \u2014 cascade: G5 also FALSE. G5: FALSE \u2014 because G4 failed, actionable treatment rules based on BMI \u00d7 regimen lack robust trial support.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Failed at G4: although a biologically coherent PD mechanism is proposed and G1\u2013G3 pass, there is insufficient RCT-level literature demonstrating that BMI meaningfully modifies CV outcome benefit of intensive SBP targets via diuretic responsiveness, so clinical recommendations remain unsupported.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'sbp' is recorded in the trial_measured_features. G2: TRUE \u2014 the hypothesis names mechanistic considerations (achievable mmHg reductions, arterial stiffness limiting SBP fall) linking baseline SBP to treatment effects. G3: FALSE \u2014 the main argument is classic absolute-risk amplification (higher baseline SBP \u2192 larger absolute mmHg and absolute-event reductions) with no additional, well-specified pharmacodynamic mechanism that changes the relative treatment effect; G3 FALSE \u2014 cascade: G4 and G5 also FALSE. G4: FALSE \u2014 because G3 failed, the specific SBP\u00d7treatment interaction beyond baseline-risk arithmetic is not established. G5: FALSE \u2014 no new actionable subgroup beyond the obvious high-versus-low baseline SBP is justified by an HTE mechanism in this formulation.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Failed at G3: the hypothesis is principally an absolute-risk amplifier (higher baseline SBP \u2192 larger absolute benefit) rather than asserting a distinct pharmacologic/pathophysiologic change in how the intervention works, so it does not meet the HTE criterion.",
+      "overall_score": 2
+    },
+    {
+      "feature_name": "Diastolic blood pressure (dbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'dbp' appears in the trial_measured_features. G2: TRUE \u2014 the hypothesis specifies a concrete physiologic pathway (low DBP reduces coronary perfusion pressure \u2192 increased myocardial ischemia risk when DBP is further lowered) consistent with a J-curve mechanism. G3: TRUE \u2014 this is a plausible effect modifier: low baseline DBP could make intensive SBP lowering cause increased ischemic harm (a treatment-mediated adverse effect), not merely reflect baseline prognosis. G4: TRUE \u2014 the DBP 'J-curve' and concern about low DBP in patients with CAD have support across observational studies and randomized-trial subgroup discussions (clinical literature has repeatedly raised and examined this interaction). G5: TRUE \u2014 the proposal gives clear DBP bands and CAD-stratified recommendations that are operationalizable in clinical practice.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "All gates passed; decisive was G3 because the hypothesis advances a mechanistic treatment-modifying pathway (low DBP \u2192 impaired coronary perfusion \u2192 increased ischemic harm with intensive lowering) rather than only predicting absolute-risk differences.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Heart rate (hr)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'hr' is included in the trial_measured_features. G2: FALSE \u2014 the hypothesis mainly treats heart rate as a prognostic marker of sympathetic tone and baseline risk and does not specify a clear pharmacodynamic or pathophysiologic chain by which intensive BP lowering would act differently in high-HR patients (the proposal is conditional and conflated with confounders like beta-blocker use and arrhythmia). G2 FALSE \u2014 cascade: G3..G5 also FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Failed at G2: the hypothesis lacks a concrete mechanistic chain (it largely treats HR as a baseline risk marker confounded by medications/arrhythmia) so it does not meet the biological-coherence requirement for an HTE claim.",
+      "overall_score": 1
+    }
+  ]
+}

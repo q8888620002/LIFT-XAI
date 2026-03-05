@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Baseline systolic blood pressure (pre-randomization SBP)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'sbp' is listed in trial_measured_features, so baseline SBP is observed in the dataset (TRUE). G2: The hypothesis states differential benefit by baseline SBP (\u2265150 vs <140) but offers no concrete biological steps (no named physiological pathway beyond a general risk/benefit statement), so it is not mechanistically specific (G2 FALSE \u2014 cascade: G3..G5 also FALSE). G3: (not evaluated because G2 FALSE) G4: (not evaluated because G2 FALSE) G5: (not evaluated because G2 FALSE).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 FALSE \u2014 the hypothesis is an epidemiologic assertion about larger absolute (and claimed relative) benefits at higher baseline SBP and more adverse events near the target, but it does not specify a concrete biological mechanism (receptor/enzyme/PK/physiologic chain) required to pass G2.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Baseline diastolic blood pressure and pulse pressure / arterial stiffness",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: DBP is recorded ('dbp' present) and pulse pressure can be derived from measured SBP and DBP, so the proposed features are observable in the trial data (TRUE). G2: The hypothesis invokes a physiologic mechanism (very low DBP and large pulse pressure/arterial stiffness reducing coronary perfusion and increasing ischemic risk with aggressive SBP lowering), which is a concrete pathophysiological chain beyond mere statistical risk amplification (TRUE). G3: This is a plausible treatment effect modifier because low DBP / high pulse pressure changes how intensive SBP lowering interacts with coronary perfusion (a PD/physiology interaction), not just an absolute-risk amplifier (TRUE). G4: There is supporting clinical literature and mechanistic/observational evidence (J\u2011curve for DBP, concerns about ischemia with very low DBP and high pulse pressure) and some trial/subgroup analyses have raised similar concerns, so literature support exists (TRUE). G5: DBP and pulse pressure thresholds (e.g., DBP <65 mmHg, PP >60 mmHg) are measurable and lend themselves to clear clinical decisions about intensity of therapy (TRUE).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive gate: G3 TRUE \u2014 the key is that low DBP/high pulse pressure plausibly alters the drug's physiological effect (coronary perfusion/ischemia) producing genuine HTE rather than only changing absolute event rates, and this mechanism is supported by clinical literature and actionable thresholds.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Pre-existing coronary artery disease (CAD) or prior myocardial infarction",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Prior CVD/CAD is captured in the dataset via 'sub_cvd' (TRUE). G2: The hypothesis specifies a physiologic mechanism \u2014 CAD patients with low DBP may experience impaired coronary perfusion and increased myocardial ischemia when SBP is driven very low \u2014 which is a concrete pathophysiological chain rather than a pure statistical claim (TRUE). G3: This represents a plausible treatment effect modifier because coronary disease plus low DBP changes the balance of benefit vs harm from intensive SBP lowering (increased ischemic risk), not merely an absolute-risk amplifier (TRUE). G4: There is literature (observational studies, mechanistic rationale and some subgroup analyses/discussions in trials) suggesting a J\u2011curve and heightened ischemic risk in coronary disease with very low DBP, so targeted evidence exists though estimates vary (TRUE). G5: The subgroup (patients with prior MI/multivessel CAD and low DBP, e.g., <65 mmHg) is measurable and actionable in practice (TRUE).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive gate: G3 TRUE \u2014 the presence of CAD combined with low DBP plausibly changes the physiological response to intensive BP lowering (greater ischemic vulnerability), making this a genuine HTE supported by mechanistic reasoning and clinical literature.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Baseline kidney function / chronic kidney disease (eGFR and albuminuria)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Kidney function and albuminuria are represented in the measured features ('sub_ckd' and 'umalcr' present), so the proposed features are observed (TRUE). G2: The hypothesis identifies concrete renal pathophysiology (lower renal perfusion and higher susceptibility to AKI/sustained eGFR decline under intensive SBP lowering) linking CKD status to differential adverse effects \u2014 this is a coherent biological mechanism (TRUE). G3: CKD plausibly modifies the treatment effect beyond absolute-risk amplification because reduced renal autoregulation and susceptibility to perfusion injury produce different harm/benefit tradeoffs with intensive lowering (TRUE). G4: Trial and observational literature (including analyses from intensive BP trials and CKD cohorts) report more renal adverse events with intensive BP targets and discuss attenuated or complex cardiovascular benefit in advanced CKD, so the interaction is literature-backed (TRUE). G5: eGFR thresholds and albuminuria categories are routine, measurable, and can guide treatment intensity decisions (TRUE).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 TRUE \u2014 while G3 establishes plausible physiological modification, existing trial and cohort evidence showing increased AKI/eGFR decline with intensive BP lowering in CKD makes the interaction empirically supported and clinically actionable.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Age and frailty (physiologic reserve, orthostatic BP response)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Chronological age is measured ('age' present) but frailty, orthostatic hypotension, and recurrent-falls status are not listed among trial_measured_features, so the key modifying feature (frailty/orthostatic response) is not observed in the dataset (G1 FALSE \u2014 cascade: G2..G5 also FALSE). G2: (not evaluated because G1 FALSE) G3: (not evaluated because G1 FALSE) G4: (not evaluated because G1 FALSE) G5: (not evaluated because G1 FALSE).",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G1 FALSE \u2014 although age is recorded, frailty and orthostatic hypotension (the hypothesised effect modifiers) are not measured in the trial dataset, so the hypothesis cannot be evaluated using these trial data and subsequent gates fail by cascade.",
+      "overall_score": 0
+    }
+  ]
+}

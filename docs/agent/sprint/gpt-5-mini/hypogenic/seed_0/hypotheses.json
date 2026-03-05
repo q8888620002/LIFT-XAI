@@ -1,0 +1,92 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "sprint",
+    "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+    "outcome": "Composite of major cardiovascular events",
+    "population": "Non-diabetic adults aged \u226550 with hypertension and increased cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 5,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": {
+    "Adults aged 65\u201374 derive meaningful cardiovascular benefit from intensive BP lowering because they have elevated baseline risk but still relatively low frailty.": {
+      "hypothesis": "Adults aged 65\u201374 derive meaningful cardiovascular benefit from intensive BP lowering because they have elevated baseline risk but still relatively low frailty.",
+      "acc": 0.5199999999999999,
+      "num_visits": 200,
+      "reward": 0.6013811815359363,
+      "subgroup_rule": {
+        "feature": "age",
+        "operator": ">=",
+        "threshold": 65.0,
+        "description": "age >= 65 and < 75 years"
+      },
+      "recommendation": "treat"
+    },
+    "In participants with baseline systolic blood pressure <130 mmHg, intensive BP control (target <120 mmHg) will offer little to no benefit on the composite cardiovascular outcome compared with standard control.": {
+      "hypothesis": "In participants with baseline systolic blood pressure <130 mmHg, intensive BP control (target <120 mmHg) will offer little to no benefit on the composite cardiovascular outcome compared with standard control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "sbp",
+        "operator": "<",
+        "threshold": 130.0,
+        "description": "Baseline systolic blood pressure less than 130 mmHg"
+      },
+      "recommendation": "control"
+    },
+    "In participants with baseline diastolic blood pressure <70 mmHg, intensive systolic BP control (target <120 mmHg) is associated with worse composite cardiovascular outcomes compared with standard control.": {
+      "hypothesis": "In participants with baseline diastolic blood pressure <70 mmHg, intensive systolic BP control (target <120 mmHg) is associated with worse composite cardiovascular outcomes compared with standard control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "dbp",
+        "operator": "<",
+        "threshold": 70.0,
+        "description": "Baseline diastolic blood pressure less than 70 mmHg"
+      },
+      "recommendation": "control"
+    },
+    "Among adults with eGFR < 60 mL/min/1.73 m^2, intensive systolic BP control (target <120 mmHg) will provide less reduction in the composite of major cardiovascular events compared with standard BP management.": {
+      "hypothesis": "Among adults with eGFR < 60 mL/min/1.73 m^2, intensive systolic BP control (target <120 mmHg) will provide less reduction in the composite of major cardiovascular events compared with standard BP management.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "egfr",
+        "operator": "<",
+        "threshold": 60.0,
+        "description": "Participants with estimated glomerular filtration rate below 60 mL/min/1.73 m^2 (indicating chronic kidney disease stage 3 or worse)."
+      },
+      "recommendation": "control"
+    },
+    "Among trial participants with chr < 3, intensive blood pressure control (systolic BP target <120 mmHg) will reduce the risk of the composite major cardiovascular events compared with standard blood pressure management.": {
+      "hypothesis": "Among trial participants with chr < 3, intensive blood pressure control (systolic BP target <120 mmHg) will reduce the risk of the composite major cardiovascular events compared with standard blood pressure management.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "chr",
+        "operator": "<",
+        "threshold": 3.0,
+        "description": "chr less than 3"
+      },
+      "recommendation": "treat"
+    }
+  },
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 0.12027623630718727,
+    "avg_accuracy": 0.10399999999999998
+  }
+}

@@ -1,23 +1,9 @@
-// Condition mapping (blinded for raters)
-// Randomized per cohort to prevent systematic bias
-// DO NOT SHARE THIS MAPPING WITH RATERS
-const conditionMapping = {
-    crash_2: {
-        condition_a: 'with_shap',           // A = SHAP
-        condition_b: 'without_shap_baseline' // B = Literature
-    },
-    ist3: {
-        condition_a: 'without_shap_baseline', // A = Literature
-        condition_b: 'with_shap'              // B = SHAP
-    },
-    sprint: {
-        condition_a: 'with_shap',           // A = SHAP
-        condition_b: 'without_shap_baseline' // B = Literature
-    },
-    accord: {
-        condition_a: 'without_shap_baseline', // A = Literature
-        condition_b: 'with_shap'              // B = SHAP
-    }
+// Method display names
+const methodDisplayNames = {
+    with_shap_drlearner: 'ALEX',
+    cot: 'CoT',
+    hypogenic: 'HypoGeniC',
+    researchagent: 'ResearchAgent'
 };
 
 // Trial metadata
@@ -125,29 +111,43 @@ function getDisplayFeatureName(featureName) {
     return featureNameMap[featureName] || featureName;
 }
 
-// Rating criteria with descriptions
-const ratingCriteria = [
+// Rating criteria: 5 cascading robustness gates + novelty bonus
+// Aligned with judge_evaluation.py gate logic
+const ratingGates = [
     {
-        id: 'mechanism_plausibility',
-        label: 'Mechanism Plausibility',
-        description: 'Biological/clinical coherence, consistency with pathophysiology, specificity'
+        id: 'is_observed_in_data',
+        label: 'Gate 1: Measurement Validity',
+        description: 'Is the hypothesis based on features actively measured in the trial? (TRUE if the proposed feature appears in the trial dataset; FALSE if inferred, derived, or not collected.)'
     },
     {
-        id: 'evidence_alignment',
-        label: 'Evidence Alignment',
-        description: 'Grounding in published trials, systematic reviews, established literature'
+        id: 'is_biologically_coherent',
+        label: 'Gate 2: Biological Logic',
+        description: 'Does the hypothesis name a concrete biological pathway (receptor, enzyme, PK/PD change, cell pathway) that mechanistically connects the feature to differential drug action? FALSE if only a statistical/epidemiological claim, circular reasoning, or biologically incorrect.'
     },
     {
-        id: 'subgroup_implications',
-        label: 'Subgroup Implications',
-        description: 'Clarity, actionability, feasibility, clinical utility'
+        id: 'is_causally_plausible',
+        label: 'Gate 3: Genuine HTE vs Statistical Artifact',
+        description: 'Is this a true treatment effect modifier — the drug works differently in this subgroup — rather than a statistical artifact? FALSE if the sole argument is absolute-risk amplification (higher baseline risk × constant RRR), post-treatment variable, reverse causality, or trivial severity proxy.'
     },
     {
-        id: 'caveat_awareness',
-        label: 'Caveat Awareness',
-        description: 'Acknowledgment of limitations, confounding, epistemic humility'
+        id: 'is_literature_backed',
+        label: 'Gate 4: External Evidence',
+        description: 'Is this specific feature × treatment interaction supported by published clinical literature (ideally RCT subgroup analyses or meta-analyses)?'
+    },
+    {
+        id: 'is_clinically_actionable',
+        label: 'Gate 5: Practical Utility',
+        description: 'Does this propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     }
 ];
+
+const noveltyBonus = {
+    id: 'is_novel',
+    label: 'Novelty Bonus',
+    description: 'Does this hypothesis identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews? (Does not affect overall score.)'
+};
+
+
 
 let currentHypotheses = [];
 let ratings = {};
@@ -157,7 +157,7 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
     const cohort = document.getElementById('cohort-select').value;
-    const conditionBlind = document.getElementById('condition-select').value;
+    const method = document.getElementById('method-select').value;
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
 
@@ -176,17 +176,7 @@ async function loadHypotheses() {
         return;
     }
 
-    // Map blinded condition to actual file path based on cohort
-    const condition = conditionMapping[cohort][conditionBlind];
-
-    // WITHOUT SHAP files don't include learner name in filename
-    // crash_2 and ist3 use DRLearner, others use XLearner
-    const learner = (cohort === 'crash_2' || cohort === 'ist3') ? 'DRLearner' : 'XLearner';
-    const fileName = condition === 'without_shap_baseline'
-        ? `hypotheses_${condition}.json`
-        : `hypotheses_${condition}_${learner}.json`;
-
-    const filePath = `agent/${cohort}/${fileName}`;
+    const filePath = `agent/${cohort}/gpt-5-mini/${method}/seed_0/hypotheses.json`;
 
     try {
         const response = await fetch(filePath);
@@ -195,18 +185,42 @@ async function loadHypotheses() {
         }
         const data = await response.json();
 
+        // Normalize different JSON formats into unified hypothesis list
+        const hypotheses = normalizeHypotheses(data, method);
+
         displayTrialInfo(cohort);
-        displayHypotheses(data.feature_hypotheses, cohort, conditionBlind, expertise, specialty);
+        displayHypotheses(hypotheses, cohort, method, expertise, specialty);
 
     } catch (error) {
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
                 <strong>Error loading hypotheses:</strong> ${error.message}<br>
-                <small>Make sure the JSON files are in the correct location: docs/agent/${cohort}/</small>
+                <small>Expected path: ${filePath}</small>
             </div>
         `;
     }
+}
+
+// Normalize different method JSON formats into a common structure
+function normalizeHypotheses(data, method) {
+    if (method === 'hypogenic') {
+        // HypoGeniC uses a dict keyed by hypothesis text
+        return Object.values(data.hypotheses || {}).map((h, i) => ({
+            feature_name: h.subgroup_rule?.feature || `Hypothesis ${i + 1}`,
+            hypothesis_text: h.hypothesis,
+            mechanisms: [{ description: h.hypothesis }],
+            subgroup_rule: h.subgroup_rule,
+            recommendation: h.recommendation,
+            importance_rank: i + 1
+        }));
+    }
+    // ALEX, CoT, ResearchAgent all use feature_hypotheses array
+    return (data.feature_hypotheses || []).map((h, i) => ({
+        feature_name: h.feature_name,
+        mechanisms: (h.mechanisms || []).map(m => ({ description: m.description })),
+        importance_rank: h.importance_rank || i + 1
+    }));
 }
 
 function displayTrialInfo(cohort) {
@@ -217,13 +231,14 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-info').style.display = 'block';
 }
 
-function displayHypotheses(hypotheses, cohort, condition, expertise, specialty) {
+function displayHypotheses(hypotheses, cohort, method, expertise, specialty) {
     currentHypotheses = hypotheses;
     ratings = {
         expertise: expertise,
         specialty: specialty,
         cohort: cohort,
-        condition: condition,
+        method: method,
+        method_display: methodDisplayNames[method] || method,
         timestamp: new Date().toISOString(),
         ratings: []
     };
@@ -244,6 +259,15 @@ function createHypothesisCard(hypothesis, index) {
     card.className = 'hypothesis-card';
     card.id = `hyp-${index}`;
 
+    // Build subgroup rule display for HypoGeniC
+    const subgroupHTML = hypothesis.subgroup_rule ? `
+            <div class="content-section">
+                <h4>Subgroup Rule</h4>
+                <p><code>${hypothesis.subgroup_rule.feature} ${hypothesis.subgroup_rule.operator} ${hypothesis.subgroup_rule.threshold}</code>
+                — ${hypothesis.subgroup_rule.description || ''}
+                (Recommendation: <strong>${hypothesis.recommendation || 'N/A'}</strong>)</p>
+            </div>` : '';
+
     card.innerHTML = `
         <div class="hypothesis-header">
             <div class="hypothesis-title">${getDisplayFeatureName(hypothesis.feature_name)}</div>
@@ -254,51 +278,24 @@ function createHypothesisCard(hypothesis, index) {
 
         <div class="hypothesis-content">
             <div class="content-section">
-                <h4>Clinical Interpretation</h4>
-                <p>${hypothesis.clinical_interpretation}</p>
-            </div>
-
-            <div class="content-section">
-                <h4>Why Important for Treatment Heterogeneity</h4>
-                <p>${hypothesis.why_important}</p>
-            </div>
-
-            <div class="content-section">
-                <h4>Proposed Mechanisms</h4>
+                <h4>Hypotheses</h4>
                 ${hypothesis.mechanisms.map(m => `
                     <div class="mechanism-item">
-                        <strong>${m.mechanism_type}:</strong> ${m.description}
+                        ${m.description}
                     </div>
                 `).join('')}
             </div>
-
-            <div class="content-section">
-                <h4>Subgroup Implications</h4>
-                <p>${hypothesis.subgroup_implications}</p>
-            </div>
-
-            <div class="content-section">
-                <h4>Validation Suggestions</h4>
-                <ul>
-                    ${hypothesis.validation_suggestions.map(v => `<li>${v}</li>`).join('')}
-                </ul>
-            </div>
-
-            <div class="content-section">
-                <h4>Caveats</h4>
-                <ul>
-                    ${hypothesis.caveats.map(c => `<li>${c}</li>`).join('')}
-                </ul>
-            </div>
+            ${subgroupHTML}
         </div>
 
         <div class="rating-section">
-            <h4>Your Ratings (1-5 scale)</h4>
-            ${createRatingInputs(index)}
+            <h4>Gate Evaluation</h4>
+            <p class="gate-instructions">For each gate, select TRUE or FALSE. Gates are evaluated independently.</p>
+            ${createGateInputs(index)}
 
             <div class="rating-group">
-                <label class="rating-label">Additional Comments (optional)</label>
-                <textarea id="comments-${index}" placeholder="Any additional thoughts, concerns, or suggestions..."></textarea>
+                <label class="rating-label">Justification / Comments (optional)</label>
+                <textarea id="comments-${index}" placeholder="Brief reasoning for your gate decisions, or any additional thoughts..."></textarea>
             </div>
         </div>
     `;
@@ -306,30 +303,68 @@ function createHypothesisCard(hypothesis, index) {
     return card;
 }
 
-function createRatingInputs(hypIndex) {
-    return ratingCriteria.map(criterion => `
-        <div class="rating-group">
-            <label class="rating-label">${criterion.label}</label>
-            <div class="rating-description">${criterion.description}</div>
-            <div class="rating-input">
-                <input
-                    type="range"
-                    id="${criterion.id}-${hypIndex}"
-                    min="1"
-                    max="5"
-                    value="3"
-                    oninput="updateRatingValue('${criterion.id}', ${hypIndex})"
-                >
-                <span class="rating-value" id="${criterion.id}-${hypIndex}-value">5</span>
+function createGateInputs(hypIndex) {
+    const gateHTML = ratingGates.map(gate => `
+        <div class="rating-group gate-group">
+            <label class="rating-label">${gate.label}</label>
+            <div class="rating-description">${gate.description}</div>
+            <div class="gate-toggle">
+                <button type="button" class="gate-btn gate-btn-true" id="${gate.id}-${hypIndex}-true"
+                    onclick="setGate('${gate.id}', ${hypIndex}, true)">
+                    TRUE
+                </button>
+                <button type="button" class="gate-btn gate-btn-false" id="${gate.id}-${hypIndex}-false"
+                    onclick="setGate('${gate.id}', ${hypIndex}, false)">
+                    FALSE
+                </button>
+                <span class="gate-status" id="${gate.id}-${hypIndex}-status">Not rated</span>
             </div>
         </div>
     `).join('');
+
+    const noveltyHTML = `
+        <div class="rating-group gate-group novelty-group">
+            <label class="rating-label">${noveltyBonus.label}</label>
+            <div class="rating-description">${noveltyBonus.description}</div>
+            <div class="gate-toggle">
+                <button type="button" class="gate-btn gate-btn-true" id="${noveltyBonus.id}-${hypIndex}-true"
+                    onclick="setGate('${noveltyBonus.id}', ${hypIndex}, true)">
+                    TRUE
+                </button>
+                <button type="button" class="gate-btn gate-btn-false" id="${noveltyBonus.id}-${hypIndex}-false"
+                    onclick="setGate('${noveltyBonus.id}', ${hypIndex}, false)">
+                    FALSE
+                </button>
+                <span class="gate-status" id="${noveltyBonus.id}-${hypIndex}-status">Not rated</span>
+            </div>
+        </div>
+    `;
+
+    return gateHTML + noveltyHTML;
 }
 
-function updateRatingValue(criterionId, hypIndex) {
-    const input = document.getElementById(`${criterionId}-${hypIndex}`);
-    const display = document.getElementById(`${criterionId}-${hypIndex}-value`);
-    display.textContent = input.value;
+function setGate(gateId, hypIndex, value) {
+    const trueBtn = document.getElementById(`${gateId}-${hypIndex}-true`);
+    const falseBtn = document.getElementById(`${gateId}-${hypIndex}-false`);
+    const status = document.getElementById(`${gateId}-${hypIndex}-status`);
+
+    // Clear both
+    trueBtn.classList.remove('active');
+    falseBtn.classList.remove('active');
+
+    if (value) {
+        trueBtn.classList.add('active');
+        status.textContent = 'TRUE';
+        status.className = 'gate-status gate-true';
+    } else {
+        falseBtn.classList.add('active');
+        status.textContent = 'FALSE';
+        status.className = 'gate-status gate-false';
+    }
+
+    // Store the value
+    trueBtn.dataset.value = value ? 'true' : '';
+    falseBtn.dataset.value = value ? '' : 'false';
 }
 
 // Export ratings
@@ -349,18 +384,40 @@ function exportRatings() {
         return;
     }
 
-    // Collect all ratings
+    // Collect all gate ratings
     ratings.ratings = currentHypotheses.map((hyp, index) => {
         const featureRating = {
             feature_name: hyp.feature_name,
             feature_index: index,
         };
 
-        // Collect scores for each criterion
-        ratingCriteria.forEach(criterion => {
-            const input = document.getElementById(`${criterion.id}-${index}`);
-            featureRating[criterion.id] = parseInt(input.value);
+        // Collect gate values
+        let allRated = true;
+        ratingGates.forEach(gate => {
+            const trueBtn = document.getElementById(`${gate.id}-${index}-true`);
+            if (trueBtn.classList.contains('active')) {
+                featureRating[gate.id] = true;
+            } else {
+                const falseBtn = document.getElementById(`${gate.id}-${index}-false`);
+                if (falseBtn.classList.contains('active')) {
+                    featureRating[gate.id] = false;
+                } else {
+                    featureRating[gate.id] = null;
+                    allRated = false;
+                }
+            }
         });
+
+        // Collect novelty bonus
+        const noveltyTrue = document.getElementById(`${noveltyBonus.id}-${index}-true`);
+        const noveltyFalse = document.getElementById(`${noveltyBonus.id}-${index}-false`);
+        if (noveltyTrue.classList.contains('active')) {
+            featureRating[noveltyBonus.id] = true;
+        } else if (noveltyFalse.classList.contains('active')) {
+            featureRating[noveltyBonus.id] = false;
+        } else {
+            featureRating[noveltyBonus.id] = null;
+        }
 
         // Collect comments
         const comments = document.getElementById(`comments-${index}`).value.trim();
@@ -378,7 +435,7 @@ function exportRatings() {
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ratings_${ratings.cohort}_${ratings.condition}_${Date.now()}.json`;
+    link.download = `ratings_${ratings.cohort}_${ratings.method}_${Date.now()}.json`;
     link.click();
 
     URL.revokeObjectURL(url);

@@ -1,7 +1,7 @@
 import os
 import re
 import json
-from typing import Optional
+from typing import Dict, List, Optional
 
 from src.agent_schemas import ArticleExtraction
 
@@ -37,6 +37,90 @@ DATASET_FEATURE_LABEL_MAP = {
         "dbprand": "Randomization/baseline diastolic BP variable",
     },
 }
+
+
+# Canonical list of features (raw column names) that were actually measured and
+# recorded in each trial dataset.  Used by the judge for Gate 1 verification.
+DATASET_KNOWN_FEATURES: Dict[str, List[str]] = {
+    "ist3": [
+        "nihss",
+        "antiplat_rand",
+        "Stroke Type: TACI (Total Anterior Circulation Infarct)",
+        "age",
+        "dbprand",
+        "gcs_score_rand",
+        "weight",
+        "sbprand",
+        "Stroke Type: PACI (Partial Anterior Circulation Infarct)",
+        "atrialfib_rand",
+        "glucose",
+        "gender",
+        "infarct",
+        "Stroke Type: POCI (Posterior Circulation Infarct)",
+        "Stroke Type: LACI (Lacunar Infarct)",
+    ],
+    "crash_2": [
+        "iinjurytype",
+        "isbp",
+        "icc",
+        "ninjurytime",
+        "ihr",
+        "igcs",
+        "irr",
+        "iage",
+        "isex",
+    ],
+    "sprint": [
+        "sub_cvd",
+        "sub_ckd",
+        "race_black",
+        "sbp",
+        "age",
+        "dbp",
+        "chr",
+        "hdl",
+        "bmi",
+        "smoke_3cat",
+        "glur",
+        "female",
+        "aspirin",
+        "statin",
+        "trr",
+        "umalcr",
+    ],
+    "accord": [
+        "anti_coag",
+        "bmi",
+        "baseline_age",
+        "ldl",
+        "potassium",
+        "hdl",
+        "hr",
+        "raceclass",
+        "dbp",
+        "sbp",
+        "fpg",
+        "antiarrhythmic",
+        "aspirin",
+        "bp_med",
+        "x4smoke",
+        "female",
+        "gfr",
+        "statin",
+        "cvd_hx_baseline",
+        "alt",
+        "trig",
+        "cpk",
+        "uacr",
+    ],
+}
+
+
+def get_dataset_features(dataset: Optional[str]) -> List[str]:
+    """Return the canonical measured-feature list for a known dataset, or [] if unknown."""
+    if not dataset:
+        return []
+    return DATASET_KNOWN_FEATURES.get(dataset.lower(), [])
 
 
 def map_feature_label(raw_feature: str, dataset: Optional[str] = None) -> str:
@@ -149,10 +233,10 @@ def get_trial_metadata(trial_name: str) -> dict:
             "article_query": "SPRINT trial intensive blood pressure control 2015",
         },
         "accord": {
-            "treatment": "Intensive glucose control (HbA1c target <6.0%)",
+            "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
             "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
             "population": "Adults with type 2 diabetes and high cardiovascular risk",
-            "article_query": "ACCORD trial intensive glucose control diabetes 2008",
+            "article_query": "ACCORD BP trial intensive blood pressure control diabetes 2010",
         },
         "txa": {
             "treatment": "Pre-hospital tranexamic acid (TXA) administration",
@@ -171,8 +255,144 @@ def get_trial_metadata(trial_name: str) -> dict:
     return trial_map[trial_lower]
 
 
-def get_model_client(api_provider: str, api_base_url: Optional[str] = None):
-    """Create an OpenAI-compatible client for OpenAI or OpenRouter."""
+# ---------------------------------------------------------------------------
+# MedGemma local pipeline wrapper (OpenAI-compatible interface)
+# ---------------------------------------------------------------------------
+
+class _MedGemmaMessage:
+    """Mimics openai ChatCompletionMessage."""
+    def __init__(self, content: str):
+        self.content = content
+        self.parsed = None
+        self.refusal = None
+
+
+class _MedGemmaChoice:
+    def __init__(self, content: str):
+        self.message = _MedGemmaMessage(content)
+
+
+class _MedGemmaCompletion:
+    def __init__(self, content: str):
+        self.choices = [_MedGemmaChoice(content)]
+
+
+class _MedGemmaCompletions:
+    """Drop-in for `client.chat.completions`."""
+
+    def __init__(self, pipe):
+        self._pipe = pipe
+
+    def create(self, *, model: str = "", messages: list, max_tokens: int = 4096, **kwargs) -> _MedGemmaCompletion:
+        # Cap max_new_tokens to a practical limit for local inference
+        capped_tokens = min(max_tokens, 8192)
+        output = self._pipe(
+            messages,
+            max_new_tokens=capped_tokens,
+            return_full_text=False,
+            do_sample=False,          # greedy decoding for reliable JSON
+        )
+        # HF pipeline returns list; last generated message is assistant reply
+        generated = output[0]["generated_text"]
+        if isinstance(generated, list):
+            content = generated[-1].get("content", "")
+        else:
+            content = str(generated)
+        return _MedGemmaCompletion(content)
+
+
+class _MedGemmaBetaParsed:
+    """Stub for `client.beta.chat.completions.parse` — always raises so
+    `_parse_structured` falls through to the plain-create fallback."""
+
+    def parse(self, **kwargs):
+        raise NotImplementedError("MedGemma does not support structured outputs")
+
+
+class _MedGemmaBeta:
+    def __init__(self, pipe):
+        self.chat = type("obj", (object,), {"completions": _MedGemmaBetaParsed()})()
+
+
+class MedGemmaClient:
+    """Lightweight wrapper around a HuggingFace text-generation pipeline that
+    exposes the subset of the OpenAI Python client interface used by
+    ``_parse_structured`` and the rest of the agent code.
+
+    Usage (automatic via ``get_model_client('medgemma')``):
+        client = MedGemmaClient(model_name="google/medgemma-27b-text-it")
+
+    Authentication:
+        MedGemma is a gated model. You must:
+        1. Accept the license at https://huggingface.co/google/medgemma-27b-text-it
+        2. Authenticate via one of:
+           - ``huggingface-cli login``
+           - Set HF_LOGIN (or HF_TOKEN) environment variable
+           - Pass token= to this constructor
+    """
+
+    def __init__(
+        self,
+        model_name: str = "google/medgemma-27b-text-it",
+        device: str = "cuda",
+        token: Optional[str] = None,
+    ):
+        import torch
+
+        # Check PyTorch version early
+        torch_version = tuple(int(x) for x in torch.__version__.split("+")[0].split(".")[:2])
+        if torch_version < (2, 4):
+            raise RuntimeError(
+                f"MedGemma requires PyTorch >= 2.4 but found {torch.__version__}. "
+                "Upgrade with: pip install 'torch>=2.4'"
+            )
+
+        from transformers import pipeline as hf_pipeline
+
+        # Resolve HF token: explicit arg > HF_LOGIN > HF_TOKEN > cached login
+        hf_token = token or os.getenv("HF_LOGIN") or os.getenv("HF_TOKEN")
+
+        print(f"Loading MedGemma model '{model_name}' on {device} …")
+        try:
+            self._pipe = hf_pipeline(
+                "text-generation",
+                model=model_name,
+                torch_dtype=torch.bfloat16,
+                device=device,
+                token=hf_token,
+            )
+        except OSError as e:
+            if "gated repo" in str(e).lower() or "401" in str(e):
+                raise RuntimeError(
+                    f"Cannot access gated model '{model_name}'. "
+                    "Please:\n"
+                    "  1. Accept the license at https://huggingface.co/google/medgemma-27b-text-it\n"
+                    "  2. Authenticate: run 'huggingface-cli login' or set HF_LOGIN env var\n"
+                    f"Original error: {e}"
+                ) from e
+            raise
+        self._model_name = model_name
+        # Public attributes checked by clinical_agent._parse_structured
+        self._base_url = None  # not an OpenRouter client
+        self._is_medgemma = True
+        self.chat = type("obj", (object,), {"completions": _MedGemmaCompletions(self._pipe)})()
+        self.beta = _MedGemmaBeta(self._pipe)
+
+
+def get_model_client(
+    api_provider: str,
+    api_base_url: Optional[str] = None,
+    medgemma_model: Optional[str] = None,
+    medgemma_device: Optional[str] = None,
+    hf_token: Optional[str] = None,
+):
+    """Create an OpenAI-compatible client for OpenAI, OpenRouter, or MedGemma (local)."""
+
+    if api_provider == "medgemma":
+        model = medgemma_model or "google/medgemma-27b-text-it"
+        device = medgemma_device or "cuda"
+        return MedGemmaClient(model_name=model, device=device, token=hf_token)
+
     from openai import OpenAI
 
     if api_provider == "openrouter":
@@ -268,7 +488,7 @@ def search_and_extract_article(
         "ist3": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(12)60768-5/fulltext",
         "crash_2": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(10)60835-5/fulltext",
         "sprint": "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939",
-        "accord": "https://www.nejm.org/doi/full/10.1056/NEJMoa0802743",
+        "accord": "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286",
     }
 
     trial_lower = trial_name.lower()
@@ -313,3 +533,115 @@ def search_and_extract_article(
     except Exception as e:
         print(f"Error extracting article information: {e}")
         return None
+
+
+def _is_hypogenic_format(data: Dict) -> bool:
+    """Return True if data is a HypoGeniC hypotheses.json (internal format).
+
+    Accepts both the old list format and the new faithful dict-keyed format.
+    """
+    return data.get("method") == "HypoGeniC" and isinstance(data.get("hypotheses"), (list, dict))
+
+
+def _convert_hypogenic_to_feature_format(data: Dict) -> Dict:
+    """Convert HypoGeniC hypotheses.json to the feature_hypotheses format expected
+    by the PubMed validator and judge.
+
+    Handles two formats:
+    - Old nested format: hypotheses is a list of {hypothesis: InternalHypothesis, acc, ...}
+    - New faithful format: hypotheses is a dict {text: {acc, reward, num_visits, subgroup_rule?, ...}}
+
+    In both cases, each hypothesis becomes its own entry. importance_rank is assigned
+    per unique feature in order of first appearance.
+    """
+    _benefit_map = {
+        "high": "higher_benefit", "moderate": "higher_benefit",
+        "low": "lower_benefit", "none": "lower_benefit", "harm": "higher_harm",
+    }
+    ctx = data.get("study_context", {})
+    raw = data.get("hypotheses", {})
+
+    # Normalise to a flat list of dicts with consistent keys
+    if isinstance(raw, dict):
+        # New faithful format: {text: {acc, reward, num_visits, subgroup_rule?, recommendation?}}
+        normalised = []
+        for text, stats in raw.items():
+            rule = stats.get("subgroup_rule") or {}
+            normalised.append({
+                "_text": text,
+                "_feature": rule.get("feature", "unknown"),
+                "_rule_description": rule.get("description") or text,
+                "_recommendation": stats.get("recommendation", "unclear"),
+                "_expected_benefit": "",   # not stored in plain format
+                "_hypothesis_id": "",
+                "_title": "",
+            })
+    else:
+        # Old nested format: list of {hypothesis: {...InternalHypothesis fields...}, acc, ...}
+        normalised = []
+        for entry in raw:
+            h = entry.get("hypothesis", {})
+            rec = h.get("treatment_recommendation") or {}
+            rule = rec.get("subgroup_rule") or {}
+            text = h.get("hypothesis_statement", "")
+            normalised.append({
+                "_text": text,
+                "_feature": rule.get("feature", "unknown"),
+                "_rule_description": rule.get("description", "") or h.get("mechanism", "") or text,
+                "_recommendation": rec.get("recommendation", "unclear"),
+                "_expected_benefit": rec.get("expected_benefit", ""),
+                "_hypothesis_id": h.get("hypothesis_id", ""),
+                "_title": h.get("title", ""),
+            })
+
+    # Assign a stable rank per unique feature (order of first appearance)
+    feature_rank: Dict[str, int] = {}
+    for item in normalised:
+        feat = item["_feature"]
+        if feat not in feature_rank:
+            feature_rank[feat] = len(feature_rank) + 1
+
+    feature_hypotheses = []
+    for idx, item in enumerate(normalised, 1):
+        feat = item["_feature"]
+        text = item["_text"]
+        feature_hypotheses.append({
+            "feature_name": feat,
+            "hypothesis_id": item["_hypothesis_id"] or f"hyp_{idx}",
+            "title": item["_title"] or "",
+            "importance_rank": feature_rank[feat],
+            "hypothesis_rank": idx,
+            "shap_value": 0.0,
+            "effect_direction": _benefit_map.get(item["_expected_benefit"], "ambiguous"),
+            # The plain hypothesis text is used directly — no LLM expansion needed
+            "clinical_interpretation": text,
+            "why_important": "Treatment effect modifier identified by HypoGeniC",
+            "mechanisms": [
+                {
+                    "mechanism_type": "biological",
+                    # Use the hypothesis statement itself as the mechanism description;
+                    # the judge and PubMed validator will score/search on this text.
+                    "description": text,
+                    "evidence_level": "moderate",
+                }
+            ],
+            "subgroup_implications": item["_rule_description"],
+            "validation_suggestions": [],
+            "caveats": [],
+        })
+
+    return {
+        "dataset": ctx.get("dataset", "unknown"),
+        "model": "HypoGeniC",
+        "treatment": ctx.get("treatment", ""),
+        "outcome": ctx.get("outcome", ""),
+        "population": ctx.get("population", ""),
+        "summary": (
+            f"HypoGeniC: {len(feature_rank)} features, {len(feature_hypotheses)} hypotheses "
+            f"from {ctx.get('dataset', 'unknown')}"
+        ),
+        "feature_hypotheses": feature_hypotheses,
+        "n_unique_features": len(feature_rank),
+        "n_hypotheses_per_feature": len(feature_hypotheses) // max(len(feature_rank), 1),
+        "cross_feature_patterns": None,
+    }

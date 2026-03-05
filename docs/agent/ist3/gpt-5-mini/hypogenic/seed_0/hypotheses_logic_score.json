@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "age",
+      "hypothesis_id": "hyp_1",
+      "gate_reasoning": "G1 TRUE \u2014 'age' is listed in trial_measured_features so the feature is present in the dataset. G2 FALSE \u2014 the hypothesis gives only a high-level clinical argument about 'physiological reserve' and comorbidity without naming receptors, enzymes, PK/PD changes, or a concrete mechanistic chain linking age to differential alteplase action, therefore G3..G5 FALSE. G3 FALSE \u2014 (cascade) no specific pharmacodynamic, pharmacokinetic, or pathophysiologic mechanism is proposed that would make alteplase act differently in the 60\u201369 age group rather than simply changing baseline prognosis. G4 FALSE \u2014 (cascade) the hypothesis provides no citation or specific literature evidence for an age\u00d7alteplase interaction and is speculative. G5 FALSE \u2014 (cascade) although an age band is specified, no clear operational treatment decision or validated subgroup rule is provided to guide clinical action.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 failed \u2014 the proposal lacks concrete biological steps (receptor/enzyme/PK/PD) linking age to a true differential effect of alteplase and therefore reads as a prognostic/absolute-risk claim.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "weight",
+      "hypothesis_id": "hyp_2",
+      "gate_reasoning": "G1 TRUE \u2014 'weight' is listed among the measured features in the trial. G2 FALSE \u2014 the hypothesis states an association (weight \u226590 kg \u2192 worse outcome with alteplase) but does not provide a mechanistic chain such as altered alteplase pharmacokinetics, dosing errors, or biologic pathways (receptor/enzyme) to explain why the drug would act differently; therefore G3..G5 FALSE. G3 FALSE \u2014 (cascade) without a stated PK/PD or pathophysiologic mechanism (e.g., altered clearance leading to under/overexposure) this appears to be a prognostic association rather than a proven treatment effect modifier. G4 FALSE \u2014 (cascade) no supporting literature or trial subgroup evidence is cited for a specific weight\u00d7alteplase interaction. G5 FALSE \u2014 (cascade) although a numeric cutoff is given, there is no validated, actionable recommendation or operational guidance for clinicians based on this subgroup.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 failed \u2014 the hypothesis lacks a concrete biological/PK explanation (e.g., altered alteplase clearance or dosing implications) to make weight a mechanistic effect modifier rather than a prognostic correlate.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "glucose",
+      "hypothesis_id": "hyp_3",
+      "gate_reasoning": "G1 TRUE \u2014 'glucose' (admission blood glucose) is present in the trial_measured_features. G2 FALSE \u2014 the hypothesis asserts that hypoglycaemia (<4.0 mmol/L) leads to worse outcomes after alteplase but does not specify a mechanistic chain (for example, effects on ischemic penumbra metabolism, hemorrhagic transformation risk, or interactions with fibrinolysis) naming receptors/enzymes/PK/PD, so G3..G5 are FALSE. G3 FALSE \u2014 (cascade) although biologically plausible that low glucose worsens ischemic injury, no explicit drug-modifying pathway is provided showing alteplase acts differently in hypoglycaemic patients rather than hypoglycaemia being a prognostic marker. G4 FALSE \u2014 (cascade) the hypothesis provides no cited literature demonstrating a glucose\u00d7alteplase treatment interaction. G5 FALSE \u2014 (cascade) the subgroup is defined numerically but there is no actionable guidance (treatment alteration or validated threshold) to change practice.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 failed \u2014 the hypothesis lacks a specified mechanistic pathway (e.g., how hypoglycaemia would alter alteplase pharmacodynamics or hemorrhage risk) and therefore reads as a prognostic association.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Gcs score rand (gcs_score_rand)",
+      "hypothesis_id": "hyp_4",
+      "gate_reasoning": "G1 TRUE \u2014 'gcs_score_rand' is listed among measured trial features. G2 FALSE \u2014 the hypothesis claims patients with GCS 9\u201312 will benefit more but gives no biological mechanism (no receptor/enzyme/PK/PD or pathophysiologic chain) explaining why alteplase efficacy would differ by this level of consciousness, therefore G3..G5 FALSE. G3 FALSE \u2014 (cascade) the argument appears prognostic (severity of consciousness impairment) rather than a specific modifier of drug action, so it does not establish genuine HTE. G4 FALSE \u2014 (cascade) no literature support or trial subgroup evidence is provided to substantiate a GCS\u00d7alteplase interaction. G5 FALSE \u2014 (cascade) the subgroup is defined numerically but lacks operational treatment recommendations or validated criteria to guide clinicians.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 failed \u2014 the hypothesis offers no concrete biological mechanism by which moderate impaired consciousness would modify alteplase effect rather than simply reflecting baseline stroke severity.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "nihss",
+      "hypothesis_id": "hyp_5",
+      "gate_reasoning": "G1 TRUE \u2014 'nihss' is present in the trial_measured_features. G2 FALSE \u2014 the hypothesis states that mild stroke (NIHSS \u22647) patients benefit more but does not specify mechanistic steps (receptor/enzyme/PK/PD changes or a pathophysiologic chain) explaining why alteplase would have a different effect in this subgroup, therefore G3..G5 FALSE. G3 FALSE \u2014 (cascade) this reads as an absolute-risk/prognostic statement (milder strokes have better outcomes) rather than a demonstrated pharmacologic effect modification of alteplase. G4 FALSE \u2014 (cascade) no specific literature or RCT subgroup evidence is provided to support a true NIHSS\u00d7alteplase interaction beyond general prognostic knowledge. G5 FALSE \u2014 (cascade) while NIHSS cutoff is operational, no validated treatment recommendation altering use of alteplase is offered for this subgroup.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 failed \u2014 the proposition lacks a concrete mechanistic chain (PK/PD or pathophysiologic) to support that baseline NIHSS produces true differential alteplase efficacy rather than reflecting baseline prognosis.",
+      "overall_score": 1
+    }
+  ]
+}

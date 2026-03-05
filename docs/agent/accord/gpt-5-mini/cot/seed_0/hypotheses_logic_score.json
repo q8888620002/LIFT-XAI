@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Baseline systolic blood pressure (pre-randomization SBP)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial measured baseline SBP (column 'sbp' is present), so the feature is observed in the dataset. G2: The hypothesis only states that higher baseline SBP (>=150) yields greater relative/absolute reductions and that low SBP (<135) has more serious adverse events, but it does not specify a concrete biological mechanism (receptor, enzyme, PK/PD change, or detailed pathophysiology), so this fails the biological-coherence gate. G3: Because G2 is false (no mechanistic chain given), this hypothesis cannot be confirmed as a genuine treatment-effect modifier rather than an absolute-risk amplifier, so G3 is also false (cascade). G4: Given G2\u2013G3 failure, literature support for a specific biological interaction cannot be established here, so G4 is false (cascade). G5: Without a supported mechanistic/causal interaction and specific actionable mechanistic thresholds, the claim is not demonstrated as clinically actionable in a mechanistic sense, so G5 is false (cascade).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "G2 decisive \u2014 the proposal is essentially a risk-based subgroup claim without a specified biological mechanism linking baseline SBP to differential drug action, so subsequent gates fail.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Age and arterial stiffness (older age, wide pulse pressure)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial measured baseline age ('baseline_age') and blood pressures ('sbp' and 'dbp'), so age and pulse-pressure (derivable from SBP\u2212DBP) are observed. G2: The hypothesis names arterial stiffness/pulse pressure as the pathophysiologic mediator of differential tolerance to intensive BP lowering in older adults (implying impaired autoregulation/baroreflex), which is a concrete physiologic mechanism and therefore passes biological coherence. G3: This is plausibly a genuine effect modifier (arterial stiffness and impaired autoregulation can change organ perfusion responses to aggressive BP lowering and increase risk of ischemia, syncope, falls), so the claim is not only absolute-risk amplification and passes causality plausibility. G4: Randomized-trial evidence for a consistent age \u00d7 intensive-target interaction is mixed (SPRINT showed benefit in older adults; ACCORD population differs and did not show clear interaction), so there is not clear, consistent RCT-level support specifically showing less benefit and more harm in \u226575 or pulse pressure \u226560 in this trial context \u2014 therefore G4 fails. G5: Because G4 fails, the hypothesis cannot be fully endorsed as an evidence-backed actionable clinical rule despite measurable inputs, so G5 is false (cascade).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "G4 decisive \u2014 although age/pulse-pressure as arterial-stiffness mediated modifiers are biologically plausible and measurable (G1\u2013G3 true), the RCT literature does not provide consistent, trial-specific evidence to confidently support the asserted differential harm/benefit pattern, so the claim is not literature-backed or fully actionable.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Pre-existing atherosclerotic coronary artery disease (CAD) versus prior cerebrovascular disease",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial dataset includes a single 'cvd_hx_baseline' variable but does not separately record prior stroke/TIA versus prior CAD in the provided measured features, so the specific comparison (stroke/TIA vs CAD) is not observed and G1 fails. G2: Because G1 is false (the requisite subgroup variables are not present), the biological-coherence gate cannot be evaluated here and is therefore false (cascade). G3: With G1\u2013G2 failure, we cannot establish a genuine causal HTE in this dataset, so G3 is false (cascade). G4: Likewise, literature backing specific to the measured variables in this trial context cannot be confirmed, so G4 is false (cascade). G5: Without observed, distinct subgroup identifiers in the dataset and lacking confirmed mechanism/evidence in this trial, the hypothesis is not actionable here, so G5 is false (cascade).",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "G1 decisive \u2014 the dataset does not provide separate indicators for prior stroke/TIA versus prior CAD (only a generic 'cvd_hx_baseline'), so the proposed subgroup comparison is not supported by the measured data and the hypothesis fails.",
+      "overall_score": 0
+    },
+    {
+      "feature_name": "Kidney disease and albuminuria (eGFR and urinary albumin-to-creatinine ratio)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial includes both 'gfr' and 'uacr' variables, so eGFR and albuminuria are observed in the dataset. G2: The hypothesis links albuminuria and low eGFR to differential effects (greater CV event reduction in albuminuria; higher AKI/creatinine rises with eGFR <30) via renal and microvascular pathophysiology and hemodynamic vulnerability, which constitutes a biologically coherent mechanistic statement. G3: These mechanisms are plausibly true effect modifiers (albuminuria as a marker of microvascular disease that could modulate benefit and low eGFR conferring increased susceptibility to hemodynamic AKI from intensive BP lowering), so this passes the causality-plausibility gate beyond simple absolute-risk amplification. G4: Clinical-trial and observational literature supports that intensive BP lowering increases risks of acute kidney injury/creatinine rises (e.g., SPRINT and other analyses) and that albuminuria marks higher vascular risk \u2014 while direct RCT evidence of a qualitative treatment-by-albuminuria interaction for major CV outcomes is limited, there is supportive literature for the specific harms in low eGFR and the prognostic relevance of albuminuria, so this gate is reasonably supported. G5: eGFR and UACR are routinely measured and definable thresholds (e.g., eGFR <30, albuminuria present) could be operationalized to guide treatment intensity, so the hypothesis is clinically actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "G5 decisive pass \u2014 eGFR and UACR are measured, there are biologically plausible mechanisms for both differential CV benefit (albuminuria) and increased AKI risk (low eGFR) with intensive lowering, the clinical literature supports increased AKI risk with intensive targets, and these markers are actionable in practice.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Autonomic dysfunction / orthostatic hypotension and frailty (diabetic autonomic neuropathy, prior falls, frailty phenotype, polypharmacy)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial's measured features do not include explicit variables for orthostatic hypotension, autonomic neuropathy, prior falls, a frailty phenotype, or a formal polypharmacy indicator in the provided list, so the proposed features are not observed in the dataset and G1 fails. G2: Because G1 is false (key subgroup variables absent), the biological-coherence gate cannot be established in this dataset and is therefore false (cascade). G3: With G1\u2013G2 failure we cannot verify a genuine treatment-effect modification in the trial data, so G3 is false (cascade). G4: Without observed subgroup data and confirmed mechanistic evaluation within this trial, literature backing specific to these measured variables in ACCORD cannot be assessed, so G4 is false (cascade). G5: As the dataset lacks required measurements and the claim is not assessed here, it is not actionable within this trial context, so G5 is false (cascade).",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "G1 decisive \u2014 orthostatic hypotension, autonomic neuropathy, frailty phenotype, prior falls, and polypharmacy are not recorded in the provided trial variables, so the hypothesis cannot be evaluated or supported from this dataset.",
+      "overall_score": 0
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "summary": "Overall, the five hypotheses are biologically plausible to varying degrees and align with existing clinical knowledge to different extents. Baseline SBP and kidney disease/albuminuria are the strongest, best-supported effect modifiers for intensive systolic BP lowering in a high-cardiovascular-risk diabetic population (ACCORD-like). Age/arterial stiffness and prior cerebrovascular vs coronary disease are plausible modifiers with mixed/partial trial support. Autonomic dysfunction / frailty is plausible and important clinically but is under-measured in large trials and thus harder to validate. Cross-cutting limitations include potential lack of direct measurements in the original trial (orthostasis, autonomic testing, frailty indices), limited power for subgroup tests, and the risk of overinterpreting post-hoc heterogeneity.",
+  "scored_features": [
+    {
+      "feature_name": "Baseline systolic blood pressure (pre-randomization SBP)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Baseline-risk effect (high SBP -> greater absolute benefit; low SBP -> more harm)",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Well-grounded: meta-analyses and trial subgroup work show larger absolute CVD risk reductions when baseline SBP is higher; very low baseline SBP plausibly increases risk of adverse events. Highly testable in trial data using pre-randomization SBP strata, though power for narrow cutpoints may be limited."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 5,
+      "strengths": [
+        "Strong biological and epidemiologic basis (higher baseline BP -> higher absolute event risk; therefore larger absolute benefit).",
+        "Clear, actionable cutpoints (>=150 vs <135 mmHg) that are straightforward to operationalize in trial datasets and clinical care.",
+        "Highly testable in randomized trial data and meta-analyses."
+      ],
+      "weaknesses": [
+        "Cutpoints are somewhat arbitrary; effects may be continuous rather than stepwise.",
+        "Potential regression-to-the-mean and measurement variability if based on single pre-randomization readings.",
+        "Less novel \u2014 already widely recognized; subgroup power and multiplicity issues remain."
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is a high-priority, well-supported effect modifier: biologically coherent, aligns with trial and meta-analytic evidence, easy to operationalize and validate in ACCORD-like data."
+    },
+    {
+      "feature_name": "Age and arterial stiffness (older age, wide pulse pressure)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Vascular stiffness / impaired autoregulation (older age/wide pulse pressure -> less benefit, more harm)",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Biologically plausible: arterial stiffness and wide pulse pressure indicate isolated systolic hypertension and altered hemodynamics that can modify benefit/harm of aggressive SBP lowering. Trial evidence mixed: older patients often benefit but may experience more adverse events; pulse pressure-specific evidence is less established. Pulse pressure is computable, but direct arterial stiffness measures are often absent."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Physiologically plausible link between arterial stiffness/wide pulse pressure and the hemodynamic response to intensive SBP lowering.",
+        "Age is universally measured; pulse pressure is readily derived from SBP and DBP.",
+        "Potentially clinically meaningful: identifies older patients at higher risk of adverse events."
+      ],
+      "weaknesses": [
+        "Evidence for reduced net cardiovascular benefit specifically in older/high pulse pressure patients is mixed \u2014 large trials (e.g., SPRINT) showed benefit across ages though adverse events were more frequent in the very elderly.",
+        "Pulse pressure is an imperfect surrogate for arterial stiffness; direct measures (PWV) are usually not available in ACCORD.",
+        "Cutpoint (>=75 years, PP>=60 mmHg) is plausible but somewhat arbitrary and may vary by population."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Important and biologically plausible; worth formal subgroup testing (age strata and derived pulse pressure), but evidence is partial and requires cautious interpretation and attention to power and measurement limitations."
+    },
+    {
+      "feature_name": "Pre-existing atherosclerotic coronary artery disease (CAD) versus prior cerebrovascular disease",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Differential event-type susceptibility (prior stroke -> stroke reduction; prior CAD -> possible MI risk from low DBP)",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Lowering SBP reliably reduces stroke risk, so prior cerebrovascular disease plausibly predicts greater stroke reduction. The concern of low DBP decreasing coronary perfusion and precipitating MI in severe CAD is biologically plausible but less consistently supported in randomized trial subgroup data."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Mechanistically coherent: BP lowering produces large proportional stroke reductions; secondary prevention populations often show benefit.",
+        "Clinical plausibility that very low DBP could risk myocardial ischemia in established CAD."
+      ],
+      "weaknesses": [
+        "Direct evidence of increased MI risk with intensive SBP lowering in patients with prior CAD is inconsistent; the 'J-curve' literature is mixed and could reflect confounding by illness severity.",
+        "Subgroup analyses may be underpowered to demonstrate reliable effect modification by prior event type.",
+        "Operationalization requires reliable ascertainment of prior stroke vs CAD; heterogeneity within those groups (extent of CAD, time since event) matters."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Plausible and clinically important to test (especially given differing event types), but evidence is partial and validation requires careful adjustment and adequate sample sizes."
+    },
+    {
+      "feature_name": "Kidney disease and albuminuria (eGFR and urinary albumin-to-creatinine ratio)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Renal risk marker (albuminuria indicates endothelial/CV risk; low eGFR increases AKI risk with intensive BP lowering)",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 5,
+          "comments": "Albuminuria is a well-established marker of systemic vascular disease and higher CVD event rates; patients with albuminuria may derive greater absolute benefit. Low eGFR is known to increase susceptibility to creatinine rises/AKI with aggressive BP lowering and certain medications. ACCORD measured eGFR and likely albuminuria, so testing is feasible."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Strong pathophysiologic and epidemiologic rationale; albuminuria and eGFR are established risk markers and commonly measured in trials.",
+        "Direct clinical relevance: could influence intensity of BP targets in CKD/albuminuric patients.",
+        "Feasible to validate in ACCORD-like datasets."
+      ],
+      "weaknesses": [
+        "Interactions between BP lowering, renal outcomes, and medications (e.g., ACEi/ARB) are complex and may confound simple subgroup interpretations.",
+        "Some renal function changes on intensive treatment are hemodynamic and reversible; distinguishing harmful AKI from hemodynamic eGFR decline requires careful outcome definitions."
+      ],
+      "recommendation": "high_priority",
+      "justification": "High clinical importance and good trial measurability; strong rationale to prioritize testing heterogeneity by albuminuria and baseline eGFR."
+    },
+    {
+      "feature_name": "Autonomic dysfunction / orthostatic hypotension and frailty (diabetic autonomic neuropathy, prior falls, frailty phenotype, polypharmacy)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Physiologic susceptibility to hypotension (autonomic failure/frailty -> higher harms, less net benefit)",
+          "plausibility": 4,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 2,
+          "novelty": 4,
+          "overall_score": 3,
+          "comments": "Very plausible clinically: autonomic dysfunction and frailty increase risk of orthostatic hypotension, syncope, falls and therefore adverse outcomes with intensive BP lowering. However, randomized trials rarely capture detailed autonomic testing or standardized frailty measures, limiting direct evidence and testability in ACCORD."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 4,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Clinically important and plausible: identifies a vulnerable population where harms may outweigh benefits.",
+        "Potential to inform individualized targets if measurable."
+      ],
+      "weaknesses": [
+        "Key predictors (autonomic neuropathy, frailty, orthostatic BP) are often not collected or are heterogeneously measured in major trials like ACCORD.",
+        "Operationalizing frailty/orthostatic dysfunction retrospectively is difficult and may rely on imperfect proxies (prior falls, medication lists).",
+        "Limited direct trial evidence of effect modification; risk of post-hoc, underpowered subgroup claims."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Clinically important and novel enough to merit exploration, but routinely limited by measurement availability; exploratory analyses and prospective data collection recommended."
+    }
+  ],
+  "top_features": [
+    "Baseline systolic blood pressure (pre-randomization SBP)",
+    "Kidney disease and albuminuria (eGFR and urinary albumin-to-creatinine ratio)"
+  ],
+  "methodological_concerns": [
+    "No per-hypothesis 'importance_rank' provided; relative ranking could not be assessed against the model's internal ranks.",
+    "Some proposed features (autonomic testing, standardized frailty indices, direct arterial stiffness measures) are often not available in ACCORD and similar trials, limiting testability.",
+    "Subgroup analyses may be underpowered and susceptible to false positives from multiple testing; pre-specification and interaction tests should be used.",
+    "Measurement error and regression-to-the-mean for baseline SBP can confound subgroup results if single readings are used.",
+    "Distinguish hemodynamic/benign eGFR declines from true AKI\u2014outcome definitions matter for kidney-related harms."
+  ]
+}

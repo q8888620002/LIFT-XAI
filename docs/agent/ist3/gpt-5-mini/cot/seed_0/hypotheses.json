@@ -1,0 +1,48 @@
+{
+  "dataset": "ist3",
+  "model": "gpt-5-mini",
+  "feature_hypotheses": [
+    {
+      "feature_name": "Onset-to-treatment time (onset-to-needle)",
+      "mechanisms": [
+        {
+          "description": "Patients treated \u22643 hours from onset will have a larger absolute and relative increase in alive-and-independent at 6 months with alteplase than patients treated >4.5 hours."
+        }
+      ]
+    },
+    {
+      "feature_name": "Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)",
+      "mechanisms": [
+        {
+          "description": "Patients with ASPECTS \u22657 at baseline will have higher odds of independence at 6 months with alteplase than patients with ASPECTS \u22646."
+        }
+      ]
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIH Stroke Scale score)",
+      "mechanisms": [
+        {
+          "description": "Patients with baseline NIHSS 6\u201315 will show the largest relative benefit in achieving independence at 6 months from alteplase, while NIHSS \u22645 patients will show minimal net benefit and higher chances of net harm from sICH."
+        }
+      ]
+    },
+    {
+      "feature_name": "Age",
+      "mechanisms": [
+        {
+          "description": "Patients aged <80 will derive greater absolute improvement in 6-month independence after alteplase than patients aged \u226580, with a progressive attenuation of benefit and higher sICH rates with advancing age."
+        }
+      ]
+    },
+    {
+      "feature_name": "Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion)",
+      "mechanisms": [
+        {
+          "description": "Patients without proximal large-vessel occlusion on vessel imaging will have a greater improvement in independence at 6 months from alteplase than patients with proximal LVOs, for whom IVT alone produces limited recanalization and smaller functional benefit."
+        }
+      ]
+    }
+  ],
+  "method": "CoT",
+  "cot_reasoning": "Below are five patient features most likely to modify the effect of IV alteplase (rtPA) on the IST-3 primary outcome (alive & independent, OHS 0\u20132 at 6 months). For each I give the plausible biological/clinical mechanism (why it would change treatment effect rather than just prognosis), the subgroup likely to benefit more and the subgroup likely to benefit less (or be harmed), and a single testable hypothesis.\n\n1) Onset-to-treatment time (onset-to-needle)\n- Why it can modify treatment effect:\n  - Thrombolysis efficacy and tissue salvage are time-dependent. With longer ischemia the penumbra converts to irreversibly injured core, clots can organize and resist lysis, and reperfusion of necrotic tissue increases risk of hemorrhagic transformation. Thus earlier reperfusion produces greater salvage (larger treatment effect), whereas later reperfusion yields less benefit and higher harm risk.\n- Subgroups:\n  - Likely to benefit more: patients treated very early (e.g., \u22643 hours; still meaningful benefit 3\u20134.5 h).\n  - Likely to benefit less / be harmed: patients treated late (e.g., >4.5\u20136 hours), especially at the longer end of the 6\u2011hour window.\n- Hypothesis:\n  - Patients treated \u22643 hours from onset will have a larger absolute and relative increase in alive-and-independent at 6 months with alteplase than patients treated >4.5 hours.\n\n2) Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)\n- Why it can modify treatment effect:\n  - A large baseline core represents tissue that is already irreversibly infarcted; reperfusing necrotic tissue does not improve function and raises hemorrhage risk. Conversely, a small core with a sizable penumbra offers more salvageable tissue and thus a greater potential benefit from thrombolysis.\n- Subgroups:\n  - Likely to benefit more: patients with small core / high ASPECTS (e.g., ASPECTS \u22657; minimal early CT changes).\n  - Likely to benefit less / be harmed: patients with large core (e.g., ASPECTS \u22646 or hypodensity involving >1/3 MCA territory) \u2014 higher sICH and little functional gain.\n- Hypothesis:\n  - Patients with ASPECTS \u22657 at baseline will have higher odds of independence at 6 months with alteplase than patients with ASPECTS \u22646.\n\n3) Baseline stroke severity (NIH Stroke Scale score)\n- Why it can modify treatment effect:\n  - NIHSS reflects territory at risk and degree of neurological deficit. Moderate-to-severe strokes may have a larger penumbra meaning greater absolute benefit from reperfusion; very mild strokes have limited room to improve (ceiling effect) and may suffer net harm from even small increases in sICH risk. Very severe strokes may represent large core or irrecoverable injury, so benefit may plateau or be offset by hemorrhage risk.\n- Subgroups:\n  - Likely to benefit more: patients with moderate deficits (commonly conceptualized as NIHSS ~6\u201315) \u2014 enough deficit to show meaningful improvement but not automatically large irreversible core.\n  - Likely to benefit less / be harmed: patients with very mild strokes (NIHSS \u22645) \u2014 small absolute benefit and sICH can produce net harm; some very severe strokes (very high NIHSS) may also have limited net benefit if large core present.\n- Hypothesis:\n  - Patients with baseline NIHSS 6\u201315 will show the largest relative benefit in achieving independence at 6 months from alteplase, while NIHSS \u22645 patients will show minimal net benefit and higher chances of net harm from sICH.\n\n4) Age\n- Why it can modify treatment effect:\n  - Older age increases blood\u2013brain barrier fragility, comorbidity burden, and vulnerability to hemorrhagic complications, and reduces neuroplasticity and recovery potential; these factors can reduce the absolute benefit of reperfusion and increase risk of harm. Conversely, younger patients tolerate reperfusion better and have greater recovery potential.\n- Subgroups:\n  - Likely to benefit more: younger patients (commonly <80, and especially <70) \u2014 greater functional recovery and lower sICH risk.\n  - Likely to benefit less / be harmed: very elderly patients (e.g., \u226580\u201385) \u2014 higher sICH and lower absolute functional gains (though some elderly still benefit if other favorable features exist).\n- Hypothesis:\n  - Patients aged <80 will derive greater absolute improvement in 6\u2011month independence after alteplase than patients aged \u226580, with a progressive attenuation of benefit and higher sICH rates with advancing age.\n\n5) Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion; clot etiology such as cardioembolism)\n- Why it can modify treatment effect:\n  - Large proximal occlusions (ICA terminus, M1) have greater clot burden and are less likely to be fully recanalized by IV alteplase alone; therefore IVT\u2019s effect on meaningful reperfusion (and downstream functional benefit) is reduced. Distal occlusions or small vessel occlusions are more readily lysed by IVT. Clot composition matters too (cardioembolic, fibrin-rich clots may be more thrombolysis-sensitive than platelet-rich atherothrombotic clots).\n- Subgroups:\n  - Likely to benefit more: patients without proximal LVO (distal MCA branch occlusions, lacunar ischemia) or with imaging suggesting small clot burden; possibly cardioembolic small clots may respond well.\n  - Likely to benefit less / be harmed: patients with proximal LVOs treated with IV alteplase alone \u2014 low recanalization probability and delayed effective reperfusion; these patients are more likely to need mechanical thrombectomy to gain benefit.\n- Hypothesis:\n  - Patients without proximal large-vessel occlusion on vessel imaging will have a greater improvement in independence at 6 months from alteplase than patients with proximal LVOs, for whom IVT alone produces limited recanalization and smaller functional benefit.\n\nInteractions and patterns across features\n- Time and core size: longer onset-to-treatment is strongly correlated with larger core \u2014 so late-treated patients are more likely to have large core and therefore less benefit. These two often amplify each other.\n- Severity, occlusion site, and core: very high NIHSS commonly co-occurs with proximal LVO and larger core \u2014 such patients may have poor response to IVT alone. Moderate NIHSS with small core and no LVO is the \u201csweet spot\u201d for IVT benefit.\n- Age and hemorrhage risk: older age amplifies the bleeding risk associated with a given infarct core or late reperfusion; elderly with large core or late treatment are at especially high risk of net harm.\n- Treatment pathway interactions: presence of proximal LVO modifies the comparative effectiveness of IV alteplase alone versus combined strategies (IVT + thrombectomy); trials that did not account for thrombectomy availability will see different heterogeneity patterns.\n- Other modifiers not on the top five but worth noting: baseline antithrombotic/anticoagulant use, very high blood pressure on admission, hyperglycemia, and pre-stroke disability (baseline mRS) can alter bleeding risk and recovery potential and thus interact with the above features.\n\nThese are testable, clinically plausible hypotheses for heterogeneity in IST-3 (and similar cohorts). In analyses you would evaluate interactions (treatment \u00d7 feature) and report both relative and absolute effects (risk differences) because subgroups with higher baseline risk (severe strokes) may have larger absolute benefit even if relative effect is similar."
+}

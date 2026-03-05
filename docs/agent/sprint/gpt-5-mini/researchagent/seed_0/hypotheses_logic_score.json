@@ -1,0 +1,17 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'sbp' appears in the provided trial_measured_features list, so the feature is observed in the dataset. G2: The hypothesis only states that baseline SBP changes baseline cardiovascular risk or disease burden without naming any concrete biological steps (receptor, enzyme, PK/PD) that would cause differential drug action, so G2 FALSE \u2014 cascade: G3..G5 also FALSE. G3: Because G2 failed (no mechanistic pathway), the claim reduces to an absolute-risk/prognostic argument rather than a specific PD/PK or pathophysiological modifier, so G3 FALSE \u2014 cascade: G4..G5 also FALSE. G4: Given G2 and G3 are false there is no specified mechanistic interaction to check against the literature, so G4 FALSE. G5: Without a biologically coherent, causal interaction and supportive literature, no clear actionable SBP-defined treatment subgroup is proposed, so G5 FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 FALSE \u2014 the hypothesis gives only an epidemiologic/absolute-risk argument (SBP \u2192 baseline risk) and does not specify a biological PK/PD pathway by which SBP would alter the effect of intensive BP lowering.",
+      "overall_score": 1
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "summary": "Overall the hypotheses are biologically and clinically plausible with the strongest, best-supported mechanism being time-to-treatment (ninjurytime). Injury type and injury-classification (iinjurytype, ICC) are also plausible and clinically useful but their placement ahead of time in importance reduces evidence-alignment scores. SBP (isbp) is a reasonable physiological modifier but evidence for strong effect modification is limited. Heart rate (ihr) is the weakest and most nonspecific modifier; it may only modify effect in combination with hypotension and long delays. Validation suggestions are generally appropriate; beware limited power, measurement error (especially time and injury coding), correlation among features, and overinterpretation of subgroup tests.",
+  "scored_features": [
+    {
+      "feature_name": "iinjurytype",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Blunt vs penetrating / multisystem vs isolated injuries",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Strong biological rationale: blunt multisystem injuries are more likely to produce diffuse bleeding and systemic fibrinolysis amenable to antifibrinolytics. Moderately supported by clinical reasoning and some subgroup analyses, but direct RCT evidence for this exact interaction is limited and confounded by care pathways (time-to-surgery). Operationalization (regions/ISS proxy) is feasible but subject to coding variability."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Mechanism is biologically coherent and specific to TXA's antifibrinolytic action.",
+        "Clear clinical intuition: blunt multisystem injuries more likely to have systemic fibrinolysis.",
+        "Validation suggestions (interaction models, mediation with fibrinolysis markers) are appropriate."
+      ],
+      "weaknesses": [
+        "Evidence-base from large trials is supportive but not definitive; CRASH-2 did not prespecify this as primary modifier.",
+        "Importance ranking (rank 1) above time-to-treatment conflicts with strong time-dependence evidence, lowering evidence_alignment.",
+        "Injury coding is heterogeneous across sites; misclassification may bias subgroup estimates."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "High biological plausibility and clinical utility merit follow-up analyses, but priorities should include adjusting for time-to-treatment and ensuring robust injury-code mappings. Expect moderate effect sizes and feasibility issues due to coding variability and sample sizes."
+    },
+    {
+      "feature_name": "isbp",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Hypotension-driven fibrinolytic activation",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Physiologically plausible: hypotension signals severe hemorrhage/shock and may correlate with fibrinolytic activation. Evidence for SBP as a strong effect modifier in RCT data is limited and confounded by resuscitation and neurogenic factors. SBP thresholds are clinically used (<90 mmHg) and analyses are straightforward but measurement timing and resuscitation effects complicate interpretation."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Clear physiologic marker with simple clinical cutpoints (SBP <90 mmHg).",
+        "Actionable: could prioritize early TXA for hypotensive patients if confirmed.",
+        "Validation plan addresses measurement timing and potential confounders."
+      ],
+      "weaknesses": [
+        "SBP is affected by prehospital/ED resuscitation and may misclassify shock status.",
+        "Limited direct RCT evidence that SBP strongly modifies TXA effect; risk of overinterpreting subgroup results.",
+        "SBP correlates with other factors (age, TBI) making causal interpretation tricky."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Plausible and clinically actionable; pursue adjusted interaction analyses using prehospital SBP where possible, but interpret cautiously due to measurement and confounding issues."
+    },
+    {
+      "feature_name": "Injury classification code (icc)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "ICC mapping to isolated TBI vs extracranial haemorrhage vs combined injuries",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Reasonable mechanistic distinction: isolated severe TBI may not benefit systemically the same way as extracranial bleeding; consistent with CRASH-3 findings for head injury. Usefulness depends on fidelity of ICC-to-clinical mapping and sample sizes per subgroup. Mapping and reproducibility are key challenges."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Links to established trial results (CRASH-3) distinguishing head injury effects.",
+        "Mechanism ties to different pathophysiology (intracranial vs extracranial bleeding).",
+        "Validation plan includes mapping and adjustment for GCS and time."
+      ],
+      "weaknesses": [
+        "Administrative ICC coding varies between sites; mapping to clinical phenotypes may be imperfect.",
+        "Heterogeneity within ICC categories might mask subgroup effects.",
+        "Cause-of-death attribution (neurologic vs hemorrhagic) is imperfect and can bias results."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Promising avenue especially to reconcile CRASH-2 and CRASH-3 contexts; requires careful mapping of codes and attention to neurologic outcome adjudication."
+    },
+    {
+      "feature_name": "Time from injury to treatment (ninjurytime)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Time-dependent antifibrinolytic efficacy",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Strong, well-established mechanism: CRASH-2 demonstrated time-dependent benefit of TXA (largest within 1h, benefit up to 3h, possible attenuation/harm after 3h). Very testable using strata or continuous models; measurement error is the main practical limitation. Ranking this as lower importance than injury type in the provided hypotheses is inconsistent with the best available evidence."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 5,
+      "strengths": [
+        "Highest quality evidence among proposed modifiers; clearly actionable (earlier administration prioritized).",
+        "Validation approaches are straightforward and well aligned with existing literature.",
+        "Mechanism is specific to TXA's pharmacology and trauma pathophysiology."
+      ],
+      "weaknesses": [
+        "Time-of-injury recording is often imprecise; misclassification will bias toward the null.",
+        "The submitted hypotheses rank time lower than injury type, which is inconsistent with prior trials; this reduces evidence_alignment.",
+        "Time interacts with other features (injury type, SBP), so simple stratification may oversimplify."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Time-to-treatment is the most important, best-supported modifier for TXA efficacy and should be prioritized for validation and policy translation; analyses must address measurement error and interactions with injury type and physiology."
+    },
+    {
+      "feature_name": "ihr",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Tachycardia as a proxy for prolonged/high-volume bleeding (moderator with SBP/time)",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "Heart rate is physiologically linked to hemorrhage severity but is highly nonspecific (pain, anxiety, medications, neurogenic factors). Evidence that HR alone modifies TXA effect is weak; more plausible as part of a composite severity marker or when combined with SBP/time. Detecting three-way interactions will be challenging given sample sizes and confounding."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Addresses an intuitively relevant clinical sign and recognizes interaction with hypotension and delay.",
+        "Validation suggestions (strata and interaction models) are sensible for hypothesis testing."
+      ],
+      "weaknesses": [
+        "HR is nonspecific and prone to confounding; single cutpoints are arbitrary.",
+        "Little direct evidence from RCTs that HR alone modifies TXA effect; power to detect interactions is likely low.",
+        "Complex three-way interactions (HR \u00d7 SBP \u00d7 time) will be hard to interpret and may be overfitted."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Worth exploratory analysis as part of composite severity scores but not a primary stratifier for policy decisions. Emphasize continuous modeling and controlling for confounders rather than rigid HR cutpoints."
+    }
+  ],
+  "top_features": [
+    "Time from injury to treatment (ninjurytime)",
+    "iinjurytype",
+    "Injury classification code (icc)"
+  ],
+  "methodological_concerns": [
+    "The submitted importance_rank ordering downplays time-to-treatment relative to injury type; this conflicts with strong CRASH-2 evidence and should be reconciled when prioritizing analyses.",
+    "Measurement error (injury time, SBP, ICC coding) will bias subgroup estimates toward the null and needs explicit handling (sensitivity analyses, use of prehospital timestamps where available).",
+    "Multiple correlated features (iinjurytype, ICC, SBP, HR, time) create potential for overfitting and collider/confounding; pre-specification and parsimonious models are recommended.",
+    "Subgroup tests in RCTs are typically underpowered; focus on effect sizes with CIs and pre-specified interactions rather than relying solely on p-values.",
+    "Cause-of-death adjudication (neurologic vs hemorrhagic) may be inconsistent; mediation analyses relying on such distinctions should be interpreted cautiously."
+  ]
+}

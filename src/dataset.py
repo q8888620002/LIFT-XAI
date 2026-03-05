@@ -355,8 +355,12 @@ class Dataset:
 
         data = baseline.merge(outcome, on="maskid", how="inner")
 
+        # Ordinal encoding: never=0, former=1, current=2, missing(4)→NaN
+        # Preserves the never < former < current gradient rather than collapsing never and former
         data["smoke_3cat"] = np.where(
-            data["smoke_3cat"] == 4, np.nan, np.where(data["smoke_3cat"] == 3, 1, 0)
+            data["smoke_3cat"] == 4, np.nan,
+            np.where(data["smoke_3cat"] == 3, 2,
+            np.where(data["smoke_3cat"] == 2, 1, 0))
         )
 
         self.continuous_vars = [
@@ -364,7 +368,7 @@ class Dataset:
             "sbp",
             "dbp",
             # "n_agents",
-            "egfr",
+            # "egfr",  # dropped: retrieves irrelevant nephrology papers; CKD signal captured by sub_ckd
             # "screat",
             "chr",
             "glur",
@@ -372,13 +376,13 @@ class Dataset:
             "trr",
             "umalcr",
             "bmi",
+            "smoke_3cat",  # ordinal: never=0, former=1, current=2; treated as numeric for imputation/scaling
             # "risk10yrs"
         ]
 
         self.binary_vars = [
             "female",
             "race_black",
-            "smoke_3cat",
             "aspirin",
             "statin",
             "sub_cvd",
@@ -609,7 +613,10 @@ class Dataset:
         t_col = self.treatment
         y_col = self.outcome
 
-        mask = df_raw.notna().all(axis=1)
+        # Drop rows where non-continuous columns have NaN (cannot be imputed).
+        # Continuous NaNs are handled below by the train-fitted SimpleImputer.
+        non_cont_cols = [c for c in df_raw.columns if c not in self.continuous_vars]
+        mask = df_raw[non_cont_cols].notna().all(axis=1)
         df_raw = df_raw.loc[mask].reset_index(drop=True)
 
         # build X (features only), W, Y (as arrays)

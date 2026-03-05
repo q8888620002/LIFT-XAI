@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: NIHSS is listed in trial_measured_features so the feature is observed in the IST-3 dataset. G2: The hypothesis specifies concrete biological steps (penumbral salvage with reperfusion, infarct core size, and sICH risk tied to larger established infarcts) connecting NIHSS to differential alteplase effects. G3: The proposed mechanism implies true effect modification (patients with moderate NIHSS have more salvageable tissue and thus greater reperfusion benefit, while very severe NIHSS confers higher sICH risk and less salvageable tissue), so this is more than mere absolute-risk amplification. G4: Large pooled thrombolysis analyses (e.g., NINDS pooled meta-analyses, Emberson et al.) and IST-3 report varying absolute benefits by baseline severity and discuss attenuated net benefit with large cores/high sICH risk, supporting the interaction. G5: NIHSS bands are measurable, commonly used clinically to stratify stroke severity, and can be operationalized to guide treatment decisions (possibly combined with imaging), so the subgroup implication is actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive pass: G3 (causal plausibility) \u2014 NIHSS plausibly indexes salvageable penumbra versus large core and sICH risk, producing a true treatment-modifying mechanism that is supported by pooled trial literature and is operationalizable in practice.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "age",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Age is present in trial_measured_features so it is observed in the dataset. G2: The hypothesis names plausible biological contributors (microvascular fragility, comorbidity, competing mortality and increased sICH risk) linking older age to altered alteplase harm\u2013benefit. G3: These mechanisms imply genuine effect modification (increased bleeding susceptibility and competing risks in older patients change the net treatment effect beyond a simple baseline-risk amplifier). G4: Randomized trial data (IST-3) and pooled analyses have documented higher sICH and mortality in older patients and have discussed age-related heterogeneity in net benefit, providing clinical-literature support for an age\u00d7treatment interaction. G5: Age thresholds (e.g., \u226580) and combinations with pre-stroke function/imaging are measurable and can be used to form actionable subgroups in clinical decision-making.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive pass: G4 (literature) \u2014 clinical trial and pooled analyses have documented age-related differences in bleeding and outcomes, supporting the proposed biologically plausible age\u00d7treatment interaction that is actionable via age-based subgrouping.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "glucose",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Admission glucose is listed in trial_measured_features so the feature is observed. G2: The hypothesis gives a concrete biological pathway (hyperglycemia \u2192 amplified reperfusion injury and blood\u2013brain barrier breakdown \u2192 higher sICH and accelerated infarct growth) linking glucose to altered alteplase effects. G3: That pathway implies true effect modification (hyperglycemia changing the tissue response to reperfusion and bleeding risk), not just arithmetic absolute-risk amplification, so causal plausibility is present. G4: While experimental and observational studies support hyperglycemia worsening reperfusion injury and hemorrhagic conversion, high-quality randomized-subgroup evidence showing a consistent glucose\u00d7alteplase interaction is limited and not definitive; therefore G4 FALSE \u2014 cascade: G5..G5 FALSE. G5: Because G4 failed, there is insufficient trial-backed evidence to define actionable, guideline-ready glucose-based treatment rules in this context.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive fail: G4 (literature) \u2014 although biologically plausible and observed in preclinical/observational studies, robust RCT/subgroup evidence for a glucose\u00d7alteplase interaction is limited, so clinical actionability is not supported.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Gcs score rand (gcs score rand) (Gcs score rand (gcs_score_rand))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: GCS score at baseline (gcs_score_rand) is present in trial_measured_features so it is observed. G2: The hypothesis specifies biological logic (low GCS often reflects large hemispheric infarct or brainstem involvement with raised intracranial pressure and higher sICH/mortality risk) linking consciousness level to differential alteplase effects. G3: This provides plausible causal effect modification (low GCS implies less salvageable tissue and higher hemorrhagic/mortality risk altering net benefit), so it is more than a trivial prognostic amplifier. G4: However, direct randomized-trial evidence demonstrating a consistent, independent GCS\u00d7treatment interaction is sparse and often conflated with stroke severity/location measures (thus G4 FALSE \u2014 cascade: G5 FALSE). G5: Because literature support is insufficient, there is inadequate basis to define clear, trial-backed GCS-based treatment rules for routine practice.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive fail: G4 (literature) \u2014 although biologically plausible and measured, evidence from randomized-trial subgroup analyses isolating GCS as an independent modifier is limited, precluding actionable recommendations.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "weight",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Weight is included in trial_measured_features so the feature is observed. G2: The mechanism is concrete and pharmacokinetic: alteplase is dosed mg/kg with common upper caps, so heavier patients receiving a capped fixed dose have lower mg/kg exposure which could reduce recanalization efficacy while lighter patients have higher exposure and possibly more bleeding. G3: This is a true PK-based effect-modifier hypothesis (dose per kg alters drug exposure and therefore efficacy/bleeding risk), not merely an absolute-risk amplifier. G4: Despite the clear PK rationale, robust clinical trial evidence that weight (or cap-related underdosing) materially modifies alteplase's clinical efficacy/outcome is limited or inconsistent; therefore G4 FALSE \u2014 cascade: G5 FALSE. G5: Without trial-backed interaction evidence and given variability in dosing practices, there is insufficient basis to define clear, widely-applicable weight-based treatment changes from IST-3 data alone.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": true,
+      "justification": "Decisive fail: G4 (literature) \u2014 weight-based PK provides a plausible mechanism for heterogeneity, but IST-3/other RCT-level evidence for a clinically important weight\u00d7treatment interaction is insufficient, so no actionable rule is supported.",
+      "overall_score": 3
+    }
+  ]
+}

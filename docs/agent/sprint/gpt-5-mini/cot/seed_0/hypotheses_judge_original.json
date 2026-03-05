@@ -1,0 +1,191 @@
+{
+  "summary": "All five hypotheses are biologically plausible and clinically relevant to interpreting heterogeneity of benefit and harm from intensive SBP lowering in SPRINT-like populations. Baseline SBP and baseline kidney function are best-supported and most actionable with available trial measurements; DBP/pulse pressure, pre-existing CAD interacting with low DBP, and frailty are plausible but have more limited or mixed direct randomized-trial support and are harder to operationalize cleanly in SPRINT data. Overall recommendations prioritize follow-up subgroup and interaction analyses for baseline SBP and renal function, while treating DBP, CAD-with-low-DBP, and frailty as important but more speculative modifiers that need careful, pre-specified testing and consideration of measurement/definition issues.",
+  "scored_features": [
+    {
+      "feature_name": "Baseline systolic blood pressure (pre-randomization SBP)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "primary mechanism",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Higher baseline SBP -> larger absolute risk reduction is well established; attenuation of relative benefit near the treatment target and increased adverse events when baseline SBP is already low is biologically plausible. Randomized data show benefit across many SBP strata but absolute effects scale with baseline risk/BP."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Strong biological rationale (higher starting BP -> greater possible reduction in events).",
+        "Directly testable in SPRINT because baseline SBP available and widely used cutpoints exist.",
+        "Actionable thresholds (e.g., \u2265150, <140) align with clinical decision-making."
+      ],
+      "weaknesses": [
+        "Randomized trials (including SPRINT) generally show benefits across baseline SBP strata; effect modification for relative benefit is modest.",
+        "Risk of overinterpreting subgroup comparisons (power, multiple testing).",
+        "Choice of cutpoints (150 vs 140) is somewhat arbitrary and may produce non-linear effects."
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is a high-priority, actionable hypothesis: biologically and clinically credible, directly testable in SPRINT, and likely to yield interpretable estimates of absolute benefit and harm to inform practice."
+    },
+    {
+      "feature_name": "Baseline diastolic blood pressure and pulse pressure / arterial stiffness",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "coronary perfusion / arterial stiffness",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Low DBP may reduce coronary perfusion pressure and be associated with increased ischemic risk (J-curve). High pulse pressure as a marker of arterial stiffness predicts risk and may attenuate benefit. Randomized evidence of harm from low DBP is mixed and largely from observational/secondary analyses."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Mechanism (coronary perfusion compromise at low DBP) is physiologically plausible and clinically discussed.",
+        "DBP and pulse pressure are measurable from trial BP readings and can be analyzed."
+      ],
+      "weaknesses": [
+        "Evidence from randomized trials that low DBP causally modifies harm/benefit is limited and conflicting.",
+        "Pulse pressure is a surrogate for arterial stiffness; without direct measures, interpretation is inferential.",
+        "Cutpoints (DBP <65, PP >60) are somewhat arbitrary and need sensitivity analyses."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth investigating in secondary analyses (DBP strata, interaction tests, continuous modeling) but interpret cautiously due to possible confounding and mixed evidence base; useful to pre-specify analytic approach and correct for multiple comparisons."
+    },
+    {
+      "feature_name": "Pre-existing coronary artery disease (CAD) or prior myocardial infarction",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "CAD with low DBP -> ischemia risk",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Patients with obstructive CAD rely on DBP-driven coronary perfusion; intensive SBP lowering in the context of low DBP could precipitate ischemia. Observational and secondary analyses support concern, but RCT evidence is limited."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Plausible, clinically important subgroup (CAD history is routinely collected).",
+        "Potentially high clinical impact if true (different target for CAD patients)."
+      ],
+      "weaknesses": [
+        "Interaction likely depends on combination of CAD severity and DBP \u2014 single-variable subgroup (CAD alone) may be insufficient.",
+        "RCT subgroup analyses often underpowered and may not replicate observational signals.",
+        "SPRINT excluded diabetes and stroke and had specific CAD prevalence; external generalizability may be limited."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Investigate CAD \u00d7 DBP interactions in stratified analyses and continuous models, but be cautious about overinterpreting subgroup signals; prospective confirmation would be needed."
+    },
+    {
+      "feature_name": "Baseline kidney function / chronic kidney disease (eGFR and albuminuria)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "reduced renal perfusion and acute kidney injury in CKD",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Lowering SBP can cause hemodynamic reductions in eGFR and precipitate AKI in patients with impaired baseline kidney function; SPRINT reported more acute declines/AKI in the intensive arm but CV benefit persisted across some CKD strata. Long-term renal vs CV tradeoffs are complex."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "CKD status (eGFR, albuminuria) is routinely measured and available for analysis.",
+        "There is clear trial evidence of more renal adverse events with intensive lowering, making this clinically actionable."
+      ],
+      "weaknesses": [
+        "Acute eGFR declines may be hemodynamic and reversible, not necessarily progressive CKD\u2014distinguishing types of renal injury needs longer follow-up and adjudication.",
+        "Evidence on whether renal adverse events offset CV benefit is mixed and depends on outcome definitions and follow-up duration."
+      ],
+      "recommendation": "high_priority",
+      "justification": "High clinical relevance and testability; important to quantify renal harms vs cardiovascular benefits across eGFR/albuminuria strata and assess persistence of eGFR decline."
+    },
+    {
+      "feature_name": "Age and frailty (physiologic reserve, orthostatic BP response)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "frailty-mediated vulnerability to adverse events",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 2,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Physiologic frailty and orthostatic intolerance plausibly increase risk of falls, syncope, and AKI with aggressive BP lowering. SPRINT showed benefit in older adults overall, but frailty-specific evidence is limited and frailty definitions vary."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Addresses an important, vulnerable population with high clinical relevance.",
+        "Mechanism (reduced physiologic reserve causing more harms) is credible."
+      ],
+      "weaknesses": [
+        "Frailty is heterogenous and not consistently or robustly measured in many trials (including limited SPRINT frailty measures), reducing testability.",
+        "Orthostatic BP measures and fall history may not be systematically available, limiting subgroup definition and replication.",
+        "SPRINT showed benefit in participants \u226575 overall, which complicates blanket recommendations against intensive control in older adults."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Investigate frailty/physiologic-reserve interactions but prioritize careful, pre-specified frailty definitions and consider complementary observational/ pragmatic data; do not assume all older adults are harmed by intensive BP lowering."
+    }
+  ],
+  "top_features": [
+    "Baseline systolic blood pressure (pre-randomization SBP)",
+    "Baseline kidney function / chronic kidney disease (eGFR and albuminuria)"
+  ],
+  "methodological_concerns": [
+    "Input hypotheses did not include explicit importance_rank values; relative ranking judgments were therefore based on clinical knowledge rather than supplied ranks.",
+    "Subgroup analyses are vulnerable to low power, multiple comparisons, and post-hoc bias; interaction tests and continuous modeling are preferable to arbitrary dichotomous cutpoints.",
+    "Availability of some measurements (orthostatic BP, standardized frailty indices, direct arterial stiffness measures) in the SPRINT dataset may be limited\u2014this reduces testability for some hypotheses.",
+    "Distinguish acute hemodynamic changes (e.g., reversible eGFR drops) from progressive organ injury in renal analyses; use adjudicated outcomes where possible.",
+    "Residual confounding may affect observational correlation of low DBP with ischemic events; randomized subgroup analyses mitigate but do not eliminate interpretational challenges."
+  ]
+}

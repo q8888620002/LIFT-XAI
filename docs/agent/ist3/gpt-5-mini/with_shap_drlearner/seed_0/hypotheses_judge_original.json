@@ -1,0 +1,190 @@
+{
+  "summary": "Overall, the submitted hypotheses are biologically and clinically plausible to varying degrees. NIHSS and age are the strongest, best-supported effect modifiers for alteplase benefit/risk balance and their high relative ranking (1 and 2) aligns with clinical literature. Glucose and GCS are plausible modifiers with supportive mechanistic and observational evidence but weaker direct randomized-trial evidence for treatment interaction. Weight (dose-per-kg / cap effect) is mechanistically plausible but has the weakest direct evidence in clinical thrombolysis trials; its effect depends on whether a dose cap was used and on pharmacokinetic considerations. Common cross-cutting concerns are confounding (severity, imaging core/penumbra), correlation among predictors (NIHSS\u2194GCS), and the need for imaging/time adjustment. Prioritize follow-up analyses for NIHSS and age, with targeted secondary analyses for glucose, GCS, and weight if dosing data and imaging are available.",
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Severity\u2013core/penumbra mediated effect (NIHSS \u2194 salvageable tissue / sICH risk)",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 5,
+          "comments": "Strongly grounded in randomized-trial pooled analyses (e.g., Emberson et al.) and clinical reasoning about penumbra/core and hemorrhagic risk. Highly testable using patient-level meta-analysis and imaging covariates. Main limitation is confounding by infarct location and imaging-unmeasured core volume if not adjusted."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 5,
+      "strengths": [
+        "Mechanism is biologically coherent and specific to thrombolysis (penumbral salvage vs core).",
+        "Well supported by major pooled thrombolysis analyses and by clinical practice.",
+        "Actionable subgrouping (NIHSS bands) is feasible in most datasets."
+      ],
+      "weaknesses": [
+        "NIHSS correlates with infarct location and imaging core; without imaging, effect estimates may be confounded.",
+        "Boundary choices for bands (mild/moderate/severe) are somewhat arbitrary and need pre-specified cutpoints."
+      ],
+      "recommendation": "high_priority",
+      "justification": "NIHSS is a well-established effect modifier for thrombolysis net benefit. The submitted mechanism is specific, evidence-backed, and testable; prioritize formal interaction testing adjusted for time and imaging."
+    },
+    {
+      "feature_name": "age",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Age-related vulnerability (microvascular fragility, comorbidity, competing mortality)",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Age is consistently associated with higher sICH and mortality risk; IST-3 and pooled analyses document differing absolute benefits by age strata. The mechanism is biologically plausible but heterogeneous (chronological age mixes frailty, pre-stroke disability, and comorbidity)."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Clear clinical interpretation and easy to operationalize (age strata).",
+        "Good supporting evidence from IST-3 and pooled meta-analyses about age-related differences in harm and absolute benefit."
+      ],
+      "weaknesses": [
+        "Age is a proxy for multiple processes (frailty, comorbidity, vascular changes); interaction may be mediated rather than causal.",
+        "Mixed trial findings regarding whether relative benefit persists uniformly across very old patients \u2014 context (pre-stroke function, imaging) matters."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age is a clinically important and measurable modifier with substantial trial-level and biological support; recommended for prioritized, adjusted interaction analyses (include pre-stroke mRS and imaging)."
+    },
+    {
+      "feature_name": "glucose",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Hyperglycemia-driven reperfusion injury and BBB disruption increasing sICH and infarct growth",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Mechanistically plausible and supported by experimental and observational clinical data linking hyperglycemia to worse outcomes and hemorrhagic transformation. However, randomized-trial evidence for a glucose\u00d7treatment interaction in thrombolysis is limited and confounding by stroke severity is a real concern."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Clear biological rationale (hyperglycemia \u2192 reperfusion injury, BBB breakdown).",
+        "Glucose is routinely measured and continuous analyses are feasible."
+      ],
+      "weaknesses": [
+        "Acute hyperglycemia may reflect stress/severity (confounding by NIHSS, infarct size).",
+        "Direct randomized-trial evidence for modification of alteplase effect by glucose is limited."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth testing in adjusted analyses (include diabetes status, NIHSS, imaging); promising biological rationale but requires careful control for confounding and possibly external validation."
+    },
+    {
+      "feature_name": "Gcs score rand (gcs score rand) (Gcs score rand (gcs_score_rand))",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Level-of-consciousness reflecting core size or brainstem involvement (GCS \u2192 salvageable tissue / sICH risk)",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "GCS plausibly indexes severity and likely core size, but it correlates strongly with NIHSS and may add little independent predictive value. Posterior circulation strokes complicate simple interpretation (low GCS can be present with salvageable tissue)."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "GCS is simple, routinely recorded, and plausibly related to severity and risk.",
+        "The hypothesis acknowledges important conditional modifiers (stroke location, imaging)."
+      ],
+      "weaknesses": [
+        "Large overlap with NIHSS reduces incremental value; potential misclassification if low GCS due to non-ischemic causes.",
+        "Less direct trial evidence that GCS alone modifies alteplase effect independent of NIHSS/imaging."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Reasonable secondary hypothesis to test, especially as a corroborative severity measure, but analyses must adjust for NIHSS and verify causes of low GCS."
+    },
+    {
+      "feature_name": "weight",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Weight-dependent dosing (mg/kg) and dose-cap effects on exposure, recanalization, and bleeding",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Mechanistically plausible when dose capping is used; however clinical evidence that weight (or dose capping) materially changes patient-level functional outcomes after alteplase is limited. The hypothesis is testable provided actual dose and cap rules are recorded."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 3,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Directly linked to dosing policy (0.9 mg/kg with upper cap) \u2014 concrete and testable if dosing data available.",
+        "Biological rationale about exposure, recanalization, and bleeding risk is straightforward."
+      ],
+      "weaknesses": [
+        "Evidence from trials that weight or dose-capping changed net benefit is weak; many trials cap policies vary.",
+        "Weight correlates with comorbidities and body composition; mg/kg is an imperfect proxy for effective exposure."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Investigate only if actual mg/kg dose and cap-status are available; otherwise deprioritize because trial-level evidence is limited and confounding is likely."
+    }
+  ],
+  "top_features": [
+    "nihss",
+    "age",
+    "glucose",
+    "Gcs score rand (gcs score rand) (Gcs score rand (gcs_score_rand))",
+    "weight"
+  ],
+  "methodological_concerns": [
+    "Confounding and mediation: many candidate modifiers correlate (NIHSS, GCS, glucose, infarct size) and may be mediators rather than true effect modifiers; causal/statistical strategies should distinguish mediation from interaction.",
+    "Imaging availability: key moderators (core/penumbra volumes, proximal occlusion location) are crucial to interpret NIHSS/GCS effects; if not measured in IST-3, interaction estimates will be limited.",
+    "Dose information: for weight hypothesis, explicit dosing and cap rules in the trial are required; otherwise inference about mg/kg exposure is speculative.",
+    "Multiple testing and power: subgroup/interaction tests require adequate sample size and prespecification; small subgroup analyses risk false positives/negatives.",
+    "SHAP-derived importance may reflect correlated predictors rather than independent causal modification; follow-up with formal interaction models is required."
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "summary": "The submitted hypotheses mix clinically plausible modifiers (age, NIHSS) with less-supported or oddly framed candidates (weight cutoff 90 kg, low glucose <4.0 mmol/L, GCS 9-12 benefit). Several hypotheses use arbitrary cutpoints, provide no validation plan, and omit major known modifiers (time-to-treatment). Ranking (age as #1, NIHSS as #5) does not align well with established clinical knowledge where stroke severity and time-from-onset are primary effect modifiers. Overall, age and NIHSS hypotheses merit follow-up testing; weight, hypoglycemia, and the GCS claim are lower priority or need reworking.",
+  "scored_features": [
+    {
+      "feature_name": "age",
+      "hypothesis_id": "hyp_1",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Age is a well-known prognostic factor and can modify treatment risks/benefits; the specific 60-69 cutpoint is somewhat arbitrary. IST-3 included older patients so testing is feasible."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Biologically plausible: age affects vascular reserve, comorbidity, hemorrhage risk.",
+        "Feasible to test using recorded age in IST-3."
+      ],
+      "weaknesses": [
+        "Suggested age band (60-69) is arbitrary and not clearly justified by existing trial evidence.",
+        "No validation suggestions or adjustment for major confounders (time, baseline severity).",
+        "Ranking age as the top feature ignores established primacy of time-to-treatment and severity as effect modifiers."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is a credible effect modifier and easily testable in trial data, but the hypothesis needs clearer mechanistic rationale, adjustment plans, and acknowledgement of other dominant modifiers (time, NIHSS)."
+    },
+    {
+      "feature_name": "weight",
+      "hypothesis_id": "hyp_2",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 2,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "There is a potential mechanistic link via weight-based dosing and dose capping of alteplase (max dose), but the hypothesis does not state the dosing mechanism explicitly and the 90 kg cutoff is not the standard threshold for dose capping (which implicates \u2248100 kg at 0.9 mg/kg with a 90 mg cap). Published evidence for weight as a treatment-effect modifier is weak."
+        }
+      ],
+      "mechanism_plausibility": 2,
+      "clinical_interpretation": 2,
+      "evidence_alignment": 1,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Weight is routinely recorded and thus testable in trial datasets.",
+        "Potentially actionable if a dose-capping mechanism is clarified and supported."
+      ],
+      "weaknesses": [
+        "Limited direct evidence that weight >=90 kg modifies the relative benefit of alteplase.",
+        "Cutpoint (>=90 kg) appears arbitrary and inconsistent with the pharmacologic cap logic (the 90 mg cap corresponds to ~100 kg at 0.9 mg/kg).",
+        "No caveats or mechanistic detail provided; ranking at #2 over more established modifiers is not evidence-aligned."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Weight is testable but the hypothesis as stated lacks clear mechanistic justification and mis-specifies a clinically meaningful cutpoint. Rework to specify dose-capping rationale (e.g., >100 kg) and include analysis plan before prioritizing."
+    },
+    {
+      "feature_name": "glucose",
+      "hypothesis_id": "hyp_3",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 2,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "Hyperglycaemia at admission is a well-described adverse prognostic factor after stroke; hypoglycaemia is plausibly harmful to the injured brain but is much less frequently studied as an alteplase-specific effect modifier. The chosen cutpoint (<4.0 mmol/L) is clinically defined hypoglycaemia but uncommon in ischemic stroke cohorts."
+        }
+      ],
+      "mechanism_plausibility": 2,
+      "clinical_interpretation": 2,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 1,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Admission glucose is commonly recorded and can be analyzed for interaction with treatment.",
+        "Addresses an underexplored direction (hypoglycaemia) rather than the more-studied hyperglycaemia."
+      ],
+      "weaknesses": [
+        "The literature more strongly implicates hyperglycaemia (not hypoglycaemia) as associated with worse outcomes and hemorrhagic transformation after thrombolysis.",
+        "Hypoglycaemia is uncommon, may yield small subgroup sizes, and the hypothesis lacks discussion of confounding (e.g., diabetes status, insulin treatment).",
+        "No validation or adjustment plan provided."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Hypoglycaemia could plausibly worsen outcome but evidence as a modifier of alteplase effect is sparse. If pursued, pre-specify analytic approach, handle small-cell issues, and control for diabetes/medication."
+    },
+    {
+      "feature_name": "Gcs score rand (gcs_score_rand)",
+      "hypothesis_id": "hyp_4",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 2,
+          "evidence_support": 1,
+          "specificity": 2,
+          "testability": 3,
+          "novelty": 2,
+          "overall_score": 1,
+          "comments": "GCS is a general consciousness measure. The claim that patients with moderate impaired consciousness (GCS 9-12) derive more benefit from alteplase is not supported by established stroke-thrombolysis literature; more impaired consciousness generally signals larger/more severe strokes and worse prognosis, and there is no clear mechanism why this band would have greater treatment responsiveness."
+        }
+      ],
+      "mechanism_plausibility": 2,
+      "clinical_interpretation": 2,
+      "evidence_alignment": 1,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 2,
+      "overall_score": 1,
+      "strengths": [
+        "GCS is recorded and testable in trial data; subgroup is clearly specified (9-12)."
+      ],
+      "weaknesses": [
+        "Mechanism is unsupported and counterintuitive: moderate depressed consciousness usually indexes greater severity and poorer outcomes, not greater relative benefit from thrombolysis.",
+        "No literature citations or rationale provided; ranking as #4 gives it undue prominence.",
+        "No caveats or sensitivity/adjustment strategies provided."
+      ],
+      "recommendation": "reconsider",
+      "justification": "This hypothesis conflicts with common clinical expectations and lacks supporting evidence. It should be reformulated with better mechanistic rationale and references or deprioritized."
+    },
+    {
+      "feature_name": "nihss",
+      "hypothesis_id": "hyp_5",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 2,
+          "comments": "Baseline NIHSS is a central measure of stroke severity and is strongly prognostic. The interaction between severity and alteplase benefit is complex: very mild strokes often have limited absolute benefit (and potential harms), whereas moderate-to-severe strokes may derive more absolute benefit. The statement that NIHSS \u22647 patients have higher probability of independence with alteplase compared with control conflates good baseline prognosis with treatment effect."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 1,
+      "novelty": 2,
+      "overall_score": 2,
+      "strengths": [
+        "NIHSS is the canonical measure of baseline stroke severity and highly relevant to treatment benefit/harm balance.",
+        "Subgroup (NIHSS \u22647) is commonly used and straightforward to operationalize."
+      ],
+      "weaknesses": [
+        "The hypothesis statement is ambiguous about relative effect: while patients with mild stroke have higher absolute chances of independence regardless of treatment, evidence suggests treatment effect (relative or absolute benefit) may be smaller or uncertain in very mild strokes.",
+        "Ranking NIHSS last (importance_rank=5) contradicts the extensive literature showing severity is a primary effect modifier.",
+        "No caveats or analytic approach provided (e.g., adjustment for baseline infarct size/time)."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "NIHSS is an important, testable modifier. Hypothesis should be reframed to distinguish baseline prognosis from treatment effect (interaction), specify whether absolute or relative benefit is expected, and include adjustment and sensitivity analyses."
+    }
+  ],
+  "top_features": [
+    "age"
+  ],
+  "methodological_concerns": [
+    "Major known effect modifiers are missing from the hypotheses and ranking (notably time-to-treatment and imaging-based large-vessel occlusion markers). Omitting time severely undermines assessment of relative feature importance.",
+    "Arbitrary cutpoints are used without justification (age 60-69, weight >=90 kg, glucose <4.0 mmol/L, GCS 9-12). These require pre-specification or continuous modeling with interaction terms.",
+    "No validation suggestions were provided; analysts should prespecify interaction tests, adjust for confounders (time, baseline NIHSS, premorbid disability), and account for multiple testing and small subgroup sizes.",
+    "Several hypotheses conflate baseline prognosis with treatment effect; analyses must test for interaction (treatment*feature) rather than comparing outcomes within treated patients only.",
+    "Caveats and uncertainty are largely absent across hypotheses; this overstates confidence and risks misleading prioritization."
+  ]
+}

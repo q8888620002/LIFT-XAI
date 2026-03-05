@@ -1,0 +1,17 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Baseline systolic blood pressure (sbp) is listed in the trial_measured_features, so the feature is observed in the dataset (G1 TRUE). G2: All provided mechanism variants describe higher or lower baseline cardiovascular risk, event trajectories, or competing-risk profiles without naming receptors, enzymes, PK/PD changes, or a concrete biological pathway linking SBP to differential drug action, so the mechanism is a statistical/epidemiologic claim rather than a biological one (G2 FALSE \u2014 cascade: G3..G5 also FALSE). G3: Because G2 failed, the hypothesis does not claim a genuine PD/PK or pathophysiologic difference in how intensive BP lowering acts across SBP strata (G3 FALSE). G4: As G2/G3 are false here, there is no specific biologically coherent SBP\u00d7treatment interaction to check against literature in this submission (G4 FALSE). G5: Without a biologically coherent, literature-backed interaction, the proposal does not define clear operational subgroups with distinct treatment recommendations (G5 FALSE).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 failed because the hypotheses only posit baseline-risk/absolute-benefit relationships without naming any concrete biological mechanism (receptor, enzyme, PK/PD pathway), so downstream gates cannot be satisfied.",
+      "overall_score": 1
+    }
+  ]
+}

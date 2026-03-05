@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "iage",
+      "hypothesis_id": "hyp_1",
+      "gate_reasoning": "G1: TRUE \u2014 'iage' (age) appears in trial_measured_features so the feature was recorded. G2: FALSE \u2014 the hypothesis offers only an epidemiologic claim (younger = fewer comorbidities/higher chance of survival) and does not name any concrete biological steps (receptor, enzyme, PK/PD change) explaining why TXA would act differently; G3..G5 FALSE by cascade. G3: FALSE \u2014 because no specific drug\u2013host interaction (PK/PD or pathophysiologic mechanism) is proposed beyond baseline-risk differences, this is consistent with an absolute-risk amplifier, not a true effect-modifier. G4: FALSE \u2014 no specific literature support for a mechanistic age \u00d7 TXA interaction is cited; speculative only. G5: FALSE \u2014 the subgroup (age < 40) is simple but the hypothesis does not provide a mechanistic guide to change treatment, so it is not clinically actionable as a mechanistic modifier.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: the claim is epidemiologic (younger patients do better) without a named biological mechanism linking age to differential TXA action, so later gates fail.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "isbp",
+      "hypothesis_id": "hyp_2",
+      "gate_reasoning": "G1: TRUE \u2014 'isbp' (initial systolic blood pressure) is in trial_measured_features. G2: FALSE \u2014 the hypothesis asserts greater benefit in patients with SBP <90 mmHg but gives no concrete biological mechanism (no PK/PD change, receptor, coagulation pathway alteration specific to hypotension) and reads as an assertion that more severely hypotensive patients benefit more; G3..G5 FALSE by cascade. G3: FALSE \u2014 the argument is consistent with baseline-risk amplification (more severely injured \u2192 different absolute outcomes) rather than a specified mechanism by which hypotension changes TXA efficacy. G4: FALSE \u2014 no cited RCT subgroup or mechanistic literature supports a specific hypotension\u00d7TXA interaction here. G5: FALSE \u2014 while SBP <90 is a measurable subgroup, without a mechanistic basis it does not provide a change-in-treatment recommendation based on differential drug action.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: no concrete biological pathway is offered to explain why hypotension would change TXA efficacy\u2014this reads as baseline-risk reasoning, so further gates fail.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "irr",
+      "hypothesis_id": "hyp_3",
+      "gate_reasoning": "G1: TRUE \u2014 'irr' (initial respiratory rate) is present in the measured features. G2: FALSE \u2014 the hypothesis states that tachypneic patients (RR \u226520) derive greater benefit but offers no concrete biological mechanism (e.g., specific coagulation, PK/PD, or pathophysiologic pathway linking tachypnea to different TXA action); G3..G5 FALSE by cascade. G3: FALSE \u2014 without a specified mechanism, the claim appears to be a prognostic association or severity proxy rather than a true treatment\u2013feature interaction altering TXA pharmacology/effect. G4: FALSE \u2014 no mechanistic or subgroup literature is provided to back a tachypnea\u00d7TXA interaction. G5: FALSE \u2014 although RR \u226520 is a clear measurable subgroup, the lack of mechanistic rationale prevents an actionable treatment recommendation.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: the hypothesis gives only a prognostic association (tachypnea \u2192 worse outcome) without specifying how TXA acts differently in this subgroup, so subsequent gates fail.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Injury classification code (icc)",
+      "hypothesis_id": "hyp_4",
+      "gate_reasoning": "G1: TRUE \u2014 'icc' appears among trial_measured_features (recorded as 'icc'), so the injury classification was measured. G2: FALSE \u2014 the hypothesis claims patients with icc \u22652 have lower mortality with TXA but does not provide a concrete biological mechanism (no named pathway, coagulation change, or PK/PD difference) explaining differential drug action; G3..G5 FALSE by cascade. G3: FALSE \u2014 absent a mechanism, this is a severity/diagnosis subgroup claim (possible absolute-risk effect) not evidence of a true treatment effect modifier. G4: FALSE \u2014 no literature is cited demonstrating a specific icc\u00d7TXA interaction. G5: FALSE \u2014 although icc thresholds are operationalizable, without a mechanistic rationale the hypothesis does not yield a distinct treatment decision based on differential efficacy.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: the claim lacks a named biological pathway linking injury-class code to altered TXA action and reads as a prognostic subgroup, so later gates fail.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "ihr",
+      "hypothesis_id": "hyp_5",
+      "gate_reasoning": "G1: TRUE \u2014 'ihr' (initial heart rate) is in the trial_measured_features. G2: FALSE \u2014 the hypothesis asserts benefit for patients with HR \u2265120 but provides no concrete mechanistic explanation (no PK/PD change, coagulation pathway, or receptor-level rationale) for why tachycardia would modify TXA effect; G3..G5 FALSE by cascade. G3: FALSE \u2014 without a specified mechanism this appears to be an association with injury severity (absolute-risk amplification) rather than a true modifier of TXA potency or pharmacology. G4: FALSE \u2014 no cited literature supports a specific HR\u00d7TXA interaction. G5: FALSE \u2014 although HR \u2265120 is measurable, the hypothesis lacks mechanistic detail to make a differential-treatment recommendation actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: the hypothesis is a severity-proxy claim (high HR) without a concrete biological pathway by which TXA efficacy would differ, so subsequent gates fail.",
+      "overall_score": 1
+    }
+  ]
+}

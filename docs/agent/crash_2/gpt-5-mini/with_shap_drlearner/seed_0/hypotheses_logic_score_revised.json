@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "iinjurytype",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: iinjurytype appears in the trial_measured_features list so the feature is observed in the data. G2: The hypothesis names a concrete biological pathway (trauma \u2192 systemic hyperfibrinolysis amenable to antifibrinolysis with TXA) and contrasts diffuse systemic bleeding vs focal surgically-controlled bleeding, so a mechanistic link is stated. G3: The claim is that blunt multisystem trauma produces systemic fibrinolysis such that TXA changes outcomes differently in that subgroup (a PD/pathophysiologic modifier), not merely an absolute-risk amplifier, so this is a plausible treatment effect modifier. G4: Specific RCT-level evidence for a treatment\u00d7injury-type interaction (blunt multisystem vs isolated penetrating) is limited or inconsistent in major trials; therefore the precise interaction is not robustly supported by the published randomized-subgroup literature. G5: Because G4 is judged FALSE the actionable recommendation (prioritise TXA in blunt multisystem when early/no immediate surgery) is not fully literature-backed; therefore G5 is also FALSE (cascade from G4).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": true,
+      "justification": "Decisive gate: G4 FALSE \u2014 while the mechanism (systemic fibrinolysis in blunt multisystem trauma) is biologically coherent and plausible as an effect modifier, there is limited RCT subgroup evidence proving a treatment\u00d7injury-type interaction, so literature support is insufficient.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "isbp",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: isbp is listed among trial_measured_features, so the feature is observed. G2: The hypothesis specifies a biological pathway linking hypotension to trauma-induced coagulopathy and fibrinolytic activation, which is a concrete physiologic mechanism relevant to TXA's antifibrinolytic action. G3: The claim is that hypotension (SBP <90 mmHg) changes the drug's effect via increased fibrinolysis (a genuine PD/pathophysiologic modifier), not merely arithmetic absolute-risk amplification, so this is causally plausible. G4: Although hypotension is biologically plausible as a modifier, robust RCT subgroup evidence demonstrating a consistent treatment\u00d7SBP interaction in major trials is limited; therefore literature backing for a specific SBP interaction is weak. G5: Because G4 is FALSE, the proposed clinical prioritisation by SBP strata lacks strong trial-backed support and so G5 is FALSE (cascade from G4).",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 FALSE \u2014 hypotension is biologically plausible as a modifier via fibrinolysis activation, but there is insufficient RCT subgroup evidence to confirm a reliable treatment\u00d7SBP interaction.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Injury classification code (icc)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The 'Injury classification code (icc)' is present in the trial_measured_features, so the feature is observed. G2: The hypothesis links ICC-derived categories (isolated severe TBI vs extracranial haemorrhage) to differing pathophysiology (intracranial bleeding vs systemic exsanguination) and relates that to TXA's antifibrinolytic mechanism, which is a concrete biological rationale. G3: This is causally plausible because CRASH-3 and related analyses show that intracranial injury severity and timing modify TXA's effect (differential efficacy in mild-moderate vs unsurvivable severe TBI), so the drug can reasonably act differently across ICC-mapped groups. G4: There is supporting clinical trial literature (notably CRASH-3 for head-injury strata and CRASH-2 for extracranial bleeding/time effects) that substantiates differential effects by head-injury severity and extracranial bleeding categories, so literature backing for this general interaction exists. G5: ICC-to-clinical-group mappings can be operationalised and used to inform subgroup treatment expectations (isolated unsurvivable TBI vs extracranial bleeding), so the hypothesis yields clinically actionable subgroup definitions, acknowledging coding limitations.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 TRUE \u2014 because trial literature (e.g., CRASH-3 for head injury strata and CRASH-2 context for extracranial bleeding) supports differential TXA effects by injury-type/severity, the hypothesis passes through to clinical actionability.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Time from injury to treatment (ninjurytime)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: ninjurytime (time from injury to treatment) is included in trial_measured_features so it is observed. G2: The hypothesis names the biologic rationale (TXA inhibits fibrinolysis which is time-dependent early after injury) and specifies how delayed administration reduces antifibrinolytic efficacy, which is a concrete mechanistic pathway. G3: The treatment is asserted to act differently depending on time (strong PD/temporal modifier of efficacy), which is a genuine effect-modifying mechanism rather than a mere baseline-risk amplifier. G4: This time-dependence is strongly supported by randomized-trial evidence (CRASH-2 showed greatest benefit when given early, with attenuation after 3 hours), so literature backing is present. G5: The hypothesis proposes clear, operational time strata (0-1h, 1-3h, >3h) and direct clinical recommendations (prioritise very early TXA), making it clinically actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 TRUE \u2014 strong RCT evidence (notably CRASH-2) supports a time-dependent treatment effect for TXA, enabling clear clinical actionability.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "ihr",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: ihr (initial heart rate) is present in trial_measured_features so the feature is observed. G2: The hypothesis offers only a non-specific physiological argument (high HR as a marker of prolonged/high-volume bleeding where antifibrinolysis alone may be insufficient) without naming a concrete molecular or cellular pathway (no specific enzyme/receptor/PK step), so the biological mechanism is vague. G3: Because G2 is judged FALSE (vague/non-specific pathway), the claim that HR is a genuine effect modifier cannot be accepted \u2014 hence G3..G5 are also FALSE by cascade. G4: (cascade) FALSE. G5: (cascade) FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": true,
+      "justification": "Decisive gate: G2 FALSE \u2014 the proposed mechanism treats HR as a nonspecific severity marker without a concrete biological chain explaining why TXA would act differently, so downstream causal, literature, and actionability gates fail by cascade.",
+      "overall_score": 1
+    }
+  ]
+}

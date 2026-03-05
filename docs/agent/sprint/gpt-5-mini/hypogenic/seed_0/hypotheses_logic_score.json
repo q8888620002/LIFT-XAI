@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "age",
+      "hypothesis_id": "hyp_1",
+      "gate_reasoning": "G1: 'age' appears in trial_measured_features, so the feature is observed in the dataset. G2: The hypothesis gives only a prognostic argument (higher baseline risk with lower frailty) and does not name a concrete biological pathway (receptor, enzyme, PK/PD) by which age would change the drug's action, so G2 FALSE \u2014 cascade: G3..5 also FALSE. G3: (not reached because G2 is FALSE) G3 FALSE \u2014 cascade: G4..5 FALSE. G4: (not reached) G4 FALSE. G5: (not reached) G5 FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 \u2014 the claim is an absolute-risk/prognostic statement without a specified biological mechanism linking age to differential pharmacologic effect, so it fails the biological-coherence requirement.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": "hyp_2",
+      "gate_reasoning": "G1: 'sbp' is present in the trial_measured_features, so the feature is observed in the dataset. G2: The hypothesis asserts baseline SBP<130 will show little/no benefit but provides no concrete mechanistic pathway (e.g., specific hemodynamic or perfusion mechanism, PK/PD change) and reads as an absolute-floor/absolute-risk claim, so G2 FALSE \u2014 cascade: G3..5 also FALSE. G3: (not reached because G2 is FALSE) G3 FALSE \u2014 cascade: G4..5 FALSE. G4: (not reached) G4 FALSE. G5: (not reached) G5 FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 \u2014 the hypothesis lacks a specified biological mechanism and functions as an absolute-risk/floor effect statement rather than a concrete drug-mechanism interaction.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Diastolic blood pressure (dbp)",
+      "hypothesis_id": "hyp_3",
+      "gate_reasoning": "G1: 'dbp' is listed among trial_measured_features so the feature is observed in the dataset. G2: The hypothesis states that baseline DBP<70 is associated with worse outcomes under intensive SBP lowering but does not articulate a concrete mechanistic chain (for example, decreased coronary perfusion during diastole) in the submitted text, so G2 FALSE \u2014 cascade: G3..5 also FALSE. G3: (not reached because G2 is FALSE) G3 FALSE \u2014 cascade: G4..5 FALSE. G4: (not reached) G4 FALSE. G5: (not reached) G5 FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 \u2014 although a plausible physiologic mechanism (low DBP \u2192 reduced coronary perfusion) exists in the literature, the submitted hypothesis text fails to state that mechanism, so it does not meet the required biological-coherence criterion.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Estimated glomerular filtration rate (egfr)",
+      "hypothesis_id": "hyp_4",
+      "gate_reasoning": "G1: The trial_measured_features list does not include an explicit 'egfr' variable but does include 'sub_ckd', which may correspond to CKD status; interpreting 'egfr <60' as equivalent to the measured 'sub_ckd' is uncertain, and per the instruction to default to FALSE when uncertain I will treat the specific eGFR variable as not observed, so G1 FALSE \u2014 cascade: G2..5 also FALSE. G2: (not reached because G1 is FALSE) G2 FALSE \u2014 cascade: G3..5 FALSE. G3: (not reached) G3 FALSE. G4: (not reached) G4 FALSE. G5: (not reached) G5 FALSE.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G1 \u2014 the hypothesis targets eGFR (<60) but 'egfr' is not explicitly present in the provided trial variables (only 'sub_ckd' is listed), so the feature as specified is not clearly observed in the dataset.",
+      "overall_score": 0
+    },
+    {
+      "feature_name": "Total cholesterol / HDL ratio (chr)",
+      "hypothesis_id": "hyp_5",
+      "gate_reasoning": "G1: 'chr' appears in trial_measured_features, so the feature is observed in the dataset. G2: The hypothesis claims chr<3 predicts greater benefit from intensive BP lowering but provides no biological mechanism (e.g., lipid-driven vascular reactivity or endothelial function changes that would alter BP-treatment efficacy), so G2 FALSE \u2014 cascade: G3..5 also FALSE. G3: (not reached because G2 is FALSE) G3 FALSE \u2014 cascade: G4..5 FALSE. G4: (not reached) G4 FALSE. G5: (not reached) G5 FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate G2 \u2014 the hypothesis lacks a specified biological pathway linking cholesterol/HDL ratio to a differential effect of intensive BP lowering, so it fails biological coherence and the subsequent causal-evidence gates.",
+      "overall_score": 1
+    }
+  ]
+}

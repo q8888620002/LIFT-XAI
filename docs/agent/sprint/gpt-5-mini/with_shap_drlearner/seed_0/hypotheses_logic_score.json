@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Sub cvd (sub cvd) (Sub cvd (sub_cvd))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The feature 'Sub cvd (sub_cvd)' appears in the provided trial_measured_features list, so it is observed in the data. G2: The hypothesis specifies mechanistic steps (events driven by fixed atherosclerotic plaque vs pressure-sensitive mechanisms; hemodynamic fragility causing orthostatic ischemia/myocardial supply-demand mismatch; AKI leading to down-titration) that could plausibly change how intensive BP lowering translates to outcomes. G3: The proposal argues for true effect modification (attenuated delivered treatment intensity from adverse events and a different mix of event pathophysiology less responsive to BP lowering), not merely higher baseline risk, so it posits a genuine HTE. G4: Although the physiologic rationale is plausible, there is no clear, consistent RCT-level evidence demonstrating a specific prior-CVD \u00d7 intensive-target interaction on the composite outcome in this setting, so the treatment\u00d7CVD interaction is not definitively literature-backed. G5: G4 FALSE \u2014 cascade: G5 also FALSE because without literature support the claim is exploratory; even so, the subgroup (prior symptomatic vs no prior CVD) would be operationalizable but the decisiveness for practice is lacking.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G4: although G1\u2013G3 pass based on measured feature and plausible mechanistic pathways (hemodynamic fragility, plaque-driven events, and treatment-limiting adverse effects), there is no strong, consistent RCT-level evidence that prior/subclinical CVD produces a reproducible heterogeneity of intensive-target benefit on the composite outcome, so the claim remains exploratory and not practice-decisive.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Sub ckd (sub ckd) (Sub ckd (sub_ckd))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'Sub ckd (sub_ckd)' is listed among trial_measured_features, so the feature is observed. G2: The hypothesis names concrete renal-pathophysiologic mechanisms (altered autoregulation, risk of AKI/GFR decline with lower perfusion pressure, stage/albuminuria-dependent vulnerability) linking baseline CKD to different tolerability and possibly different efficacy of intensive BP lowering. G3: This is presented as a true modifier (CKD changes delivered intensity via AKI/down-titration and changes the mix of BP-sensitive events), not merely an absolute-risk amplifier, so it is causally plausible. G4: There is published trial evidence (including SPRINT analyses) showing higher rates of kidney function decline/AKI with intensive therapy and subgroup data on CV outcomes in CKD strata, supporting a nuanced CKD\u00d7treatment interaction in the literature. G5: The hypothesis defines operational subgroups (eGFR and albuminuria strata, CKD stages) with distinct recommended caution and is therefore clinically actionable.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive pass through G4: mechanistic renal physiology (autoregulation, AKI risk) and SPRINT-era trial data showing increased renal adverse events with intensive BP control provide literature support for stage-dependent CKD effect modification, and the hypothesis maps to clear eGFR/albuminuria-based subgroups that are actionable.",
+      "overall_score": 5
+    },
+    {
+      "feature_name": "Race black (race black) (Race black (race_black))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'Race black (race_black)' is present in the trial_measured_features, so the feature is observed. G2: The hypothesis invokes specific, named mechanisms (salt-sensitivity, class-specific pharmacologic responsiveness to diuretics/CCBs vs RAS blockers, and differential adherence/health-system effects) that could alter how intensive BP strategies are implemented and their physiological effect. G3: The proposal describes genuine effect-modifying pathways (different BP response to drug classes and implementation/adherence differences that change achieved SBP separation and adverse-event rates), not simply higher baseline event rates, so it is causally plausible. G4: However, while pharmacologic-class differences by race are well-described (e.g., ALLHAT), high-quality RCT evidence for a consistent Black-race \u00d7 intensive-target interaction on the composite CV outcome is lacking or mixed (SPRINT showed benefit across races), so the specific interaction as stated is not definitively literature-backed. G5: G4 FALSE \u2014 cascade: G5 also FALSE for guideline-level actionability because without consistent trial evidence the race-based tailoring proposed is exploratory and risks conflating social and biological factors.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G4: although there are plausible pharmacologic and implementation mechanisms and race is measured, the RCT evidence does not clearly support a reproducible Black-race \u00d7 intensive-target interaction on the primary composite outcome, so using race to change practice here would be premature.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'Systolic blood pressure (sbp)' is included in trial_measured_features, so the feature is observed. G2: The submitted mechanism is primarily epidemiologic (higher baseline SBP \u2192 larger achievable reduction \u2192 larger risk reduction) and does not specify a concrete molecular/physiologic pathway (receptor/enzyme/PK) beyond the arithmetic/engineering of BP lowering, which falls into the 'absolute-risk amplifier' category. G3: G2 FALSE \u2014 cascade: because the argument is essentially that higher baseline SBP allows greater BP reduction and thus greater absolute benefit (an arithmetic effect) without a distinct drug\u2013biology interaction beyond achieved BP change, it does not meet the standard for a separate biologic PD/PK treatment modifier, so G3\u2013G5 are also FALSE. G4: G3 FALSE \u2014 cascade: G4 and G5 also FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive failure at G2: the hypothesis mainly describes an absolute-risk/achievable-reduction effect (higher baseline SBP \u2192 greater absolute benefit via larger BP decrement) rather than a named biological or PD/PK mechanism that would constitute a true treatment effect modifier.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "age",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: 'age' is listed in the trial_measured_features, so the feature is observed. G2: The hypothesis specifies physiological mechanisms (increased arterial stiffness, frailty-related orthostatic susceptibility, competing non-CV mortality) that can mechanistically alter both the responsiveness to BP lowering and risk of adverse effects, which satisfies the requirement for a concrete biologic/physiologic pathway. G3: The proposal asserts true effect modification (older fitter adults gain more preventable BP-sensitive events; frail/very old patients incur more harms and competing risk), not merely baseline-risk amplification, so it is causally plausible. G4: This age \u00d7 treatment heterogeneity is supported by trial evidence (SPRINT subgroup showing benefit in those \u226575, plus observational/physiologic literature about arterial stiffness and frailty-modified harms), so it is literature-backed. G5: The hypothesis is clinically actionable because it points to operationalizable subgroups (age thresholds combined with frailty/life-expectancy indices) that could inform individualized treatment decisions.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": true,
+      "is_clinically_actionable": true,
+      "is_novel": false,
+      "justification": "Decisive pass through G4: physiologic mechanisms (arterial stiffness, frailty), SPRINT subgroup evidence for older adults, and the ability to operationalize age combined with frailty/life-expectancy make this a literature-backed, clinically actionable treatment-modification hypothesis.",
+      "overall_score": 5
+    }
+  ]
+}

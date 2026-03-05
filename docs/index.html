@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <h1>Clinical Hypothesis Evaluation</h1>
-            <p class="subtitle">Rate mechanistic hypotheses for treatment effect heterogeneity</p>
+            <p class="subtitle">Evaluate mechanistic hypotheses using 5 robustness gates</p>
         </header>
 
         <div class="controls">
@@ -26,10 +26,12 @@
             </div>
 
             <div class="control-group">
-                <label for="condition-select">Hypothesis Set:</label>
-                <select id="condition-select">
-                    <option value="condition_a">Hypothesis Set A</option>
-                    <option value="condition_b">Hypothesis Set B</option>
+                <label for="method-select">Method:</label>
+                <select id="method-select">
+                    <option value="with_shap_drlearner">ALEX</option>
+                    <option value="cot">CoT</option>
+                    <option value="hypogenic">HypoGeniC</option>
+                    <option value="researchagent">ResearchAgent</option>
                 </select>
             </div>
 

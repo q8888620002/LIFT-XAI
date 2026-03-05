@@ -1,0 +1,759 @@
+{
+  "dataset": "ist3",
+  "total_mechanisms_analyzed": 5,
+  "total_abstracts_retrieved": 62,
+  "overall_support_count": 3,
+  "overall_conflict_count": 0,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "nihss",
+      "mechanism": {
+        "description": "Treatment-response interaction claim: Patients with moderate baseline NIHSS (approx. 5\u000215) gain the largest absolute benefit from IV alteplase because they are most likely to have sizable salvageable penumbra with lower sICH risk; patients with very low NIHSS (0\u0004) gain little absolute benefit due to high baseline independence (ceiling effect); patients with very high NIHSS (>20) generally derive less net benefit because large established core and higher sICH/mortality reduce functional gains. Crucially, this NIHSS\u00d7treatment effect is conditional on time-to-treatment and imaging: among patients with small core/large penumbra on CT perfusion or MRI, even high-NIHSS patients may still derive substantial benefit."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (NIHSS OR \"stroke severity\" OR \"neurological deficit\" OR \"infarct volume\") AND (\"independence\" OR \"substantial\" OR \"salvageable\" OR \"interaction\" OR \"established\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT]) NOT (tenecteplase[tiab] OR sonothrombolysis[tiab] OR \"mechanical thrombectomy\"[tiab] OR \"endovascular thrombectomy\"[tiab] OR thrombectomy[tiab] OR urokinase[tiab] OR desmoteplase[tiab])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 5,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 5,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not test the hypothesised NIHSS\u00d7treatment interaction. The target feature (baseline NIHSS severity strata, e.g., 0, 5\u201315, >20) is not analyzed as a predictor or subgroup modifying treatment effect; NIHSS appears only in the outcome definition (END = increase \u22652 in NIHSS) rather than as a baseline stratifier. In addition, the trial primarily compares dual antiplatelet therapy versus intravenous alteplase (alteplase functions as the comparator), so it is not a primary alteplase-versus-placebo RCT evaluating alteplase treatment effect by baseline NIHSS. Because the abstract neither evaluates baseline NIHSS subgroups nor reports treatment effect heterogeneity by NIHSS, it cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "Primary outcome was END, defined as an increase of \u22652 in the NIHSS score from baseline within 24\u2009h.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary analysis of the NINDS rt-PA randomized trial and explicitly analyzes baseline NIHSS. It identifies NIHSS as a 'masking confounder' for 3-month outcome and states that adjustment for baseline NIHSS altered detection of an onset-to-treatment (OTT) \u00d7 treatment interaction. However, the abstract does not present any NIHSS \u00d7 treatment interaction tests, nor does it report subgroup treatment effects stratified by NIHSS severity (low/moderate/high). Thus the abstract supports that baseline NIHSS is prognostic for outcome (and can confound treatment effect estimates), but it does not provide direct evidence that treatment benefit differs between NIHSS-defined subgroups as required by the proposed mechanism.",
+          "evidence_quote": "\"For 3-month favorable outcome, the NIHSS met criteria for a masking confounder. After adjusting for NIHSS as a covariate, an OTT-treatment interaction was detected (p = 0.09): the adjusted OR (95% CI) for a favorable 3-month outcome associated with recombinant tissue-type plasminogen activator (rt-PA) was 2.11 (1.33 to 3.35) in the 0 to 90 minute stratum and 1.69 (1.09 to 2.62) in the 91 to 180 minute stratum.\"",
+          "stance": "neutral",
+          "pmid": "11113218",
+          "title": "Early stroke treatment associated with better outcome: the NINDS rt-PA stroke study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This abstract does not test the hypothesized alteplase (rt-PA) treatment-response mechanism. The ELAN trial primarily randomized timing of DOAC initiation (early vs late), not administration of IV alteplase; IVT/EVT are recorded as prior therapies/subgroups rather than the randomized intervention (Intervention Match fail). The primary outcomes are a 30-day composite of recurrent stroke/bleeding/vascular death rather than functional outcome measures such as mRS (Outcome Alignment fail). NIHSS is only included as an adjusted covariate in the regression and there is no reported NIHSS\u00d7treatment interaction or subgroup analysis testing whether NIHSS modifies treatment effect (Feature Check fail). Therefore the abstract is not relevant evidence for the specified NIHSS\u00d7alteplase mechanism.",
+          "evidence_quote": "We performed logistic regression adjusted for age, hypertension, infarct location/size, pre-modified Rankin Scale, NIHSS, and hemorrhagic transformation, including the interaction term between treatment groups (early versus late DOAC) and reperfusion strategy.",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This is a post-hoc subgroup analysis of the randomized, placebo-controlled NINDS t-PA trial in acute ischemic stroke patients. The authors tested pretreatment variables (including deficit severity) for differential response to t-PA using regression and multivariable approaches and explicitly state that \"No pretreatment information significantly affected patients response to t-PA.\" They do note that deficit severity (reported as an age-by-deficit severity interaction) was prognostic for outcome irrespective of treatment, but it did not modify the treatment effect. Thus the abstract provides direct evidence that baseline stroke severity (the feature referred to as 'deficit severity', which corresponds to NIHSS in this context) does not interact with t-PA treatment to change its efficacy \u2014 failing to support the hypothesized NIHSS\u00d7treatment interaction. The authors also report the model had >90% power to detect an interaction, strengthening confidence in the null interaction finding. A caveat is that the abstract uses the term 'deficit severity' rather than explicitly naming 'NIHSS', but this is the relevant clinical severity measure and was tested as a potential modifier.",
+          "evidence_quote": "\"No pretreatment information significantly affected patients response to t-PA.\"; and \"Apart from t-PA therapy, outcome was related to age-by-deficit severity interaction...These variables and interactions altered long-term patient outcome irrespective of t-PA treatment but did not alter the likelihood of responding favorably to t-PA therapy.\"",
+          "stance": "neutral",
+          "pmid": "9368551",
+          "title": "Generalized efficacy of t-PA for acute stroke. Subgroup analysis of the NINDS t-PA Stroke Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This is a sub-study of the MR CLEAN NO-IV randomized trial assessing activated coagulation markers and whether their association with final infarct volume and clinical outcomes is modified by IVT (alteplase). Although IVT (alteplase) and relevant functional outcomes (mRS 3-6, mortality at 90 days) are reported, the abstract contains no mention of NIHSS nor any analysis of NIHSS as a predictor or treatment-effect modifier. Because the target feature (NIHSS) is not analyzed or linked to outcomes/treatment interaction in the abstract, it cannot provide evidence for or against the proposed NIHSS\u00d7alteplase mechanism.",
+          "evidence_quote": "",
+          "stance": "neutral",
+          "pmid": "39571223",
+          "title": "Association between coagulation activity and clinical and imaging outcomes in acute ischemic stroke patients - A sub-study of the MR CLEAN NO-IV trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "description": "Treatment-response interaction claim: Older patients (commonly defined \u226580 years) tend to have smaller absolute net benefit from IV alteplase on average because higher sICH risk, frailty, and non-stroke competing mortality reduce gains from reperfusion; however, among elderly patients who are functionally independent pre-stroke (pre-stroke mRS 0-1) and who have small ischemic core and short onset-to-treatment, relative efficacy is often preserved and can translate into meaningful absolute benefit. Thus the age\u00d7treatment interaction is moderated by pre-stroke function, imaging core size, and time-to-treatment."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (age OR elderly OR geriatric) AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT]) NOT (tenecteplase[tiab] OR sonothrombolysis[tiab] OR \"mechanical thrombectomy\"[tiab] OR \"endovascular thrombectomy\"[tiab] OR thrombectomy[tiab] OR urokinase[tiab] OR desmoteplase[tiab])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 22,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 21,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports a randomized trial of dual antiplatelet therapy (clopidogrel + aspirin) versus aspirin alone for mild ischemic stroke/TIA. The target mechanism concerns age modifying the effect of intravenous alteplase (rt-PA) on functional outcomes; this abstract evaluates a different intervention (antiplatelet therapy), a different primary outcome (new stroke within 90 days rather than functional outcome/mRS), and does not present any age-by-treatment interaction analyses. Age appears only as a baseline summary (median age), with no subgroup or interaction statistics linking age to treatment effect. Therefore it does not provide evidence for or against the proposed alteplase \u00d7 age mechanism.",
+          "evidence_quote": "The median age was 65 years (IQR, 57-71 years)",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the pooled analysis evaluates intravenous thrombolysis (alteplase) versus no thrombolysis alongside endovascular treatment and uses functional outcome (90-day mRS), the abstract does not analyze Age as an effect modifier. Age appears only as a baseline descriptor (median age 71, IQR 62\u201378) and there are no subgroup results, interaction tests, or statements about differential treatment effect by age (eg, \u226580 years vs younger). The paper's prespecified subgroup focus is carotid tandem lesions, not age. Because the target feature (Age) is not linked to treatment effect in the abstract, this report cannot provide evidence for or against the proposed age\u00d7treatment mechanism.",
+          "evidence_quote": "\"The median age of patients was 71 years (IQR 62-78); 1003 (44\u00b72%) patients were female and 1264 (55\u00b78%) were male.\"",
+          "stance": "neutral",
+          "pmid": "40120615",
+          "title": "Intravenous thrombolysis before endovascular treatment versus endovascular treatment alone for patients with large vessel occlusion and carotid tandem lesions: individual participant data meta-analysis of six randomised trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis comparing low- versus standard-dose IV tPA with functional outcome (mRS) and safety (sICH, mortality) endpoints in acute ischemic stroke, so treatment and outcomes are relevant. However, Age is not analyzed or reported as a modifier of treatment effect \u2014 the abstract gives no subgroup or interaction results by age (it only mentions a subgroup analysis by ethnicity). Because the target feature (Age) is missing as an analyzed effect modifier, this abstract cannot provide evidence for or against the proposed age\u00d7treatment interaction mechanism.",
+          "evidence_quote": "\"In a subgroup analysis by ethnicity, there was no significant difference between patients of Asian and non-Asian descent for any of the end points.\"",
+          "stance": "neutral",
+          "pmid": "29224744",
+          "title": "Low- versus Standard-Dose Intravenous Tissue-Type Plasminogen Activator for Acute Ischemic Stroke: An Updated Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a randomized, placebo-controlled trial subgroup analysis of MRI-guided alteplase (WAKE-UP) in patients with vessel occlusion. However, it does not analyze Age as a modifier of treatment effect \u2014 age appears only as a baseline descriptor (mean age 64.5 years) and there is no subgroup analysis, interaction test, or mention of older patients (eg, \u226580 years) or age\u00d7treatment effects. Because the TARGET FEATURE (Age) is not evaluated as a predictor of differential treatment response, the abstract is irrelevant to the specified mechanism claim about age moderating alteplase benefit.",
+          "evidence_quote": "185 patients (mean age 64.5 years, 46% female, median NIH Stroke Scale score 9, median time between last seen well and MRI 10.26 hours) received treatment and presented with an occlusion.",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract evaluates intravenous alteplase versus placebo (pass) and reports functional outcome (3-month mRS) in acute ischemic stroke patients (pass), it does not analyze Age as an effect modifier. Age appears only as an adjusted covariate and as baseline summary statistics (median ages reported), with no subgroup analyses, age\u00d7treatment interaction tests, or results stratified by older versus younger patients. The mechanism hypothesis requires evidence that age modifies treatment benefit (interaction or subgroup-specific absolute/relative effects). Because the abstract provides no such age-specific interaction data, it fails the Feature Check and is irrelevant to the proposed age\u00d7treatment interaction mechanism.",
+          "evidence_quote": "\"Ordinal logistic regression adjusted for baseline age and National Institutes of Health Stroke Scale score...\"",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not evaluate the target feature (Age) nor the required outcome. It is a post-hoc RCT analysis stratified by systolic blood pressure (SBP) and reports early neurological deterioration (change in NIHSS within 24 h) as the primary outcome, not functional outcomes such as mRS/dependency/death. Age is not analyzed as a subgroup or effect modifier. Although intravenous alteplase is one arm of the comparison, the mechanism test specifically concerns age\u00d7treatment effects on functional outcome after stroke; those data are absent, so the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "According to SBP at admission, patients were divided into SBP \u2265140\u2009mmHg and SBP <140\u2009mmHg subgroups.",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a subgroup analysis of the MISTIE trial evaluating minimally invasive surgery (MIS) \u00b1 local alteplase for intracerebral haemorrhage (ICH). This is a different disease (hemorrhagic stroke/ICH) and a different intervention (surgical evacuation with local alteplase instillation) than the hypothesised mechanism, which concerns intravenous alteplase for acute ischemic stroke. Furthermore, the abstract contains no analysis or interaction testing by Age (no mention of age subgroups or age\u00d7treatment interaction). Therefore it cannot provide evidence for the proposed age\u00d7treatment mechanism in IV alteplase for ischemic stroke.",
+          "evidence_quote": "\"Minimally invasive surgery (MIS) for spontaneous supratentorial intracerebral haemorrhage (ICH) ... from the phase 3 Minimally Invasive Surgery Plus Alteplase for Intracerebral Haemorrhage Evacuation (MISTIE) trial.\" \u2014 The abstract does not report any age-related analyses or age\u00d7treatment interaction.",
+          "stance": "neutral",
+          "pmid": "37949482",
+          "title": "Cerebral small vessel disease modifies outcomes after minimally invasive surgery for intracerebral haemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this is a post-hoc subgroup analysis of an RCT of intravenous alteplase (ENCHANTED) reporting the relevant clinical outcome (90-day death or disability), the abstract only reports age as a baseline characteristic (mean age and that the lipid\u2011lowering pretreatment group was older). It does not present any analysis of age as a modifier of treatment effect (no subgroup results by age, no interaction p-values, nor statements about differential benefit/harm by age). Therefore the abstract cannot be used to evaluate the proposed age\u00d7treatment mechanism.",
+          "evidence_quote": "\"mean age 66.6 years... Compared with patients with no lipid-lowering pretreatment, those with lipid-lowering pretreatment were significantly older\"",
+          "stance": "neutral",
+          "pmid": "29705803",
+          "title": "Lipid-Lowering Pretreatment and Outcome Following Intravenous Thrombolysis for Acute Ischaemic Stroke: A Post Hoc Analysis of the Enhanced Control of Hypertension and Thrombolysis Stroke Study Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports an age-by-treatment interaction identified in a secondary analysis of the NINDS rt-PA trials using lesion volume as a surrogate outcome, so it is relevant to the proposed mechanism. However, the abstract gives no directionality, no numerical interaction estimate or p-value, and no subgroup breakdown (e.g., \u226580 yrs, pre-stroke function, core size, or time-to-treatment). Thus it offers evidence that age modifies treatment effects (consistent with the mechanism) but is insufficient to confirm that older patients have smaller absolute benefit or that the interaction is moderated by pre-stroke function, imaging core size, or onset-to-treatment. Therefore the evidence is supportive but weak.",
+          "evidence_quote": "The age by treatment interaction described in previous studies was also found in this analysis, confirming the strong effect age has on stroke outcomes.",
+          "stance": "support",
+          "pmid": "21894044",
+          "title": "Application of beta regression to analyze ischemic stroke volume in NINDS rt-PA clinical trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The abstract reports an observational, propensity score\u2013matched analysis of alteplase versus control from a stroke registry with survival and functional outcomes, so treatment and outcomes are relevant. However, the TARGET FEATURE 'Age' is not analyzed or reported as a modifier of treatment effect in the abstract. The authors report an interaction with time-to-hospital arrival (\u22643 hours) but provide no subgroup results, interaction p-values, or effect estimates stratified by age (or by pre-stroke function or imaging core). Because the mechanism claim centers on an age\u00d7treatment interaction (and its moderation by pre-stroke function, core size, and OTT), and the abstract contains no age-related interaction data, it cannot provide evidence for or against the proposed mechanism and must be classified as irrelevant for that specific mechanism test.",
+          "evidence_quote": "No age-related analysis or age\u00d7treatment interaction is reported in the abstract; the only interaction mentioned: \"after introducing a multiplicative interaction term into the model, mortality risk reduction was 42% (hazard ratio, 0.58; 95% CI, 0.40-0.82) at 10 years for those arriving within 3 hours to the hospital.\"",
+          "stance": "neutral",
+          "pmid": "29440582",
+          "title": "Long-Term Survival After Intravenous Thrombolysis for Ischemic Stroke: A Propensity Score-Matched Cohort With up to 10-Year Follow-Up.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary/subgroup analysis of the IMS III randomized trial comparing endovascular therapy versus intravenous tPA. Although functional outcome (mRS) is reported, Age is not analyzed or mentioned anywhere in the abstract, and the study's primary question is the effect of endovascular therapy (with IV tPA as the comparator), not the effect of alteplase versus control. The Task gates require the feature (Age) to be explicitly linked to outcome and the trial to primarily evaluate alteplase (or a pooled analysis of alteplase trials). Because Age is not examined and the intervention focus is endovascular therapy rather than alteplase treatment effect by age, the abstract is irrelevant to the requested mechanism.",
+          "evidence_quote": "No mention of age or age-stratified/age-interaction results appears in the abstract.",
+          "stance": "neutral",
+          "pmid": "25791716",
+          "title": "Differential Effect of Baseline Computed Tomographic Angiography Collaterals on Clinical Outcome in Patients Enrolled in the Interventional Management of Stroke III Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary analysis of the NINDS rtPA Stroke Study evaluating baseline CT ASPECTS as a treatment effect modifier of intravenous rt-PA. It does not analyze or report any results stratified by Age, nor does it mention age-related subgroup or interaction testing. Because the target feature (Age) is not examined with respect to treatment effect in this abstract, it cannot provide evidence for or against the proposed age\u00d7treatment mechanism, so the abstract is irrelevant to that mechanism.",
+          "evidence_quote": "None \u2014 Age is not mentioned in the abstract. The abstract instead focuses on ASPECTS, e.g. 'There was no evidence of treatment effect modification by the baseline ASPECTS value in the NINDS rtPA Stroke Study.'",
+          "stance": "neutral",
+          "pmid": "16166579",
+          "title": "Importance of early ischemic computed tomography changes using ASPECTS in NINDS rtPA Stroke Study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not test alteplase/rt-PA as the randomized intervention. The ELAN trial compared early versus late DOAC initiation; prior reperfusion (including IVT) is only a subgroup variable, not the primary randomized treatment. The primary outcome is a 30-day composite of vascular events/bleeding rather than functional outcome (mRS/dependency/death). Age is reported as a baseline descriptor and was adjusted for in regression, but there is no analysis or interaction test of age modifying treatment effect. The prespecified interaction examined is between timing of DOAC initiation and prior reperfusion strategy, not age. Therefore this abstract is not relevant evidence for the hypothesized age\u00d7alteplase treatment-response mechanism.",
+          "evidence_quote": "\"We performed logistic regression adjusted for age, hypertension, infarct location/size, pre-modified Rankin Scale, NIHSS, and hemorrhagic transformation, including the interaction term between treatment groups (early versus late DOAC) and reperfusion strategy.\"",
+          "stance": "neutral",
+          "pmid": "40402090",
+          "title": "Prior Reperfusion Strategy Does Not Modify Outcome in Early Versus Late Start of Anticoagulants in Patients With Ischemic Stroke: Prespecified Subanalysis of the Randomized Controlled ELAN Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a general narrative review about stroke and aging. It mentions rt-PA broadly and states that age influences stroke risk and cerebral reperfusion, but it provides no data, subgroup analysis, interaction tests, or numeric estimates linking Age to differential treatment effect of IV alteplase. There is no evaluation of age\u00d7treatment interaction, no statistics (no interaction P-values), and no assessment of the proposed moderators (pre-stroke function, ischemic core size, onset-to-treatment time). Therefore it does not provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "Age, cardiovascular disease, and hypertension are major determinants of cerebral blood flow; all have a negative impact on cerebral reperfusion.",
+          "stance": "neutral",
+          "pmid": "9745637",
+          "title": "Stroke and the aging of the brain and the arteries.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis of low- vs standard-dose alteplase in bridging therapy for large-vessel occlusion and reports 90-day functional independence, recanalization, sICH, and mortality. However, it contains no analyses or subgroup results by Age (no mention of age strata, octogenarians, interaction tests by age, or age-adjusted effect modification). Because the TARGET FEATURE (Age) is not analyzed as a modifier of treatment effect in the abstract, the paper cannot provide evidence for or against the proposed age\u00d7treatment mechanism. Other relevance gates (treatment, outcome, intervention, and population) are met, but the missing Age analysis makes the abstract irrelevant to the specific mechanism test.",
+          "evidence_quote": "No age-related analyses or mentions in the abstract (e.g., subgroup analyses described were ethnicity-based: \"In the ethnicity-based subgroup analyses, no differences were noted between Asian and non-Asian participants.\")",
+          "stance": "neutral",
+          "pmid": "38185108",
+          "title": "Low-Dose versus Standard-Dose Alteplase in Bridging Therapy for Large Vessel Stroke: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "medium",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a pooled systematic review/meta-analysis of patients who received intravenous alteplase and reports outcomes stratified by age (\u226580 vs <80). It shows that older patients treated with alteplase have higher mortality (OR 2.77) and lower odds of a favourable mRS (OR 0.49), while SICH was not significantly increased. However, the paper does not compare treatment versus control across age strata nor report interaction tests that would demonstrate age modifies the treatment effect of alteplase. It therefore documents that age is a prognostic factor among treated patients (older patients do worse overall), but it does not provide evidence that age changes the magnitude of benefit from thrombolysis (no treatment\u00d7age interaction shown) nor address moderation by pre-stroke function, imaging core size, or onset-to-treatment time.",
+          "evidence_quote": "\"Patients \u2265 80 years of age appear to have a lower probability of gaining a favourable outcome and a higher mortality rate compared with patients < 80 years old; however, the rate of SICH was not significantly increased.\"",
+          "stance": "neutral",
+          "pmid": "21292789",
+          "title": "Intravenous thrombolysis in acute ischaemic stroke: a systematic review and meta-analysis to aid decision making in patients over 80 years of age.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a systematic review and meta-analysis of IV thrombolysis UTILIZATION RATES across Asian countries, not treatment effects on functional outcomes. It does not report mRS, dependency, death, or any treatment vs control comparisons. Age is not analyzed as a moderator or subgroup; the listed subgroup factors are geographic, economic, temporal, and protocol/guideline features, not patient age. Therefore it cannot provide evidence for an age\u00d7treatment interaction or the proposed mechanism.",
+          "evidence_quote": "\"A subgroup analysis was conducted, taking into account factors such as the study's country, the economic status of the country, specific Asian regions, publication year (before 2015 and from 2015 onwards), study location, study setting, hospital stroke protocol, and national stroke guidelines.\"",
+          "stance": "neutral",
+          "pmid": "37861564",
+          "title": "Utilization rates of intravenous thrombolysis for acute ischemic stroke in Asian countries:: A systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports an individual participant data meta-analysis of thrombolysis for central retinal artery occlusion (CRAO) with visual acuity outcomes, not acute ischemic stroke with functional outcomes (mRS/dependency/death). Although intravenous thrombolysis (including recombinant t-PA subgroup) is analyzed, the population (CRAO) and primary outcome (visual recovery/BCVA) are a fundamentally different disease context from acute ischemic stroke, so findings do not address the IST-3 age\u00d7treatment mechanism. Age appears only as a baseline descriptor (mean age reported) and there is no analysis or interaction test reporting how age modifies treatment effect. Therefore the abstract cannot provide evidence for the proposed age\u00d7treatment mechanism in acute ischemic stroke.",
+          "evidence_quote": "In total, 783 patients met inclusion criteria (age, 64.8\u00b113.3 years; 35.5% female; baseline BCVA, 2.3\u00b10.5 logMAR).",
+          "stance": "neutral",
+          "pmid": "40832714",
+          "title": "Early Thrombolysis and Outcomes in Central Retinal Artery Occlusion: An Individual Participant Data Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis of IV thrombolysis outcomes in patients with versus without atrial fibrillation and compares IVT versus no IVT within AF patients. It reports mRS, mortality, and sICH but provides no quantitative age subgroup analyses, interaction p-values, or any data showing how treatment effect varies by age. Age is only mentioned qualitatively as one of several clinical factors to consider. Because the TARGET FEATURE (Age) is not analyzed as a modifier of treatment effect in the abstract, it cannot support or refute the proposed age\u00d7treatment mechanism.",
+          "evidence_quote": "Thrombolysis in ischemic stroke patients with AF should be carefully considered based on clinical factors such as NIHSS score, age, and the type of AF.",
+          "stance": "neutral",
+          "pmid": "33573619",
+          "title": "Efficacy and safety of thrombolysis for acute ischemic stroke with atrial fibrillation: a meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports an RCT of alteplase dose in acute ischemic stroke with mRS functional outcomes (passes treatment, outcome, intervention, and population checks). However it does not analyze Age as a modifier of treatment effect \u2014 age appears only as a baseline summary (mean age 66.6 years) with no subgroup or interaction results by age. Because the target feature (Age) is not linked to outcomes or treatment-response in the abstract, it cannot provide evidence for the proposed age\u00d7treatment mechanism.",
+          "evidence_quote": "Among 3285 alteplase-treated patients (mean age, 66.6 years; 38% women) randomly assigned to low-dose (0.6 mg/kg) or standard-dose (0.9 mg/kg) intravenous alteplase within 4.5 hours of symptom onset...",
+          "stance": "neutral",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a meta-analysis of ginkgo terpene lactone preparations, not a trial or pooled analysis testing alteplase/rt-PA as the primary intervention. Although five trials report ginkgo combined with rt-PA, the study primarily evaluates a different intervention (ginkgo preparations) and therefore fails the Intervention Match gate. The abstract contains no analysis or subgroup results by Age (no mention of elderly, \u226580, or age-stratified outcomes) and does not report the specified functional outcomes (mRS/dependency/death) tied to age-by-treatment interaction. Therefore it cannot provide evidence for an age\u00d7alteplase treatment-response mechanism.",
+          "evidence_quote": "meta-analysis of five trials on ginkgo diterpene lactone meglumine injection combined with recombinant tissue plasminogen activator (rt-PA) thrombolytic therapy for acute IS showed that combination therapy was better in improving clinical efficacy",
+          "stance": "neutral",
+          "pmid": "35392576",
+          "title": "The Efficacy and Safety of Ginkgo Terpene Lactone Preparations in the Treatment of Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports results from the IMS III randomized trial comparing endovascular therapy versus IV tPA (alteplase) and focuses on baseline CT angiography and occlusion site effects on recanalization and 90-day mRS. It does not analyze or report any results by Age, nor any age\u00d7treatment interaction. In addition, alteplase is a comparator arm rather than the primary intervention being tested (the trial primarily evaluated endovascular therapy). Because the TARGET FEATURE (Age) is not examined in relation to treatment effect in the abstract, and the trial's primary question is not evaluation of alteplase versus control/placebo, the abstract is irrelevant to the proposed age\u00d7treatment mechanism.",
+          "evidence_quote": "Abstract contains no mention of age or an age-by-treatment interaction.",
+          "stance": "neutral",
+          "pmid": "24895878",
+          "title": "Recanalization and clinical outcome of occlusion sites at baseline CT angiography in the Interventional Management of Stroke III trial.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "glucose",
+      "mechanism": {
+        "description": "Treatment-response interaction claim (conditional and uncertain): Patients with marked hyperglycemia on admission (e.g., >10 mmol/L / >180 mg/dL) \u2014 particularly those with known diabetes or persistent hyperglycemia in-hospital \u2014 are likely to have attenuated net benefit from alteplase because hyperglycemia amplifies reperfusion injury and hemorrhagic transformation; conversely, normoglycemic patients are more likely to translate reperfusion into functional recovery. This interaction is moderated by diabetes status, infarct size, and whether acute glucose is rapidly corrected."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (glucose OR hyperglycemia OR \"blood glucose\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 14,
+      "support_count": 2,
+      "conflict_count": 0,
+      "neutral_count": 12,
+      "abstracts_analyzed": [
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "This is a post-hoc subgroup analysis of the randomized DIRECT-MT trial testing intravenous alteplase before thrombectomy versus thrombectomy alone in acute ischemic stroke due to large vessel occlusion. The authors report a statistically significant treatment-by-admission hyperglycemia interaction (P_interaction=0.025) and show that combination therapy improved functional outcome in patients without hyperglycemia but did not in hyperglycemic patients; for excellent outcome (mRS 0-1) the directionally opposite effects (benefit in normoglycemia, harm in hyperglycemia) reached interaction significance (P_interaction=0.003). Those results directly match the proposed mechanism that admission hyperglycemia attenuates or reverses the net benefit of alteplase. However, the analysis is post-hoc and specific to LVO patients undergoing thrombectomy; the abstract does not report stratification by known diabetes status, infarct size, or in-hospital glucose correction, so moderation by those factors is not assessed here. For these reasons the abstract provides supportive evidence of the proposed interaction but requires replication and more granular assessment of the moderators.",
+          "evidence_quote": "There was evidence of alteplase treatment effect modification by hyperglycemia (P_interaction = 0.025). In patients without hyperglycemia, combination therapy was associated with better outcomes compared to mechanical thrombectomy alone (adjusted common odd ratio 1.46, 95% CI [1.04-2.07]), but not in hyperglycemic patients (acOR 0.74, 95% CI [0.46-1.20]). Combination therapy led to an absolute increase of 6% excellent outcome (mRS 0-1) in non-hyperglycemic patients (aOR 1.71, 95% CI [1.05-2.79]), but resulted in a 12.3% absolute decrease (aOR 0.42 [95% CI, 0.19-0.95]) in hyperglycemic patients (P_interaction = 0.003).",
+          "stance": "support",
+          "pmid": "36151441",
+          "title": "Effect of Admission Hyperglycemia on Safety and Efficacy of Intravenous Alteplase Before Thrombectomy in Ischemic Stroke: Post-hoc Analysis of the DIRECT-MT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract analyzes admission glucose and its interaction with reperfusion therapy on mRS, the trial data come from MR CLEAN, which randomized patients to intra-arterial endovascular treatment versus control. The target mechanism specifically concerns rt-PA / alteplase (intravenous thrombolysis) treatment-response interaction. Because the primary intervention here is mechanical/intra-arterial reperfusion (not IV alteplase), the study does not directly test the hypothesized alteplase\u2013glucose interaction and therefore is not relevant to assessing that mechanism despite appropriate outcome and glucose measurements.",
+          "evidence_quote": "\u201cThe interaction of either hyperglycemia or admission serum glucose levels and treatment effect on modified Rankin Scale scores was not significant (P=0.67 and P=0.87, respectively).\u201d",
+          "stance": "neutral",
+          "pmid": "28389610",
+          "title": "Admission Glucose and Effect of Intra-Arterial Treatment in Patients With Acute Ischemic Stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The abstract reports a retrospective cohort of 345 AIS patients all treated with rt-PA and evaluates multiple glucose metrics (SHR variants, GG, RPG, FPG, HbA1c) for association with outcomes (IHM, MCE, sICH, 3-month mortality, poor functional outcome). SHR1 is strongly associated with worse outcomes within the treated cohort. However, the study does not include an untreated/control arm or report treatment-by-glucose interaction tests (no interaction p-values) comparing rt-PA effect across glucose strata. Therefore the data demonstrate that hyperglycemia (via SHR1) is a prognostic marker of worse outcomes after thrombolysis but do not provide evidence that hyperglycemia modifies the net benefit of alteplase (treatment-response interaction). The subgroup analyses cited are within the rt-PA group (e.g., non-diabetes, SBP\u2265180, NIHSS<16) and do not demonstrate differential treatment efficacy versus no-treatment, so they cannot confirm the proposed mechanism of attenuated alteplase benefit in hyperglycemic patients.",
+          "evidence_quote": "SHR1 (per 1-point increases) was independently associated with IHM (OR = 5.80; 95% CI [1.96, 17.17]; p = 0.001), MCE (OR = 4.73; 95% CI [1.71, 13.04]; p = 0.003), sICH (OR = 4.68, 95% CI [1.48-14.82]; p = 0.009), 3-month mortality (OR = 10.87; 95% CI [3.56, 33.21]; p<0.001), and 3-month poor functional outcome (OR = 8.05; 95% CI [2.77, 23.39]; p<0.001). In subgroup analysis, elevated SHR1 was associated with fatal outcomes in patients with non-diabetes, SBP\u2265 180 mmHg, and NIHSS <16.",
+          "stance": "neutral",
+          "pmid": "38295137",
+          "title": "Performance comparison of stress hyperglycemia ratio for predicting fatal outcomes in patients with thrombolyzed acute ischemic stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post hoc secondary analysis of the randomized ESCAPE-NA1 trial of nerinetide versus placebo in patients undergoing endovascular thrombectomy. The primary intervention evaluated is nerinetide, not intravenous alteplase (patients who did NOT receive alteplase were the analytic sample). Therefore the study does not test rt-PA/aleteplase as the primary treatment arm and is not relevant to a mechanism about how admission glucose modifies alteplase treatment effect. Although baseline serum glucose is reported as a predictor of infarct volume (a prognostic association), the abstract does not report any treatment-by-glucose interaction testing nor any alteplase-specific effect modification. Because the intervention mismatch fails the intervention gate, the abstract is irrelevant to the specified alteplase\u2013glucose interaction hypothesis.",
+          "evidence_quote": "\u201cOther predictors of smaller infarct volume were ... lower baseline serum glucose ...\u201d",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "Although the cohort includes an AIS-TPA group and reports functional outcomes (mRS), the abstract only reports that admission glucose was recorded/adjusted as a covariate. There is no analysis of glucose as a predictor of outcome specific to alteplase treatment, no subgroup analysis by hyperglycemia or diabetes, and no interaction statistics testing whether glucose modified treatment effect. The study's primary aim is the 'weekend effect' rather than testing treatment-response interactions for rt-PA, so it does not provide evidence relevant to the proposed mechanism.",
+          "evidence_quote": "\"Patient demographics, NIHSS scores, and admission glucose levels were examined.\" / \"Using multivariate logistic regression to adjust for site, age, admission NIHSS, and blood glucose, weekend admission was not a significant independent predictive factor...\"",
+          "stance": "neutral",
+          "pmid": "19039213",
+          "title": "Can comprehensive stroke centers erase the 'weekend effect'?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports that glucose level was an independent determinant of neurological outcome in a multifactorial regression, but the study includes only patients who received systemic thrombolysis and provides no comparison (placebo/no-thrombolysis) or subgroup interaction testing. Therefore the data show that admission glucose is a prognostic factor for outcome after thrombolysis, but do not provide evidence that glucose modifies the treatment effect of alteplase (no interaction statistics, no treated vs untreated comparison, no subgroup treatment effect estimates). This matches a general prognostic main-effect rather than a treatment-response interaction.",
+          "evidence_quote": "\"A multifactorial regression showed that systolic blood pressure, glucose level and initial neurological impairment determined the neurological outcome at discharge.\"",
+          "stance": "neutral",
+          "pmid": "18494775",
+          "title": "Systemic thrombolysis based on CT or MRI stroke imaging.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract describes a randomized trial of intraarterial tenecteplase as an adjunct to endovascular treatment for basilar artery occlusion. The hypothesized mechanism concerns treatment-response interaction with intravenous alteplase (rt-PA) specifically. Although this protocol plans subgroup analyses by blood glucose, it does not evaluate intravenous alteplase (or alteplase as the primary intervention). Tenecteplase given intraarterially after EVT is a different agent and clinical context (adjunct to mechanical thrombectomy in posterior circulation) so results would not directly support or refute an alteplase-specific glucose interaction. Therefore the abstract is not relevant to the proposed mechanism.",
+          "evidence_quote": "Subgroup analysis of the primary outcome will be performed by age, gender, baseline NIHSS score, baseline pc-ASPECTS, intravenous thrombolysis, time from estimated symptom onset to treatment, mTICI, blood glucose, and stroke etiology.",
+          "stance": "neutral",
+          "pmid": "37231688",
+          "title": "Improving neurological outcome for acute basilar artery occlusion with sufficient recanalization after thrombectomy by intraarterial tenecteplase (INSIST-IT): Rationale and design.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "Although the study evaluates intravenous alteplase and reports 90-day functional outcomes, glucose is only listed among baseline covariates used in adjustment. The abstract does not report any analysis of glucose as a predictor of outcome nor any subgroup or interaction testing by glucose level, hyperglycemia, or diabetes status. Therefore it does not provide evidence for or against the proposed treatment\u2013glucose interaction mechanism.",
+          "evidence_quote": "This was essentially unchanged after adjusting for differences in baseline characteristics, including age >70, glucose, hypertension, atrial fibrillation, hypercholesterolemia, baseline National Institute of Health Stroke Severity, and baseline Alberta Stroke Program Early CT score",
+          "stance": "neutral",
+          "pmid": "18495951",
+          "title": "The gender effect in stroke thrombolysis: of CASES, controls, and treatment-effect modification.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The post\u2011hoc analysis of the DIRECT\u2011MT randomized trial explicitly examined admission glucose and found a statistically significant treatment-by-glucose interaction: at marked hyperglycemia (>11.1 mmol/L) patients receiving bridging therapy (which includes intravenous alteplase) had substantially higher odds of parenchymal hematoma compared with direct EVT (OR 4.84, p=0.024), while no excess risk was seen at lower glucose levels. That pattern directly supports the proposed mechanism that hyperglycemia amplifies hemorrhagic complications when alteplase is given, which would attenuate its net benefit. However, this is an exploratory, secondary analysis with a small high\u2011glucose subgroup (n=71), and the reported outcome is hemorrhagic complications (a plausible surrogate/mediator for worse functional outcome) rather than direct functional outcomes (mRS). These limitations reduce certainty, so confidence is medium.",
+          "evidence_quote": "A significant interaction indicated higher hemorrhagic risk with bridging therapy versus direct EVT at glucose levels > 11.1 mmol/L. In the > 11.1 mmol/L subgroup (n = 71), bridging therapy was associated with increased PH risk (OR 4.84; 95 % CI 1.34-21.95, p = 0.024).",
+          "stance": "support",
+          "pmid": "41610780",
+          "title": "Elevated baseline glucose and hemorrhagic complications in bridging vs direct EVT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The subgroup analysis tested whether individualized bleeding-risk (using scores that include glucose, e.g., SEDAN and GRASPS) modified the effect of adjunctive IVT before EVT on 90-day functional outcome and found no treatment-by-bleeding-risk interactions (all p>0.05). Glucose is present only as a component of composite bleeding-risk scores rather than as an isolated variable or stratified hyperglycemia subgroup, so there is no evidence here that admission hyperglycemia (or diabetes status/persistent in-hospital hyperglycemia) specifically modified alteplase treatment effect. The null interaction for the composite scores therefore argues against the proposed mechanism in this dataset, but confidence is limited because glucose itself was not analyzed separately and other moderators (diabetes, infarct size, correction of glucose) were not reported.",
+          "evidence_quote": "\"The SEDAN (blood Sugar, Early infarct signs and (hyper) Dense cerebral artery sign, Age, and National Institutes of Health Stroke Score) score...\" \"There were no treatment-by-bleeding-risk interactions for all dichotomized mRS outcomes based on the three scores (all p>0.05).\"",
+          "stance": "neutral",
+          "pmid": "36171101",
+          "title": "Effect of bleeding risk prediction on decision making of intravenous thrombolysis before thrombectomy: a subgroup analysis of DIRECT-MT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "This retrospective cohort of 230 AIS patients all treated with intravenous r-tPA reports that measures of admission/fasting glucose (SHR1/SHR2) predict poor 3-month functional outcome (SHR2 independently associated with worse outcome). However, there is no untreated or placebo comparator and no reported treatment-by-glucose interaction tests showing that glucose status modifies the magnitude of benefit from alteplase. The results therefore show a prognostic association of hyperglycemia with outcome after thrombolysis, but do not provide evidence that hyperglycemia attenuates (or augments) the treatment effect of alteplase.",
+          "evidence_quote": "After adjustment for possible confounders, though patients with AIS with higher SHR1 tend to have a higher risk of poor outcome and death and unlikely to develop ENI, these did not reach the statistical significance. In contrast, SHR2 was independently associated with poor functional outcome (per 0.1-point increases: odds ratios (OR) = 1.383 95% CI [1.147-1.668]).",
+          "stance": "neutral",
+          "pmid": "35211004",
+          "title": "Admission Random Blood Glucose, Fasting Blood Glucose, Stress Hyperglycemia Ratio, and Functional Outcomes in Patients With Acute Ischemic Stroke Treated With Intravenous Thrombolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports a prospective cohort of 343 acute ischemic stroke patients all treated with intravenous thrombolysis (IVT). It tests whether metabolic syndrome and hyperglycemia predict 3-month poor functional outcome after IVT and finds that hyperglycemia (alone or with MetS) is independently associated with worse outcome (adjusted ORs provided). However, there is no untreated or placebo/control arm and no statistical test of treatment-by-glucose interaction versus a comparator \u2014 therefore the paper demonstrates that hyperglycemia is a prognostic risk factor after receiving alteplase, but does not provide evidence that hyperglycemia modifies the magnitude of benefit from alteplase (treatment-response interaction). Additionally, the abstract reports no association between MetS/components and 24-h hemorrhagic transformation or symptomatic ICH, which does not support the specific mechanistic claim that hyperglycemia increases hemorrhagic transformation after reperfusion in this cohort.",
+          "evidence_quote": "\"Compared with 'neither,' hyperglycemia only or concurrent with MetS was associated with an elevated risk of PFO after receiving IVT. 'hyperglycemia only (OR = 2.097, 95% CI = 1.052-4.179)'\"",
+          "stance": "neutral",
+          "pmid": "35255756",
+          "title": "The effect of metabolic syndrome and/or hyperglycemia on outcomes of acute ischemic stroke patients treated with intravenous thrombolysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary/subgroup analysis of the ESCAPE-NA1 randomized trial of nerinetide versus placebo in patients undergoing endovascular treatment. The primary intervention evaluated is nerinetide, not intravenous alteplase (rt-PA). Although the abstract lists baseline serum glucose as a predictor of outcome (\u201clower baseline serum glucose\u201d), it does not analyze or report whether glucose modifies the effect of alteplase on functional outcome. The target mechanism concerns treatment-response interaction between glucose (and diabetes) and alteplase; this abstract does not test alteplase as the primary treatment arm nor report an interaction between glucose and alteplase. Therefore it is irrelevant to the specified alteplase\u2013glucose mechanism.",
+          "evidence_quote": "Younger age, lower NIHSS score, lower baseline serum glucose, absence of atrial fibrillation at baseline, higher ASPECTS score, ... were all predictors of favorable outcome.",
+          "stance": "neutral",
+          "pmid": "39916458",
+          "title": "Factors Influencing Nerinetide Effect on Clinical Outcome in Patients Without Alteplase Treatment in the ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The abstract reports that admission glucose-to-potassium ratio (GPR), which incorporates serum glucose, is independently associated with worse 90-day functional outcome after IV thrombolysis. However, all patients received IVT and there is no control/comparator arm (no non-thrombolysed group) and no interaction test showing that glucose modifies the magnitude of alteplase treatment benefit versus no alteplase. Thus the paper shows a prognostic association of glucose-related measure with outcome after treatment, but does not provide evidence that hyperglycemia attenuates (or enhances) the treatment effect of alteplase.",
+          "evidence_quote": "\"GPR was calculated from serum glucose and potassium levels at admission... Median GPR was significantly higher in these patients (2.14 vs. 1.88, p < 0.001). Subgroup analysis indicated a stronger association in non-diabetic patients.\"",
+          "stance": "neutral",
+          "pmid": "40538655",
+          "title": "The glucose-to-potassium ratio: a predictor of poor functional outcomes in stroke patients receiving thrombolytic therapy.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Gcs score rand (gcs_score_rand)",
+      "mechanism": {
+        "description": "Treatment-response interaction claim: Patients with preserved consciousness (GCS 13\u000215) are more likely to obtain net benefit from IV alteplase because preserved GCS typically indicates smaller core and higher chance of functional recovery; patients with deep reduced consciousness (GCS \u22648) generally derive less benefit or may be harmed due to large established infarct, mass effect, or high sICH risk. The interaction is moderated by stroke location \u2014 posterior circulation strokes may present with low GCS yet still have salvageable tissue and hence may not follow this pattern."
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "weight",
+      "mechanism": {
+        "description": "Treatment-response interaction claim (conditional): If IST-3 applied a fixed maximum alteplase dose (e.g., 90 mg), very high-weight patients who were dose-capped may have lower mg/kg exposure and therefore reduced recanalization probability and smaller net functional benefit; low-weight patients may receive higher mg/kg and thus higher efficacy but also greater hemorrhagic risk. The net effect direction depends on whether reduced mg/kg leads to clinically meaningful reductions in recanalization that outweigh any reduction in bleeding."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (weight OR BMI OR obesity OR \"body mass\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 21,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 21,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a general narrative review about stroke risk factors and aging. While it mentions rt-PA as an effective early treatment and briefly lists 'control of obesity' among preventive measures, it contains no analysis of Weight as a predictor or modifier of alteplase treatment effect, no subgroup or interaction testing, and no functional outcome data stratified by weight or mg/kg dosing. It therefore fails the Feature Check (Weight not analyzed for outcome or treatment interaction) and does not provide evidence relevant to the proposed dose-capping mg/kg mechanism.",
+          "evidence_quote": "Cessation of smoking, control of diabetes, reduction of serum lipids, and control of obesity can reduce the risk of stroke.",
+          "stance": "neutral",
+          "pmid": "9745637",
+          "title": "Stroke and the aging of the brain and the arteries.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a randomized, placebo-controlled trial (WAKE-UP) and a subgroup analysis by vessel occlusion assessing IV alteplase versus placebo with a functional outcome (mRS 0-1 at 90 days). However, it does not analyze or report any results stratified by patient weight or body mass; weight is not mentioned as a covariate or subgroup. Because the TARGET FEATURE (Weight) is absent from the abstract (Step 1.C fails), the paper cannot provide evidence for the proposed dose\u2013weight treatment-response interaction hypothesis, even though other relevance gates (treatment, outcome, population, intervention) are met. Thus the abstract is irrelevant to the specific mechanism claim.",
+          "evidence_quote": "\"We examined data from a corresponding subsample of patients from the multicenter, randomized, placebo-controlled WAKE-UP trial to determine whether MRI-guided IV thrombolysis with alteplase in unknown-onset ischemic stroke benefits patients presenting with vessel occlusion.\" \u2014 The abstract contains no mention of weight or body weight and provides no weight-stratified results.",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis of coagulation, fibrinolytic, and endothelial markers in atrial fibrillation and thromboembolism. It does not evaluate rt-TPA/alteplase or any thrombolytic therapy, does not report functional stroke outcomes (mRS/dependency/death), and does not analyze or mention patient Weight as a predictor or modifier. The population (AF patients) and the biomarkers studied are not comparable to the IST-3 alteplase treatment-response interaction hypothesis. Therefore it cannot provide evidence for or against a weight-dependent alteplase dosing interaction.",
+          "evidence_quote": "Pooled analysis showed the association of coagulation markers (...) fibrinolytic markers (...) and endothelial markers (...) with AF.",
+          "stance": "neutral",
+          "pmid": "28360407",
+          "title": "Predictive Role of Coagulation, Fibrinolytic, and Endothelial Markers in Patients with Atrial Fibrillation, Stroke, and Thromboembolism: A Meta-Analysis, Meta-Regression, and Systematic Review.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary/subgroup analysis of the THAWS randomized trial of alteplase versus control and uses a functional outcome (mRS 0-1 at 90 days), so it meets treatment and outcome gates. However, it does not analyze or report any results stratified by patient Weight nor discuss weight as a modifier of treatment effect. Moreover, the trial used weight-adjusted dosing (alteplase 0.6 mg/kg) rather than a fixed maximum-dose cap (the hypothesized mechanism depends on fixed-dose capping causing lower mg/kg exposure in high-weight patients). Because Weight is neither analyzed as a treatment-effect modifier nor discussed in the abstract, the report cannot provide evidence for the proposed weight-related treatment-response interaction, and is therefore irrelevant to the specified mechanism.",
+          "evidence_quote": "This subanalysis of the THAWS trial assessed the efficacy and safety of alteplase 0.6 mg/kg in CE patients with unknown time of onset and showing diffusion-weighted imaging-fluid-attenuated inversion recovery mismatch.",
+          "stance": "neutral",
+          "pmid": "38220173",
+          "title": "Magnetic Resonance Imaging-Guided Intravenous Thrombolysis in Cardioembolic Stroke Patients With Unknown Time of Onset\u3000- Subanalysis of the THAWS Randomized Control Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis of recombinant human prourokinase (rhPro-UK) vs controls (including alteplase) and is primarily evaluating a different thrombolytic agent (rhPro-UK), so it does not test alteplase/rt-PA as the primary intervention (fails gate D). The abstract does not analyze Weight as a predictor/modifier of treatment effect \u2014 Weight is only mentioned qualitatively (\u2018\u2018weight-independent dosing\u2019\u2019) and is not linked to outcomes (fails gate C). The reported outcomes focus on early neurological recovery and bleeding/SAEs rather than the specified functional outcome (mRS/dependency/death), so outcome alignment is weak (gate B). Because key relevance gates fail, the abstract is irrelevant to the proposed mechanism about weight-dependent mg/kg dosing modifying alteplase efficacy and safety.",
+          "evidence_quote": "offers advantages such as weight-independent dosing and cost effectiveness.",
+          "stance": "neutral",
+          "pmid": "40728699",
+          "title": "Efficacy and safety of 35\u00a0mg of recombinant human prourokinase for thrombolysis in acute ischemic stroke: a meta-analysis of randomized controlled trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this is a randomized trial of alteplase with a functional outcome (90\u2011day mRS) in acute ischemic stroke, the abstract contains no analysis or subgrouping by patient weight nor any mention of dose\u2011capping or mg/kg exposure differences across weight strata. The trial used a weight\u2011based regimen (0.6 mg/kg) rather than a fixed maximum dose, so it does not test the proposed IST\u20113 style mechanism (high\u2011weight patients being dose\u2011capped and thus receiving lower mg/kg exposure). Therefore the abstract cannot provide evidence for or against the hypothesized treatment-by-weight interaction.",
+          "evidence_quote": "\"alteplase at 0.6 mg/kg intravenously\"",
+          "stance": "neutral",
+          "pmid": "33297866",
+          "title": "Magnetic Resonance Imaging-Guided Thrombolysis (0.6 mg/kg) Was Beneficial for Unknown Onset Stroke Above a Certain Core Size: THAWS RCT Substudy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary/exploratory MRI analysis of MISTIE III (intracerebral hemorrhage evacuation with intraclot alteplase), not a trial of intravenous alteplase for acute ischemic stroke. The TARGET FEATURE 'Weight' is not mentioned or analyzed. Population and intervention mismatch: this study addresses large spontaneous intracerebral hemorrhage (ICH) and intraclot alteplase in a surgical evacuation context, which is a fundamentally different disease and delivery route from IV alteplase for acute ischemic stroke. Because Weight is neither reported nor linked to treatment effect or outcomes, and the clinical context differs, the abstract is irrelevant to the specified mechanism (mg/kg IV alteplase dosing effects by patient weight).",
+          "evidence_quote": "\"Mechanistic Evaluation of Diffusion Weighted Hyperintense Lesions After Large Spontaneous Intracerebral Hemorrhage: A Subgroup Analysis of MISTIE III.\" ... \"This was an exploratory analysis of participants in the Minimally Invasive Surgery Plus Alteplase for Intracerebral Hemorrhage Evacuation phase 3 trial... In patients with large hypertensive ICH, white matter disease, intraventricular hemorrhage volume, and large reductions in SBP over the first 24 h were independently associated with DWI lesions.\"",
+          "stance": "neutral",
+          "pmid": "38040993",
+          "title": "Mechanistic Evaluation of Diffusion Weighted Hyperintense Lesions After Large Spontaneous Intracerebral Hemorrhage: A Subgroup Analysis of MISTIE III.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract evaluates intravenous thrombolysis (IVT) plus EVT versus EVT alone and reports 90-day mRS outcomes (matching the treatment and outcome gates), it does not mention or analyze patient weight or any weight-defined subgroups. The hypothesized mechanism depends on differential mg/kg dosing (dose-capping) by patient weight and requires weight-stratified treatment effect estimates or interaction testing; no such data or subgroup analyses are reported. Therefore the abstract cannot provide evidence for or against the proposed weight-based treatment-response interaction.",
+          "evidence_quote": "The abstract contains no mention of 'weight' or body weight and reports no weight-stratified analyses.",
+          "stance": "neutral",
+          "pmid": "41104449",
+          "title": "Acute Carotid Stenting for Tandem Lesions in Patients Randomized to Endovascular Treatment With or Without Thrombolysis: Results From the IRIS Individual Participant Data Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports a randomized trial of nerinetide vs placebo in patients undergoing endovascular thrombectomy. Alteplase was used as part of usual care and was a stratification variable, but the trial does not evaluate alteplase (rt-PA) as the primary intervention nor analyze whether patient weight modifies alteplase treatment effect. The feature 'Weight' is mentioned only in the context of nerinetide dosing (a mg/kg dose with a maximum cap), but there is no subgroup or interaction analysis linking weight to functional outcome or to alteplase efficacy. The mechanism under evaluation concerns how fixed maximum alteplase dosing and weight-dependent mg/kg exposure modify alteplase efficacy; the abstract provides no data or interaction tests addressing weight effects on alteplase response, so it is irrelevant to the proposed mechanism.",
+          "evidence_quote": "Patients were randomly assigned (1:1) to receive intravenous nerinetide in a single dose of 2\u00b76 mg/kg, up to a maximum dose of 270 mg, on the basis of estimated or actual weight (if known) or saline placebo...",
+          "stance": "neutral",
+          "pmid": "32087818",
+          "title": "Efficacy and safety of nerinetide for the treatment of acute ischaemic stroke (ESCAPE-NA1): a multicentre, double-blind, randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative review focused on imaging selection for reperfusion (thrombectomy/alteplase) and does not report any analysis of patient Weight or any subgroup interaction by weight. Although it mentions IV alteplase as a historical treatment, there are no data, subgroup comparisons, interaction p-values, or even descriptive statements linking body weight (mg/kg dosing or dose-capping) to outcomes. Because the target feature (Weight) is not analyzed or discussed in relation to treatment effect or outcomes, the abstract cannot provide evidence for or against the proposed weight-dependent mechanism.",
+          "evidence_quote": "\"IV alteplase administered within 4.5hours after the onset of acute BI diagnosed by the absence of hemorrhage on a non-contrast head CT scan has been the only approved revascularization treatment.\"",
+          "stance": "neutral",
+          "pmid": "29037436",
+          "title": "Which imaging before reperfusion strategy?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract reports outcomes after IV rt-PA among other treatments and uses functional outcomes (mRS), it contains no mention or analysis of patient weight, weight-based subgroups, mg/kg dosing, or interaction tests by weight. The proposed mechanism depends on a treatment-by-weight interaction (dose-capping leading to different mg/kg exposure), but the abstract provides no data or subgroup analyses addressing weight, nor any interaction p-values. Therefore it cannot provide evidence for or against the hypothesized mechanism.",
+          "evidence_quote": "No mention of weight or weight-based subgroup/interaction in the abstract.",
+          "stance": "neutral",
+          "pmid": "28823413",
+          "title": "Treatment of acute basilar artery occlusion: Systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The abstract evaluates intravenous alteplase (IVT) before mechanical thrombectomy and reports treatment effect on 90-day functional outcome, but it does not analyze or report weight as a modifier of treatment effect. The authors state that ASPECTS was the only baseline variable showing a significant interaction with IVT and explicitly note no other significant baseline variable interaction terms were identified. Because the TARGET FEATURE (Weight) is neither examined nor linked to outcome/treatment interaction in the abstract, it cannot provide evidence for the proposed weight-based dose-capping mechanism.",
+          "evidence_quote": "\"No other significant baseline variable interaction terms were identified. ASPECTS was the only baseline variable that showed a significant interaction with IVT for outcome prediction.\"",
+          "stance": "neutral",
+          "pmid": "35801346",
+          "title": "Benefit of Intravenous Alteplase before Thrombectomy Depends on ASPECTS.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports a randomized trial testing adjunctive argatroban or eptifibatide added to IV thrombolysis (alteplase or tenecteplase). The hypothesis concerns a weight-dependent alteplase mg/kg exposure (dose-capping) modifying treatment effect of alteplase itself. This abstract does not analyze or report patient weight or any weight-defined subgroup or interaction, and the study's primary question is the effect of adjunctive agents (not testing different alteplase dosing or dose-capping). Therefore it cannot provide evidence for or against a weight-based interaction with alteplase dosing.",
+          "evidence_quote": "The abstract does not report patient weight or any weight-based subgroup analysis; it focuses on adjunctive therapies added to IV thrombolysis (argatroban, eptifibatide) rather than alteplase dosing.",
+          "stance": "neutral",
+          "pmid": "41071964",
+          "title": "Thrombolysis Alone vs With Argatroban or Eptifibatide: A Prespecified Subgroup Analysis of the MOST Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a subgroup analysis of IV alteplase (THRACE subgroup) with functional outcome (3-month mRS \u22641), so treatment and outcome gates pass. However, the TARGET FEATURE (Weight) is not analyzed or reported anywhere in the abstract \u2014 predictors listed are medical history of hypertension, smoking, onset-to-IVT time, DWI volume, presence/length of SVS. Because weight is neither tested as a predictor nor reported as an interaction with treatment, the abstract cannot provide evidence for the proposed weight-based dosing/response mechanism and must be classified as irrelevant.",
+          "evidence_quote": "Predictors of 3-month mRS \u22641 were no medical history of hypertension (OR 2.43; ...); no current smoking (OR 2.76; ...); onset-to-IVT time (OR 0.47 per hour increase; ...); diffusion-weighted imaging (DWI) volume (OR 0.78 per 10 mL increase; ...); presence of susceptibility vessel sign (SVS) (OR 7.89; ... ) and SVS length (OR 0.87 per mm increase; ...).",
+          "stance": "neutral",
+          "pmid": "34103393",
+          "title": "Clinical imaging factors of excellent outcome after thrombolysis in large-vessel stroke: a THRACE subgroup analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The DIRECT-MT post-hoc analysis directly tested whether BMI (weight surrogate) modified the effect of intravenous alteplase plus EVT versus EVT alone on 90-day functional outcome using interaction terms. The abstract reports no significant interaction between BMI categories and treatment allocation on ordinal mRS or 90-day mortality and concludes BMI had no association with final outcome whether patients received EVT alone or plus IVT. This directly contradicts the proposed mechanism claim that high-weight (dose-capped) patients would have reduced benefit from alteplase (or low-weight patients increased benefit/harm). However, this is a secondary/post-hoc subgroup analysis with a relatively small obese subgroup (64 patients, ~10%), which limits power to detect modest treatment-by-weight interactions; therefore confidence is downgraded to medium.",
+          "evidence_quote": "No significant difference for the ordinal mRS or 90-day mortality was observed by BMI (adjusted common odds ratio [acOR] was 0.92 [95% CI 0.64 to 1.32] for normal weight, 1.36 [95% CI 0.83 to 2.22] for overweight, and 1.09 [95% CI 0.45 to 2.64] for obese) and treatment allocation interaction (the adjusted p value for interaction was 0.335 [normal weight versus overweight], 0.761 [normal weight versus obese], and 0.733 [overweight versus obese]).",
+          "stance": "neutral",
+          "pmid": "40031887",
+          "title": "Impact of Body Mass Index on Outcome of Endovascular Thrombectomy with or without Intravenous Alteplase in Acute Stroke in China: A Post Hoc Analysis of DIRECT-MT Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary post hoc analysis of the ESCAPE-NA1 randomized trial of nerinetide versus placebo in patients undergoing endovascular thrombectomy. It does not evaluate rt-TPA/alteplase as the primary intervention (alteplase is mentioned only as a cotreatment exclusion criterion for this analysis), and the target feature 'Weight' is not analyzed or mentioned anywhere in the abstract. Therefore the paper cannot provide evidence for a dose-capping-by-weight mechanism for alteplase efficacy or harm in IST-3-style dosing.",
+          "evidence_quote": "N/A \u2014 the abstract does not mention weight or any weight-by-treatment interaction.",
+          "stance": "neutral",
+          "pmid": "39648909",
+          "title": "Factors Influencing Nerinetide Effect on Infarct Volume in Patients Without Alteplase in the Randomized ESCAPE-NA1 Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative discussion of imaging-based selection for extended-window revascularization/thrombolysis and cites trials of mismatch-based thrombolysis. It does not analyze or report any results stratified by patient weight, nor does it mention weight, mg/kg dosing, or dose capping. Because the TARGET FEATURE (Weight) is not examined as a modifier of treatment effect, the abstract cannot provide evidence for or against the proposed dose\u2013weight interaction mechanism. While the population (acute ischemic stroke) and intervention class (thrombolysis/revascularization) are relevant, the critical Feature Check fails (no weight-related analysis), so the abstract is irrelevant to the specific mechanism claim.",
+          "evidence_quote": "",
+          "stance": "neutral",
+          "pmid": "30935350",
+          "title": "Extension of therapeutic window in ischemic stroke by selective mismatch imaging.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Step 1 fails because the abstract does not analyze Weight at all (Feature Check). The THRACE subgroup analysis focuses on DWI lesion volume, occlusion site, coronary disease, smoking and age, with no mention of body weight or mg/kg dosing. Additionally, the trial primarily tests the addition of mechanical thrombectomy to intravenous alteplase (thrombectomy vs alteplase alone), so it is not a trial primarily evaluating alteplase dose effects \u2014 the intervention match for an alteplase dose/weight mechanism is not satisfied. Although the population (acute ischemic stroke) and the outcome (mRS at 3 months) are appropriate, absence of any weight-specific subgroup or interaction analysis makes the abstract irrelevant to the proposed weight-based alteplase dosing mechanism.",
+          "evidence_quote": "Variables were extracted from the THRACE database, and DWI volumes were measured semiautomatically.",
+          "stance": "neutral",
+          "pmid": "29382803",
+          "title": "Outcome After Reperfusion Therapies in Patients With Large Baseline Diffusion-Weighted Imaging Stroke Lesions: A THRACE Trial (Mechanical Thrombectomy After Intravenous Alteplase Versus Alteplase Alone After Stroke) Subgroup Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract describes a secondary/preplanned cohort analysis of the MOST randomized trial testing argatroban or eptifibatide as adjuncts to intravenous thrombolysis in patients undergoing thrombectomy. It does not test alteplase/rt-PA as the primary randomized intervention (alteplase was background therapy given to many patients, not the randomized comparison), and it contains no analysis or subgroup results by patient weight. Because the TARGET FEATURE (Weight) is not analyzed for effect modification of thrombolysis, and the trial primarily evaluates other adjunctive agents rather than dose-capped alteplase effects, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "No mention of weight in abstract.",
+          "stance": "neutral",
+          "pmid": "40824660",
+          "title": "Intravenous Argatroban or Eptifibatide in Patients Undergoing Mechanical Thrombectomy: A Subgroup Analysis of the MOST Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "cross_sectional",
+          "reasoning": "The abstract does not evaluate alteplase (rt-PA) efficacy vs control on functional outcomes. It is a cross-sectional analysis of care received after acute ischemic stroke, reporting who received treatments (including whether IV tPA was given) rather than measuring treatment effect on functional outcomes (mRS/dependency/death). The target feature (Weight) is not analyzed as a modifier of treatment effect; at best body mass index is listed as an adjustment covariate in one model, but there is no subgroup or interaction analysis by weight/kg dosing or any link between weight and treatment efficacy or safety. Therefore the abstract cannot provide evidence for the mechanism (weight-dependent mg/kg alteplase exposure altering benefit/harms).",
+          "evidence_quote": "\"the dementia-quality association became nonsignificant after adjusting for patient factors, namely sex, comorbidity, and body mass index (adjusted cumulative OR [acOR]=0.79, P=0.19).\"",
+          "stance": "neutral",
+          "pmid": "33902296",
+          "title": "Preexisting Mild Cognitive Impairment, Dementia, and Receipt of Treatments for Acute Ischemic Stroke.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The abstract does not evaluate rt-TPA/alteplase as the primary intervention \u2014 it reports outcomes after endovascular treatment (EVT) and notes some patients had prior IV rt-PA that was ineffective. Most importantly, the abstract contains no analysis or mention of patient weight or mg/kg dosing, nor any subgroup interaction by weight. The Target Feature ('Weight') is missing, so the trial cannot provide evidence for a weight-dependent dosing interaction of alteplase. Therefore this abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "No mention of 'weight' or patient body weight in the abstract. Example relevant text showing intervention mismatch: \"188 patients ... achieved recanalization with EVT ... 71 patients underwent intracranial EVT because intravenous recombinant tissue plasminogen activator therapy was ineffective.\"",
+          "stance": "neutral",
+          "pmid": "24685994",
+          "title": "Relationship between magnetic resonance angiography-diffusion-weighted imaging mismatch and clinical outcome in endovascular treatment for acute ischemic stroke: subgroup analysis of the Recovery by Endovascular Salvage for Cerebral Ultra-acute Embolism--Japan Registry.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

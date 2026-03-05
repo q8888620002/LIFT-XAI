@@ -1,0 +1,125 @@
+{
+  "dataset": "ist3",
+  "model": "unknown_learner",
+  "summary": "Refined interaction hypotheses for top signals (NIHSS, age, glucose, GCS, weight) focus on treatment-response differences: specify which subgroups derive greater or smaller absolute benefit from IV alteplase and why (biological mechanism), list key moderators (time-to-treatment, imaging core/penumbra, pre-stroke function, diabetes, dose cap), and provide concrete validation plans. Note that SHAP mean effects are small in this dataset (near-zero), so these remain mechanistic hypotheses to be tested rather than confirmed effect modifiers.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "nihss",
+      "importance_rank": 1,
+      "shap_value": 0.08,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Baseline NIH Stroke Scale quantifying neurological deficit (stroke severity).",
+      "why_important": "Severity determines salvageable tissue vs established infarct and predicts sICH risk; these change the absolute net benefit of reperfusion therapy.",
+      "mechanisms": [
+        {
+          "description": "Treatment-response interaction claim: Patients with moderate baseline NIHSS (approx. 5\u000215) gain the largest absolute benefit from IV alteplase because they are most likely to have sizable salvageable penumbra with lower sICH risk; patients with very low NIHSS (0\u0004) gain little absolute benefit due to high baseline independence (ceiling effect); patients with very high NIHSS (>20) generally derive less net benefit because large established core and higher sICH/mortality reduce functional gains. Crucially, this NIHSS\u00d7treatment effect is conditional on time-to-treatment and imaging: among patients with small core/large penumbra on CT perfusion or MRI, even high-NIHSS patients may still derive substantial benefit."
+        }
+      ],
+      "subgroup_implications": "Prioritize treatment for moderate NIHSS (5\u000215) within short onset-to-treatment windows and with favorable imaging; expect limited absolute benefit in very mild or very severe NIHSS unless imaging shows small core.",
+      "validation_suggestions": [
+        "Fit logistic regression for mRS 0-2 at 6 months with NIHSS\u00d7treatment interaction (NIHSS continuous and categorical bands 0-4, 5-15, 16-20, >20), adjusting for age, time-to-treatment, imaging core volume, and pre-stroke mRS.",
+        "Report absolute risk differences and NNT within NIHSS bands; test heterogeneity via likelihood-ratio test of interaction term.",
+        "Perform sensitivity analyses restricting to patients with CT perfusion/MRI to evaluate NIHSS\u00d7core-volume\u00d7treatment three-way interaction."
+      ],
+      "caveats": [
+        "NIHSS is influenced by infarct location (posterior strokes can have low NIHSS but large penumbra) which can confound simple NIHSS stratification.",
+        "Small SHAP mean (near zero) implies limited signal in this model; interaction tests may be underpowered without pooled data.",
+        "Residual confounding by unmeasured imaging or comorbidity features is possible even in randomized sample if interactions with treatment are complex."
+      ]
+    },
+    {
+      "feature_name": "age",
+      "importance_rank": 2,
+      "shap_value": 0.079,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Chronological age at randomization.",
+      "why_important": "Age-related vascular fragility, comorbidity, frailty, and competing mortality alter the absolute benefit-to-harm trade-off for thrombolysis.",
+      "mechanisms": [
+        {
+          "description": "Treatment-response interaction claim: Older patients (commonly defined \u226580 years) tend to have smaller absolute net benefit from IV alteplase on average because higher sICH risk, frailty, and non-stroke competing mortality reduce gains from reperfusion; however, among elderly patients who are functionally independent pre-stroke (pre-stroke mRS 0-1) and who have small ischemic core and short onset-to-treatment, relative efficacy is often preserved and can translate into meaningful absolute benefit. Thus the age\u00d7treatment interaction is moderated by pre-stroke function, imaging core size, and time-to-treatment."
+        }
+      ],
+      "subgroup_implications": "Expect attenuated absolute benefit and higher harm in very elderly with pre-existing disability or large core; do not reflexively withhold alteplase from all older patients\u2014those with good pre-stroke function and favorable imaging may still benefit.",
+      "validation_suggestions": [
+        "Estimate age\u00d7treatment interaction with age as continuous and categorical (e.g., <65, 65\u000079, \u226580), adjusting for pre-stroke mRS, NIHSS, imaging core, and time-to-treatment.",
+        "Report absolute risk differences and sICH-attributable harm by age strata; consider subgroup analyses restricted to independent pre-stroke patients.",
+        "If sample size limited, pool IST-3 with other trials (individual patient data meta-analysis) to improve power for age-stratified interaction testing."
+      ],
+      "caveats": [
+        "Age correlates with multiple mediators (comorbidity, vessel fragility); observed interactions may reflect these factors rather than age per se.",
+        "IST-3 and pooled analyses show mixed results; age alone is insufficient to determine treatment eligibility."
+      ]
+    },
+    {
+      "feature_name": "glucose",
+      "importance_rank": 3,
+      "shap_value": 0.078,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "Admission blood glucose (mmol/L or mg/dL).",
+      "why_important": "Hyperglycemia promotes reperfusion injury, blood-brain barrier breakdown, and infarct growth, potentially increasing sICH risk and reducing functional gains after thrombolysis.",
+      "mechanisms": [
+        {
+          "description": "Treatment-response interaction claim (conditional and uncertain): Patients with marked hyperglycemia on admission (e.g., >10 mmol/L / >180 mg/dL) \u2014 particularly those with known diabetes or persistent hyperglycemia in-hospital \u2014 are likely to have attenuated net benefit from alteplase because hyperglycemia amplifies reperfusion injury and hemorrhagic transformation; conversely, normoglycemic patients are more likely to translate reperfusion into functional recovery. This interaction is moderated by diabetes status, infarct size, and whether acute glucose is rapidly corrected."
+        }
+      ],
+      "subgroup_implications": "Expect smaller absolute benefit and potentially higher sICH in patients with admission glucose >10 mmol/L and in poorly controlled diabetics; normoglycemic patients likely realize greater net functional improvement per unit reperfusion, though the dataset's SHAP signal is small/uncertain.",
+      "validation_suggestions": [
+        "Test glucose\u00d7treatment interaction with glucose modeled continuously and with thresholds (e.g., \u22647, 7-10, >10 mmol/L), adjusting for NIHSS, diabetes status, imaging core size, and time-to-treatment.",
+        "Perform mediation analyses to determine how much of any interaction is explained by sICH and infarct growth (assess CT/MRI volumetrics if available).",
+        "If available, analyze whether in-hospital glucose control (insulin protocols) modifies the interaction."
+      ],
+      "caveats": [
+        "Acute stress hyperglycemia can be a marker of stroke severity and physiological stress; without careful adjustment for NIHSS and infarct size the interaction may be confounded.",
+        "SHAP mean in this dataset is small and slightly positive, indicating weak or inconsistent signal\u2014treat this hypothesis as exploratory."
+      ]
+    },
+    {
+      "feature_name": "Gcs score rand (gcs_score_rand)",
+      "importance_rank": 4,
+      "shap_value": 0.077,
+      "effect_direction": "bidirectional",
+      "clinical_interpretation": "Glasgow Coma Scale score at baseline (level of consciousness).",
+      "why_important": "Level of consciousness reflects extent and location of brain injury; it conditions the amount of salvageable tissue and the risk of hemorrhagic conversion and death after thrombolysis.",
+      "mechanisms": [
+        {
+          "description": "Treatment-response interaction claim: Patients with preserved consciousness (GCS 13\u000215) are more likely to obtain net benefit from IV alteplase because preserved GCS typically indicates smaller core and higher chance of functional recovery; patients with deep reduced consciousness (GCS \u22648) generally derive less benefit or may be harmed due to large established infarct, mass effect, or high sICH risk. The interaction is moderated by stroke location \u2014 posterior circulation strokes may present with low GCS yet still have salvageable tissue and hence may not follow this pattern."
+        }
+      ],
+      "subgroup_implications": "Predict larger net benefit in patients with GCS 13\u000215 and early treatment; expect attenuated benefit or higher harm among GCS \u22648 unless imaging shows small core (especially in posterior circulation).",
+      "validation_suggestions": [
+        "Model GCS\u00d7treatment interaction (GCS continuous and dichotomized at \u22648 vs >8, and alternative bands) adjusting for NIHSS, stroke subtype (posterior vs anterior), and imaging core volume.",
+        "Compare sICH, mortality, and functional outcome across GCS strata in randomized arms and perform sensitivity analyses excluding non-ischemic causes of reduced consciousness.",
+        "If sample sizes allow, test three-way interactions GCS\u00d7stroke-location\u00d7treatment."
+      ],
+      "caveats": [
+        "Low GCS may be caused by stroke mimics (seizure, hypoglycemia) and by sedation\u2014misclassification can bias results.",
+        "GCS correlates with NIHSS and infarct location; observed modification may be mediated or confounded by these factors."
+      ]
+    },
+    {
+      "feature_name": "weight",
+      "importance_rank": 5,
+      "shap_value": 0.076,
+      "effect_direction": "unclear",
+      "clinical_interpretation": "Patient body weight used to calculate alteplase dose (typically 0.9 mg/kg) and subject to maximum dosing caps.",
+      "why_important": "Weight determines mg/kg exposure; if a fixed maximum dose is applied, high-weight patients receive lower mg/kg which may reduce recanalization and net efficacy, while low-weight patients receive higher mg/kg and may have increased bleeding risk.",
+      "mechanisms": [
+        {
+          "description": "Treatment-response interaction claim (conditional): If IST-3 applied a fixed maximum alteplase dose (e.g., 90 mg), very high-weight patients who were dose-capped may have lower mg/kg exposure and therefore reduced recanalization probability and smaller net functional benefit; low-weight patients may receive higher mg/kg and thus higher efficacy but also greater hemorrhagic risk. The net effect direction depends on whether reduced mg/kg leads to clinically meaningful reductions in recanalization that outweigh any reduction in bleeding."
+        }
+      ],
+      "subgroup_implications": "Anticipate potential attenuation of benefit in very high-weight/capped patients and a shifted benefit-harm balance in low-weight patients; effect will depend on actual dosing practice and body composition.",
+      "validation_suggestions": [
+        "Use recorded alteplase dose to compute mg/kg and analyze mg/kg\u00d7treatment interaction on recanalization (if angiographic data), sICH, and 6-month independence, adjusting for NIHSS, age, and comorbidities.",
+        "Stratify by whether actual dose was capped; perform comparison of outcomes in capped vs non-capped patients within weight strata.",
+        "If available, examine pharmacodynamic proxies (recanalization rates, early neurological improvement) rather than only final mRS."
+      ],
+      "caveats": [
+        "Weight may proxy for obesity-related comorbidity (diabetes, hypertension) which could confound interactions.",
+        "IST-3 dosing policy must be checked: if no strict cap was applied or cap was rare, hypothesized effect may be irrelevant to this cohort.",
+        "SHAP mean is small and positive in this dataset, so observed association may be weak or reflect correlated factors."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "Key conditional interactions to test: NIHSS\u00d7age (very severe stroke in very elderly likely produces especially attenuated net benefit), NIHSS/GCS\u00d7imaging core (severity/consciousness modify benefit mainly when core is large), glucose\u00d7diabetes status (stress hyperglycemia vs chronic hyperglycemia differ), and weight\u00d7dose-cap (weight effect depends on whether a dose cap was applied). Prioritize multivariable interaction models and mediation analyses (sICH, recanalization, infarct growth) and consider pooling IST-3 with other trials for power."
+}

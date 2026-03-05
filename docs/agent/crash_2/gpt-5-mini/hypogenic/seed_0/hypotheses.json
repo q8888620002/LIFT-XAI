@@ -1,0 +1,92 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "crash_2",
+    "treatment": "Tranexamic acid (TXA)",
+    "outcome": "All-cause mortality at 28 days or in-hospital death",
+    "population": "Trauma patients with significant bleeding or at risk of significant hemorrhage",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 5,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": {
+    "Younger trauma patients (age < 40 years) benefit more from TXA because they have fewer comorbidities and higher likelihood of survival if hemorrhage is controlled early.": {
+      "hypothesis": "Younger trauma patients (age < 40 years) benefit more from TXA because they have fewer comorbidities and higher likelihood of survival if hemorrhage is controlled early.",
+      "acc": 0.5100000000000007,
+      "num_visits": 200,
+      "reward": 0.5913811815359371,
+      "subgroup_rule": {
+        "feature": "iage",
+        "operator": "<",
+        "threshold": 40.0,
+        "description": "Patients with age < 40 years"
+      },
+      "recommendation": "treat"
+    },
+    "Trauma patients with initial systolic blood pressure (isbp) < 90 mmHg will experience a greater reduction in 28-day all-cause mortality when treated with tranexamic acid compared with control.": {
+      "hypothesis": "Trauma patients with initial systolic blood pressure (isbp) < 90 mmHg will experience a greater reduction in 28-day all-cause mortality when treated with tranexamic acid compared with control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "isbp",
+        "operator": "<",
+        "threshold": 90.0,
+        "description": "Initial systolic blood pressure less than 90 mmHg (severe hypotension)"
+      },
+      "recommendation": "treat"
+    },
+    "In trauma patients with an initial respiratory rate of 20 breaths per minute or higher (irr >= 20), administration of tranexamic acid reduces all-cause 28-day or in-hospital mortality compared with no TXA.": {
+      "hypothesis": "In trauma patients with an initial respiratory rate of 20 breaths per minute or higher (irr >= 20), administration of tranexamic acid reduces all-cause 28-day or in-hospital mortality compared with no TXA.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "irr",
+        "operator": ">=",
+        "threshold": 20.0,
+        "description": "Initial respiratory rate in breaths per minute; subgroup includes patients with tachypnea (>=20 bpm)."
+      },
+      "recommendation": "treat"
+    },
+    "In trauma patients, those with icc >= 2 will have lower all-cause 28-day or in-hospital mortality when treated with tranexamic acid compared with controls.": {
+      "hypothesis": "In trauma patients, those with icc >= 2 will have lower all-cause 28-day or in-hospital mortality when treated with tranexamic acid compared with controls.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "icc",
+        "operator": ">=",
+        "threshold": 2.0,
+        "description": "icc value greater than or equal to 2"
+      },
+      "recommendation": "treat"
+    },
+    "In trauma patients with an initial heart rate of 120 beats per minute or higher, administration of tranexamic acid reduces 28-day or in-hospital all-cause mortality compared with no TXA.": {
+      "hypothesis": "In trauma patients with an initial heart rate of 120 beats per minute or higher, administration of tranexamic acid reduces 28-day or in-hospital all-cause mortality compared with no TXA.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "ihr",
+        "operator": ">=",
+        "threshold": 120.0,
+        "description": "initial heart rate (beats per minute) at or above 120"
+      },
+      "recommendation": "treat"
+    }
+  },
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 0.11827623630718742,
+    "avg_accuracy": 0.10200000000000013
+  }
+}

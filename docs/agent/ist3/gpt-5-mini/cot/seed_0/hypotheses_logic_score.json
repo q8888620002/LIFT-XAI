@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Onset-to-treatment time (onset-to-needle)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Onset-to-treatment time is not present in the provided trial_measured_features, so this feature was not recorded in the dataset. G1 FALSE \u2014 cascade: G2..G5 also FALSE. G2: Not applicable because G1 is false; the hypothesis' biological coherence cannot be evaluated from this trial dataset and so G2 is FALSE. G3: Not applicable because G1 is false; causal plausibility as an effect modifier in this trial cannot be established and so G3 is FALSE. G4: Not applicable because G1 is false; trial-based literature support for this interaction cannot be assessed here and so G4 is FALSE. G5: Not applicable because G1 is false; clinical actionability within this trial cannot be operationalized and so G5 is FALSE.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G1 failed because onset-to-treatment time is not among the trial_measured_features, so all subsequent gates must be FALSE.",
+      "overall_score": 0
+    },
+    {
+      "feature_name": "Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: ASPECTS or quantified baseline infarct core size / early ischemic change is not listed in the trial_measured_features (the trial lists a generic 'infarct' field but not ASPECTS or core size), so the specific imaging measure was not recorded. G1 FALSE \u2014 cascade: G2..G5 also FALSE. G2: Not applicable because G1 is false; the trial data do not contain the named imaging feature so biological coherence within this trial setting cannot be confirmed and G2 is FALSE. G3: Not applicable because G1 is false; causal effect-modification plausibility in-trial cannot be assessed and G3 is FALSE. G4: Not applicable because G1 is false; literature support cannot be tied to measured trial variables here so G4 is FALSE. G5: Not applicable because G1 is false; actionable subgrouping within this trial is not possible so G5 is FALSE.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G1 failed because ASPECTS / baseline core size is not among the recorded trial features (only a generic 'infarct' is listed), so subsequent gates are FALSE.",
+      "overall_score": 0
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIH Stroke Scale score)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: NIHSS is explicitly listed in trial_measured_features, so the feature was recorded in the dataset (G1 TRUE). G2: The hypothesis posits differential benefit by NIHSS bands but does not specify a concrete molecular/physiological pathway (receptor/enzyme/PK/PD or detailed cell-level mechanism) connecting NIHSS to a different pharmacologic action of alteplase, so the statement is a prognostic/severity claim rather than a named biological mechanism (G2 FALSE \u2014 cascade: G3..G5 also FALSE). G3: Not applicable because G2 is false; the hypothesis reads like an absolute-risk/severity amplifier and lacks a specified drug-specific mechanistic pathway so G3 is FALSE. G4: Not applicable because G2 is false; while literature describes differing absolute effects by severity, a rigorously demonstrated mechanism of true differential drug action in this trial context is not provided so G4 is FALSE. G5: Not applicable because G2 is false; although NIHSS is measurable, the hypothesis lacks an operational mechanistic rule to change treatment beyond general severity bands so G5 is FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 failed because the hypothesis only gives severity-based subgrouping without specifying a concrete biological mechanism by which alteplase acts differently across NIHSS strata; therefore further gates are not met.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Age",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Age is explicitly listed in trial_measured_features, so the feature was recorded (G1 TRUE). G2: The hypothesis asserts attenuation of benefit and higher sICH with increasing age but does not name specific biological steps (e.g., blood\u2013brain barrier fragility, altered fibrinolytic response, PK changes) tying age to altered alteplase action, so the mechanism is not concretely specified (G2 FALSE \u2014 cascade: G3..G5 also FALSE). G3: Not applicable because G2 is false; although age plausibly influences risk and complications, the hypothesis lacks a specified drug-specific PD/PK pathway in this dataset so G3 is FALSE. G4: Not applicable because G2 is false; while clinical literature discusses age-related outcome differences, the hypothesis as stated lacks a trial-tied mechanistic claim so G4 is FALSE. G5: Not applicable because G2 is false; age is measurable but the hypothesis does not provide a mechanistic rule that would change treatment beyond general age bands so G5 is FALSE.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 failed because the hypothesis describes age-associated attenuation of benefit without specifying concrete biological steps (PK/PD or cell-level mechanisms) that would make this a true drug-specific effect modifier.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Proximal large-vessel occlusion or clot-burden / vessel-imaging variables are not listed in trial_measured_features (the dataset lists only 'infarct' and stroke type categories), so the specific occlusion-site variable was not recorded (G1 FALSE \u2014 cascade: G2..G5 also FALSE). G2: Not applicable because G1 is false; the biological coherence (recanalization differences by occlusion site) cannot be evaluated within this trial dataset and so G2 is FALSE. G3: Not applicable because G1 is false; causal plausibility of differential alteplase effectiveness by occlusion site cannot be confirmed in-trial so G3 is FALSE. G4: Not applicable because G1 is false; literature support exists broadly but cannot be tied to measured trial variables here so G4 is FALSE. G5: Not applicable because G1 is false; actionable subgrouping within this trial is not possible without vessel-imaging data so G5 is FALSE.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G1 failed because occlusion-site / clot-burden variables are not among the recorded trial_measured_features, so subsequent gates are FALSE.",
+      "overall_score": 0
+    }
+  ]
+}

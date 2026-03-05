@@ -1,0 +1,426 @@
+{
+  "dataset": "ist3",
+  "total_mechanisms_analyzed": 5,
+  "total_abstracts_retrieved": 32,
+  "overall_support_count": 1,
+  "overall_conflict_count": 0,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "Onset-to-treatment time (onset-to-needle)",
+      "mechanism": {
+        "description": "Patients treated \u22643 hours from onset will have a larger absolute and relative increase in alive-and-independent at 6 months with alteplase than patients treated >4.5 hours."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (\"time to treatment\" OR \"onset to treatment\" OR \"treatment delay\" OR \"door-to-needle\" OR \"symptom onset\") AND (\"independent\" OR \"alteplase\" OR \"absolute\" OR \"increase\" OR \"relative\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT]) NOT (tenecteplase[tiab] OR sonothrombolysis[tiab] OR \"mechanical thrombectomy\"[tiab] OR \"endovascular thrombectomy\"[tiab] OR thrombectomy[tiab] OR urokinase[tiab] OR desmoteplase[tiab])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 9,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 9,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract describes a randomized trial and subgroup analysis of clopidogrel plus aspirin versus aspirin alone initiated within 72 hours after ischemic stroke/TIA. It does analyze time-from-onset strata (\u226424h, >24\u201348h, >48\u201372h) but does NOT evaluate rt-TPA/alteplase or any thrombolytic agent, nor does it report the functional outcome (mRS/dependency/death) targeted by the hypothesis. Because the intervention differs (antiplatelet therapy rather than alteplase) the study is not relevant to the proposed mechanism regarding onset-to-needle effects of rt-TPA.",
+          "evidence_quote": "\"All patients with acute mild ischemic stroke and TIA were included in this subgroup analysis and categorized into 3 groups according to time from symptom onset to randomization (group 1: \u226424 hours; group 2: >24 to \u226448 hours; and group 3: >48 to 72 hours).\"",
+          "stance": "neutral",
+          "pmid": "39240565",
+          "title": "Clopidogrel and Aspirin Initiated Between 24 to 72 Hours for Mild Ischemic Stroke: A Subgroup Analysis of the INSPIRES Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "While the abstract evaluates IV tPA and reports functional outcomes (mRS at 90 days) in acute ischemic stroke patients (so Treatment Check, Outcome Alignment, Intervention Match, and Population Context pass), it does not analyze or report results stratified by Onset-To-Treatment Time (Onset-To-Needle). The included studies and analyses are restricted to patients treated within 4.5 hours of symptom onset and no interaction or subgroup analysis by time-from-onset (e.g., \u22643h vs >4.5h) is presented. Therefore it cannot provide evidence for or against the proposed mechanism that benefit differs for patients treated \u22643 hours versus >4.5 hours.",
+          "evidence_quote": "\"We performed a meta-analysis to compare the efficacy and safety between low- and standard-dose intravenous (IV) tissue-type plasminogen activator (tPA) for acute ischemic stroke (AIS) patients within 4.5 hours of symptom onset.\"",
+          "stance": "neutral",
+          "pmid": "29224744",
+          "title": "Low- versus Standard-Dose Intravenous Tissue-Type Plasminogen Activator for Acute Ischemic Stroke: An Updated Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The pooled randomized-trial analysis explicitly tested a reperfusion \u00d7 time-to-randomization interaction across onset-to-randomization strata (4.5\u20136 h, 6\u20139 h, and wake-up) and found no evidence that time modified the benefit of reperfusion (interaction P = 0.63). Thus the abstract reports that treatment effect (benefit of reperfusion/alteplase) was consistent across the examined time strata, i.e., no interaction. However, this analysis only covers late windows (>4.5 h and wake-up) and does not include the early \u22643-hour window from the hypothesis, so the data do not address whether patients treated \u22643 hours have larger absolute/relative benefit than those treated >4.5 hours. Because the authors explicitly report no time-dependent heterogeneity of effect in the examined strata, the correct classification is NO_INTERACTION, with only medium confidence due to the absence of early (\u22643 h) patients in these analyses.",
+          "evidence_quote": "\"...with no evidence of association between time to randomization and beneficial effect of reperfusion (P = .63).\"",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract reports outcomes after intravenous alteplase (within 4.5 h) and assesses 90-day death/disability, it does not analyze or report any association or interaction with Onset-To-Treatment Time (Onset-To-Needle). The paper's focus is lipid\u2011lowering pretreatment and alteplase dose; onset-to-needle is only an inclusion/time window criterion (treated within 4.5 h) rather than a tested subgroup or predictor. Because the TARGET FEATURE (Onset-To-Treatment Time) is not evaluated as a modifier of treatment effect, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\"...were randomly assigned to low-dose (0.6 mg/kg) or standard-dose (0.9 mg/kg) intravenous alteplase within 4.5 h of symptom onset.\"",
+          "stance": "neutral",
+          "pmid": "29705803",
+          "title": "Lipid-Lowering Pretreatment and Outcome Following Intravenous Thrombolysis for Acute Ischaemic Stroke: A Post Hoc Analysis of the Enhanced Control of Hypertension and Thrombolysis Stroke Study Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a prespecified subgroup analysis from the ENCHANTED randomized trial comparing low- versus standard-dose alteplase with functional outcome (mRS) as the endpoint. However, it does not analyze or report treatment effect by Onset-To-Treatment Time (e.g., \u22643 h vs >4.5 h). Onset-to-needle appears only as an enrollment window (within 4.5 hours) and is not linked to outcomes or subgroup interaction testing. The subgroup analyses described focus on prior antiplatelet therapy and dose, not onset-to-treatment intervals, so the abstract provides no evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"randomly assigned to low-dose (0.6 mg/kg) or standard-dose (0.9 mg/kg) intravenous alteplase within 4.5 hours of symptom onset\"",
+          "stance": "neutral",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post-hoc/secondary analysis of the NINDS rtPA Stroke Study examining baseline CT ASPECTS as a potential treatment modifier of rt-PA effect. While the intervention (rt-PA) and outcome domain (functional outcome/mortality) are relevant, the target feature (Onset-To-Treatment Time / Onset-To-Needle) is not analyzed or mentioned anywhere in the abstract. Because the mechanism specifically concerns effect modification by onset-to-treatment time (\u22643 h vs >4.5 h), and that feature is absent, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "No mention of onset-to-treatment time or onset-to-needle in the abstract; the analysis focuses on ASPECTS and early ischemic change.",
+          "stance": "neutral",
+          "pmid": "16166579",
+          "title": "Importance of early ischemic computed tomography changes using ASPECTS in NINDS rtPA Stroke Study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The IMS-III trial randomized patients to intravenous tPA plus endovascular therapy versus intravenous tPA alone within 3 hours of onset. The hypothesis to test requires assessing whether onset-to-treatment time modifies the effect of alteplase versus control (including times >4.5 hours). This abstract does analyze subgroups by time to IV tPA, but (1) alteplase/tPA is given in both arms (the trial evaluates addition of endovascular therapy, not alteplase versus placebo), so it does not test alteplase effect versus no alteplase; and (2) enrollment was within 3 hours, so the study cannot address treatment effects at >4.5 hours. Therefore the abstract is not relevant to the specified mechanism (effect modification of alteplase by onset-to-needle time across the \u22643 h vs >4.5 h comparison).",
+          "evidence_quote": "\"The Interventional Management of Stroke (IMS)-III trial randomized patients ... to intravenous tissue-type plasminogen activator (tPA) plus endovascular therapy versus intravenous tPA therapy alone within 3 hours from symptom onset. ... We analyzed subgroups defined by time from onset to intravenous tPA initiation and baseline occlusion status at a prespecified \u03b1=0.01.\"",
+          "stance": "neutral",
+          "pmid": "24335227",
+          "title": "Alberta Stroke Program early computed tomography score to select patients for endovascular treatment: Interventional Management of Stroke (IMS)-III Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports post-hoc subgroup analyses stratified by onset-to-treatment intervals (0\u201390 min, 91\u2013180 min) crossed with NIHSS and states that \"for all the 12 specified onset-to-treatment-NIH Stroke Scale subgroups, the adjusted odds ratio for a favorable 3-month outcome was greater than 1.0 and favored tPA.\" There is no report of a significant interaction by onset-to-treatment time, no interaction p-value, and the language emphasizes consistent benefit across the time-by-severity subgroups. The analysis is descriptive and post-hoc and does not include later treatment windows (>4.5 h) needed to test the hypothesis comparing \u22643 h versus >4.5 h. Taken together, the abstract indicates a consistent treatment effect across the analyzed onset-to-treatment strata rather than a significantly larger benefit in earlier (\u22643 h) versus much later (>4.5 h) treatment \u2014 therefore it does not support the proposed mechanism and instead indicates no interaction.",
+          "evidence_quote": "\"We categorized patients from the trials into onset to treatment (0 to 90 minutes, 91 to 180 minutes) by NIH Stroke Scale... For all the 12 specified onset-to-treatment-NIH Stroke Scale subgroups, the adjusted odds ratio for a favorable 3-month outcome was greater than 1.0 and favored tPA.\"",
+          "stance": "neutral",
+          "pmid": "15795715",
+          "title": "The impact of imbalances in baseline stroke severity on outcome in the National Institute of Neurological Disorders and Stroke Recombinant Tissue Plasminogen Activator Stroke Study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "Although the trial randomized patients to intravenous alteplase and explicitly analyzed treatment timing (6\u201324 h, and <=12 h vs 12\u201324 h), the population and clinical context are acute myocardial infarction (AMI), not acute ischemic stroke. The target mechanism concerns onset-to-treatment modifying alteplase benefit for functional outcome after ischemic stroke. Pathophysiology, outcome measures (mRS/dependency/death in stroke vs mortality/disabled survivors in AMI), and clinical implications differ fundamentally between AMI and stroke, so the abstract does not provide relevant evidence for the proposed stroke-specific mechanism.",
+          "evidence_quote": "\"5711 patients ... were randomised ... between 6 and 24 h from symptom onset ... Pre-specified survival analysis according to treatment within 12 h of symptom onset, however, showed a significant reduction in mortality in favour of alteplase: 35-day mortality was 8.90% versus 11.97% for placebo...\"",
+          "stance": "neutral",
+          "pmid": "8103874",
+          "title": "Late Assessment of Thrombolytic Efficacy (LATE) study with alteplase 6-24 hours after onset of acute myocardial infarction.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)",
+      "mechanism": {
+        "description": "Patients with ASPECTS \u22657 at baseline will have higher odds of independence at 6 months with alteplase than patients with ASPECTS \u22646."
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIH Stroke Scale score)",
+      "mechanism": {
+        "description": "Patients with baseline NIHSS 6\u201315 will show the largest relative benefit in achieving independence at 6 months from alteplase, while NIHSS \u22645 patients will show minimal net benefit and higher chances of net harm from sICH."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (NIHSS OR \"stroke severity\" OR \"neurological deficit\" OR \"infarct volume\") AND (\"independence\" OR \"achieving\" OR \"alteplase\" OR \"baseline\" OR \"relative\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT]) NOT (tenecteplase[tiab] OR sonothrombolysis[tiab] OR \"mechanical thrombectomy\"[tiab] OR \"endovascular thrombectomy\"[tiab] OR thrombectomy[tiab] OR urokinase[tiab] OR desmoteplase[tiab])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 10,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 10,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract evaluates intravenous alteplase versus non-thrombolytic care and reports functional outcomes (mRS) in a population described as having mild ischemic stroke, it does not analyze or report treatment effect by baseline NIHSS strata (e.g., NIHSS \u22645 vs 6\u201315). The only subgroup analysis mentioned concerns time-to-treatment (3\u20134.5 hours). Because the TARGET FEATURE (explicit analysis of Baseline Stroke Severity / NIHSS as a modifier of treatment effect) is missing, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"Subgroup analysis showed that the function outcomes was the best within 3-4.5 hours; and the risk and mortality of sICH were the lowest within 3-4.5 hours.\"",
+          "stance": "neutral",
+          "pmid": "35148589",
+          "title": "Intravenous Alteplase Treatment of Acute Ischemic Stroke Patients Exhibiting Mild Neurological Deficits.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a systematic review/meta-analysis of erythropoietin (EPO) in acute ischemic stroke, not a trial of rt-PA/alteplase as the primary intervention. NIHSS is mentioned only as a 30-day outcome measure, not as baseline stroke severity used to define subgroups or effect modification. The abstract contains no analysis or interaction testing of baseline NIHSS strata (e.g., NIHSS \u22645 vs 6\u201315) on treatment effect. Although a subgroup analysis by prior rtPA use is reported, that pertains to combination therapy with EPO rather than trials testing alteplase versus control/placebo, so it does not address the specified mechanism about alteplase benefit by baseline NIHSS.",
+          "evidence_quote": "\"30-day NIHSS measures primary outcome\"; \"In the subgroup analysis by using recombinant tissue plasminogen activator (rtPA) earlier, the rtPA group showed increased all-cause mortality...\"",
+          "stance": "neutral",
+          "pmid": "27549753",
+          "title": "Erythropoietin Treatment in Patients with Acute Ischemic Stroke: A Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract is a meta-analysis comparing endovascular therapy (ET) versus intravenous thrombolysis. The primary intervention tested is ET, with IV tPA serving as the comparator; the Step 1(D) requirement requires the abstract test rt-PA/altepase as a primary arm (not merely a control) for relevance to the proposed alteplase-vs-no-alteplase mechanism. In addition, the subgroup analysis reported concerns severe strokes (NIHSS \u226520), not the target NIHSS strata (6\u201315 and \u22645) specified in the hypothesis. Therefore the paper does not provide direct evidence for the mechanism about baseline NIHSS modifying benefit from alteplase versus control/no alteplase.",
+          "evidence_quote": "\"Subset analysis was performed for patients with severe stroke (National Institutes of Health Stroke Scale score \u226520).\" and \"ET was found to have better outcomes in patients with severe stroke (National Institutes of Health Stroke Scale score \u226520)... compared with IV thrombolysis.\"",
+          "stance": "neutral",
+          "pmid": "24079677",
+          "title": "Endovascular therapy for acute ischemic stroke: a systematic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not test whether baseline stroke severity (baseline NIHSS strata, e.g., 0\u20135, 6\u201315) modifies the effect of alteplase on the functional outcome of interest. Although alteplase is one treatment arm in the ARAMIS comparison (dual antiplatelet vs intravenous alteplase) and the outcome (early neurological deterioration, END) is a short-term surrogate, the analysis evaluates treatment effect by baseline systolic blood pressure, not by baseline NIHSS. Baseline NIHSS is used only to define END (an increase in NIHSS from baseline) and to describe the population as 'minor nondisabling' stroke, but no subgroup or interaction analysis by baseline NIHSS severity is reported. Because the TARGET FEATURE (baseline NIHSS as an effect modifier of alteplase benefit) is not analyzed, the abstract is irrelevant to the specified mechanism.",
+          "evidence_quote": "\"Primary outcome was END, defined as an increase of \u22652 in the NIHSS score from baseline within 24\u2009h.\"",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract is from the randomized NINDS rt-PA trial and reports favourable 3-month outcomes for rt-PA. Baseline NIHSS is discussed as a 'masking confounder' and was adjusted for in interaction analyses, which shows NIHSS is prognostic and associated with outcome. However, the abstract provides no explicit subgroup analysis or interaction test showing that treatment benefit differs across NIHSS strata (e.g., NIHSS 6\u201315 versus \u22645), nor any data on differential sICH or net harm by NIHSS. Therefore the abstract supports that baseline NIHSS predicts outcome generally, but does not provide evidence that NIHSS modifies the effect of alteplase in the manner hypothesized.",
+          "evidence_quote": "For 3-month favorable outcome, the NIHSS met criteria for a masking confounder. After adjusting for NIHSS as a covariate, an OTT-treatment interaction was detected (p = 0.09): the adjusted OR (95% CI) for a favorable 3-month outcome associated with recombinant tissue-type plasminogen activator (rt-PA) was 2.11 (1.33 to 3.35) in the 0 to 90 minute stratum and 1.69 (1.09 to 2.62) in the 91 to 180 minute stratum.",
+          "stance": "neutral",
+          "pmid": "11113218",
+          "title": "Early stroke treatment associated with better outcome: the NINDS rt-PA stroke study.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not evaluate rt-TPA / alteplase (intravenous thrombolysis) or a class-equivalent as the tested intervention; it compares dual versus single antiplatelet therapy (with a Factor XIa inhibitor background). The primary outcome reported is recurrent ischemic stroke (not functional outcome such as mRS/dependency/death). Although baseline NIHSS is reported and a subgroup (NIHSS \u22643) is mentioned, the study tests a different intervention in a different outcome domain, so it cannot provide evidence for the alteplase\u2013NIHSS mechanism specified in the hypothesis.",
+          "evidence_quote": "\"median NIHSS was 2 (interquartile range [IQR] 1-4) ... with the strongest numerical benefit of DAPT over SAPT among patients with NIHSS\u2009\u2a7d\u20093 not treated by intravenous thrombolysis.\"",
+          "stance": "neutral",
+          "pmid": "40008571",
+          "title": "Dual versus single antiplatelet therapy in patients with non-cardioembolic acute ischemic stroke and baseline MRI.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "medium",
+          "study_design": "prospective_cohort",
+          "reasoning": "The J-MARS abstract reports outcomes after treatment with alteplase in a large, open-label, nonrandomized post-marketing registry and provides an outcome (mRS 0-1) for a subgroup defined by baseline NIHSS (<25). However, there is no control or comparator arm, no subgroup comparisons of treatment effect versus no treatment/placebo, and no interaction statistics testing whether baseline NIHSS modifies alteplase benefit. Thus the abstract can only show that baseline NIHSS is prognostic of outcome in treated patients (predicts absolute outcomes), not that NIHSS 6\u201315 patients derive a larger relative or absolute treatment benefit versus controls or that NIHSS \u22645 patients have net harm from sICH. Also, the abstract does not report the specific NIHSS strata of interest (6\u201315 or \u22645) nor reports sICH rates stratified by those bands. Therefore the evidence supports a prognostic main effect of baseline NIHSS but does not support or refute the proposed treatment\u2013severity interaction.",
+          "evidence_quote": "The subgroup analysis in patients between 18 and 80 years with a baseline NIHSS score <25 demonstrated that favorable outcome at 3 months was 39.0% (95% CI, 37.4%-40.6%).",
+          "stance": "neutral",
+          "pmid": "20651262",
+          "title": "Thrombolysis with 0.6 mg/kg intravenous alteplase for acute ischemic stroke in routine clinical practice: the Japan post-Marketing Alteplase Registration Study (J-MARS).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports subgroup odds ratios for the primary functional endpoint stratified by baseline NIHSS (0-9, 10-19, \u226520) and explicitly states that effectiveness was independent of baseline stroke severity with an interaction p=0.631. The ORs for the mid-range severity groups (0-9: 1.28, 10-19: 1.16) are similar and not statistically different from each other, and the apparent larger OR in the \u226520 group has a very wide CI (2.32, 0.61-8.90) and is not significant. No evidence is provided that patients with NIHSS 6\u201315 derived a significantly greater benefit, nor that NIHSS \u22645 patients had net harm from sICH. The abstract therefore indicates no significant modification of alteplase effect by baseline NIHSS, failing to support the proposed mechanism.",
+          "evidence_quote": "\u201cthe effectiveness was independent of the severity of stroke at baseline (NIHSS 0-9: 1.28, 0.84-1.96; NIHSS 10-19: 1.16, 0.73-1.84; NIHSS > or =20: 2.32, 0.61-8.90; p=0.631).\u201d",
+          "stance": "neutral",
+          "pmid": "19850525",
+          "title": "Stroke treatment with alteplase given 3.0-4.5 h after onset of acute ischaemic stroke (ECASS III): additional outcomes and subgroup analysis of a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract does not analyze or report Baseline Stroke Severity (NIHSS) in relation to treatment effect. Although the trial includes intravenous alteplase (IVT) as an arm (IVT+EVT vs EVT alone) and reports functional outcomes (mRS 3\u20136 and mortality), the study's primary question concerns EVT use, and the abstract reports coagulation markers rather than any NIHSS subgroup or interaction analyses. Therefore it fails the Feature Check (C) requiring explicit analysis of NIHSS as a modifier of alteplase benefit and is not relevant to the specific mechanism claim.",
+          "evidence_quote": "The abstract contains no mention of NIH Stroke Scale (NIHSS) subgroup or interaction analysis. Relevant contextual text: \"The MR CLEAN NO-IV trial showed neither superiority nor noninferiority of endovascular treatment (EVT) alone compared to intravenous thrombolysis (IVT; Alteplase) before EVT ... Neither the enzyme:inhibitor complexes nor the interaction with IVT were significantly associated with the outcome measures.\"",
+          "stance": "neutral",
+          "pmid": "39571223",
+          "title": "Association between coagulation activity and clinical and imaging outcomes in acute ischemic stroke patients - A sub-study of the MR CLEAN NO-IV trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports post-hoc subgroup analyses of the NINDS rtPA trials stratified by NIH Stroke Scale (<=5, 6\u201320, >20) and onset-to-treatment. For every onset-to-treatment \u00d7 NIHSS subgroup the adjusted odds ratio for a favorable 3-month outcome was >1.0 and favored tPA, and the authors conclude that baseline NIHSS imbalance does not account for the better outcome with rtPA. That indicates a consistent treatment benefit across baseline severity strata rather than a significant interaction with the hypothesized pattern (largest relative benefit in NIHSS 6\u201315 and minimal net benefit or harm in NIHSS \u22645). The analysis is post hoc and subgroup-based (so power and multiplicity are limitations), but the abstract explicitly states consistency of benefit across NIHSS subgroups and reports no difference in early mortality, which does not support the proposed mechanism of harm in low-NIHSS patients.",
+          "evidence_quote": "We categorized patients ... by NIH Stroke Scale (<=5, 6 to 20, >20) subgroups. For all the 12 specified onset-to-treatment-NIH Stroke Scale subgroups, the adjusted odds ratio for a favorable 3-month outcome was greater than 1.0 and favored tPA. ... Baseline NIH Stroke Scale imbalance does not account for the better outcome of rtPA-treated patients.",
+          "stance": "neutral",
+          "pmid": "15795715",
+          "title": "The impact of imbalances in baseline stroke severity on outcome in the National Institute of Neurological Disorders and Stroke Recombinant Tissue Plasminogen Activator Stroke Study.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Age",
+      "mechanism": {
+        "description": "Patients aged <80 will derive greater absolute improvement in 6-month independence after alteplase than patients aged \u226580, with a progressive attenuation of benefit and higher sICH rates with advancing age."
+      },
+      "query": "((alteplase OR \"intravenous thrombolysis\" OR \"tissue plasminogen activator\" OR rtPA OR tPA) AND (stroke OR \"ischemic stroke\")) AND (age OR elderly OR geriatric) AND (\"independence\" OR \"improvement\" OR \"attenuation\" OR \"progressive\" OR \"alteplase\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT]) NOT (tenecteplase[tiab] OR sonothrombolysis[tiab] OR \"mechanical thrombectomy\"[tiab] OR \"endovascular thrombectomy\"[tiab] OR thrombectomy[tiab] OR urokinase[tiab] OR desmoteplase[tiab])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 13,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 12,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract evaluates alteplase (low- vs standard-dose) for acute ischemic stroke and reports functional outcomes (90-day independence), it does not analyze Age as a predictor or subgroup. The TARGET FEATURE (Age) is not examined or linked to outcomes in the abstract (no subgroup analysis or interaction test by age is reported). Because the mechanism specifically concerns differential treatment benefit by age (<80 vs \u226580 and progressive attenuation with advancing age), the absence of any age-stratified results or interaction statistics makes this abstract irrelevant to the hypothesis.",
+          "evidence_quote": "\"The outcomes of interest were 90-day functional independence, successful recanalization, symptomatic intracerebral hemorrhage (sICH), and mortality; these outcomes were compared between patients who received BT with low- (primarily 0.6 mg/kg) and standard-dose alteplase (0.9 mg/kg).\"",
+          "stance": "neutral",
+          "pmid": "38185108",
+          "title": "Low-Dose versus Standard-Dose Alteplase in Bridging Therapy for Large Vessel Stroke: A Systematic Review and Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports a randomized, placebo-controlled trial of IV alteplase with a functional outcome (mRS 0-1 at 90 days), so (A) and (B) pass. However, the TARGET FEATURE (Age) is not analyzed as an effect modifier: age appears only as a baseline descriptor (mean age 64.5 years) and there is no subgroup or interaction analysis by age or any statements about differing treatment effects by age. Because the hypothesis specifically requires evidence that treatment effect differs by age (<80 vs \u226580) (an interaction), absence of any age-stratified results or interaction p-values makes this abstract irrelevant to the proposed mechanism.",
+          "evidence_quote": "185 patients (mean age 64.5 years, 46% female, median NIH Stroke Scale score 9, median time between last seen well and MRI 10.26 hours) received treatment and presented with an occlusion.",
+          "stance": "neutral",
+          "pmid": "39705631",
+          "title": "Effect of IV Thrombolysis With Alteplase in Patients With Vessel Occlusion in the WAKE-UP Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although this is an individual-patient meta-analysis of alteplase RCTs with a functional outcome (90-day mRS), the abstract does not analyze Age as an effect modifier of treatment benefit. Age is only reported as a baseline characteristic and was included as an adjustment covariate in models (i.e., 'adjusted for baseline age'), but there are no subgroup analyses, interaction tests, or reported results stratified by age (eg, <80 vs \u226580) nor any sICH rates reported by age. The stated mechanism requires explicit evidence that treatment effect differs by age (interaction or absolute benefit differences), which is not provided in the abstract, so it is not relevant to support or refute the proposed age-based mechanism.",
+          "evidence_quote": "\"Ordinal logistic regression adjusted for baseline age and National Institutes of Health Stroke Scale score... The median (interquartile range) age was 76 (66-81) years in the reperfusion group vs 74 (64.5-81.0) years in the group with no reperfusion.\"",
+          "stance": "neutral",
+          "pmid": "33137171",
+          "title": "Association of Reperfusion After Thrombolysis With Clinical Outcome Across the 4.5- to 9-Hours and Wake-up Stroke Time Window: A Meta-Analysis of the EXTEND and EPITHET Randomized Clinical Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post-hoc analysis of ARAMIS comparing dual antiplatelet therapy vs intravenous alteplase with a focus on baseline systolic blood pressure and early neurological deterioration within 24 hours. It does not analyze age as a modifier of treatment effect, nor does it report the 6-month functional outcomes (mRS/dependency/death) specified in the hypothesis. Additionally, alteplase functions as a comparator arm to a different primary intervention (dual antiplatelet) in this trial, which fails the requirement that alteplase be the primary tested arm for the proposed mechanism. Therefore the abstract does not provide relevant evidence for the Age-related alteplase benefit/safety mechanism.",
+          "evidence_quote": "No mention of age in the abstract. Example relevant lines: \"We performed a secondary analysis of ARAMIS trial to investigate whether baseline SBP affects the effect of dual antiplatelet versus intravenous alteplase on END.\" and \"Primary outcome was END... within 24 h.\"",
+          "stance": "neutral",
+          "pmid": "39014552",
+          "title": "Systolic blood pressure and early neurological deterioration in minor stroke: A post hoc analysis of ARAMIS trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review/meta-analysis reporting outcomes after alteplase stratified by age (\u226580 vs <80) among patients who received thrombolysis. It shows that older patients have higher mortality and lower odds of a favourable outcome after treatment, but it does not compare treated versus untreated/control groups within age strata or report interaction tests (no treatment-by-age interaction or absolute treatment effect by age). Therefore the data demonstrate that age is a prognostic factor for outcomes after thrombolysis, but do not provide evidence that age modifies the treatment effect of alteplase (i.e., no evidence for greater absolute benefit in <80 vs \u226580).",
+          "evidence_quote": "The overall OR was 2.77 (95% CI 2.25 to 3.40) for death, 0.49 (95% CI 0.40 to 0.61) for achieving a favourable outcome ... in \u2265 80 year old patients compared with those < 80 years old.",
+          "stance": "neutral",
+          "pmid": "21292789",
+          "title": "Intravenous thrombolysis in acute ischaemic stroke: a systematic review and meta-analysis to aid decision making in patients over 80 years of age.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a prespecified subgroup analysis of the MISTIE III trial testing minimally invasive surgery (MIS) with local alteplase for evacuation of intracerebral haemorrhage (ICH). The mechanism to be evaluated concerns IV alteplase (rt-PA) for acute ischemic stroke and whether age (<80 vs \u226580) modifies its effect on functional outcome. This abstract: (1) studies ICH treated with MIS +/- intralesional alteplase, not IV thrombolysis for acute ischemic stroke (population and intervention are fundamentally different), and (2) does not analyze Age as a treatment-effect modifier \u2014 subgroup analyses are by cerebral small vessel disease (CSVD) features. Because the population, intervention, and subgroup feature differ from the hypothesized IV-rtPA in ischemic stroke + age interaction, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\"We tested for heterogeneity in the effects of MIS and MIS+EOT volume \u226415 mL on the trial's primary outcome of good versus poor function at 1 year by the presence of single CSVD features and CSVD scores.\"; \"Minimally invasive surgery (MIS) for spontaneous supratentorial intracerebral haemorrhage (ICH) ...\"",
+          "stance": "neutral",
+          "pmid": "37949482",
+          "title": "Cerebral small vessel disease modifies outcomes after minimally invasive surgery for intracerebral haemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports an individual participant data meta-analysis of thrombolysis for central retinal artery occlusion (CRAO), not acute ischemic cerebral stroke. The outcome is visual recovery (BCVA), not functional stroke outcome (mRS/dependency/death). Age appears only as a baseline descriptor (mean age reported) and is not analyzed as an effect modifier of thrombolysis benefit. Although intravenous thrombolysis is evaluated, the population and outcome are a fundamentally different disease entity from acute ischemic stroke, so the study does not provide relevant evidence for the proposed mechanism about age modifying alteplase benefit in stroke.",
+          "evidence_quote": "In total, 783 patients met inclusion criteria (age, 64.8\u00b113.3 years; 35.5% female; baseline BCVA, 2.3\u00b10.5 logMAR).",
+          "stance": "neutral",
+          "pmid": "40832714",
+          "title": "Early Thrombolysis and Outcomes in Central Retinal Artery Occlusion: An Individual Participant Data Meta-Analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "Although the study evaluates intravenous alteplase versus matched controls and reports long-term survival and functional outcomes, the abstract contains no analysis of Age as an effect modifier. Age appears only implicitly as part of 'demographical' covariates used for propensity matching; there are no age-stratified results, interaction tests, or statements about differential benefit or sICH rates by age. Because the TARGET FEATURE (Age modifying treatment effect) is not analyzed or reported, the abstract cannot support or contradict the proposed mechanism.",
+          "evidence_quote": "Propensity score was used to match thrombolyzed and control cases to a 1:2 ratio by demographical and clinical covariates.",
+          "stance": "neutral",
+          "pmid": "29440582",
+          "title": "Long-Term Survival After Intravenous Thrombolysis for Ischemic Stroke: A Propensity Score-Matched Cohort With up to 10-Year Follow-Up.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post-hoc subgroup analysis of an RCT of low- vs standard-dose alteplase and assesses the effect of lipid-lowering (statin) pretreatment on 90-day death or disability. Although age is reported as a baseline characteristic (mean age and that statin-treated patients were older), the abstract does not analyze Age as a modifier of alteplase treatment effect, does not report subgroup outcomes by age, nor provides interaction tests involving Age. The target mechanism specifically requires evidence that age (<80 vs \u226580 or as a continuous modifier) changes the absolute or relative benefit or sICH risk with alteplase; this abstract does not provide such analyses, so it is irrelevant to the proposed age-treatment interaction mechanism.",
+          "evidence_quote": "In all, 3,284 thrombolysis-eligible AIS patients (mean age 66.6 years; 38% women)... Of the total number of patients, 615 (19%) received statin or other lipid-lowering pretreatment. Compared with patients with no lipid-lowering pretreatment, those with lipid-lowering pretreatment were significantly older...",
+          "stance": "neutral",
+          "pmid": "29705803",
+          "title": "Lipid-Lowering Pretreatment and Outcome Following Intravenous Thrombolysis for Acute Ischaemic Stroke: A Post Hoc Analysis of the Enhanced Control of Hypertension and Thrombolysis Stroke Study Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a prespecified subgroup analysis of the ENCHANTED randomized trial comparing low- vs standard-dose alteplase according to prior antiplatelet therapy. Although age is reported as a baseline descriptor (mean age 66.6 years), the abstract contains no analysis or interaction test of treatment effect by age (no <80 vs \u226580 comparison, no interaction p-value, no age-stratified outcomes or sICH rates). The target mechanism specifically requires evidence that Age modifies the alteplase treatment effect; that information is absent, so the abstract is irrelevant to the stated age-based mechanism.",
+          "evidence_quote": "\"Among 3285 alteplase-treated patients (mean age, 66.6 years; 38% women)\"",
+          "stance": "neutral",
+          "pmid": "28619989",
+          "title": "Low- Versus Standard-Dose Alteplase in Patients on Prior Antiplatelet Therapy: The ENCHANTED Trial (Enhanced Control of Hypertension and Thrombolysis Stroke Study).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review/meta-analysis comparing outcomes of IV thrombolysis in cancer versus non-cancer patients, and reports subgroup analyses by cancer type (gastrointestinal) and by race (Asians vs non-Asians). It does not analyze Age as a modifier of treatment effect, nor does it report subgroup or interaction results stratified by age (e.g., <80 vs \u226580) or any age-related interaction p-values. Because the TARGET FEATURE (Age) is not evaluated with respect to treatment effect in this abstract, it cannot provide evidence for or against the hypothesized age-related attenuation of alteplase benefit or increased sICH with advancing age. Therefore the abstract is irrelevant to the specified mechanism.",
+          "evidence_quote": "\"The meta-analysis showed no significant difference between cancer and non-cancer patients in favorable outcome, HT, SICH, MB, in-hospital mortality and 3-month mortality.\" (The abstract makes no mention of age or age-stratified analyses.)",
+          "stance": "neutral",
+          "pmid": "32913551",
+          "title": "Efficacy and safety of intravenous thrombolysis for acute ischemic stroke in cancer patients: a systemic review and meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_WEAK",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports age-stratified subgroup analyses from the ECASS III randomized trial of alteplase versus placebo. For the functional efficacy endpoint (mRS 0-1 at day 90) the age interaction (dichotomised at 65 years) was not statistically significant (ORs favoring treatment in both strata, interaction p=0.230), i.e. a numerical trend toward greater relative benefit in younger patients but no confirmed interaction. However, for symptomatic intracranial hemorrhage there is a statistically significant interaction by age (dichotomised at 65) with much higher sICH odds in the older group (interaction p=0.004). The hypothesis under evaluation predicted greater benefit in younger patients (<80) and higher sICH with advancing age. The ECASS III abstract provides a consistent (but non-significant) trend toward greater functional benefit in younger patients and a significant increase in bleeding risk with older age. Because efficacy interaction is not significant while safety interaction is significant (and the trial used a different age cutoff of 65 rather than 80), the overall evidence is supportive but weak/partial rather than definitive.",
+          "evidence_quote": "Alteplase was effective in various subgroups, including older patients (<65 years: odds ratio 1.61, 95% CI 1.05-2.48; > or =65 years: 1.15, 0.80-1.64; p=0.230) ... but not of age dichotomised at 65 years (<65 years: 0.74, 0.28-1.96; > or =65 years: 5.79, 2.18-15.39; p=0.004).",
+          "stance": "support",
+          "pmid": "19850525",
+          "title": "Stroke treatment with alteplase given 3.0-4.5 h after onset of acute ischaemic stroke (ECASS III): additional outcomes and subgroup analysis of a randomised controlled trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports an open-label, nonrandomized post-marketing registry of intravenous alteplase with mRS-based functional outcomes, so treatment and outcome are relevant. However, it does not present any analysis comparing treatment effect by age (e.g., <80 vs \u226580) or report interaction statistics or subgroup comparisons that would test whether age modifies the benefit or risk of alteplase. The only age-related statement is a subgroup restricted to patients between 18 and 80, which does not provide evidence about how outcomes differ in those \u226580 or whether benefit attenuates with increasing age. No sICH rates or treatment effects stratified by age or interaction p-values are reported. Therefore the abstract does not provide evidence for or against the proposed age-related mechanism.",
+          "evidence_quote": "The subgroup analysis in patients between 18 and 80 years with a baseline NIHSS score <25 demonstrated that favorable outcome at 3 months was 39.0% (95% CI, 37.4%-40.6%).",
+          "stance": "neutral",
+          "pmid": "20651262",
+          "title": "Thrombolysis with 0.6 mg/kg intravenous alteplase for acute ischemic stroke in routine clinical practice: the Japan post-Marketing Alteplase Registration Study (J-MARS).",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion)",
+      "mechanism": {
+        "description": "Patients without proximal large-vessel occlusion on vessel imaging will have a greater improvement in independence at 6 months from alteplase than patients with proximal LVOs, for whom IVT alone produces limited recanalization and smaller functional benefit."
+      },
+      "total_abstracts": 0,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 0,
+      "abstracts_analyzed": []
+    }
+  ]
+}

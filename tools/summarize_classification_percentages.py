@@ -29,8 +29,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--root",
         type=str,
-        default="docs/agent",
-        help="Root directory containing result JSON files (default: docs/agent)",
+        default="ALEX/results",
+        help="Root directory containing result JSON files (default: ALEX/results)",
     )
     parser.add_argument(
         "--source",
@@ -75,17 +75,21 @@ def parse_args() -> argparse.Namespace:
 
 
 def infer_model(file_path: Path) -> str:
-    """Extract the model folder name from the new path structure.
+    """Extract the model folder name from the path structure.
 
-    New structure: docs/agent/<cohort>/<model>/<method>/hypotheses_*.json
-    The model is 2 levels up from the file.
+    Handles two layouts:
+    - docs/agent/<cohort>/<model>/<method>/...
+    - ALEX/results/<cohort>/<model>/<method>/...
+    The model is always 2 levels after the anchor folder.
     """
     parts = file_path.parts
-    try:
-        agent_idx = next(i for i, p in enumerate(parts) if p == "agent")
-        return parts[agent_idx + 2]  # cohort=+1, model=+2
-    except (StopIteration, IndexError):
-        return "unknown"
+    for anchor in ("agent", "results"):
+        try:
+            idx = next(i for i, p in enumerate(parts) if p == anchor)
+            return parts[idx + 2]  # cohort=+1, model=+2
+        except (StopIteration, IndexError):
+            continue
+    return "unknown"
 
 
 def infer_method(file_path: Path) -> str:
@@ -97,22 +101,24 @@ def infer_method(file_path: Path) -> str:
     if method_folder == "hypogenic":
         return "HypoGeniC"
     if method_folder == "simple_cot":
-        return "SimpleCoT"
+        return "ALEX (w/o verifier)"
+    if method_folder == "cot":
+        return "CoT"
     if method_folder in ("with_shap_xlearner", "with_shap_drlearner"):
         return "ALEX"
     if method_folder == "without_shap_baseline":
-        return "Baseline"
+        return "ALEX w/o SHAP"
 
     # Fallback: try filename for legacy flat structure
     name = file_path.name.lower()
     if "hypogenic" in name:
         return "HypoGeniC"
     if "simple_cot" in name:
-        return "SimpleCoT"
+        return "ALEX (w/o verifier)"
     if "with_shap_xlearner" in name or "with_shap_drlearner" in name:
         return "ALEX"
     if "without_shap_baseline" in name:
-        return "Baseline"
+        return "ALEX w/o SHAP"
     if "with_shap" in name:
         return "WithSHAP"
     if "without_shap" in name:
@@ -145,15 +151,15 @@ def infer_dataset(file_path: Path, payload: Dict[str, Any]) -> str:
         if dataset_clean.lower() not in {"unknown", "unknown_dataset", "unknown_datase"}:
             return dataset_clean
 
-    # New structure: docs/agent/<cohort>/<model>/<method>/hypotheses_*.json
-    # Cohort is 3 levels up from the file
+    # Structured layout: <anchor>/<cohort>/<model>/<method>/...
+    # Cohort is always 1 level after the anchor folder ("agent" or "results")
     parts = file_path.parts
-    try:
-        agent_idx = next(i for i, p in enumerate(parts) if p == "agent")
-        cohort = parts[agent_idx + 1]
-        return cohort
-    except (StopIteration, IndexError):
-        pass
+    for anchor in ("agent", "results"):
+        try:
+            idx = next(i for i, p in enumerate(parts) if p == anchor)
+            return parts[idx + 1]
+        except (StopIteration, IndexError):
+            continue
 
     # Fallback: parent folder name (legacy flat structure)
     return file_path.parent.name
@@ -903,7 +909,7 @@ def print_tables(
             print(f"  {abbrevs[lbl]:>8}  {lbl}")
         print()
 
-        _METHOD_ORDER = ["SimpleCoT", "Baseline", "HypoGeniC", "ALEX"]
+        _METHOD_ORDER = ["CoT", "ALEX (w/o verifier)", "ALEX w/o SHAP", "HypoGeniC", "ALEX"]
         all_methods_set = set(ab_pivot) | set(hyp_pivot)
         all_methods_set |= set(feat_pivot)
         all_methods = [m for m in _METHOD_ORDER if m in all_methods_set] + \
@@ -964,7 +970,7 @@ def build_pivot_csv_rows(
     fieldnames = ["level", "model", "method", "dataset", "total", "total_std", "n_seeds"] + pct_fields + pct_std_fields + cnt_fields + cnt_std_fields
     # Collect model per (method, dataset) from rows
     model_lookup = {(r["method"], r["dataset"]): r.get("model", "") for r in rows}
-    _METHOD_ORDER = ["SimpleCoT", "Baseline", "HypoGeniC", "ALEX"]
+    _METHOD_ORDER = ["CoT", "ALEX (w/o verifier)", "ALEX w/o SHAP", "HypoGeniC", "ALEX"]
     ordered_methods = [m for m in _METHOD_ORDER if m in pivot] + \
                       sorted(set(pivot) - set(_METHOD_ORDER))
     out_rows: List[Dict[str, Any]] = []

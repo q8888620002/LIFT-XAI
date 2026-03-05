@@ -202,12 +202,29 @@ select:focus, input:focus {
 }
 
 .rating-section h4 {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     color: var(--text-primary);
+}
+
+.gate-instructions {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 18px;
 }
 
 .rating-group {
     margin-bottom: 20px;
+}
+
+.gate-group {
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+}
+
+.novelty-group {
+    border-left: 3px solid #a855f7;
 }
 
 .rating-label {
@@ -223,46 +240,53 @@ select:focus, input:focus {
     margin-bottom: 10px;
 }
 
-.rating-input {
+.gate-toggle {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 8px;
 }
 
-.rating-input input[type="range"] {
-    flex: 1;
-    height: 8px;
-    border-radius: 4px;
-    background: var(--border-color);
-    outline: none;
-    -webkit-appearance: none;
-}
-
-.rating-input input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
+.gate-btn {
+    padding: 8px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    transition: all 0.15s;
 }
 
-.rating-input input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    border: none;
+.gate-btn:hover {
+    border-color: var(--primary-color);
 }
 
-.rating-value {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    min-width: 40px;
-    text-align: center;
+.gate-btn-true.active {
+    background: #dcfce7;
+    border-color: var(--success-color);
+    color: #166534;
+}
+
+.gate-btn-false.active {
+    background: #fee2e2;
+    border-color: var(--danger-color);
+    color: #991b1b;
+}
+
+.gate-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-left: 8px;
+}
+
+.gate-status.gate-true {
+    color: var(--success-color);
+}
+
+.gate-status.gate-false {
+    color: var(--danger-color);
 }
 
 textarea {
@@ -315,11 +339,11 @@ textarea:focus {
     header h1 {
         font-size: 2rem;
     }
-    
+
     .controls {
         grid-template-columns: 1fr;
     }
-    
+
     .hypothesis-title {
         font-size: 1.2rem;
     }

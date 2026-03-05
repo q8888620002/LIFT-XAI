@@ -199,11 +199,13 @@ def infer_method_name(file_path: str) -> str:
     elif 'researchagent' in file_lower:
         return 'ResearchAgent'
     elif 'simple_cot' in file_lower or 'simplecot' in file_lower:
-        return 'SimpleCoT'
+        return 'ALEX (w/o verifier)'
+    elif '/cot/' in file_lower.replace('\\', '/') or file_lower.endswith('/cot'):
+        return 'CoT'
     elif 'with_shap' in file_lower or 'xlearner' in file_lower or 'drlearner' in file_lower:
         return 'ALEX'
     elif 'without_shap' in file_lower or 'baseline' in file_lower:
-        return 'Baseline'
+        return 'ALEX w/o SHAP'
     else:
         return 'Unknown'
 
@@ -246,6 +248,20 @@ def infer_model_name(file_path: str) -> str:
             model_candidate = parts[agent_idx + 2]
             model_candidate_lower = model_candidate.lower()
 
+            if (
+                dataset_candidate in dataset_names
+                and model_candidate_lower not in method_like_names
+                and not model_candidate_lower.endswith('.json')
+            ):
+                return model_candidate
+
+    # ALEX/results/<dataset>/<model>/<method>/... layout
+    if 'results' in parts:
+        results_idx = parts.index('results')
+        if results_idx + 2 < len(parts):
+            dataset_candidate = parts[results_idx + 1].lower()
+            model_candidate = parts[results_idx + 2]
+            model_candidate_lower = model_candidate.lower()
             if (
                 dataset_candidate in dataset_names
                 and model_candidate_lower not in method_like_names
@@ -470,7 +486,7 @@ def compute_method_averages(df: pd.DataFrame) -> pd.DataFrame:
     method_avgs = method_avgs.merge(run_counts, on=['model', 'method'], how='left')
 
     # Sort by predefined method order, then any additional methods (e.g., ResearchAgent)
-    method_order = ['SimpleCoT', 'Baseline', 'HypoGeniC', 'ALEX']
+    method_order = ['CoT', 'ALEX (w/o verifier)', 'ALEX w/o SHAP', 'HypoGeniC', 'ALEX']
     present_methods = [m for m in method_avgs['method'].dropna().astype(str).unique() if m not in method_order]
     categories = method_order + sorted(present_methods)
     method_avgs['method'] = pd.Categorical(
@@ -502,7 +518,7 @@ def compute_per_dataset_averages(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
         'overall_score'
     ]
 
-    method_order = ['SimpleCoT', 'Baseline', 'HypoGeniC', 'ALEX']
+    method_order = ['CoT', 'ALEX (w/o verifier)', 'ALEX w/o SHAP', 'HypoGeniC', 'ALEX']
 
     results = {}
     for dataset in df['dataset'].unique():
@@ -905,21 +921,18 @@ def main():
         bool(args.judge_with_shap) and bool(args.judge_without_shap)
     )
     if not has_explicit_mode:
-        docs_agent_root = Path('docs/agent')
-        if docs_agent_root.exists():
-            discovered = sorted(
-                {
-                    *docs_agent_root.rglob('hypotheses_judge*.json'),
-                    *docs_agent_root.rglob('hypotheses_pubmed_input_judge*.json'),
-                },
-                key=lambda p: str(p),
-            )
+        results_root = Path('ALEX/results')
+        if results_root.exists():
+            all_discovered: set = set()
+            all_discovered.update(results_root.rglob('hypotheses_judge*.json'))
+            all_discovered.update(results_root.rglob('hypotheses_pubmed_input_judge*.json'))
+            discovered = sorted(all_discovered, key=lambda p: str(p))
             discovered = [str(p) for p in discovered]
             if discovered:
                 args.judge_files = discovered
                 print(
                     f"Auto-discovered {len(discovered)} judge files under "
-                    f"{docs_agent_root.as_posix()} for aggregate analysis."
+                    f"{results_root.as_posix()} for aggregate analysis."
                 )
 
     # New aggregate mode: analyze all methods across datasets

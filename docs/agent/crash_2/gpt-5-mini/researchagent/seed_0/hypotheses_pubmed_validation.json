@@ -1,0 +1,760 @@
+{
+  "dataset": "crash_2",
+  "total_mechanisms_analyzed": 15,
+  "total_abstracts_retrieved": 45,
+  "overall_support_count": 15,
+  "overall_conflict_count": 0,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In Effects of tranexamic acid on death, vascular occlusive events, and blood transfusion in trauma patients with significant haemorrhage (CRASH-2): a randomised, placebo-controlled trial, baseline ninjurytime may modify treatment response through differential baseline cardiovascular risk.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract studies tranexamic acid and explicitly analyzes time from hemorrhage to treatment (ninjurytime) as an effect modifier for rebleeding, it is irrelevant to the stated mechanism for CRASH_2 because (1) the population is aneurysmal subarachnoid hemorrhage (SAH), which is a fundamentally different disease context from adult traumatic hemorrhage targeted by CRASH_2, and (2) the reported outcomes are rebleeding and functional outcome (mRS), not death due to bleeding or mortality. The feature is thus analyzed, but neither the population nor the primary outcome aligns with the trauma/mortality mechanism, so it cannot provide evidence for the proposed mechanism in CRASH_2.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h.",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a prespecified analysis of time-from-injury (Ninjurytime) as a modifier of tranexamic acid effect on head-injury death in the CRASH-3 trial. They explicitly model a time-treatment interaction and report a statistically significant interaction term (1.15, 95% CI 1.03\u20131.27; increased to 1.16, 95% CI 1.05\u20131.28 using monitored times), and stronger treatment effects at 1 hour (ORs ~0.58\u20130.63). The interaction indicates that treatment efficacy declines with increasing time from injury (i.e., earlier treatment confers greater benefit), which matches the hypothesized direction that Ninjurytime modifies treatment response. Although the abstract does not address the proposed biological mediation via baseline cardiovascular risk, it provides clear, significant clinical evidence that Ninjurytime modifies the effect of TXA on mortality.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term.\" \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract evaluates anti-fibrinolytics (a class that includes tranexamic acid) and plans subgroup analyses by time to treatment, the population is patients with acute intracranial haemorrhage (stroke or head injury). The hypothesised mechanism concerns TXA treatment effect modification in adult trauma patients with significant haemorrhage (CRASH-2 context). Intracranial haemorrhage (stroke/head injury) represents a fundamentally different disease context from general traumatic hemorrhage targeted by CRASH-2, so findings would not directly inform the proposed trauma-specific mechanism. Therefore the abstract is not relevant to the mechanism claim despite including a time-to-treatment analysis.",
+          "evidence_quote": "We will use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment... The primary outcomes will be limited to patients treated within three hours of injury or stroke onset.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different ninjurytime levels may show heterogeneous benefit due to variation in baseline disease burden.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid (TXA), analyzes time from hemorrhage to treatment (stratified 0-3, 3-6, >6 h), and reports effects on rebleeding and functional outcome, the study population is aneurysmal subarachnoid hemorrhage (SAH). The mechanism target context is CRASH_2 (adult trauma hemorrhage). SAH is a fundamentally different disease entity from traumatic hemorrhage with distinct pathophysiology and clinical course. Per the predefined relevance gates, a TXA study in aneurysmal SAH is not comparable to a trauma-hemorrhage mechanism, so the abstract is not relevant to supporting or refuting the ninjurytime mechanism in the CRASH_2 trauma context.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (<i>p</i>\u2009<\u20090.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6\u2009h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly evaluates time-from-injury to treatment (ninjurytime) as an effect modifier of tranexamic acid benefit. It states there is a \"time to treatment interaction, with early treatment being most beneficial\" and reports numeric interaction estimates with 95% CIs that exclude the null (interaction term increased from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28) using monitored times). It also provides treatment effect estimates at an early time point (1 hour) showing stronger benefit (ORs <1) for earlier treatment. These elements meet the core requirement for a significant, directionally consistent interaction between ninjurytime and treatment effect, supporting the proposed mechanism that benefit is heterogeneous by time-from-injury.",
+          "evidence_quote": "\"There is a time to treatment interaction, with early treatment being most beneficial.\" ... \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It addresses the correct intervention class (anti-fibrinolytics, which includes TXA), and the outcomes align with mortality from head injury/stroke. It explicitly states that time-to-treatment (ninjurytime) will be examined as a potential effect modifier, but it contains no results, interaction estimates, or p-values. Therefore it does not provide evidence that ninjurytime modifies the treatment effect (supporting the mechanism); at best it indicates time is a prognostic factor to be analyzed. Because no interaction data are reported, the appropriate classification is that the feature is prognostic/planned-for but the mechanism (heterogeneous benefit by ninjurytime) is untested here.",
+          "evidence_quote": "We will report treatment effects using odds ratios and 95% confidence intervals. We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age. The primary outcomes will be limited to patients treated within three hours of injury or stroke onset.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in ninjurytime may alter event risk trajectories, changing absolute treatment benefit.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly analyzes the interval between hemorrhage and start of TXA (ninjurytime) with respect to rebleeding and functional outcome, the population is aneurysmal subarachnoid hemorrhage (SAH), which is a fundamentally different disease context from adult traumatic hemorrhage. The instructions explicitly treat TXA studies in aneurysmal SAH as not generalizable to the CRASH-2 trauma mechanism because the coagulation pathophysiology and clinical context differ. Therefore, despite a reported time-treatment interaction within SAH patients, the study is not relevant evidence for the proposed mechanism in trauma patients.",
+          "evidence_quote": "We assessed confounders, hazard ratio (HR) of rebleeding and odds ratio (OR) of good outcome... and investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6 h). Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a randomized trial of tranexamic acid (CRASH-3) and explicitly analyzes time-from-injury to treatment (ninjurytime) as a time-treatment interaction. It states that early treatment is most beneficial in mild/moderate TBI and provides numeric interaction estimates that are statistically significant (interaction terms with 95% CIs excluding 1). Adjusted analyses (regression calibration, multiple imputation, Bayesian) give similar results and monitored times slightly strengthen the interaction. These findings directly support the mechanism that differences in ninjurytime alter treatment benefit (earlier treatment -> greater benefit), matching the expected (negative) direction.",
+          "evidence_quote": "\u201cIn mild and moderate TBI, there is a time to treatment interaction, with early treatment being most beneficial.\u201d \u2026 \u201cUsing monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\u201d",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It explicitly states that time to treatment (Ninjurytime) will be examined as a modifier of treatment effect and that primary outcomes will be limited to patients treated within three hours of injury/stroke. However, this is a protocol/analysis plan with no reported results or interaction estimates. Therefore there is no evidence presented that Ninjurytime modifies the effect of tranexamic acid (or class) on death due to bleeding. The abstract shows the feature is relevant and will be analyzed (i.e., prognostic/stratification intent) but provides no data to support or refute the mechanism that differences in Ninjurytime alter absolute treatment benefit.",
+          "evidence_quote": "\"We will report treatment effects using odds ratios and 95% confidence intervals. We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment... The primary outcomes will be limited to patients treated within three hours of injury or stroke onset.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "The association between ninjurytime and outcome may interact with treatment intensity in the trial population.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly analyzes time from hemorrhage to TXA (ninjurytime) with an interaction on rebleeding, the study population (aneurysmal subarachnoid hemorrhage) is fundamentally different from the target context (adult trauma patients at risk of bleeding). The task's relevance gate (E) requires a reasonably comparable trauma population; the protocol explicitly gives aneurysmal SAH as an example of an irrelevant population for a CRASH_2 trauma mechanism. In addition, the abstract focuses on rebleeding and functional outcome (mRS), not on death due to bleeding/mortality as in the hypothesis. Therefore, despite a reported interaction by time-to-treatment, the evidence does not apply to the proposed CRASH_2/trauma mechanism and must be classified as IRRELEVANT.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p\u2009<\u20090.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6\u2009h.",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly models time from injury to treatment (ninjurytime) as a time\u2013treatment interaction and reports a statistically significant interaction term (interaction term CIs exclude 1). It also reports larger benefit for earlier treatment (OR at 1 hour \u22480.58\u20130.63 across analyses), and monitored times slightly increased the estimated interaction (from 1.15 (95% CI 1.03\u20131.27) to 1.16 (95% CI 1.05\u20131.28)). These elements constitute direct, significant evidence that ninjurytime modifies the effect of tranexamic acid on head-injury death, supporting the proposed mechanism. The analysis is a secondary/post-hoc analysis of the CRASH-3 RCT and notes that adjustment for measurement error had minimal impact on conclusions.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It passes relevance checks (anti-fibrinolytics including TXA are the drug class of interest; mortality outcomes are primary; and time-to-treatment is explicitly listed as a factor to be examined). However, this abstract presents no results, no subgroup estimates, and no interaction tests for ninjurytime. Because it contains no empirical evidence (positive, negative, or trend) about whether ninjurytime modifies the treatment effect, it does not provide support for or against the proposed mechanism.",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Variation in ninjurytime may identify subgroups with different competing-risk profiles under treatment.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly analyzes the interval from hemorrhage to treatment (ninjurytime) as an effect modifier for rebleeding, the study population (aneurysmal subarachnoid hemorrhage) is a fundamentally different disease context from adult trauma hemorrhage (CRASH_2). The abstract also does not report death due to bleeding or mortality outcomes (it reports rebleeding and functional outcome), so the outcome alignment required for the proposed trauma-related mechanism is not met. Therefore the abstract is not relevant to supporting the proposed mechanism linking ninjurytime to mortality outcomes in trauma.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly models a time-to-treatment (ninjurytime) by treatment interaction and reports a statistically significant interaction consistent with the hypothesis that earlier treatment confers greater benefit. They report treatment effect estimates at 1 hour (ORs <1 indicating benefit) and an interaction term whose 95% CI excludes 1 (interaction increased from 1.15, 95% CI 1.03\u20131.27 to 1.16, 95% CI 1.05\u20131.28 when using monitored times). Although the paper focuses on measurement error in recorded times, the presence of a significant time-treatment interaction (and larger benefit at earlier times) supports the mechanism that variation in ninjurytime identifies subgroups with different treatment effects/competing-risk profiles.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term. ... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It (A) evaluates anti-fibrinolytics (class including TXA), (B) lists mortality outcomes, and (C) explicitly states it will examine time-to-treatment (the feature 'ninjurytime'). However, it contains no results or subgroup effect estimates \u2014 only planned analyses. Therefore it provides no empirical evidence (neither significant nor suggestive) that variation in time-to-injury modifies the treatment effect on death due to bleeding. Because this is a protocol/SAP rather than a results report, it cannot support or refute the proposed mechanism.",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Trial abstract context suggests ninjurytime could act as an effect modifier for clinical outcomes.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid versus usual care and explicitly analyzes time from hemorrhage to TXA (ninjurytime) as an effect modifier for rebleeding and functional outcome, the study population is aneurysmal subarachnoid hemorrhage (SAH), a fundamentally different disease context from adult traumatic hemorrhage targeted by the CRASH_2 mechanism. The abstract does not report death due to bleeding or mortality as the primary outcome (reports rebleeding and 6-month functional outcome), and the authors themselves note differing prior findings in \u2018\u2018bleeding conditions, distinct from SAH.\u2019\u2019 Because the population/context differs materially from trauma (different pathophysiology and clinical course), the results do not provide relevant evidence for the proposed CRASH_2-related mechanism despite an observed interaction within SAH patients.",
+          "evidence_quote": "\"Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h...\"",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly treats 'time to treatment' (ninjurytime) as an effect modifier: they model a time-treatment interaction and report a significant interaction term (interaction OR 1.15, 95% CI 1.03\u20131.27, increasing to 1.16, 95% CI 1.05\u20131.28 with monitored times). They also report larger treatment effects estimated at 1 hour (ORs ~0.58\u20130.63), indicating greater benefit with earlier treatment. Multiple analytic approaches (regression calibration, multiple imputation, Bayesian) produced similar time-treatment interactions. Although the authors note measurement error and that adjustment had minimal impact on trial results, the reported significant interaction and stronger early-hour effects support ninjurytime acting as an effect modifier.",
+          "evidence_quote": "We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term. The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81) than for clinician-recorded times OR = 0.63 (95% CI 0.48, 0.83). Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It is relevant: it evaluates anti-fibrinolytics (class includes TXA), includes mortality outcomes, and explicitly states it will examine variation of effect by time to treatment (ninjurytime). However, this is a protocol/SAP with no results reported. There are no subgroup estimates, interaction p-values, or any numeric data showing whether ninjurytime modifies treatment effect. Because the abstract contains no outcome data or interaction analyses, it provides no evidence supporting or refuting the proposed mechanism (effect modification by ninjurytime).",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In Effects of tranexamic acid on death, vascular occlusive events, and blood transfusion in trauma patients with significant haemorrhage (CRASH-2): a randomised, placebo-controlled trial, baseline ninjurytime may modify treatment response through differential baseline cardiovascular risk. (variant 7)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract analyzes tranexamic acid and explicitly tests effect modification by time from hemorrhage to treatment (ninjurytime), it studies aneurysmal subarachnoid hemorrhage (SAH) patients, not adult trauma patients with significant hemorrhage as in CRASH-2. The outcomes reported are rebleeding and functional outcome (mRS), not death due to bleeding/mortality as specified in the target mechanism. The disease context (aneurysmal SAH) has fundamentally different pathophysiology and clinical course from trauma haemorrhage, so findings about time-to-TXA in SAH are not transferable to the CRASH-2 trauma mechanism. Therefore the abstract is not relevant to the proposed mechanism.",
+          "evidence_quote": "\u201cwe investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6\u2009h). ... Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)\u201d",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly tests a time-from-injury (Ninjurytime) by treatment interaction and reports that earlier treatment is more beneficial. They model head-injury death with a time-treatment interaction, provide numeric interaction estimates with 95% CIs that exclude the null (interaction term 1.15, 95% CI 1.03\u20131.27 increasing to 1.16, 95% CI 1.05\u20131.28 using monitored times), and report larger treatment effect estimates at 1 hour (ORs ~0.58\u20130.63). This directly supports the hypothesis that baseline time-from-injury modifies TXA treatment effect (earlier treatment = greater benefit). Confidence is tempered to medium because the abstract concerns CRASH-3 (TBI population) and is a secondary/measurement-focused analysis rather than the original CRASH-2 haemorrhage trial, though the finding is a clear, statistically supported time-treatment interaction.",
+          "evidence_quote": "\"In mild and moderate TBI, there is a time to treatment interaction, with early treatment being most beneficial.\" ... \"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term.\" ... \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Although the abstract concerns anti-fibrinolytics (class includes TXA), examines mortality outcomes, and explicitly plans to analyze time-to-treatment (Ninjurytime), the population is acute intracranial haemorrhage (stroke/head injury) rather than adult traumatic haemorrhage as in CRASH-2. The Step 1 Population Context gate fails because intracranial haemorrhage is a fundamentally different disease context from trauma bleeding (different pathophysiology and clinical course). Therefore the abstract does not provide relevant evidence for the CRASH-2 mechanism hypothesis despite analyzing time-to-treatment.",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different ninjurytime levels may show heterogeneous benefit due to variation in baseline disease burden. (variant 8)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract explicitly analyzes time from hemorrhage to TXA (the TARGET FEATURE) and reports an interaction on rebleeding, the study population (aneurysmal subarachnoid hemorrhage) is a fundamentally different disease context from adult trauma patients targeted by CRASH_2. The outcome assessed is rebleeding and functional outcome (mRS), not death due to bleeding/mortality as in the hypothesized mechanism for trauma. Because the clinical setting and outcome differ materially, the abstract does not provide directly relevant evidence to support or refute the proposed mechanism in the CRASH_2 (trauma) context.",
+          "evidence_quote": "\"We assessed ... and investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6 h). ... Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).\"",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports an explicit, statistically significant time-to-treatment interaction indicating that treatment benefit varies by time from injury (ninjurytime). They give larger treatment effects at 1 hour (ORs ~0.58\u20130.63) and report a time-treatment interaction term with 95% CI excluding 1 (1.15, 95% CI 1.03\u20131.27, rising to 1.16 with monitored times). This matches the hypothesised direction (earlier treatment = greater benefit) and demonstrates heterogeneous benefit by ninjurytime. The analysis is a secondary analysis of the randomized CRASH-3 trial and adjustments for measurement error had minimal impact, strengthening confidence that the interaction is real rather than an artifact of time measurement error.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti\u2011fibrinolytics in acute intracranial haemorrhage. It is relevant to the proposed mechanism because it (a) concerns anti\u2011fibrinolytics (class equivalent to TXA), (b) uses mortality endpoints, (c) explicitly plans to examine effects by time to treatment (ninjurytime), and (d) includes head injury patients. However, this is a protocol/analysis plan and presents no results, interaction tests, or subgroup effect estimates. Therefore there is no evidence here that ninjurytime modifies the treatment effect (no supportive or contradictory data). The abstract only indicates that the investigators will analyze the interaction; it does not report whether ninjurytime is prognostic versus predictive. Because the paper is silent on results, the mechanism is unresolved \u2014 the abstract is consistent with assessing prognostic effects but provides no evidence that the feature modifies TXA benefit.",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in ninjurytime may alter event risk trajectories, changing absolute treatment benefit. (variant 9)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly analyzes time from hemorrhage to treatment (ninjurytime) with reported interaction p-values for rebleeding, the study population is aneurysmal subarachnoid hemorrhage (SAH), a fundamentally different disease context from adult traumatic hemorrhage (CRASH_2 target population). Per the predefined relevance gates, a TXA study in aneurysmal SAH is not comparable to trauma hemorrhage because coagulation pathophysiology and clinical context differ substantially; therefore the abstract is not evidence for the proposed mechanism in the CRASH_2 trauma setting. (Other gates: TXA is evaluated and ninjurytime is analyzed, and outcomes include rebleeding as a surrogate, but the population mismatch mandates rejection.)",
+          "evidence_quote": "We assessed ... the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6 h). Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h.",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary analysis of the CRASH-3 randomized trial of tranexamic acid (TXA) with head-injury death as the outcome and explicitly models a time-to-treatment (ninjurytime) \u00d7 treatment interaction. It states that early treatment is most beneficial and provides a numeric interaction estimate whose 95% CI excludes the null (interaction term 1.15, 95% CI 1.03\u20131.27, increased to 1.16, 95% CI 1.05\u20131.28 using monitored times). The direction (greater benefit with earlier treatment) matches the expected negative relationship between ninjurytime and treatment benefit. Measurement-error adjustments had minimal impact on results, supporting robustness of the interaction signal.",
+          "evidence_quote": "\"There is a time to treatment interaction, with early treatment being most beneficial.\" \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This article is a statistical analysis plan for an IPD meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It explicitly states that analyses will examine how treatment effects vary by time to treatment (ninjurytime) and that primary outcomes will be limited to patients treated within three hours, so the feature is directly targeted. However, this abstract contains no results, subgroup estimates, or interaction tests. Therefore there is no evidence here that ninjurytime modifies tranexamic acid's (or other anti-fibrinolytics') treatment effect (i.e., no support for the proposed mechanism). The abstract only indicates that time-to-treatment will be analyzed, so at best it establishes prognostic/analytic intent rather than evidence of effect modification.",
+          "evidence_quote": "We will ... limit the primary outcomes to patients treated within three hours of injury or stroke onset. We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "The association between ninjurytime and outcome may interact with treatment intensity in the trial population. (variant 10)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract explicitly analyzes time from hemorrhage to TXA (ninjurytime) and reports an interaction on rebleeding, the study population is aneurysmal subarachnoid hemorrhage (SAH). The TARGET context for this mechanism is adult trauma (CRASH_2). SAH is a fundamentally different disease entity with distinct coagulation and clinical pathways from traumatic hemorrhage, so findings do not generalize to the trauma context required by the hypothesis. Therefore the abstract is irrelevant for evaluating the proposed TXA-by-ninjurytime mechanism in trauma.",
+          "evidence_quote": "\u2018\u2018This post-hoc analysis of the ULTRA-trial investigates whether the interval between hemorrhage and start of TXA impacts the effect of TXA on rebleeding... stratified into time categories (0-3, 3-6 and >6 h) ... Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001)...\u2019\u2019",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This is a secondary analysis of the CRASH-3 randomized trial explicitly modeling a time-to-treatment (ninjurytime) \u00d7 treatment interaction for head-injury death. The abstract reports numeric interaction estimates with 95% CIs that exclude the null (interaction term increased from 1.15 [95% CI 1.03, 1.27] to 1.16 [95% CI 1.05, 1.28] using monitored times) and shows larger treatment benefit at earlier times (OR at 1 h ~0.58\u20130.63 depending on method). Those statistics constitute significant evidence that ninjurytime modifies the treatment effect (early treatment more beneficial), thus supporting the proposed mechanism.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term...Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28). The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81) than for clinician-recorded times OR = 0.63 (95% CI 0.48, 0.83).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Step 1 passes: the abstract concerns anti-fibrinolytics (class including TXA), uses mortality/death from head injury as primary outcomes, explicitly plans analyses by time-to-treatment (ninjurytime), and studies acute intracranial haemorrhage including head injury (population reasonably related to trauma haemorrhage). However, this document is a statistical analysis plan (IPD meta-analysis) and contains no results or subgroup estimates. It declares an intention to examine whether treatment effect varies by time to treatment and limits some analyses to patients treated within three hours, which indicates that time-to-treatment is considered an important prognostic factor. Because no numeric interaction tests, p-values, or subgroup effect estimates are reported, there is no evidence that ninjurytime modifies TXA (anti-fibrinolytic) treatment effect. The abstract therefore provides prognostic relevance of time-to-treatment (it will be examined and is clinically important) but does not provide evidence that the feature modifies treatment response \u2014 hence PROGNOSTIC_MAIN_EFFECT with low confidence due to absence of outcome data.",
+          "evidence_quote": "\"The primary outcomes will be limited to patients treated within three hours of injury or stroke onset. We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Variation in ninjurytime may identify subgroups with different competing-risk profiles under treatment. (variant 11)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly tests whether time from hemorrhage to TXA start (ninjurytime) modifies treatment effect on rebleeding, the population is aneurysmal subarachnoid hemorrhage (SAH), a fundamentally different disease context from adult traumatic hemorrhage (CRASH_2 context). The instructions explicitly mark TXA studies in aneurysmal SAH as irrelevant for a trauma-hemorrhage mechanism because coagulation pathophysiology and clinical context differ. Additionally, the outcomes reported are rebleeding and functional outcome (mRS), not death due to bleeding/mortality in a trauma population. Therefore the abstract does not provide relevant evidence to support or refute the proposed mechanism in the CRASH_2 (trauma) context.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract analyzes tranexamic acid vs control in the CRASH\u20113 randomized trial and explicitly models a time-to-treatment (ninjurytime) \u00d7 treatment interaction for head\u2011injury death. It reports stronger treatment benefit with earlier treatment (OR at 1 hour <1) and provides a numeric, statistically significant interaction term (interaction 1.15, 95% CI 1.03\u20131.27, increasing to 1.16 with monitored times). These results indicate the magnitude of TXA benefit varies by time from injury in the expected direction (earlier treatment \u2192 greater mortality reduction), meeting the criteria for a supported interaction.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term... The treatment effect estimate at 1 h was greater for monitored times OR = 0.61 (95% CI 0.47, 0.81)... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an IPD meta-analysis of anti\u2011fibrinolytics (including tranexamic acid) in acute intracranial haemorrhage and therefore passes the relevance gates: it evaluates the correct drug class, the outcome (death from head injury/stroke) and explicitly states it will examine time-to-treatment (ninjurytime). However, this is a protocol/SAP with no results reported \u2014 there are no effect estimates, subgroup results, or interaction p-values provided. Thus there is no evidence that variation in ninjurytime modifies treatment effect; at best the abstract indicates the authors will test that hypothesis. Because the abstract does not present data showing either interaction or lack thereof, the mechanism remains unclear (the feature is planned as an effect modifier but no results are reported).",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Trial abstract context suggests ninjurytime could act as an effect modifier for clinical outcomes. (variant 12)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this post-hoc analysis evaluates tranexamic acid and explicitly tests time from hemorrhage to treatment (the reported 'time to start of TXA' = ninjurytime) as an effect modifier for rebleeding, the study population is aneurysmal subarachnoid hemorrhage (SAH). The target mechanism is for CRASH_2 (trauma patients with major hemorrhage). SAH is a fundamentally different disease entity with distinct bleeding/coagulation pathophysiology and clinical course from traumatic hemorrhage, so results do not generalize to the CRASH_2 trauma mechanism. Additionally, the abstract focuses on rebleeding and functional outcome rather than mortality due to bleeding in trauma. Therefore the abstract is not relevant to evaluating the proposed mechanism in the trauma context.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly analyzes time from injury to treatment (ninjurytime) as an effect modifier: they state a time-to-treatment interaction and report a statistically significant interaction term (interaction OR ~1.15 with 95% CI excluding 1). They provide subgroup/conditional treatment effect estimates at 1 hour (ORs <1 favoring TXA) and show that correcting measured times had minimal impact but slightly increased the interaction estimate. This directly supports the mechanism that ninjurytime modifies the effect of tranexamic acid on head-injury death (earlier treatment more beneficial).",
+          "evidence_quote": "\"There is a time to treatment interaction, with early treatment being most beneficial... Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This document is a statistical analysis plan for an individual patient data (IPD) meta-analysis (protocol) and contains no results or subgroup analyses. Although it explicitly states that time-to-treatment (ninjurytime) will be examined as a potential effect modifier, it reports no numeric estimates, interaction p-values, or subgroup outcome data. Therefore it provides no evidence for or against the proposed mechanism (ninjurytime modifying TXA effect on bleeding/mortality).",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In Effects of tranexamic acid on death, vascular occlusive events, and blood transfusion in trauma patients with significant haemorrhage (CRASH-2): a randomised, placebo-controlled trial, baseline ninjurytime may modify treatment response through differential baseline cardiovascular risk. (variant 13)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this post-hoc analysis of the ULTRA RCT evaluates tranexamic acid and explicitly tests time-from-hemorrhage (Ninjurytime) as an effect modifier (and even reports a significant interaction for rebleeding), the study population (aneurysmal subarachnoid hemorrhage) and primary outcomes (rebleeding and functional outcome) are fundamentally different from the CRASH-2 context (adult trauma with major hemorrhage and death due to bleeding). The hypothesis concerns modification of TXA's effect on bleeding mortality in trauma; a SAH cohort has distinct pathophysiology and different outcome measures, so results do not provide relevant evidence for the CRASH-2 mechanism. Note: Treatment and feature checks pass, but the Population Context gate fails, so the abstract is classified as IRRELEVANT.",
+          "evidence_quote": "We assessed confounders, hazard ratio (HR) of rebleeding and odds ratio (OR) of good outcome ..., and investigated the impact of time between hemorrhage and start of TXA on the treatment effect, stratified into time categories (0-3, 3-6 and >6 h). Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract explicitly models a time-to-treatment (ninjurytime) by treatment interaction and reports a statistically significant interaction term (CIs exclude 1), with larger treatment benefit for earlier treatment. Reported treatment odds ratios at 1 hour (ORs ~0.58\u20130.63) and the significant interaction (1.15, 95% CI 1.03\u20131.27 increasing to 1.16, 95% CI 1.05\u20131.28 with monitored times) indicate that ninjurytime modifies the effect of tranexamic acid, in the expected direction (earlier treatment = greater benefit). This is a secondary/post-hoc analysis of the CRASH-3 randomized trial data (subset analysis and measurement-error adjustment), so the study design is an RCT secondary analysis. The abstract does not test the proposed biological pathway (differential baseline cardiovascular risk) as the mediator, but it does provide direct statistical evidence that baseline time-from-injury modifies treatment effect.",
+          "evidence_quote": "\"We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term.\" ... \"Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).\"",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract describes an IPD meta-analysis of anti\u2011fibrinolytics in acute intracranial haemorrhage, not a trial in adult trauma patients with major extracranial hemorrhage (the CRASH-2 context). Although the protocol will examine variation by time to treatment, the population (intracranial haemorrhage/stroke/head injury) is a fundamentally different disease context from traumatic systemic hemorrhage. The intervention is described broadly as \"anti\u2011fibrinolytics\" and TXA is not explicitly named; even if TXA trials are included, the pathophysiology and clinical context differ enough that this abstract is not relevant to testing the proposed CRASH-2 ninjurytime \u2192 differential TXA effect mechanism. Therefore it fails the population/context relevance gate and must be classified as IRRELEVANT.",
+          "evidence_quote": "We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different ninjurytime levels may show heterogeneous benefit due to variation in baseline disease burden. (variant 14)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid and explicitly analyzes time-to-treatment (ninjurytime analogue) with a significant interaction for rebleeding, the study population is aneurysmal subarachnoid hemorrhage (SAH). The Step 1 population gate requires the study be reasonably comparable to adult trauma patients at risk of hemorrhage; SAH is a fundamentally different disease entity with distinct pathophysiology from trauma bleeding. The instructions and examples explicitly classify TXA trials in aneurysmal SAH as irrelevant to a CRASH-2 (trauma) mechanism. Therefore, despite relevant within-study findings about time-to-treatment, the abstract is not relevant to the proposed trauma-related mechanism.",
+          "evidence_quote": "\u201cWe assessed ... stratified into time categories (0-3, 3-6 and >6\u2009h). ... Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6\u2009h (absolute rate reduction 1.4%).\u201d",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "All relevance gates pass: the study is a randomized trial of tranexamic acid in traumatic brain injury and explicitly analyses time from injury to treatment (ninjurytime) as a modifier of effect on head-injury death. The abstract reports numeric estimates for a time-treatment interaction with 95% CIs excluding the null (interaction term increased from 1.15, 95% CI 1.03\u20131.27 to 1.16, 95% CI 1.05\u20131.28 using monitored times) and gives treatment effect estimates at 1 hour showing greater benefit with earlier treatment (ORs \u22480.58\u20130.63). The direction (greater benefit with earlier treatment) matches the expected direction. The analysis is a secondary/post-hoc analysis of the RCT but provides statistically significant interaction evidence, so the mechanism is supported.",
+          "evidence_quote": "We model the effect of tranexamic acid on head injury death using logistic regression with a time-treatment interaction term. Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "low",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a statistical analysis plan for an individual patient data meta-analysis of anti-fibrinolytics in acute intracranial haemorrhage. It explicitly states that time to treatment (ninjurytime) will be examined as a potential effect modifier, but it reports no results or subgroup analyses. Therefore there is no evidence presented that ninjurytime modifies the treatment effect (no interaction estimates, p-values, or directionality). The abstract thus does not support the proposed mechanism; at best it promises to evaluate it. Because the feature is recognized as important (and may be prognostic), but no treatment-by-time results are given, the mechanism remains unclear/prognostic rather than supported or refuted.",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "ninjurytime",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in ninjurytime may alter event risk trajectories, changing absolute treatment benefit. (variant 15)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"tranexamic acid\" OR TXA OR \"anti-fibrinolytic\" OR CRASH-2) AND (trauma OR bleeding OR hemorrhage)) AND (\"time from injury\" OR \"injury-to-treatment time\" OR \"treatment delay\" OR \"time to treatment\" OR \"early treatment\" OR \"delayed treatment\" OR \"treatment timing\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 1,
+      "conflict_count": 0,
+      "neutral_count": 2,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract evaluates tranexamic acid vs usual care and explicitly analyzes time from hemorrhage to TXA initiation (ninjurytime) with a reported interaction on rebleeding, the study population is aneurysmal subarachnoid hemorrhage (SAH). Per the prespecified relevance criteria, SAH is a fundamentally different disease entity from adult traumatic hemorrhage (different pathophysiology and clinical context), so findings in SAH do not generalize to the CRASH-2 trauma mechanism. Additionally, the abstract reports rebleeding and functional outcome rather than death due to bleeding/mortality, further reducing direct relevance to the specified trauma mortality mechanism. Therefore, despite a reported time-treatment interaction within SAH, the paper is not relevant to the target TXA mechanism in trauma.",
+          "evidence_quote": "Time to start of TXA modifies the effect of TXA on rebleeding rate (p < 0.001), with a clinically non-relevant reduction observed only when TXA was initiated after 6 h (absolute rate reduction 1.4%).",
+          "stance": "neutral",
+          "pmid": "38606724",
+          "title": "Impact of time to start of tranexamic acid treatment on rebleed risk and outcome in aneurysmal subarachnoid hemorrhage.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "SUPPORT_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports and quantifies a statistically significant time-to-treatment (ninjurytime) interaction: early treatment is reported as most beneficial and the time-treatment interaction term is >1 with 95% CIs excluding 1. The authors explicitly model a time-treatment interaction and show treatment effects varying by time (e.g., stronger effect at 1 hour and a significant interaction term). Measurement error analyses changed estimates only minimally, but did not remove the interaction, supporting the mechanism that differences in ninjurytime alter treatment benefit. Directionality matches the hypothesis (earlier treatment \u2192 greater benefit).",
+          "evidence_quote": "Using monitored times increased the time-treatment interaction term from 1.15 (95% CI 1.03, 1.27) to 1.16 (95% CI 1.05, 1.28).",
+          "stance": "support",
+          "pmid": "32711551",
+          "title": "Accuracy of time to treatment estimates in the CRASH-3 clinical trial: impact on the trial results.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract is a statistical analysis plan for an individual patient data (IPD) meta-analysis and contains no results or subgroup interaction tests. Although it explicitly states that it will examine treatment effects by time-to-treatment (ninjurytime) and limits primary outcomes to patients treated within three hours, it provides no numerical estimates, p-values, or claims about effect modification by ninjurytime. Therefore it does not provide evidence for or against the proposed mechanism (that differences in ninjurytime alter absolute treatment benefit) and cannot support interaction, prognostic, null, or conflicting claims.",
+          "evidence_quote": "\"We use logistic regression models to examine how the effect of anti-fibrinolytics vary by time to treatment, severity of intracranial bleeding, and age.\"",
+          "stance": "neutral",
+          "pmid": "29417096",
+          "title": "The effectiveness and safety of anti-fibrinolytics in patients with acute intracranial haemorrhage: statistical analysis plan for an individual patient data meta-analysis.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

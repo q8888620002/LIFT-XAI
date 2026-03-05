@@ -1,0 +1,131 @@
+{
+  "dataset": "crash_2",
+  "model": "unknown_learner (CATE explainer output)",
+  "summary": "Refined interaction-focused hypotheses: injury type, SBP, ICD-derived injury categories, delay to TXA, and heart rate modify the treatment effect of tranexamic acid (TXA) on 28-day/in-hospital mortality. Each hypothesis is framed as a testable treatment-response interaction with operational subgroup definitions, conditional moderators (most importantly time-to-treatment and whether definitive haemorrhage control occurred), concrete validation steps (statistical interaction tests, ARR/NNT reporting, mediation analyses), and explicit caveats about measurement error, confounding, and power.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "iinjurytype",
+      "importance_rank": 1,
+      "shap_value": 0.083610899746418,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Mechanism and anatomic injury type (e.g., blunt multisystem vs isolated penetrating; region: head, torso, extremity) capturing bleeding pattern and likelihood of systemic fibrinolysis.",
+      "why_important": "Injury mechanism and distribution influence whether bleeding is diffuse/systemic (more likely to generate hyperfibrinolysis and benefit from systemic antifibrinolysis) or focal and surgically controllable (less incremental benefit from TXA).",
+      "mechanisms": [
+        {
+          "description": "Interaction claim: Patients with blunt multisystem trauma (operationally defined as involvement of \u22652 anatomic regions or ISS-based proxy) derive larger absolute and likely larger relative benefit from TXA compared with patients with isolated penetrating injuries because blunt trauma more often produces diffuse bleeding with systemic fibrinolysis that is amenable to antifibrinolysis. The magnitude of benefit is greatest when TXA is given early (<3 hours, particularly <1 hour) and when definitive operative haemostasis is not immediately performed; conversely, isolated penetrating injuries that undergo rapid surgical control will show smaller incremental TXA benefit because haemorrhage control (not antifibrinolysis) determines survival."
+        }
+      ],
+      "subgroup_implications": "Prioritise TXA for blunt multisystem trauma and major torso contusions when treatment is early and immediate surgery is not already planned; expect smaller ARR and higher NNT in isolated penetrating wounds with rapid operative control.",
+      "validation_suggestions": [
+        "Define groups: blunt multisystem (\u22652 regions or ISS proxy) vs isolated penetrating. Pre-specify cutpoints and sample sizes.",
+        "Estimate treatment \u00d7 injury-type interaction using adjusted regression/CATE models (include age, GCS, SBP, time-to-treatment).",
+        "Report subgroup-specific absolute risk reduction (ARR), relative risk reduction (RRR), and NNT with 95% CIs; test interaction (Wald or likelihood-ratio).",
+        "Mediation: if available, compare viscoelastic markers (TEG/ROTEM) or D-dimer prevalence across groups to assess mediation by hyperfibrinolysis.",
+        "Sensitivity: restrict to cases without immediate operative intervention (or adjust for time-to-surgery) to separate effect from definitive haemostasis."
+      ],
+      "caveats": [
+        "Injury-type coding can be coarse; misclassification biases subgroup estimates.",
+        "Blunt vs penetrating is correlated with other factors (transport time, mechanism of prehospital care); residual confounding possible despite randomization being preserved for treatment assignment.",
+        "Power may be limited for granular anatomic subgroups; adjust analyses for multiplicity and present CIs."
+      ]
+    },
+    {
+      "feature_name": "isbp",
+      "importance_rank": 2,
+      "shap_value": 0.04394968971610069,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Initial systolic blood pressure on presentation \u2014 a proxy for hemorrhagic shock severity and likelihood of fibrinolytic activation.",
+      "why_important": "Hypotension increases the probability that bleeding has triggered trauma-induced coagulopathy and hyperfibrinolysis; TXA is mechanistically more likely to reduce bleeding deaths in these patients.",
+      "mechanisms": [
+        {
+          "description": "Interaction claim: Patients presenting with hypotension (operational threshold SBP <90 mmHg) gain larger absolute benefit from TXA than normotensive patients because hypotension is associated with fibrinolytic activation. The effect is conditional: the benefit is largest when hypotensive patients receive TXA early (<3h, especially <1h) and when definitive haemorrhage control has not yet been achieved. If hypotension co-occurs with immediate surgical control, the incremental benefit of TXA is attenuated."
+        }
+      ],
+      "subgroup_implications": "Prioritize early TXA in patients with SBP <90 mmHg, especially when surgery is delayed; expect diminishing ARR in higher SBP strata and when operative control is immediate.",
+      "validation_suggestions": [
+        "Use SBP strata (<90, 90-110, >110 mmHg) and fit treatment \u00d7 SBP interaction in adjusted models (covariates: age, GCS, injury-type, time-to-treatment).",
+        "Report ARR, RRR, and NNT per SBP stratum and test interaction (Wald/likelihood-ratio).",
+        "Examine mediation by transfusion volume and viscoelastic markers if available.",
+        "Sensitivity: use prehospital SBP where recorded to reduce ED-resuscitation bias and perform analyses excluding patients receiving large prehospital fluids/vasopressors."
+      ],
+      "caveats": [
+        "SBP is subject to measurement error and resuscitation effects; single measurements may misclassify shock.",
+        "SBP correlates with age, medications, and neurogenic shock \u2014 adjust for these confounders.",
+        "CRASH-2 subgroup evidence on SBP alone is limited; this remains a plausible but not definitive effect modifier."
+      ]
+    },
+    {
+      "feature_name": "Injury classification code (icc)",
+      "importance_rank": 3,
+      "shap_value": 0.0418754443526268,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Coded injury categories that can be mapped to clinical groups (e.g., isolated severe TBI, major torso haemorrhage, combined injuries) and reflect differing pathophysiology and time-course of bleeding.",
+      "why_important": "Certain coded injuries \u2014 especially severe isolated intracranial haemorrhage \u2014 may not derive the same systemic TXA benefit as extracranial exsanguination; TXA effect varies by pathology and neurologic status.",
+      "mechanisms": [
+        {
+          "description": "Interaction claim: ICC-derived categories identifying isolated severe TBI (particularly with very low GCS) will show smaller or absent mortality benefit from systemic TXA relative to extracranial haemorrhage categories. Conversely, ICCs indicating major extracranial bleeding or combined head + torso bleeding are more likely to show preserved or greater TXA benefit. The magnitude depends on neurologic status (GCS) and timing \u2014 early TXA may reduce head-injury death in mild-moderate TBI (consistent with CRASH-3), but in unsurvivable severe TBI the effect on 28-day mortality is minimal."
+        }
+      ],
+      "subgroup_implications": "Map ICC to clinically meaningful groups and expect differential ARRs: small/no ARR in unsurvivable isolated TBI, measurable ARR in extracranial haemorrhage groups and possibly in less-severe intracranial bleeding when treated early.",
+      "validation_suggestions": [
+        "Create reproducible mapping from ICC codes to groups (isolated severe TBI vs major torso haemorrhage vs combined).",
+        "Fit treatment \u00d7 ICC-group interactions adjusted for GCS, SBP, time-to-treatment; compare to CRASH-3 head-injury strata.",
+        "Report subgroup ARRs and interaction p-values; perform mediation analysis by bleed volume (imaging) if available."
+      ],
+      "caveats": [
+        "ICC codes are administratively assigned and vary by site; mapping is imperfect.",
+        "Heterogeneity within ICC categories can produce average negative effects even when some subcodes benefit.",
+        "Separation of neurologic and extracranial causes of death can be challenging; cause-of-death misclassification may bias subgroup results."
+      ]
+    },
+    {
+      "feature_name": "Time from injury to treatment (ninjurytime)",
+      "importance_rank": 4,
+      "shap_value": 0.03978388011455536,
+      "effect_direction": "positive",
+      "clinical_interpretation": "Elapsed time (minutes/hours) between injury and TXA administration; a time-sensitive determinant of antifibrinolytic efficacy.",
+      "why_important": "TXA's mechanism (inhibition of fibrinolysis) is most effective early in the bleeding course; delay allows progression to phases less amenable to antifibrinolysis.",
+      "mechanisms": [
+        {
+          "description": "Interaction claim: The mortality reduction from TXA is time-dependent: largest benefit when administered within the first hour, still beneficial within 1-3 hours, and little or no benefit (possible attenuation or harm) beyond ~3 hours. This time effect is moderated by injury type and physiological status (e.g., intracranial bleeding may have a different time-sensitivity), and by whether definitive haemorrhage control occurs rapidly."
+        }
+      ],
+      "subgroup_implications": "Expect greatest ARR and lowest NNT in 0-1h group, measurable benefit in 1-3h, and little/no benefit >3h; policy implication is to prioritize very early TXA administration in suspected bleeding.",
+      "validation_suggestions": [
+        "Pre-specify time strata (0-1h, 1-3h, >3h). Fit interaction models adjusted for injury-type, SBP, GCS. Report ARRs, RRRs, NNTs per stratum and test for trend.",
+        "Perform sensitivity analyses for misrecorded injury times and assess robustness using prehospital vs ED-recorded times.",
+        "Mediation: estimate how much of time-dependent benefit is mediated by transfusion volume or fibrinolysis markers if available."
+      ],
+      "caveats": [
+        "Time-of-injury is often imprecise, particularly in prehospital settings; misclassification can bias estimates toward the null.",
+        "Time interacts with injury type and care pathway; a single time effect is an oversimplification unless conditioned on these factors.",
+        "CRASH-2 provides strong support for time-dependence, but subgroup analyses may be underpowered for fine-grained strata."
+      ]
+    },
+    {
+      "feature_name": "ihr",
+      "importance_rank": 5,
+      "shap_value": 0.0396924689412117,
+      "effect_direction": "negative",
+      "clinical_interpretation": "Initial heart rate on presentation, a nonspecific physiological marker reflecting bleeding, pain, anxiety, neurogenic influence, or medications.",
+      "why_important": "Marked tachycardia may flag high-volume/prolonged bleeding and physiologic exhaustion, contexts in which the incremental benefit of TXA could be reduced because definitive haemorrhage control and resuscitation determine survival.",
+      "mechanisms": [
+        {
+          "description": "Interaction claim: Extremely high HR (e.g., \u2265120 bpm) in combination with hypotension (SBP <90 mmHg) or long prehospital delay predicts a smaller TXA treatment effect because this constellation suggests prolonged, high-volume hemorrhage where antifibrinolysis alone is insufficient. By contrast, moderate tachycardia without hypotension or delay should not be interpreted as reducing TXA responsiveness."
+        }
+      ],
+      "subgroup_implications": "Anticipate reduced ARR among patients with HR \u2265120 bpm plus SBP <90 mmHg or long (>1-3h) delay; do not use HR alone to withhold TXA without considering SBP and time.",
+      "validation_suggestions": [
+        "Define HR strata (<90, 90-119, \u2265120 bpm) and fit treatment \u00d7 HR interactions with SBP and time as moderators (three-way tests or stratified analyses).",
+        "Adjust for confounders (beta-blocker use, neurogenic injury, sepsis) and examine mediation by transfusion requirements and timing of surgery.",
+        "Sensitivity: repeat analyses excluding patients with non-bleeding causes of tachycardia where possible."
+      ],
+      "caveats": [
+        "HR is highly non-specific; observed interactions may reflect confounding by other indicators of illness severity.",
+        "Cutpoints for HR are arbitrary and should be validated; continuous analyses with splines may be preferable if sample size allows.",
+        "Power to detect three-way interactions (HR \u00d7 SBP \u00d7 time) may be limited; interpret negative findings cautiously."
+      ]
+    }
+  ],
+  "cross_feature_patterns": "Coherent pattern: features that indicate active systemic bleeding and recent injury (blunt multisystem trauma, low SBP, short time-to-treatment) predict larger TXA benefit; features that indicate either focal injuries not responsive to systemic antifibrinolysis (specific ICC categories for severe isolated TBI) or prolonged/exhausted physiology (very high HR with hypotension and long delay) predict attenuated benefit. Important conditionalities: time-to-treatment consistently moderates other interactions (SBP, injury type, ICC), and analyses should report absolute effect sizes (ARR, NNT) and test interaction terms while adjusting for confounders (age, GCS, operative timing). Validation should prioritize pre-specified strata, mediation by fibrinolysis markers/transfusion, and sensitivity to measurement error."
+}

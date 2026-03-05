@@ -1,0 +1,674 @@
+{
+  "dataset": "sprint",
+  "total_mechanisms_analyzed": 5,
+  "total_abstracts_retrieved": 54,
+  "overall_support_count": 0,
+  "overall_conflict_count": 2,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "Sub cvd (sub_cvd)",
+      "mechanism": {
+        "description": "Patients with prior symptomatic coronary disease or symptomatic heart failure will on average derive LESS incremental benefit from intensive SBP control (<120 mmHg) than patients without prior CVD because: (1) a higher proportion of their events are due to fixed atherosclerosis or structural pump failure that respond less to short-term BP lowering, and (2) they have greater susceptibility to hypotension-related ischemia or decompensation (increasing harms and reducing delivered intensity). The attenuation is expected to be greatest for recent ischemic events or active heart failure and smaller for remote, stable atherosclerosis. This interaction is moderated by frailty, timing of CVD (recent vs remote), and concurrent cardioprotective therapies (statin/antiplatelet use) which may change the preventable fraction."
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"cardiovascular disease\" OR CVD OR \"heart disease\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_2_strict_interaction",
+      "total_abstracts": 17,
+      "support_count": 0,
+      "conflict_count": 1,
+      "neutral_count": 16,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative review/editorial discussing the appropriateness of a KDIGO systolic BP target <120 mmHg in CKD patients. It does not report results from a trial testing intensive (<120 mmHg) versus standard targets with subgroup analyses by prior symptomatic coronary disease or symptomatic heart failure (the specified 'Sub Cvd'). The abstract contains no analysis or numeric data on major cardiovascular events or all-cause mortality stratified by prior CVD status, nor any interaction tests. Therefore it fails the Feature Check (Sub Cvd is not analyzed) and does not provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"The recommendation of systolic BP target of <120 mm\u2009Hg by KDIGO is controversial. It is based on weak evidence derived mainly from a single randomized controlled trial and its CKD subgroup analysis.\"",
+          "stance": "neutral",
+          "pmid": "34784720",
+          "title": "Is the KDIGO Systolic Blood Pressure Target <120 mm\u2009Hg for Chronic Kidney Disease Appropriate in Routine Clinical Practice?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative summary of three trials (ACCORD, SPRINT, SPS3) and does not report results stratified by the target feature 'Sub Cvd' (prior symptomatic coronary disease or symptomatic heart failure). Although it mentions subgroup analyses in general, it does not specify or analyze outcomes by prior symptomatic coronary disease or heart failure, so it fails the Feature Check (Step 1C). Because the mechanism hypothesis requires subgroup interaction evidence for patients with prior symptomatic CVD, this abstract provides no usable evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"Subgroup analysis revealed differences and similarities.\"",
+          "stance": "neutral",
+          "pmid": "27357398",
+          "title": "A Tale of 3 Trials: ACCORD, SPRINT, and SPS3. What Happened?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract evaluates intensive (<120 mmHg) versus standard BP control and reports effects on major CVD outcomes, but it does not analyze or report results stratified by the target feature (prior symptomatic coronary disease or symptomatic heart failure \u2014 'Sub Cvd'). The only subgroup interaction reported concerns diabetes status (T2DM), not prior CVD. Because the hypothesized mechanism specifically requires evidence that prior symptomatic CVD modifies the incremental benefit (or harm) of intensive BP control, and the abstract contains no such subgroup analysis or interaction test, it cannot provide evidence for or against the proposed mechanism and is therefore irrelevant for this mechanism question. The study is a post-hoc/subgroup analysis of RCT data (ACCORD-BP pooled with SPRINT), so I classify the design as RCT_secondary.",
+          "evidence_quote": "No relevant quote \u2014 the abstract does not mention or analyze prior symptomatic coronary disease or symptomatic heart failure (Sub Cvd). The only subgroup interaction reported: \"The effect of intensive BP control on CVD outcomes did not differ between patients with and without T2DM (P > 0.62).\"",
+          "stance": "neutral",
+          "pmid": "28947569",
+          "title": "Intensive Versus Standard Blood Pressure Control in SPRINT-Eligible Participants of ACCORD-BP.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports subgroup analyses directly addressing prior cardiovascular disease (labelled 'established cardiovascular disease') and finds no heterogeneity of treatment effect. The reported individual subgroup HRs for the primary outcome (MACE) are no CVD: 0.89 (95% CI 0.70-1.14) and yes CVD: 0.84 (95% CI 0.67-1.06), and the authors state that subgroup analyses \"did not identify groups with heterogeneity of treatment effect.\" This contradicts the proposed mechanism that patients with prior symptomatic coronary disease or symptomatic heart failure would derive less incremental benefit from intensive SBP control; if anything the point estimate is slightly more favorable in the CVD group. Limitations: the abstract uses a broad 'established cardiovascular disease' category rather than separating recent vs remote events or active heart failure, and CIs cross unity so subgroup estimates are imprecise. However, the explicit negative heterogeneity statement and subgroup estimates support classification as NO_INTERACTION.",
+          "evidence_quote": "Subgroup analysis based on age (<65 years: HR 0\u00b789 [95% CI 0\u00b771-1\u00b712]; \u226565 years: 0\u00b785 [0\u00b767-1\u00b709]), sex (male: 0\u00b789 [0\u00b772-1\u00b710]; female: 0\u00b785 [0\u00b765-1\u00b710]), established cardiovascular disease (no: 0\u00b789 [95% CI 0\u00b770-1\u00b714]; yes: 0\u00b784 [0\u00b767-1\u00b706]), or active smoking (no: 0\u00b785 [0\u00b771-1\u00b702]; yes: 1\u00b701 [0\u00b764-1\u00b760]) did not identify groups with heterogeneity of treatment effect.",
+          "stance": "neutral",
+          "pmid": "36307193",
+          "title": "Individualising intensive systolic blood pressure reduction in hypertension using computational trial phenomaps and machine learning: a post-hoc analysis of randomised clinical trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post-hoc analysis of SPRINT relating orthostatic SBP changes to incident atrial fibrillation. It does not evaluate the intensive (<120 mmHg) vs standard (<140 mmHg) treatment effect on the prespecified outcomes (major cardiovascular events or all-cause mortality), nor does it present subgroup or interaction analyses comparing patients with prior symptomatic coronary disease or symptomatic heart failure (the 'Sub Cvd' feature) for differential treatment benefit. At best the abstract adjusts for 'history of cardiovascular disease' as a covariate; it does not link Sub Cvd to differential treatment response or to the trial's primary outcomes. Therefore it fails the relevance gates (outcome alignment and feature analysis) and is not evidence for the proposed mechanism.",
+          "evidence_quote": "\"We performed a post hoc analysis of SPRINT ... After adjusting for age, female, race, smoking, alcohol use, history of cardiovascular disease, history of chronic kidney disease, and body mass index, an SBP increase \u22656 mmHg to standing was independently associated with a 43% higher risk of incident AF...\"",
+          "stance": "neutral",
+          "pmid": "40845203",
+          "title": "Orthostatic Systolic Blood Pressure Elevation and Incident Atrial Fibrillation: Insights From the SPRINT Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract is a post-hoc analysis of SPRINT (intensive vs standard SBP targets) and reports major adverse cardiovascular events, it does not analyze or report results stratified by the TARGET FEATURE 'Sub Cvd' (prior symptomatic coronary disease or symptomatic heart failure). Instead, the analysis focuses on baseline orthostatic blood pressure changes and their relationship with MACE and with intensive BP management. Because the feature of interest (Sub Cvd) is not examined as a subgroup modifier of treatment effect in the abstract, the study does not provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"We aimed to evaluate the association between baseline orthostatic BP change and major adverse cardiovascular event (MACE) occurrence... There was no significant interaction effect between orthostatic SBP (p for interaction=0.37) or DBP changes (p for interaction=0.33) and intensive BP management.\"",
+          "stance": "neutral",
+          "pmid": "36007937",
+          "title": "Relationship between orthostatic blood pressure changes and intensive blood pressure management in patients with hypertension.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post-hoc subgroup analysis of SPRINT by baseline atrial fibrillation (AF). The TARGET FEATURE (Sub Cvd: prior symptomatic coronary disease or symptomatic heart failure) is not analyzed or mentioned. Although the trial, intervention (intensive SBP <120 mmHg), and cardiovascular outcomes are relevant, the mechanism hypothesis specifically concerns prior coronary disease or heart failure modifying treatment effect; this abstract evaluates AF as the subgroup instead. Therefore it does not provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\u201cAmong 9361 randomized participants, 778 (8.3%) had baseline AF... Intensive BP control reduced the similar relative risk of cardiovascular events irrespective of the presence of AF, with all interaction P-values\u2009>\u20090.05.\u201d",
+          "stance": "neutral",
+          "pmid": "35640916",
+          "title": "Effects of intensive blood pressure control on cardiovascular and cognitive outcomes in patients with atrial fibrillation: insights from the SPRINT trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary analysis of SPRINT that examines associations between on-treatment diastolic BP categories and MACE; it does not evaluate the randomized comparison of intensive (<120 mmHg) versus standard (<140 mmHg) SBP targets or report treatment-by-Sub Cvd (prior symptomatic coronary disease / heart failure) interactions. The mechanism under test predicts differential benefit (an interaction) of the intensive SBP strategy by prior CVD status; this abstract only reports a prognostic association of low DBP with MACE and states there was no effect modification by cardiovascular disease history for that prognostic association. Because the study does not test the intensive SBP intervention effect across Sub Cvd strata, it cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "There was no effect modification by age, sex, atherosclerotic cardiovascular disease risk, or cardiovascular disease history (all P values for interaction >0.05).",
+          "stance": "neutral",
+          "pmid": "38606761",
+          "title": "Cardiovascular Risk in Patients With Treated Isolated Diastolic Hypertension and Isolated Low Diastolic Blood Pressure.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract describes a post-hoc subgroup analysis of the STEP trial investigating whether baseline LDL-C and non-HDL-C modify the benefit of intensive versus standard SBP control on a composite cardiovascular outcome. The target feature (prior symptomatic coronary disease or symptomatic heart failure \u2014 'Sub Cvd') is not mentioned or analyzed anywhere in the abstract. Because the proposed mechanism specifically concerns effect modification by prior symptomatic CVD, and that feature is absent (not even presented as a covariate linked to outcomes), this study cannot provide evidence for or against the mechanism and must be classified as irrelevant for the hypothesis.",
+          "evidence_quote": "\"...to examine whether the effects of the SBP intervention differed by baseline low-density lipoprotein cholesterol (LDL-C) and non-high-density lipoprotein cholesterol (non-HDL-C) concentrations.\"",
+          "stance": "neutral",
+          "pmid": "37525354",
+          "title": "Association of baseline serum cholesterol with benefits of intensive blood pressure control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The proposed mechanism concerns effect modification by prior symptomatic coronary disease or symptomatic heart failure (Sub Cvd). The abstract is a secondary analysis of SPRINT explicitly restricted to participants without prevalent CVD, so the target feature (prior symptomatic coronary disease or heart failure) is absent and not analyzed. Although the trial compares intensive (<120 mmHg) vs standard (<140 mmHg) SBP and reports cardiovascular outcomes, it cannot provide evidence for or against the mechanism because the relevant subgroup (patients with prior CVD) was excluded. Therefore the abstract is irrelevant to testing the specified mechanism.",
+          "evidence_quote": "A secondary analysis of SPRING (Systolic Blood Pressure Intervention Trial) was performed among participants without prevalent CVD ...\n...\nAmong SPRINT participants without baseline CVD, the relative risk reduction with intensive vs standard SBP treatment was consistent across PREVENT risk strata.",
+          "stance": "neutral",
+          "pmid": "41125318",
+          "title": "Using PREVENT Equations to Compare Intensive vs Standard Systolic Blood Pressure Control for Primary Prevention in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract describes a post-hoc subgroup analysis of SPRINT by baseline Framingham Risk Score (FRS) categories, not by prior symptomatic coronary disease or symptomatic heart failure (the 'Sub Cvd' feature). While the trial and outcomes (intensive vs standard SBP targets and major CV events/all-cause mortality) are appropriate, the target feature (prior symptomatic coronary disease or symptomatic heart failure, including timing or stability) is not analyzed or reported. Therefore the abstract cannot provide evidence for or against the proposed mechanism because the relevant subgroup (Sub Cvd) is missing from the reported analyses.",
+          "evidence_quote": "\"The 9298 SPRINT participants were categorized into low-risk (baseline FRS < 10%), intermediate-risk (FRS = 10%-20%), or high-risk (FRS > 20%) arms.\"",
+          "stance": "neutral",
+          "pmid": "31670874",
+          "title": "Effectiveness of blood pressure-lowering treatment by the levels of baseline Framingham risk score: A post hoc analysis of the Systolic Blood Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not analyze the target feature (prior symptomatic coronary disease or symptomatic heart failure \u2014 'Sub Cvd'). It reports a cluster RCT secondary analysis testing an intensive BP target of <130/80 mmHg (not the <120 mmHg intensive SBP target specified in the hypothesis) and presents overall cardiovascular outcomes for participants without chronic kidney disease, but there is no subgroup analysis or interaction test by prior CVD status. Because the feature is missing and the intervention target differs from the <120 mmHg intensive SBP context, the abstract is not relevant to the proposed mechanism.",
+          "evidence_quote": "a BP treatment goal of less than 130/80 mm Hg. ... This secondary analysis of the CRHCP study suggests that intensive BP control was associated with reduced incidence of the composite cardiovascular disease outcome but not increased risk of kidney injury in patients without chronic kidney disease.",
+          "stance": "neutral",
+          "pmid": "40643915",
+          "title": "Intensive Systolic Blood Pressure Reduction and Kidney and Cardiovascular Outcomes: A Secondary Analysis of a Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this is a secondary/post-hoc analysis of the SPRINT randomized trial testing intensive (<120 mmHg) vs standard SBP targets and reporting major cardiovascular outcomes and all-cause mortality, the abstract evaluates effect modification by baseline metabolic syndrome and race/ethnicity. It does not report any analyses stratified by or testing interaction with prior symptomatic coronary disease or symptomatic heart failure (the requested 'Sub Cvd' feature). Because the target feature is missing (not analyzed as a modifier of treatment effect), the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"To determine whether baseline metabolic syndrome (MetS) modifies the effect of intensive blood pressure control on cardiovascular (CV) outcomes, and whether the effects varied by race/ethnicity.\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "CONFLICT",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post-hoc subgroup analysis of SPRINT (intensive SBP <120 vs <140) reporting primary CVD and all-cause mortality and explicitly stratifying by presence/absence of pre-existing CVD (Sub Cvd). The hypothesis predicted that patients with prior CVD would derive less incremental benefit from intensive BP lowering. The abstract, however, reports a significant reduction in primary CVD outcome and all-cause mortality among subjects \u226575 years with pre-existing CVD or CKD \u2014 i.e., a significant benefit in a group with prior CVD, which is opposite to the hypothesized attenuation. The abstract does not present formal interaction p-values or detailed subgroup effect estimates, so while the reported subgroup findings contradict the proposed mechanism, lack of explicit interaction testing lowers certainty. Hence CONFLICT with medium confidence.",
+          "evidence_quote": "\"We found that intensive blood pressure control was associated with a significantly lower rate of the primary CVD outcome and all-cause mortality in subjects age <75 years with no prior CVD or CKD and in subjects age \u226575 years with pre-existing CVD or CKD.\"",
+          "stance": "conflict",
+          "pmid": "33460256",
+          "title": "Heterogeneity of treatment effect in SPRINT by age and baseline comorbidities: The greatest impact of intensive blood pressure treatment is observed among younger patients without CKD or CVD and in older patients with CKD or CVD.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract evaluates intensive SBP target (<120 mmHg) and reports major cardiovascular outcomes, so treatments and outcomes are relevant. However, it does not present any subgroup analysis or interaction testing by the target feature 'Sub Cvd' (prior symptomatic coronary disease or symptomatic heart failure). Although participants with established cardiovascular disease were included in the cohort, the abstract reports only overall effects (and a driver by nonfatal MI) with no stratified results, interaction p-values, or statements about differential benefit/harm in patients with vs without prior CVD or heart failure. Because the feature is not analyzed with respect to treatment effect, the abstract cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "We included Action to Control Cardiovascular Risk in Diabetes - Blood Pressure participants in the standard glucose control arm who had established cardiovascular disease, chronic kidney disease, were \u226575\u2009years of age or who had a 10-year coronary heart risk \u226515%.",
+          "stance": "neutral",
+          "pmid": "29424469",
+          "title": "Effect of intensive blood pressure control in patients with type 2 diabetes mellitus over 9 years of follow-up: A subgroup analysis of high-risk ACCORDION trial participants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract does not evaluate intensive systolic blood pressure targeting (<120 mmHg) or any blood-pressure treatment strategy (Gate A and D fail). The reported outcomes are physiologic fitness (V\u0307O2max), acceptability, and feasibility\u2014not major cardiovascular events or all-cause mortality (Gate B fails). The target feature 'Sub Cvd (prior symptomatic coronary disease or symptomatic heart failure)' is not mentioned or analyzed as a subgroup or predictor of treatment effect (Gate C fails). The population (office-based employees, mean age 47, BMI ~27) is not a cohort of hypertensive adults at increased cardiovascular risk (Gate E fails). Therefore the study is irrelevant to the specified mechanism claim.",
+          "evidence_quote": "The objective of this study was to use mixed methods to investigate the feasibility, acceptability and effectiveness of a short-duration, high-intensity exercise intervention (REHIT) when applied unsupervised in a workplace setting. V\u0307O2max significantly improved in the exercise group (...) compared to the control group.",
+          "stance": "neutral",
+          "pmid": "32164631",
+          "title": "Time-efficient and computer-guided sprint interval exercise training for improving health in the workplace: a randomised mixed-methods feasibility study in office-based employees.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract describes a small, randomized crossover exercise trial in adolescent boys testing the effect of repeated short maximal sprints on postprandial endothelial function and triacylglycerol. It does not evaluate intensive systolic blood pressure targets (<120 mmHg) or major cardiovascular events/all-cause mortality, nor does it analyze a subgroup defined as 'Sub Cvd (Sub Cvd)'. The population (adolescent, inactive/athletic boys) and intervention (exercise bout) are fundamentally different from hypertensive adults at increased cardiovascular risk in SPRINT, so the study cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "\"This study investigated whether repeated, very short duration sprints influenced endothelial function (indicated by flow-mediated dilation) and triacylglycerol concentrations following the ingestion of high-fat meals in adolescent boys.\"",
+          "stance": "neutral",
+          "pmid": "25357120",
+          "title": "Effect of repeated sprints on postprandial endothelial function and triacylglycerol concentrations in adolescent boys.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Sub ckd (sub_ckd)",
+      "mechanism": {
+        "description": "Patients with mild-to-moderate CKD (eGFR ~45\t6, ACR <300 mg/g) are likely to derive GREATER absolute cardiovascular benefit from intensive SBP lowering because they have higher baseline rates of stroke and HF that are pressure-sensitive and because moderate BP lowering reduces these events. In contrast, patients with advanced CKD (eGFR <30 mL/min/1.73m2) or heavy albuminuria (ACR \u007f300 mg/g) are more prone to AKI and sustained GFR decline when perfusion pressure is lowered; these renal harms can force dose reductions or cessation and increase competing morbidity, attenuating net benefit or producing net harm. The direction and magnitude of the treatment effect therefore depend on eGFR and albuminuria levels and on how renal adverse events are managed."
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"chronic kidney disease\" OR CKD OR \"renal impairment\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 15,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 15,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative review/opinion piece about the KDIGO SBP <120 mmHg recommendation rather than an original trial or subgroup analysis reporting outcome data by CKD strata. While it discusses the KDIGO target and notes it is based on a single RCT and its CKD subgroup, the abstract provides no numerical results or subgroup interaction testing by eGFR or albuminuria (the 'Sub Ckd' feature). It does not report major cardiovascular events or all-cause mortality stratified by mild/moderate versus advanced CKD or by albuminuria, nor does it present interaction p-values or absolute risk differences. Therefore it fails the requirement that the target feature be explicitly analyzed for differential treatment effect, so it cannot provide evidence for or against the proposed mechanism.",
+          "evidence_quote": "\"It is based on weak evidence derived mainly from a single randomized controlled trial and its CKD subgroup analysis.\"",
+          "stance": "neutral",
+          "pmid": "34784720",
+          "title": "Is the KDIGO Systolic Blood Pressure Target <120 mm\u2009Hg for Chronic Kidney Disease Appropriate in Routine Clinical Practice?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This abstract reports a post-hoc SPRINT analysis of orthostatic SBP change and incident atrial fibrillation, not an analysis of the randomized intensive (<120 mmHg) vs standard (<140 mmHg) blood-pressure treatment effect by CKD/albuminuria. The outcome evaluated (incident AF) is not the prespecified major cardiovascular events or all-cause mortality of interest, and the target feature (Sub Ckd) is not analyzed as a subgroup or effect modifier \u2014 CKD appears only as an adjusted covariate. Therefore the abstract provides no evidence testing whether the magnitude or direction of benefit/harm from intensive SBP lowering differs by CKD or albuminuria, so it is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\"After adjusting for age, female, race, smoking, alcohol use, history of cardiovascular disease, history of chronic kidney disease, and body mass index, an SBP increase \u22656 mmHg to standing was independently associated with a 43% higher risk of incident AF...\"",
+          "stance": "neutral",
+          "pmid": "40845203",
+          "title": "Orthostatic Systolic Blood Pressure Elevation and Incident Atrial Fibrillation: Insights From the SPRINT Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract does not assess the TARGET FEATURE (patients with mild-to-moderate CKD or advanced CKD / albuminuria). It explicitly enrolled only participants with baseline eGFR >=60 mL/min/1.73 m2 (i.e., excluded CKD), so there is no subgroup of patients with eGFR ~45 or with heavy albuminuria to test the proposed mechanism. In addition the intervention targeted BP <130/80 mmHg (not the intensive <120 mmHg target in the hypothesis), so the trial intervention is not a direct match to the SPRINT-style intensive target. Because the key feature (Sub Ckd) is missing from the analyzed population and the BP target differs, the abstract cannot provide evidence for or against the hypothesized eGFR/albuminuria-dependent mechanism.",
+          "evidence_quote": "\u201cPatients with a baseline estimated glomerular filtration rate (eGFR) of 60 mL/min/1.73 m2 or greater were randomized to an intervention or usual care group, stratified according to eGFR level.\u201d",
+          "stance": "neutral",
+          "pmid": "40643915",
+          "title": "Intensive Systolic Blood Pressure Reduction and Kidney and Cardiovascular Outcomes: A Secondary Analysis of a Randomized Clinical Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary/post-hoc analysis of an RCT comparing intensive (<120 mmHg) vs standard (<140 mmHg) BP targets and gives overall effects on major CV outcomes. Although patients with 'chronic kidney disease' were included in the enrollment criteria, the abstract does not report any subgroup analyses by degree of eGFR or albuminuria, provides no interaction P-values, nor presents subgroup-specific treatment effects or absolute risk differences for CKD strata. The proposed mechanism hinges on differences by CKD stage and albuminuria and on renal adverse events influencing net benefit; those elements are not analyzed or reported here, so the abstract cannot provide evidence for or against the mechanism.",
+          "evidence_quote": "We included Action to Control Cardiovascular Risk in Diabetes - Blood Pressure participants in the standard glucose control arm who had established cardiovascular disease, chronic kidney disease, were \u226575\u2009years of age or who had a 10-year coronary heart risk \u226515%.",
+          "stance": "neutral",
+          "pmid": "29424469",
+          "title": "Effect of intensive blood pressure control in patients with type 2 diabetes mellitus over 9 years of follow-up: A subgroup analysis of high-risk ACCORDION trial participants.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post-hoc subgroup analysis of SPRINT and explicitly stratifies outcomes by presence or absence of pre-existing CKD, so the feature (CKD) is present and linked to outcomes. However, the abstract does not report interaction tests or numeric comparisons across CKD severity strata (eGFR bands) or albuminuria levels, nor does it address renal adverse events or management. The mechanism claim specifically depends on differences between mild-to-moderate CKD versus advanced CKD and on albuminuria-driven harms; the abstract only contrasts CKD present versus absent and simply reports which age-by-comorbidity subgroups showed significant benefit. That pattern indicates CKD status is prognostic (associated with differing event rates and subgroup significance) but provides no clear evidence that CKD modifies the treatment effect in the mechanistic way proposed (no interaction p-values, no severity/albuminuria data, no renal harm data). Therefore this is best classified as a prognostic main-effect observation rather than support for the specific CKD-severity/albuminuria mechanism.",
+          "evidence_quote": "\u201cOur subgroup analysis ... stratified subjects by age (\u226575 years vs. <75 years) and presence or absence of pre-existing chronic kidney disease (CKD) or cardiovascular disease (CVD). We found that intensive blood pressure control was associated with a significantly lower rate of the primary CVD outcome and all-cause mortality in subjects age <75 years with no prior CVD or CKD and in subjects age \u226575 years with pre-existing CVD or CKD.\u201d",
+          "stance": "neutral",
+          "pmid": "33460256",
+          "title": "Heterogeneity of treatment effect in SPRINT by age and baseline comorbidities: The greatest impact of intensive blood pressure treatment is observed among younger patients without CKD or CVD and in older patients with CKD or CVD.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract describes a systematic review/meta-analysis of clinician-facing interventions to improve blood pressure management in CKD patients in primary care and reports effects on BP control and systolic BP reduction. It does not evaluate an intensive systolic BP target (<120 mmHg) versus standard target (<140 mmHg), does not report major cardiovascular events or all-cause mortality, and does not present subgroup analyses by CKD severity (eGFR) or albuminuria that would test the proposed mechanism concerning mild-to-moderate versus advanced CKD. Therefore it is not relevant to assessing whether Sub Ckd modifies the effect of intensive BP lowering on cardiovascular outcomes.",
+          "evidence_quote": "\"We synthesize the evidence for clinician-facing interventions to improve hypertension management in CKD patients in primary care... We conducted a quantitative synthesis of interventions on blood pressure (BP) outcomes and a narrative synthesis of other CKD relevant clinical outcomes. Planned subgroup analyses were performed by (1) study design ... (2) intervention type ... and (3) use of behavioral/implementation theory.\"",
+          "stance": "neutral",
+          "pmid": "33107008",
+          "title": "Improving Blood Pressure Management in Primary Care Patients with Chronic Kidney Disease: a Systematic Review of Interventions and Implementation Strategies.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative review about childhood chronic kidney disease and renoprotection; it addresses slowing CKD progression in children and the benefits of RAAS blockade and tight blood pressure control for renal survival. It does not evaluate an intensive systolic BP target (<120 mmHg) versus standard (<140 mmHg), does not report major cardiovascular events or all-cause mortality, and does not present subgroup analyses by CKD stage or albuminuria (the 'Sub Ckd' feature). The population (children with CKD) and outcomes (renal progression/renal survival) are not comparable to the SPRINT context (hypertensive adults at increased cardiovascular risk), so the abstract fails the relevance gates (A\u2013E).",
+          "evidence_quote": "Recent pediatric evidence supports the renoprotective efficacy of tight blood pressure control aiming for the low-normal range.",
+          "stance": "neutral",
+          "pmid": "20042976",
+          "title": "Can we slow the progression of chronic kidney disease?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a longitudinal subgroup analysis of SPRINT participants with prevalent CKD and evaluates urine biomarkers of kidney tubule injury after randomization to intensive vs standard SBP targets. Although the intervention (intensive SBP <120 mmHg) and the CKD subgroup are present, the study does not report effects on the hypothesized clinical outcomes (major cardiovascular events or all-cause mortality) or an interaction of treatment effect on those outcomes by CKD status/severity. Instead it addresses whether eGFR declines reflect intrinsic kidney injury versus hemodynamic change, focusing on renal biomarkers. Therefore it does not provide evidence testing whether patients with mild-to-moderate CKD derive greater absolute cardiovascular benefit (or whether advanced CKD/albuminuria attenuate benefit) from intensive BP lowering, so it is irrelevant to the requested mechanism test.",
+          "evidence_quote": "978 SPRINT participants (519 in the intensive and 459 in the standard arm) with prevalent CKD were included. Mean age was 72\u00b19 years and eGFR was 46.1\u00b19.4mL/min/1.73m2 at baseline. ... Among participants with CKD in SPRINT, random assignment to the intensive SBP arm did not increase any levels of 8 urine biomarkers of tubule cell damage despite loss of eGFR.",
+          "stance": "neutral",
+          "pmid": "30291012",
+          "title": "Effects of Intensive Blood Pressure Lowering on Kidney Tubule Injury in CKD: A Longitudinal Subgroup Analysis in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a brief critique/commentary about a guideline, not a report of trial results or subgroup analyses. Although it references a CKD subgroup analysis from a single RCT, the abstract does not present outcomes (major cardiovascular events or all-cause mortality) nor does it analyze or report results by the specified Sub Ckd feature (eGFR/albuminuria strata). It does not test the intensive SBP target as a primary trial arm within the abstract itself. Therefore it fails the outcome alignment and feature-check gates required to evaluate whether the proposed mechanism (effect modification by CKD severity/albuminuria) is supported.",
+          "evidence_quote": "\"This recommendation is controversial. It is based on weak evidence derived primarily from CKD subgroup analysis of a single randomized controlled trial.\"",
+          "stance": "neutral",
+          "pmid": "36314686",
+          "title": "[The KDIGO guideline on blood pressure management in chronic kidney disease is based on weak evidence].",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary MRI analysis of SPRINT testing effects of intensive vs. standard SBP treatment on brain perivascular space (PVS) volume fraction \u2014 an imaging biomarker \u2014 not on the clinical endpoints specified in the hypothesis (major cardiovascular events or all-cause mortality). Chronic kidney disease (Sub Ckd) appears only as an adjustment covariate in the mixed models and is not analyzed as a subgroup or effect modifier; there is no evidence of interaction testing by eGFR or albuminuria, nor any report of differential clinical benefits or harms by CKD status. Therefore the abstract does not provide relevant evidence for the proposed mechanism.",
+          "evidence_quote": "\"The effects of SBP treatment group and major antihypertensive classes on PVS volume fraction were separately tested using linear mixed-effects models while covarying for MRI site, age, sex, Black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\"",
+          "stance": "neutral",
+          "pmid": "37774646",
+          "title": "Intensive systolic blood pressure treatment remodels brain perivascular spaces: A secondary analysis of the Systolic Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Fails the relevance gates. Although this is a secondary analysis of the SPRINT randomized trial (intensive <120 mmHg vs standard <140 mmHg) in an appropriate hypertensive, at-risk population, the abstract does not report major cardiovascular events or all-cause mortality (the clinical outcomes in the hypothesis). Instead it reports change in brain perivascular space (PVS) volume fraction \u2014 a neuroimaging biomarker not shown here to be a surrogate for major CV events or mortality. The target feature 'Sub Ckd (Sub Ckd)' is not analyzed as a subgroup modifier of treatment effect; CKD is only included as an adjustment covariate. Because the abstract neither assesses the specified clinical outcomes nor tests whether CKD stage/albuminuria modifies the treatment effect, it cannot support or contradict the proposed CKD-based mechanism.",
+          "evidence_quote": "\"The effects of SBP treatment group and major antihypertensive classes on PVS volume fraction were separately tested using linear mixed-effects models while covarying for MRI site, age, sex, black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH).\"",
+          "stance": "neutral",
+          "pmid": "36865252",
+          "title": "Intensive Systolic Blood Pressure Treatment Remodels Brain Perivascular Spaces: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "retrospective_cohort",
+          "reasoning": "The PRESERVE abstract does not evaluate an intensive systolic BP target (<120 mmHg) versus standard care nor does it report major cardiovascular events or all-cause mortality. It is an observational pediatric CKD study (retrospective cohort + cross-sectional PROs) of children with mild-to-moderate CKD and focuses on kidney outcomes (e.g., eGFR decline, dialysis, transplant) and hypertension management strategies in children. Although the target feature (mild\u2013moderate CKD) is present as an inclusion criterion, the abstract does not analyze or report an interaction between Sub Ckd and an intensive SBP treatment effect on cardiovascular outcomes; the population (children with CKD) is also not comparable to hypertensive adults at increased cardiovascular risk. Therefore it fails the relevance gates (no intensive SBP intervention tested, outcomes mismatch, and population mismatch) and is not relevant to the proposed mechanism.",
+          "evidence_quote": "\"PRESERVE will include approximately 20,000 children between January 2009-December 2022 with mild-moderate CKD from 15 health care institutions... The inclusion criteria were \u22651 nephrologist visit and \u22652 estimated glomerular filtration rate (eGFR) values in the range of 30 to <90 mL/min/1.73 m2 ... The primary outcome is a composite event of a 50% reduction in eGFR, eGFR of <15 mL/min/1.73 m2, long-term dialysis or kidney transplant.\"",
+          "stance": "neutral",
+          "pmid": "37965485",
+          "title": "The Preserving Kidney Function in Children With CKD (PRESERVE) Study: Rationale, Design, and Methods.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a biomarker (tubular secretion score) prognostic analysis among SPRINT participants with CKD but does not evaluate the effect of intensive versus standard systolic blood pressure targets or report treatment-by-Sub Ckd interactions. The hypothesis concerns differential treatment benefit/harm of intensive SBP lowering across CKD/albuminuria subgroups; this abstract provides only associations between a secretion score and outcomes (prognostic), not subgroup-specific treatment effects. Therefore it cannot support or refute the proposed mechanism.",
+          "evidence_quote": "\"Among SPRINT participants with CKD, lower estimated tubular secretion was associated with faster eGFR decline, independent of baseline eGFR and albuminuria, but not with CKD progression, CVD, or mortality.\"",
+          "stance": "neutral",
+          "pmid": "36507053",
+          "title": "Estimated Kidney Tubular Secretion and Kidney, Cardiovascular, and Mortality Outcomes in CKD: The Systolic Blood Pressure Intervention Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a methodological paper applying a Bayesian subgroup-slope model to the MDRD trial and evaluates heterogeneous effects on total eGFR slope (a kidney surrogate). Although it identifies an eGFR-defined subgroup (above vs below 34.32 mL/min/1.73m2) with a higher treatment effect on eGFR slope, it does not report or analyze the clinical outcomes specified in the hypothesis (major cardiovascular events or all-cause mortality) nor renal adverse events (AKI, sustained GFR decline) that would mediate the proposed mechanism. The intervention/context differs from the SPRINT cardiovascular-outcome setting: the outcome focus is renal slope rather than cardiovascular events, so the abstract cannot provide evidence about the mechanism linking CKD strata to absolute cardiovascular benefit or competing renal harms with intensive SBP lowering.",
+          "evidence_quote": "We apply our approach to the Modification of Diet in Renal Disease (MDRD) Trial, observing strong Bayesian evidence that patients with a baseline eGFR above 34.32 benefit more from the intensive systolic blood pressure control compared to patients with a baseline eGFR below 34.32. Specifically, the posterior probability that the treatment effect is larger in the higher-eGFR subgroup is 81 %.",
+          "stance": "neutral",
+          "pmid": "41087960",
+          "title": "Discovering heterogeneous treatment effects on slope-based endpoints in chronic kidney disease trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "case_series",
+          "reasoning": "The abstract is a single-case report of a 16-year-old with focal segmental glomerulosclerosis treated with mycophenolate mofetil and describes recovery from posterior reversible encephalopathy syndrome after intensive antihypertensive therapy. It does not evaluate an intensive systolic BP target (<120 mmHg) versus standard target in a randomized trial, does not report major cardiovascular events or all-cause mortality, and does not analyze subgroups defined by CKD (eGFR or albuminuria) or their interaction with treatment. The population (a teenage FSGS patient) and intervention (MMF) are different from the SPRINT context, so the abstract cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "\"Intensive antihypertensive therapy restored him to consciousness. Renal biopsy revealed that he suffered from focal segmental glomerulosclerosis... Then, mycophenolate mofetil (MMF) ... Soon after, he reached remission of nephrotic syndrome without recurrence of posterior reversible encephalopathy syndrome.\"",
+          "stance": "neutral",
+          "pmid": "28509096",
+          "title": "Successful treatment by mycophenolate mofetil in a patient with focal segmental glomerulosclerosis associated with posterior reversible encephalopathy syndrome.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Race black (race_black)",
+      "mechanism": {
+        "description": "Black participants may derive MORE absolute benefit from intensive SBP lowering when the strategy achieves adequate SBP separation and uses medication classes (e.g., thiazide diuretics, CCBs) that reliably lower BP in this population and when adherence/support systems are robust, because their baseline stroke and HF risk is higher and more BP-responsive. Alternatively, Black participants may derive LESS net benefit if they experience smaller achieved SBP separation, more treatment-limiting adverse events, or face systemic barriers to sustained care. Hence the race\u007ftreatment interaction is bidirectional and primarily mediated by implementation and comorbidity patterns rather than race itself. Note: SPRINT subgroup analyses did not demonstrate a large qualitative race-based treatment effect reversal, so any observed heterogeneity likely reflects mediators."
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND \"race AND black AND race AND black\" AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 4,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 4,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports a prospective cohort analysis (Health ABC) of long-term cognitive trajectories by achieved SBP categories, and it tests race interaction for cognition. However, the prespecified mechanism to evaluate concerns effects of intensive SBP lowering on major cardiovascular events and all-cause mortality (and mediation by implementation, medication class, adverse events). This study's outcome is cognitive decline (3MSE, DSST), not major cardiovascular events or all-cause mortality, so it does not address the target clinical outcome. Additionally, the analysis is observational (not an RCT of intensive vs standard SBP targets), does not report randomized achieved SBP separation, medication-class effects, treatment-limiting adverse events, or sustained-care implementation\u2014key elements of the proposed mechanism. Although the abstract notes a race interaction for cognition (greater difference in cognition by SBP level in black vs white participants), that finding does not provide direct evidence for the mechanism concerning cardiovascular events/mortality or for mediation by implementation/medication class. Therefore the abstract is irrelevant to the specified mechanism.",
+          "evidence_quote": "Compared with white patients, black patients had a greater difference between the higher and lower SBP levels in the decrease in cognition; adjusted differences between the group with SBP levels of 150 mm Hg or higher and the group with SBP levels of 120 mm Hg or lower were -0.05 in white patients and -0.08 in black patients for 3MSE (P = .03) and -0.07 in white patients and -0.13 in black patients for DSST (P = .05).",
+          "stance": "neutral",
+          "pmid": "28828478",
+          "title": "Association of JNC-8 and SPRINT Systolic Blood Pressure Levels With Cognitive Function and Related Racial Disparity.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary MRI analysis of SPRINT testing effects of intensive vs standard SBP targets on brain perivascular spaces (PVS). The hypothesized mechanism concerns differential effects on major cardiovascular events and all-cause mortality by Black race (a race-treatment interaction). This abstract does not report major cardiovascular events or mortality nor any race-specific treatment interaction. Race (Black) appears only as a covariate / baseline descriptor (32% Black) and an observed association with PVS (greater PVS in non-Black race), but there is no analysis showing that treatment effect differs by Black race or that race mediates the clinical outcomes in question. Because the feature (Race Black) is not linked to the trial treatment effect on the clinical outcomes of interest, the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\"...using linear mixed-effects models while covarying for MRI site, age, sex, Black race...\"",
+          "stance": "neutral",
+          "pmid": "37774646",
+          "title": "Intensive systolic blood pressure treatment remodels brain perivascular spaces: A secondary analysis of the Systolic Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports post-hoc subgroup analyses in SPRINT including non-Hispanic Black, White and Hispanic participants and explicitly states that the cardiovascular benefit of intensive SBP control was similar across race/ethnic subgroups. This indicates no evidence that Race Black modified the treatment effect in this analysis. While the trial setting and outcomes are directly relevant, the analysis is a secondary/post-hoc subgroup assessment and the abstract provides no detailed interaction statistics for race (nor data on achieved SBP separation, specific medication classes, adverse events by race, or implementation/adherence measures). Therefore the abstract supports the absence of a race-by-treatment interaction but does not test the more mechanistic claims about medication class responsiveness or implementation barriers.",
+          "evidence_quote": "\"We performed post hoc analyses among non-Hispanic black, non-Hispanic white and Hispanic participants...\" and \"The findings were also similar across race/ethnic subgroups. In this analysis the CV benefit of intensive SBP control did not differ among participants by baseline MetS status, regardless of race/ethnicity.\"",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "PROGNOSTIC_MAIN_EFFECT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary analysis of the randomized SPRINT MRI substudy testing intensive (<120 mmHg) vs standard (<140 mmHg) SBP targets in a relevant high-CV-risk hypertensive population, so it passes relevance. Race (Black) was included as a covariate and the authors report that PVS volume fraction differed by race (they state non-Black race was associated with greater PVS). However, the abstract does not report any race-by-treatment interaction or subgroup analysis testing whether the effect of intensive SBP lowering on the outcome (PVS volume fraction, a surrogate of vascular brain health) differed between Black and non-Black participants. Thus the data show a prognostic association of race with the surrogate outcome but provide no evidence that race modifies the treatment effect (no interaction reported). This matches a prognostic-main-effect result rather than support for the proposed race-treatment interaction mechanism.",
+          "evidence_quote": "\"covarying for MRI site, age, sex, black race, baseline SBP, history of cardiovascular disease (CVD), chronic kidney disease, and white matter hyperintensities (WMH). For 610 participants with sufficient quality MRI at baseline (mean age 67\u00b18, 40% female, 32% black), greater PVS volume fraction was associated with older age, male sex, non-Black race, concurrent CVD, WMH, and brain atrophy.\"",
+          "stance": "neutral",
+          "pmid": "36865252",
+          "title": "Intensive Systolic Blood Pressure Treatment Remodels Brain Perivascular Spaces: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "mechanism": {
+        "description": "Higher baseline SBP confers MORE absolute benefit from intensive SBP target because (1) there is more achievable BP reduction (larger on-treatment separation) and (2) a greater proportion of events are pressure-sensitive (stroke, HF). This positive interaction is nonlinear: benefit increases across moderate baseline SBP ranges (e.g., 140\u000159 mmHg) but may plateau or be offset by harms at very high SBP with severe vascular stiffness or in frail patients who tolerate rapid lowering poorly. Achieved SBP separation is a key mediator of the effect."
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review/meta-analysis of telemedicine and mHealth interventions vs usual care for improving systolic blood pressure (SBP) control in stroke survivors. It does not evaluate an intensive systolic BP target (<120 mmHg) versus a standard target (<140 mmHg) as the treatment comparison, nor does it report effects on the prespecified outcomes of major cardiovascular events or all-cause mortality. Although SBP is measured and subgrouped (e.g., baseline SBP \u2265140 mmHg), the study tests a different intervention (telemedicine/mHealth) with SBP change as the proximal endpoint rather than testing the intensive-target strategy and its clinical-event effects. Therefore it fails the Treatment Check and Outcome Alignment gates and is irrelevant to the specific SPRINT-target mechanism question.",
+          "evidence_quote": "Among the stroke survivors ... or a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract does analyze systolic blood pressure (SBP) and reports associations with outcomes, but it does not evaluate an intensive systolic blood pressure target (<120 mmHg) or compare treatment arms of intensive vs standard BP control as in SPRINT. The study population (patients with minor ischemic stroke or high-risk TIA treated with dual antiplatelet therapy) is a fundamentally different clinical context from hypertensive adults at increased cardiovascular risk targeted by the SPRINT mechanism. Thus the paper offers prognostic associations of admission SBP in a stroke population rather than evidence that baseline SBP modifies the benefit of an intensive SBP treatment strategy; it fails the Treatment Check and Intervention Match gates and is not directly relevant to the proposed mechanism.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although this is a secondary/subgroup analysis of the SPRINT randomized trial comparing intensive (<120 mmHg) versus standard (<140 mmHg) systolic BP targets (so the intervention and outcomes are relevant), the abstract stratifies participants by baseline diastolic blood pressure (DBP) and hs-cTnT and reports treatment effects across those DBP/hs-cTnT strata. It does not analyze or report treatment effect modification by baseline systolic blood pressure (SBP) \u2014 the target feature of the hypothesis \u2014 nor absolute or relative benefits across SBP strata. Therefore the abstract cannot provide evidence for or against the proposed mechanism that baseline SBP modifies the benefit of intensive SBP lowering.",
+          "evidence_quote": "\"We determined the impact of intensive BP control among individuals with elevated systolic BP who have low DBP and elevated hs-cTnT (high-sensitivity cardiac troponin T) levels.\"",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "age",
+      "mechanism": {
+        "description": "Older adults (especially \u007f75 years) who are fit (low frailty score, preserved gait speed, good life expectancy) will derive MORE absolute cardiovascular benefit from intensive SBP lowering because of greater baseline event rates that are BP-responsive. Conversely, frail older adults or those with limited life expectancy will derive LESS benefit or net harm due to higher rates of adverse events (falls, syncope, AKI) and competing non-CV mortality. Therefore, the age-treatment interaction is moderated by frailty, comorbidity burden, and life expectancy."
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (age OR elderly OR geriatric OR \"older adults\") AND (\"cardiovascular\" OR \"interaction\" OR \"comorbidity\" OR \"conversely\" OR \"especially\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab]) AND (Clinical Trial[PT] OR Randomized Controlled Trial[PT] OR Meta-Analysis[PT] OR Review[PT])",
+      "query_tier_used": "tier_1_mechanism_specific",
+      "total_abstracts": 15,
+      "support_count": 0,
+      "conflict_count": 1,
+      "neutral_count": 14,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post hoc subgroup analysis of the STEP RCT evaluating whether baseline LDL-C and non\u2013HDL-C modified the effect of intensive vs standard SBP targets. Although the trial enrolled patients aged 60\u201380 years, the abstract contains no analyses or interaction tests involving Age, frailty, comorbidity burden, or life expectancy \u2014 the target feature and moderators in the hypothesis. The reported interaction P-values and subgroup HRs all refer to LDL-C and non\u2013HDL-C, not Age. Therefore the abstract is not relevant to the proposed mechanism about age-related heterogeneity (moderation by frailty/comorbidity/life expectancy) and must be rejected for this mechanism claim.",
+          "evidence_quote": "\"Chinese patients aged 60 to 80 years with hypertension.\"",
+          "stance": "neutral",
+          "pmid": "37525354",
+          "title": "Association of baseline serum cholesterol with benefits of intensive blood pressure control.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary analysis of SPRINT that examines the association between age and therapeutic inertia (failure to intensify antihypertensive therapy) and whether frailty/cognition/gait speed moderate that association. It does not report effects on the trial's clinical endpoints (major cardiovascular events or all-cause mortality) nor does it test whether age, frailty, or life expectancy modify the treatment effect of intensive vs standard SBP targets on those outcomes. Although age is analyzed, it is linked to clinician behavior (therapeutic inertia) rather than patient-level treatment benefit or harm, so the paper cannot assess the proposed mechanism that older fit adults derive greater absolute CV benefit (or frail adults derive less benefit/harm) from intensive SBP lowering.",
+          "evidence_quote": "\"Participants 60 to <70, 70 to <80, and \u226580 years of age had a higher prevalence of TI in both treatment groups versus participants <60 years of age... The adjusted odds ratios for TI comparing participants \u226580 versus <60 years of age were 1.32 (95% CI, 1.14-1.53) and 1.25 (95% CI, 1.11-1.41) in the standard and intensive treatment groups, respectively.\"",
+          "stance": "neutral",
+          "pmid": "37165900",
+          "title": "Evidence for Age Bias Contributing to Therapeutic Inertia in Blood Pressure Management: A Secondary Analysis of SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "NO_INTERACTION",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports explicit subgroup analyses by age (<65 vs \u226565) and states it \"did not identify groups with heterogeneity of treatment effect.\" The reported hazard ratios are similar across age strata (<65: HR 0.89 [95% CI 0.71-1.12]; \u226565: HR 0.85 [95% CI 0.67-1.09]) with no significant interaction reported. Therefore the data do not support an age-treatment interaction as hypothesised. Additionally, the mechanism proposed relies on moderation by frailty, comorbidity, and life expectancy; the abstract does not present subgroup results by frailty or life expectancy (it reports many baseline variables and an ML-derived predictor but does not demonstrate that older, fit adults had greater absolute benefit or that frail older adults had less benefit or net harm). The analysis reports relative treatment effects (HRs) and does not provide age-stratified absolute risk reductions, so the specific claim that older fit adults derive greater absolute benefit is not demonstrated. Because age was tested and no heterogeneity was found, the mechanism as stated is not supported by this abstract, though absence of frailty-specific subgroup data means the broader moderation hypothesis cannot be fully ruled out.",
+          "evidence_quote": "Subgroup analysis based on age (<65 years: HR 0\u00b789 [95% CI 0\u00b771-1\u00b712]; \u226565 years: 0\u00b785 [0\u00b767-1\u00b709]) ... did not identify groups with heterogeneity of treatment effect.",
+          "stance": "neutral",
+          "pmid": "36307193",
+          "title": "Individualising intensive systolic blood pressure reduction in hypertension using computational trial phenomaps and machine learning: a post-hoc analysis of randomised clinical trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "narrative_review",
+          "reasoning": "The abstract is a narrative review critiquing the KDIGO recommendation for SBP <120 mmHg in CKD and does not present trial subgroup data analyzing Age. While it discusses risks to \"multimorbid and frail\" patients, it contains no explicit analysis or results stratified by age (no subgroup HRs, interaction p-values, or statements about benefit/harm by age). Therefore it fails the Step 1 Feature Check (Age is not analyzed for outcome association) and cannot provide evidence for or against the proposed age-frailty moderated treatment effect from SPRINT.",
+          "evidence_quote": "If applied to routine BP measurement, this target will expose the multimorbid and frail CKD patients to the risk of adverse events including falls and fractures.",
+          "stance": "neutral",
+          "pmid": "34784720",
+          "title": "Is the KDIGO Systolic Blood Pressure Target <120 mm\u2009Hg for Chronic Kidney Disease Appropriate in Routine Clinical Practice?",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "CONFLICT",
+          "confidence": "medium",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports secondary analyses of two randomized trials (SPRINT and ACCORD) comparing intensive (<120 mmHg) versus standard (<140 mmHg) SBP targets with age-stratified effects on cerebral small vessel disease markers (WMHv and peak width of skeletonized mean diffusivity). These analyses directly test an age-by-treatment interaction. Results show a consistent pattern of greater benefit from intensive SBP lowering in younger participants (\u226465 years) versus older participants: in SPRINT the magnitude of WMHv reduction was largest in \u226465, smaller in 66\u201375, and smallest/non-significant in >75 (overall interaction P=0.18 but clear subgroup differences), and in ACCORD the age-by-treatment interaction was statistically significant (P=0.038) favoring the younger group. Your hypothesized mechanism predicted greater absolute cardiovascular benefit in older (especially fit \u226575) adults; the reported interaction (significant in ACCORD and directionally consistent in SPRINT) is the opposite (greater benefit in younger). Note the outcome here is cerebral small vessel disease imaging markers (a surrogate for cerebrovascular injury) rather than major cardiovascular events or all-cause mortality, so generalizability to the original mortality/CV-events mechanism is limited. Nevertheless, on the evidence provided, the age-treatment interaction contradicts the proposed mechanism.",
+          "evidence_quote": "In SPRINT, the overall interaction between age and SBP on WMHv change was not statistically significant (P=0.18). However, intensive SBP treatment demonstrated a stepwise greater longitudinal WMHv reduction with younger age \u226465 years (-0.19 [95% CI, -0.28 to -0.11]), 66 to 75 years (-0.11 [95% CI, -0.19 to -0.02]), >75 years (-0.06 [95% CI, -0.20 to 0.09])... In ACCORD, intensive SBP-lowering was associated with reduced WMHv progression in the younger (\u226465) compared with the older age group (P=0.038).",
+          "stance": "conflict",
+          "pmid": "41159258",
+          "title": "Effect of Intensive Systolic Blood Pressure Control on Markers of Cerebral Small Vessel Disease by Age.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "This abstract reports a post-hoc MRI subgroup analysis of SPRINT stratified by baseline white matter hyperintensity volume (WMHv). Although the trial and outcomes (primary cardiovascular composite, all-cause mortality) and the intensive (<120 mmHg) versus standard (<140 mmHg) arms are appropriate, the TARGET FEATURE (Age) is not analyzed as a modifier of treatment effect. Age appears only as a baseline summary and as an adjustment covariate in models, and no age-treatment interaction or subgroup results by age are reported. Because the mechanism hypothesis specifically requires evidence that age (and its moderation by frailty/comorbidity/life expectancy) modifies the treatment benefit, the abstract is irrelevant to that mechanism.",
+          "evidence_quote": "\"The mean age of the participants was 68 \u00b1 9 years\"; and \"We estimated the association ... using Cox proportional hazards models adjusted for treatment assignment, age, sex, MRI scanner, and intracranial volume.\"",
+          "stance": "neutral",
+          "pmid": "40586237",
+          "title": "Cerebral small vessel disease and effects of intensive versus standard blood pressure treatment on cardiovascular outcomes and adverse events.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post-hoc SPRINT analysis stratified by baseline Framingham Risk Score (FRS), not by Age. While the trial and outcomes (intensive vs standard SBP; major CV events and mortality) match the trial context, the TARGET FEATURE 'Age' is not analyzed or reported as a subgroup or interaction variable. The mechanism hypothesis specifically requires evidence that Age (and its moderation by frailty/comorbidity/life expectancy) modifies the treatment effect. Because the abstract only reports results by FRS and explicitly states effects were similar across FRS strata (and does not mention age, frailty, or life expectancy), it cannot support or refute the proposed Age-based mechanism.",
+          "evidence_quote": "\"This was a post hoc analysis of Systolic Blood Pressure Intervention Trial (SPRINT), aimed to investigate whether intensive blood pressure treatment has differential therapeutic outcomes on patients with different baseline Framingham risk score (FRS). The 9298 SPRINT participants were categorized into low-risk (baseline FRS < 10%), intermediate-risk (FRS = 10%-20%), or high-risk (FRS > 20%) arms.\"",
+          "stance": "neutral",
+          "pmid": "31670874",
+          "title": "Effectiveness of blood pressure-lowering treatment by the levels of baseline Framingham risk score: A post hoc analysis of the Systolic Blood Pressure Intervention Trial (SPRINT).",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct",
+          "reasoning": "The abstract reports a secondary analysis of the ACCORD-BP randomized trial testing intensive (<120 mmHg) vs standard (<140 mmHg) SBP targets, but the analysis examines baseline diastolic blood pressure (DBP) and glycemic control as effect modifiers. It does not analyze Age (the target feature) or report any age-treatment interaction. Because the mechanism to be tested specifically concerns Age (and how frailty/comorbidity/life expectancy moderate age-related treatment benefit), the abstract is irrelevant to that mechanism despite matching the intervention and outcomes. Therefore it fails the Feature Check (Step 1C) and cannot provide evidence for or against the proposed age-moderated mechanism.",
+          "evidence_quote": "\"We examined whether effects of SBP control on cardiovascular composite were modified by baseline DBP and glycemic control.\"",
+          "stance": "neutral",
+          "pmid": "32366577",
+          "title": "The Influence of Baseline Diastolic Blood Pressure on the Effects of Intensive Blood Pressure Lowering on Cardiovascular Outcomes and All-Cause Mortality in Type 2 Diabetes.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a secondary analysis of a trial in acute ischemic stroke patients after endovascular thrombectomy comparing SBP targets <140 mmHg vs 140\u2013180 mmHg, with primary outcome functional independence (mRS 0\u20132 at 3 months). This does not match the hypothesized context: (1) the evaluated intensive BP target is <140 mmHg, not the <120 mmHg target (or class-equivalent) in SPRINT; (2) the population is post-EVT stroke patients, not hypertensive adults at elevated cardiovascular risk; (3) the outcome is functional neurologic outcome, not major cardiovascular events or all-cause mortality; and (4) Age is not analyzed or reported as a subgroup or effect modifier. Because one or more relevance gates fail, the abstract is irrelevant to the requested age-treatment mechanism.",
+          "evidence_quote": "No age-related analysis reported; abstract focuses on BP targets: \"We conducted a secondary analysis ... which compared intensive (systolic BP < 140 mmHg) versus conventional (systolic BP 140-180 mmHg) BP management within the first 24 h following successful recanalization.\"",
+          "stance": "neutral",
+          "pmid": "40317165",
+          "title": "Blood pressure management based on infarct volume after successful endovascular thrombectomy.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a post-hoc subgroup analysis of SPRINT focused on baseline metabolic syndrome and race/ethnicity. While the trial, intervention (intensive SBP <120 vs <140) and outcomes (major CV events, all-cause mortality) match the mechanism context, the TARGET FEATURE 'Age' is not analyzed or mentioned anywhere in the abstract. The hypothesis concerns an age-by-treatment interaction moderated by frailty, comorbidity, and life expectancy; because age (and frailty/comorbidity/life expectancy) is not evaluated or linked to treatment effect in this abstract, it cannot provide evidence for or against the proposed mechanism. Therefore the abstract is irrelevant to the age-treatment interaction question despite being a secondary analysis of the correct RCT.",
+          "evidence_quote": "\"To determine whether baseline metabolic syndrome (MetS) modifies the effect of intensive blood pressure control on cardiovascular (CV) outcomes, and whether the effects varied by race/ethnicity.\" (The abstract focuses on MetS and race; it contains no age-stratified analyses or interaction results by age.)",
+          "stance": "neutral",
+          "pmid": "29024310",
+          "title": "Influence of metabolic syndrome and race on the relationship between intensive blood pressure control and cardiovascular outcomes in the SPRINT cohort.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "While the abstract analyzes intensive (<120 mmHg) vs standard (<140 mmHg) SBP targets and reports major cardiovascular outcomes (satisfying treatment and outcome gates), it does not analyze Age as a modifier of treatment effect. Age appears only as a baseline descriptor (mean age 65 years) and there are no subgroup results or interaction tests reported by age, frailty, comorbidity burden, or life expectancy. The analysis focuses on PREVENT risk strata rather than age- or frailty-defined subgroups, so the abstract cannot provide evidence for the proposed age-frailty moderated mechanism.",
+          "evidence_quote": "Of 6,554 SPRINT participants analyzed (mean age 65 years, 37% women, 53% non-Hispanic White)",
+          "stance": "neutral",
+          "pmid": "41125318",
+          "title": "Using PREVENT Equations to Compare Intensive vs Standard Systolic Blood Pressure Control for Primary Prevention in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post-hoc analysis of SPRINT focusing on blood pressure time-in-target range (BP-TTR) in frail vs non-frail participants and its association with cardiovascular outcomes. The hypothesized mechanism specifically requires analysis of Age (particularly \u226575 y) and interactions between age, frailty/comorbidity/life expectancy, and the intensive SBP treatment effect. The abstract contains no age-stratified analyses, no mention of older adults or an age-treatment interaction, and therefore cannot provide evidence for or against the proposed age-moderated mechanism. Although the trial context (SPRINT) and major cardiovascular endpoints are relevant and the study design is a secondary analysis of an RCT, the key TARGET FEATURE (Age) is missing from the reported analyses, so the abstract is irrelevant to the stated mechanism.",
+          "evidence_quote": "N/A \u2014 abstract contains no age-related analyses or mention of older age subgroups.",
+          "stance": "neutral",
+          "pmid": "38552135",
+          "title": "Systolic and diastolic blood pressure time in target range and cardiovascular outcomes in patients with hypertension and pre-frailty or frailty status.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract evaluates intensive (<120 mmHg) versus standard BP control in a post-hoc subgroup analysis of ACCORD-BP (pooled with SPRINT-eligible participants) and reports effects on major cardiovascular outcomes and adverse events. However, it contains no analyses, subgroup results, interaction tests, or even descriptive statements that relate Age to differential treatment effect. The only explicit subgroup interaction reported concerns diabetes status (T2DM) (P > 0.62). Because the TARGET FEATURE (Age) is not analyzed or linked to outcomes or treatment effect in the abstract, it cannot provide evidence for the proposed age-by-treatment mechanism and is therefore irrelevant to that hypothesis.",
+          "evidence_quote": "\"The effect of intensive BP control on CVD outcomes did not differ between patients with and without T2DM (P > 0.62).\"",
+          "stance": "neutral",
+          "pmid": "28947569",
+          "title": "Intensive Versus Standard Blood Pressure Control in SPRINT-Eligible Participants of ACCORD-BP.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Fails Relevance Gates. Although this is a post-hoc analysis of the SPRINT dataset, the abstract does not evaluate the intensive (<120 mmHg) versus standard (<140 mmHg) treatment effect on major cardiovascular events or all-cause mortality (the prespecified outcome). Instead it studies orthostatic SBP changes and incident atrial fibrillation. Age appears only as an adjusted covariate (not as a subgroup or treatment-effect modifier), and no age-treatment interaction or analyses by frailty, comorbidity, or life expectancy are reported. Therefore the abstract provides no evidence relevant to the hypothesized age-moderated treatment effect of intensive SBP lowering.",
+          "evidence_quote": "\"After adjusting for age, female, race, smoking, alcohol use, history of cardiovascular disease, history of chronic kidney disease, and body mass index, an SBP increase \u22656 mmHg to standing was independently associated with a 43% higher risk of incident AF (HR: 1.43; 95% CI: 1.07-1.90; p = 0.014) compared to nonsignificant orthostatic SBP changes (>-4 to <6 mmHg).\"",
+          "stance": "neutral",
+          "pmid": "40845203",
+          "title": "Orthostatic Systolic Blood Pressure Elevation and Incident Atrial Fibrillation: Insights From the SPRINT Trial.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary analysis comparing achieved systolic BP distributions and their relationships with outcomes across SPRINT and ACCORD. It does not analyze Age, frailty, comorbidity burden, or life expectancy as modifiers of treatment effect, nor does it present subgroup or interaction results by age. Because the TARGET FEATURE (Age) is not evaluated with respect to treatment effect or outcomes in the abstract, the paper cannot provide evidence for or against the proposed mechanism that age-related fitness/frailty moderates absolute benefit from intensive SBP lowering.",
+          "evidence_quote": "N/A \u2014 Age, frailty, and life-expectancy subgroup analyses are not mentioned in the abstract.",
+          "stance": "neutral",
+          "pmid": "29133522",
+          "title": "Systolic Blood Pressure Response in SPRINT (Systolic Blood Pressure Intervention Trial) and ACCORD (Action to Control Cardiovascular Risk in Diabetes): A Possible Explanation for Discordant Trial Results.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

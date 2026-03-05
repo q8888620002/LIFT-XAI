@@ -1,0 +1,192 @@
+{
+  "summary": "The set of hypotheses proposes that routinely recorded patient characteristics (age, initial systolic BP, respiratory rate, an injury classification code, and heart rate) modify the mortality benefit of tranexamic acid (TXA) in bleeding trauma patients. Biologically these are plausible as markers of baseline risk/severity, but the hypotheses omit the best-established effect modifier in the CRASH-2 context \u2014 time-to-treatment \u2014 and provide little validation planning or caveat discussion. Overall evidence that these particular features are independent relative effect modifiers (rather than markers of baseline risk where absolute benefit varies) is limited. The strongest candidate among the five is initial systolic blood pressure (severe hypotension) as a modifier; others are plausible but weakly supported and need carefully designed validation that adjusts for confounding and considers time-to-treatment.",
+  "scored_features": [
+    {
+      "feature_name": "iage",
+      "hypothesis_id": "hyp_1",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 2,
+          "comments": "Age plausibly modifies baseline risk and comorbidity burden; however, there is limited direct trial evidence that younger age produces a larger relative TXA effect. The mechanism is generic (younger = fewer comorbidities) and not specific to antifibrinolytic action."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 1,
+      "caveat_awareness": 1,
+      "novelty": 2,
+      "overall_score": 2,
+      "strengths": [
+        "Age is routinely available and easy to define (e.g., <40).",
+        "Biologically plausible link to survival and comorbidity burden."
+      ],
+      "weaknesses": [
+        "CRASH-2 and other TXA trauma analyses emphasize time-to-treatment; age has not been shown to be a primary relative effect modifier.",
+        "Hypothesis treats age as causal modifier without addressing confounding (baseline risk, frailty, mechanism of injury).",
+        "No validation plan or discussion of cutpoints beyond arbitrary <40."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Age is easy to measure and plausibly related to outcome, but direct evidence that age modifies the relative effect of TXA is weak; the hypothesis is generic and missing key considerations (time-to-treatment, comorbidity measurement), so deprioritize unless further supporting data are available."
+    },
+    {
+      "feature_name": "isbp",
+      "hypothesis_id": "hyp_2",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Severe hypotension indicates major hemorrhage and shock; plausibly identifies patients with high baseline risk who may derive larger absolute benefit from haemostatic interventions. Some trial/subgroup data support greater absolute benefit in more severely bleeding patients, though evidence for a differential relative effect is mixed."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Clinically sensible: SBP <90 mmHg is a standard marker of shock/bleeding and is measured in trials.",
+        "Testable in CRASH-2 and similar datasets; subgroup is actionable for triage."
+      ],
+      "weaknesses": [
+        "Relative vs absolute effect not distinguished \u2014 higher baseline risk will increase absolute benefit even if relative risk reduction is constant.",
+        "Time-to-treatment and other confounders (e.g., transfusion, injury type) are not addressed.",
+        "No validation plan or statistical approach provided to adjust for confounding or interaction testing."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Initial hypotension is a plausible and clinically meaningful modifier candidate and should be prioritized for validation (adjusted interaction tests, stratified analyses, consideration of time-to-treatment)."
+    },
+    {
+      "feature_name": "irr",
+      "hypothesis_id": "hyp_3",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Tachypnea can reflect shock or respiratory compromise and correlates with severity; plausible as a marker of higher baseline risk. Direct evidence that elevated respiratory rate modifies TXA's relative effect is limited."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Respiratory rate is routinely recorded and can serve as a quick severity marker.",
+        "Hypothesis is easily testable in existing datasets."
+      ],
+      "weaknesses": [
+        "Evidence for RR as an independent effect modifier of TXA is weak; it likely correlates with other severity measures.",
+        "Arbitrary cutoff (>=20) not justified; measurement error in RR is common.",
+        "No plan to adjust for confounders or consider co-linearity with other vitals and time-to-treatment."
+      ],
+      "recommendation": "low_priority",
+      "justification": "RR is plausible as a severity marker but unlikely to be an independent moderator of the relative effect; testable but should be analyzed alongside other severity indicators and time-to-treatment."
+    },
+    {
+      "feature_name": "Injury classification code (icc)",
+      "hypothesis_id": "hyp_4",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 2,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "If 'icc' represents injury severity/type, it is plausible that more severe or specific injury patterns interact with TXA benefit. However 'icc' is undefined here (scale, coding), limiting interpretability and testability."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 2,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 1,
+      "caveat_awareness": 1,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Injury type/severity is an intuitively relevant modifier for hemostatic therapy.",
+        "Could point toward subgroups (e.g., predominantly hemorrhagic injuries) with greater benefit."
+      ],
+      "weaknesses": [
+        "Feature is underspecified (what is icc? how is it scaled?), making the hypothesis vague and difficult to validate.",
+        "Direct evidence for a specific icc cutpoint modifying TXA's relative effect is lacking.",
+        "No validation strategy or confounder adjustment proposed."
+      ],
+      "recommendation": "reconsider",
+      "justification": "Retention of 'icc' as a candidate requires definition and justification of the coding/threshold. Without that this hypothesis is not actionable; reconsider after clarifying the variable and providing a validation approach."
+    },
+    {
+      "feature_name": "ihr",
+      "hypothesis_id": "hyp_5",
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "biological",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 2,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 2,
+          "comments": "Tachycardia (HR >=120) signals high physiologic stress/hemorrhage. It is plausible as a marker of patients at higher baseline risk and thus possibly greater absolute benefit, but evidence for independent modification of relative effect is limited."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 1,
+      "novelty": 2,
+      "overall_score": 2,
+      "strengths": [
+        "Heart rate is simple to measure and widely available.",
+        "Biologically plausible link to severity of hemorrhage and hemodynamic compromise."
+      ],
+      "weaknesses": [
+        "Arbitrary high cutoff (>=120) not justified; moderate tachycardia thresholds may be more common.",
+        "Likely correlated with other vital signs and baseline risk; relative effect modification unproven.",
+        "No plan to control confounding or explore interaction vs absolute benefit."
+      ],
+      "recommendation": "low_priority",
+      "justification": "HR is a reasonable severity marker but, without analytic detail and acknowledgment of confounding and time-to-treatment, it is a low-priority hypothesis for further work."
+    }
+  ],
+  "top_features": [
+    "isbp",
+    "irr"
+  ],
+  "methodological_concerns": [
+    "Omission of time-to-treatment: CRASH-2 and subsequent analyses show time from injury to TXA is a key modifier of benefit; this is not considered in any hypothesis.",
+    "Confounding by baseline risk/severity: vitals (SBP, HR, RR) likely reflect baseline mortality risk; observed heterogeneity may reflect absolute risk variation rather than differential relative treatment effect.",
+    "Undefined variables: 'icc' is not specified (coding, meaning, scale, distribution), limiting interpretability and reproducibility.",
+    "No validation plans: hypotheses lack concrete statistical testing strategies, adjustment variables, pre-specified cutpoints justification, or multiplicity control.",
+    "Measurement issues: vital signs (particularly RR) are prone to recording error; threshold-based subgroups may be unstable.",
+    "Potential for multiple testing and data-driven selection bias: HypoGeniC-identified features require pre-specified confirmatory analyses in independent datasets."
+  ]
+}

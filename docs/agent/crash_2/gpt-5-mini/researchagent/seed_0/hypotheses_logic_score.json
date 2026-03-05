@@ -1,0 +1,17 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Time from injury to treatment (ninjurytime)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'ninjurytime' is explicitly listed in trial_measured_features so the proposed modifier was recorded in this dataset. G2: FALSE \u2014 the provided mechanism statements are epidemiological (baseline cardiovascular risk, baseline disease burden, absolute-risk/trajectory arguments) and do not name any concrete biological steps (e.g., fibrinolysis, plasminogen/plasmin inhibition by TXA, PK changes) that would mechanistically link ninjurytime to differential drug action; cascade: G3..G5 also FALSE. G3: FALSE \u2014 because G2 failed, and the hypotheses as presented do not claim a specific PD/PK or pathophysiologic difference (they amount to baseline-risk amplification or vague interaction claims) that would make TXA act differently in subgroups. G4: FALSE \u2014 cascade: G4 is false because no specific mechanistic interaction was proposed to check against literature and the provided items are labeled hypothesis-generating without citation of mechanistic evidence. G5: FALSE \u2014 cascade: G5 is false because the hypothesis descriptions are vague (no mechanistic cut-points or actionable biologic markers) and therefore do not define operational subgroups for clinical decision-making.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 failed because the submitted hypotheses only state epidemiological/absolute-risk arguments and do not specify any concrete biological pathway (receptor/enzyme/PK-PD) by which time-from-injury would alter tranexamic acid's effect; therefore later gates cannot be passed.",
+      "overall_score": 1
+    }
+  ]
+}

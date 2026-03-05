@@ -1,0 +1,194 @@
+{
+  "summary": "Overall, the hypotheses reflect a mix of well-established (time-to-TXA, TBI) and plausible but less-proven (fibrinolytic phenotype, shock severity, pre-injury anticoagulation/fibrinogen) effect modifiers. Time-to-treatment and TBI severity are strongly supported by randomized trial evidence (CRASH-2/CRASH-3) and are high-priority for modeling and clinical decision-making. Fibrinolytic phenotype and coagulation reserve are biologically plausible and potentially important but require point-of-care assays or new prospective data for robust validation. Shock severity is plausible but may suffer from confounding in observational analyses. Pre-injury anticoagulants and low fibrinogen are mechanistically reasonable but evidence is sparse and operationalization is challenging.",
+  "scored_features": [
+    {
+      "feature_name": "Time from injury to TXA administration",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Timing (early vs late TXA)",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 1,
+          "overall_score": 5,
+          "comments": "Strong randomized-trial evidence (CRASH-2) that TXA within 3 hours (and greater benefit earlier, within 1 hour) reduces death due to bleeding; >3 hours shows no benefit and possible harm. Timing is well recorded and directly testable."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 1,
+      "overall_score": 5,
+      "strengths": [
+        "Strong, high-quality randomized-trial evidence (CRASH-2) supports effect modification by time.",
+        "Clear and actionable cutpoints (<1 h, 1-3 h, >3 h) that map to clinical practice and prehospital care.",
+        "Highly testable using trial and registry timestamps."
+      ],
+      "weaknesses": [
+        "Potential for misclassification of injury-to-treatment time in some datasets (recall or documentation error).",
+        "Residual confounding in observational validation if sicker patients receive earlier care or if early deaths prevent treatment.",
+        "Limited novelty \u2014 already incorporated into guidelines; less value for discovery but critical for validation and modeling."
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is the most robust, clinically actionable modifier with strong RCT support. Prioritize for modeling and for ensuring correct handling of time-related confounding (immortal time, survivor bias) in validation."
+    },
+    {
+      "feature_name": "Fibrinolytic phenotype at presentation (hyperfibrinolysis vs fibrinolytic shutdown)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Viscoelastic phenotype (TEG/ROTEM) determining response to antifibrinolytic",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 4,
+          "overall_score": 3,
+          "comments": "Biologically plausible: TXA blocks plasmin-mediated fibrinolysis and should help when hyperfibrinolysis is present. Evidence mainly from observational studies, cohort analyses, and physiologic reasoning; RCTs (e.g., CRASH-2) did not stratify by viscoelastic phenotype. Phenotype is dynamic and assay-dependent which complicates interpretation."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Strong mechanistic rationale: antifibrinolytics target hyperfibrinolysis.",
+        "Potential to personalize TXA use and avoid giving TXA to patients in fibrinolytic shutdown.",
+        "Underexplored in RCTs \u2014 good opportunity for targeted trials or secondary analyses where TEG/ROTEM were collected."
+      ],
+      "weaknesses": [
+        "Limited high-quality clinical trial evidence demonstrating effect modification by viscoelastic phenotype.",
+        "Viscoelastic testing availability and standardization vary; thresholds for 'hyperfibrinolysis' vs 'shutdown' are assay- and time-dependent.",
+        "Dynamic changes in fibrinolysis after injury make single-time measurements imperfect markers."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Plausible and potentially practice-changing, but requires prospective measurement (TEG/ROTEM) or pre-existing datasets with these measures for validation. Prioritize as a secondary hypothesis for cohorts with viscoelastic data; design prospective studies to test."
+    },
+    {
+      "feature_name": "Severity of shock / physiological derangement (hypotension, high lactate, large base deficit)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Physiologic severity (hemodynamic instability) modulating TXA benefit",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Mechanistically plausible: patients in shock are at higher risk of bleeding death, so relative or absolute benefit may be greater. However, randomized evidence of consistent effect modification by physiologic severity is limited; confounding and survivor bias complicate observational assessments."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Clinical variables (SBP, HR, lactate, base deficit) are usually available and testable.",
+        "High clinical face validity: sicker patients have higher baseline risk and may derive greater absolute benefit."
+      ],
+      "weaknesses": [
+        "Potential confounding by indication: more unstable patients may receive earlier or different care.",
+        "Survivor/immortal time bias if physiologic deterioration occurs after presentation and before treatment.",
+        "Heterogeneity in which physiologic thresholds best define the subgroup (e.g., SBP <90, lactate cutpoint)."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth exploring in secondary analyses because variables are available; treat cautiously due to confounding. Use causal methods (time-varying covariates, sensitivity analyses) when validating."
+    },
+    {
+      "feature_name": "Presence and severity of traumatic brain injury (TBI) / intracranial bleeding",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Intracranial hemorrhage stabilization by TXA reducing head-injury mortality",
+          "plausibility": 4,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "CRASH-3 supports benefit of early TXA in non-severe (mild-moderate) TBI for head-injury-related death; biologically plausible that antifibrinolytic therapy limits hematoma expansion. Benefit appears time-dependent and concentrated in less severe TBI."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Supported by randomized trial evidence (CRASH-3) showing reduced head-injury death in early-treated, non-severe TBI.",
+        "Clear clinical subgroups (GCS categories, CT-confirmed intracranial bleed) make operationalization feasible.",
+        "Testable in existing trial datasets and registries."
+      ],
+      "weaknesses": [
+        "Limited or no benefit in severe TBI \u2014 risk of overgeneralization to all TBI patients.",
+        "Potential heterogeneity related to lesion type (e.g., subdural vs intraparenchymal) that is not fully resolved.",
+        "Some unanswered questions about thrombotic risk in certain subgroups, though major signals are lacking."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Well-supported and actionable modifier; include in models and analyses with careful stratification by severity and early treatment timing."
+    },
+    {
+      "feature_name": "Pre-injury anticoagulant or antiplatelet therapy and baseline coagulation reserve (including low fibrinogen)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Anticoagulant/antiplatelet exposure and low fibrinogen reducing TXA effectiveness",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 2,
+          "novelty": 3,
+          "overall_score": 2,
+          "comments": "Mechanistically reasonable: TXA preserves clot by inhibiting fibrinolysis, but if coagulation factors (e.g., fibrinogen) are depleted or anticoagulants active, antifibrinolysis may be insufficient. However, clinical evidence that pre-injury anticoagulation or low fibrinogen meaningfully alters TXA benefit is sparse and confounded by reversal therapies."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 2,
+      "validation_plan_quality": 2,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 2,
+      "strengths": [
+        "Biologically plausible interaction highlighting the need to consider substrate (fibrinogen) and anticoagulant activity.",
+        "Potential clinical importance: could guide combined haemostatic strategies (fibrinogen replacement + TXA)."
+      ],
+      "weaknesses": [
+        "Limited direct clinical trial evidence showing effect modification by pre-injury anticoagulant/antiplatelet status.",
+        "Operational challenges: heterogeneous anticoagulant agents, unknown timing/dose, use of reversal agents, and inconsistent measurement of fibrinogen in acute care.",
+        "Difficult to test in many datasets due to missing pre-injury medication records or fibrinogen measurements."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Worth exploring in datasets with reliable medication histories and fibrinogen levels, but overall evidence is limited and operationalization is challenging. Consider as a hypothesis-generating area for targeted prospective studies."
+    }
+  ],
+  "top_features": [
+    "Time from injury to TXA administration",
+    "Presence and severity of traumatic brain injury (TBI) / intracranial bleeding"
+  ],
+  "methodological_concerns": [
+    "Many proposed modifiers are dynamic (fibrinolysis, physiologic state); single baseline measurements may misclassify trajectory and lead to biased estimates.",
+    "Confounding by indication and survivor (immortal) time bias: sicker patients may receive earlier interventions or may die before receiving TXA; causal methods and careful time-zero alignment are required.",
+    "Measurement availability: viscoelastic testing (TEG/ROTEM) and fibrinogen levels are not universally collected in trial datasets like CRASH-2, limiting validation opportunities.",
+    "Heterogeneity in definitions/cutpoints (e.g., hyperfibrinolysis thresholds, lactate/base-deficit cutoffs, GCS categories) complicates cross-study comparisons; pre-specify clinically meaningful thresholds.",
+    "Pre-injury medication data may be incomplete and reversal treatments (e.g., PCC, vitamin K) confound associations with anticoagulant exposure."
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "summary": "Overall the five hypotheses are generally biologically plausible and clinically grounded. NIHSS and age are the strongest, best-supported effect modifiers for alteplase benefit and are ranked appropriately. Glucose and GCS are plausible modifiers but evidence for a clear treatment interaction is weaker and more confounded by stroke severity and imaging. Weight-as-dose-capping is a potentially interesting operational mechanism but depends critically on trial dosing policy (whether a strict maximum dose was applied) and therefore is the most conditional and novel of the five. Across hypotheses, validation suggestions are appropriate; main cross-cutting concerns are limited power, modest SHAP signals, possible confounding/mediation by imaging and NIHSS, and potential lack of required covariates in IST-3 (e.g., CT perfusion core volumes, exact alteplase dose/ cap details).",
+  "scored_features": [
+    {
+      "feature_name": "nihss",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Treatment-response interaction (NIHSS bands; salvageable penumbra vs core; sICH risk)",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 5,
+          "comments": "Strong biologic and clinical rationale; abundant trial and observational evidence that baseline stroke severity strongly predicts absolute benefit and risk from reperfusion. The mechanism is specific (bands, moderated by imaging/time) and readily testable in randomized data with interaction terms and absolute risk differences."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 5,
+      "novelty": 3,
+      "overall_score": 5,
+      "strengths": [
+        "Well-aligned with established pathophysiology and trial literature.",
+        "Clear, actionable subgroup definitions (NIHSS bands) and concrete validation steps.",
+        "Acknowledges conditional moderators (time-to-treatment, imaging)."
+      ],
+      "weaknesses": [
+        "NIHSS imperfect for posterior circulation strokes and may misclassify salvageable tissue.",
+        "Model SHAP mean near zero in this dataset suggests the automated learner provided only a small signal\u2014interaction tests may be underpowered in IST-3 alone."
+      ],
+      "recommendation": "high_priority",
+      "justification": "NIHSS is a well-established modifier of absolute benefit from thrombolysis; the proposed mechanisms, subgroup bands, and validation plan are strong and actionable. Prioritize testing, ideally pooling data if power is limited."
+    },
+    {
+      "feature_name": "age",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Treatment-response interaction (age-related frailty, sICH risk, competing mortality)",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 4,
+          "comments": "Biologically and clinically plausible: older age increases hemorrhagic risk and competing risks that reduce absolute benefit. Evidence from trials (including IST-3) shows benefit extends into older age but absolute benefits vary. Moderation by pre-stroke function and imaging is correctly noted."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 4,
+      "strengths": [
+        "Mechanism well-grounded and clinically relevant.",
+        "Validation suggestions (continuous and categorical age, adjustment for pre-stroke mRS) are appropriate."
+      ],
+      "weaknesses": [
+        "Age is a proxy for many mediators (comorbidity, frailty) so interaction may not reflect age per se.",
+        "Existing pooled analyses are mixed\u2014rank 2 is reasonable but not definitive."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is an important, well-known modifier; tests are straightforward and clinically meaningful, but effect heterogeneity may be partially mediated by other measured/unmeasured factors and is not a novel finding."
+    },
+    {
+      "feature_name": "glucose",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Treatment-response interaction (hyperglycemia -> reperfusion injury, BBB breakdown, increased sICH)",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Mechanistically plausible: hyperglycemia worsens reperfusion injury and is associated with hemorrhagic transformation. However, evidence that admission hyperglycemia modifies the specific benefit of alteplase beyond being a severity marker is mixed and confounded. Proposed moderation by diabetes status and in-hospital glucose control is sensible."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Plausible biological mechanism and reasonable validation plan, including mediation analyses.",
+        "Acknowledges confounding by severity and need to adjust for NIHSS and imaging."
+      ],
+      "weaknesses": [
+        "Evidence for a clear treatment interaction is inconsistent; acute stress hyperglycemia is a severity marker.",
+        "IST-3 may lack granular data on in-hospital glucose control or repeated measures to assess persistence of hyperglycemia."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth exploratory testing and mediation analysis, but treat as hypothesis-generating due to confounding and modest signal in this dataset."
+    },
+    {
+      "feature_name": "Gcs score rand (gcs score rand) (Gcs score rand (gcs_score_rand))",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Treatment-response interaction (level of consciousness -> core size, sICH/mortality risk)",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "GCS plausibly tracks severity and mass effect, which influence net benefit. However GCS overlaps substantially with NIHSS and is less commonly used as an independent modifier in thrombolysis trials. Posterior circulation exceptions are correctly noted."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Recognizes important confounders (stroke location, sedation, mimics) and proposes specific interaction tests.",
+        "Testable in randomized data and actionable if validated."
+      ],
+      "weaknesses": [
+        "Redundant with NIHSS in many cases; may not add independent predictive/modifier information.",
+        "GCS misclassification (seizure, sedation, metabolic causes) could bias results."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Reasonable hypothesis to examine, particularly to explore patients with low consciousness where imaging might contradict expected poor prognosis, but less likely to be independent of NIHSS."
+    },
+    {
+      "feature_name": "weight",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Treatment-response interaction (mg/kg exposure and dose cap effects on recanalization and sICH)",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 4,
+          "overall_score": 3,
+          "comments": "Mechanism is plausible if a strict maximum dose was in use (dose-capping leads to lower mg/kg in heavy patients). Evidence that this materially changes outcomes in alteplase-treated stroke populations is limited. Feasibility of testing depends on whether IST-3 recorded administered dose and whether a cap was applied in practice."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Operationally relevant (dosing practice can be changed) and the proposed validation (compute mg/kg, cap vs no cap) is appropriate.",
+        "Potentially novel and actionable if a dosing cap reduced efficacy in heavy patients."
+      ],
+      "weaknesses": [
+        "Highly conditional on trial dosing policy; if IST-3 did not routinely cap dose, mechanism is irrelevant.",
+        "Literature on clinically meaningful outcome differences due to dose-capping is sparse."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth checking because it could reveal an avoidable source of heterogeneity, but prioritize only after confirming availability of detailed dosing data and cap policy in IST-3."
+    }
+  ],
+  "top_features": [
+    "nihss",
+    "age"
+  ],
+  "methodological_concerns": [
+    "SHAP means reported are very small \u2014 automated model attribution signal is weak; interaction tests may be underpowered in IST-3 alone.",
+    "Key moderators invoked in hypotheses (CT perfusion/MRI core volume, exact alteplase dose and caps, in-hospital glucose control) may be missing or incompletely recorded in IST-3, limiting validation.",
+    "High collinearity among severity metrics (NIHSS, GCS, glucose as stress marker) complicates attribution of independent effect modification and risks over-adjustment or mediation bias.",
+    "Multiple interaction tests increase false-discovery risk; pre-specify a small number of tests or use pooled individual-patient meta-analysis for adequate power.",
+    "Some subgroup bins (e.g., NIHSS bands) are conventional but cutpoints can be arbitrary\u2014report continuous interaction effects and absolute-risk estimates across range."
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "summary": "Overall, the submitted hypotheses are generally biologically plausible and reflect clinically sensible effect modifiers for intensive systolic BP lowering. Baseline systolic BP and age are the strongest, best-supported modifiers in the literature; diastolic BP has a credible physiologic rationale but randomized evidence of harm (J-curve) is mixed; BMI and resting heart rate are more speculative/ exploratory in this context and require careful control for confounding and treatment patterns. Validation is feasible within trial data (interaction tests, spline models, mediation by achieved BP) but will require attention to power, correlated covariates (SBP/DBP/pulse pressure), frailty measurement, and treatment-class confounding.",
+  "scored_features": [
+    {
+      "feature_name": "Baseline age (baseline age) (Baseline age (baseline_age))",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Age \u00d7 treatment interaction (tolerability, competing risk, arterial stiffness)",
+          "plausibility": 5,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Strong physiologic rationale (orthostatic susceptibility, competing mortality, arterial stiffness), supported by trial contrasts (SPRINT vs ACCORD) though direct randomized evidence of a harmful age \u00d7 intensive-BP interaction within diabetics is limited. Highly testable in trial data with interaction models and stratified analyses; needs frailty/biologic-age measures to refine results."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Biologically coherent mechanisms (orthostasis, AKI risk, competing non-CV mortality).",
+        "Consistent with major trial contrasts (SPRINT vs ACCORD) and geriatric physiology.",
+        "Highly testable with interaction terms and stratified analyses; mediation analyses feasible."
+      ],
+      "weaknesses": [
+        "Chronological age is an imperfect proxy for physiologic age/frailty; many trials (including ACCORD) lack granular frailty measures.",
+        "Potential confounding by differential monitoring, medication intensity, and co-morbidity patterns across age strata.",
+        "Extrapolation from non-diabetic SPRINT to diabetic ACCORD population is imperfect."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Age is a clinically important and plausible effect modifier with substantial prior literature and practical implications for individualized BP targets; prioritize interaction testing and stratification by frailty/CVD burden in ACCORD and pooled analyses."
+    },
+    {
+      "feature_name": "Body mass index (bmi)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "BMI-mediated hemodynamic responsiveness (volume/sympathetic mechanisms; med-class interaction)",
+          "plausibility": 3,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 3,
+          "comments": "Plausible physiologic reasons (volume status, sympathetic tone) why obese patients might respond differently, and diuretics may be particularly effective. However, evidence specifically showing BMI as an effect modifier of BP-target randomized trials\u2014especially in diabetics\u2014is limited and confounding (baseline SBP, comorbidity, medication choice) is likely. Testable with stratified interaction models and mediation by achieved SBP, but needs careful adjustment."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 3,
+      "strengths": [
+        "Biologically plausible link between adiposity, volume-related hypertension, and response to diuretics.",
+        "Practical subgrouping by BMI categories is straightforward in most datasets.",
+        "Validation approaches (interaction tests, mediation by achieved SBP, stratification by medication class) are doable."
+      ],
+      "weaknesses": [
+        "BMI is an imperfect marker of adiposity and may proxy for many confounders (fitness, sleep apnea, socioeconomics).",
+        "Treatment-class heterogeneity (which meds were used) may drive apparent effect modification rather than BMI itself.",
+        "Limited direct trial evidence in diabetics; likely exploratory rather than definitive."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Worth exploratory testing (adjusted interactions, mediation), but interpret cautiously because of confounding and limited prior trial support; pursue if trial medication-class data and adequate power are available."
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Baseline SBP as determinant of absolute risk reduction (room for reduction)",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 5,
+          "testability": 5,
+          "novelty": 2,
+          "overall_score": 5,
+          "comments": "Canonical and well-supported mechanism: higher baseline SBP increases absolute potential benefit from further reduction. Strong support from BPLTTC and trial subgroup analyses. Highly specific and straightforward to test (continuous interactions, splines, mediation by achieved SBP). Low novelty but high clinical importance."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 4,
+      "novelty": 2,
+      "overall_score": 5,
+      "strengths": [
+        "Strong, well-established biologic and epidemiologic basis.",
+        "Direct, actionable implications (stratify by baseline SBP; estimate absolute risk differences).",
+        "Very testable and interpretable in trial data."
+      ],
+      "weaknesses": [
+        "Must account for regression-to-the-mean and measurement variability in SBP to avoid biased subgroup effects.",
+        "Correlations with other risk factors (age, arterial stiffness) require careful adjustment to identify independent modification."
+      ],
+      "recommendation": "high_priority",
+      "justification": "Baseline SBP is the most defensible and clinically actionable modifier; prioritize rigorous modeling (splines, mediation) and reporting of absolute effects by SBP strata."
+    },
+    {
+      "feature_name": "Diastolic blood pressure (dbp)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "DBP-related coronary perfusion / J-curve (low DBP increases ischemic risk)",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Physiologically credible (coronary perfusion during diastole) and supported by observational J-curve signals and some secondary trial analyses. Randomized evidence demonstrating clinically important harm from lower DBP in BP-target trials is mixed, especially in diabetics. Distinguishing independent DBP effects from correlated SBP/pulse pressure and arterial stiffness is challenging but feasible with careful modeling."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 4,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Strong physiologic rationale and clinically relevant (concerns about too-low DBP in CAD patients).",
+        "Actionable subgrouping (low vs adequate DBP, especially with CAD history).",
+        "Testable using interaction models, achieved-DBP analyses, and sensitivity analyses with pulse pressure proxies."
+      ],
+      "weaknesses": [
+        "Observational and secondary analyses are mixed; direct randomized evidence of a harmful DBP \u00d7 target interaction is limited in diabetics.",
+        "Strong collinearity with SBP and pulse pressure complicates causal interpretation.",
+        "Choice of DBP cutpoints (J-curve threshold) can be arbitrary and underpowered."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Clinically important and testable \u2014 prioritize adjusted interaction tests and sensitivity analyses, but interpret results cautiously due to mixed evidence and collinearity issues."
+    },
+    {
+      "feature_name": "Heart rate (hr)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Resting HR as marker of sympathetic tone / risk phenotype modifying BP-target benefit",
+          "plausibility": 3,
+          "evidence_support": 2,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 4,
+          "overall_score": 3,
+          "comments": "Physiologically plausible that high resting HR reflects higher sympathetic tone and higher baseline risk, and thus could mark greater absolute benefit from BP lowering. However, direct evidence of HR as a modifier in BP-target trials is sparse; HR is heavily influenced by medications (beta-blockers) and arrhythmias, making causal inference and application difficult. The idea is moderately testable with adjustments and exclusions but likely exploratory."
+        }
+      ],
+      "mechanism_plausibility": 3,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 2,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 4,
+      "novelty": 4,
+      "overall_score": 3,
+      "strengths": [
+        "Plausible physiologic link between sympathetic drive, heart rate, and baseline CV risk.",
+        "Potentially identifies an underexplored subgroup at higher baseline risk where absolute benefit could be greater.",
+        "Can be partially tested with interaction models and sensitivity analyses excluding beta-blocker/AF patients."
+      ],
+      "weaknesses": [
+        "Sparse direct evidence in BP-target RCTs; HR is heavily confounded by medications and arrhythmias.",
+        "Measurement may be affected by acute factors; resting HR as recorded at baseline may be noisy.",
+        "Even if association exists, clinical actionability (change target based on HR) is uncertain without stronger evidence."
+      ],
+      "recommendation": "low_priority",
+      "justification": "Exploratory and underpowered relative to potential confounding; consider as a secondary hypothesis if resources permit, but not a primary driver of treatment decisions absent confirmatory evidence."
+    }
+  ],
+  "top_features": [
+    "Systolic blood pressure (sbp)",
+    "Baseline age (baseline age) (Baseline age (baseline_age))"
+  ],
+  "methodological_concerns": [
+    "Collinearity between SBP, DBP and pulse pressure complicates independent effect modification estimates \u2014 require joint modeling, penalization or orthogonalization.",
+    "Regression-to-the-mean and measurement variability in baseline BP need addressing (use averaged baseline measurements or regression calibration if available).",
+    "Frailty/physiologic age is poorly captured by chronological age alone in ACCORD; lack of robust frailty measures limits inference about age-related tolerability.",
+    "Medication-class confounding: different antihypertensive regimens (diuretics, beta-blockers) both affect modifiers (HR, volume responsiveness) and outcomes \u2014 analyses must adjust or stratify by drug classes and by achieved BP.",
+    "Power limitations for interaction tests in ACCORD subgroups \u2014 negative interactions may reflect limited power rather than absence of effect; consider pooled meta-analysis with other trials.",
+    "Multiple testing and data dredging risk across many proposed interactions \u2014 pre-specify analyses or control false-discovery rate when possible.",
+    "Trial population context (ACCORD = diabetics with high CV risk) limits generalizability to non-diabetic populations (e.g., SPRINT)."
+  ]
+}

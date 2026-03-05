@@ -7,6 +7,7 @@ Optionally verify hypotheses with a separate verifier model.
 
 Requires:
   pip install openai pydantic
+  pip install transformers torch  # for MedGemma local inference
 
 API Keys:
   - OpenAI: Set OPENAI_API_KEY environment variable
@@ -29,6 +30,13 @@ Example:
     --model anthropic/claude-3.5-sonnet \
         --api_provider openrouter
 
+  Or with local MedGemma:
+  python clinical_agent.py \
+    --shap_json results/ist3/shap_summary.json \
+    --out_json results/ist3/hypotheses.json \
+    --trial_name ist3 \
+    --api_provider medgemma
+
   Or with manual metadata:
   python clinical_agent.py \
     --shap_json results/custom/shap_summary.json \
@@ -50,7 +58,8 @@ Example:
 import argparse
 import json
 import os
-from typing import List, Literal, Optional
+import re
+from typing import List, Literal, Optional, Type, TypeVar
 
 from openai import OpenAI
 from pydantic import BaseModel, Field
@@ -180,14 +189,8 @@ class VerificationOutput(BaseModel):
 
 
 class MechanismHypothesis(BaseModel):
-    mechanism_type: Literal[
-        "biological", "physiological", "pharmacological", "behavioral", "statistical"
-    ] = Field(..., description="Type of mechanism")
     description: str = Field(
-        ..., description="Detailed explanation of the mechanism"
-    )
-    evidence_level: Literal["strong", "moderate", "weak", "speculative"] = Field(
-        ..., description="Strength of supporting evidence"
+        ..., description="A hypothesis explaining how this feature modifies the treatment effect."
     )
 
 class FeatureHypothesis(BaseModel):
@@ -246,17 +249,11 @@ class FeatureHypothesisIssue(BaseModel):
 
 
 class MechanismReview(BaseModel):
-    mechanism_type: str = Field(..., description="Type of mechanism being reviewed")
     verdict: Literal["approve", "revise", "reject"]
     plausibility: Literal["high", "moderate", "low", "implausible"]
-    evidence_level_appropriate: bool = Field(
-        ..., description="Whether the claimed evidence level matches the actual support"
-    )
-    comments: str = Field(
-        ..., description="Detailed comments on this specific mechanism"
-    )
+    comments: str = Field(..., description="Detailed comments on this hypothesis")
     suggested_revision: Optional[str] = Field(
-        None, description="Suggested revision for the mechanism description if needed"
+        None, description="Suggested revision for the hypothesis description if needed"
     )
 
 
@@ -290,6 +287,351 @@ class FeatureVerificationOutput(BaseModel):
 # Helpers
 # -----------------------------
 
+_T = TypeVar("_T")
+
+
+def _coerce_to_str(val) -> str:
+    """Coerce a value to a string.  If *val* is a dict, try to extract the
+    most informative single value; otherwise fall back to ``str(val)``."""
+    if isinstance(val, str):
+        return val
+    if isinstance(val, dict):
+        # Pick the first long-ish string value, or join all values
+        str_vals = [str(v) for v in val.values() if v]
+        return " ".join(str_vals) if str_vals else str(val)
+    if isinstance(val, list):
+        return " ".join(str(v) for v in val)
+    return str(val)
+
+
+def _normalize_hypotheses_dict(data: dict) -> dict:
+    """Normalize a raw LLM-generated dict to match FeatureHypothesesSet schema.
+
+    Handles common simplifications made by non-OpenAI models:
+    - mechanisms as list of strings → list of {description: str} objects
+    - effect_direction free text → nearest allowed literal
+    - missing optional-ish fields → sensible defaults
+    - dict / list in string fields → coerced to str
+    """
+    _DIRECTION_MAP = {
+        "pos": "positive", "neg": "negative",
+        "bi": "bidirectional", "unclear": "unclear", "neutral": "unclear",
+        "none": "unclear",
+    }
+
+    def _fix_direction(val: str) -> str:
+        v = (val or "").lower().split()[0].rstrip(".,;:(")
+        for prefix, canonical in _DIRECTION_MAP.items():
+            if v.startswith(prefix):
+                return canonical
+        return "unclear"
+
+    # --- Top-level string fields: coerce dicts / lists → str ---
+    for str_field in ("dataset", "model", "summary"):
+        if str_field in data and not isinstance(data[str_field], str):
+            data[str_field] = _coerce_to_str(data[str_field])
+    # Provide defaults for required top-level fields
+    data.setdefault("dataset", "unknown")
+    data.setdefault("model", "unknown")
+    data.setdefault("summary", "")
+
+    # --- feature_hypotheses missing: try to rescue from nested wrapper keys ---
+    def _hoist_list(src: dict, dst: dict) -> bool:
+        """Try named aliases, then any list-of-dicts value. Returns True if found."""
+        _fh_aliases = ("feature_hypotheses", "hypotheses", "features", "feature_list",
+                       "feature_analyses", "individual_features", "feature_importance",
+                       "feature_hypothesis_list", "individual_hypotheses")
+        for alias in _fh_aliases:
+            if isinstance(src.get(alias), list):
+                dst["feature_hypotheses"] = src[alias]
+                return True
+        # fallback: first list of dicts in src
+        for val in src.values():
+            if isinstance(val, list) and val and isinstance(val[0], dict):
+                dst["feature_hypotheses"] = val
+                return True
+        return False
+
+    if "feature_hypotheses" not in data or not isinstance(data.get("feature_hypotheses"), list):
+        # 1. Nested inside "study_context" or similar wrapper dicts
+        for wrapper_key in ("study_context", "context", "analysis", "result", "output",
+                            "response", "analysis_results", "feature_analysis"):
+            wrapper = data.get(wrapper_key)
+            if isinstance(wrapper, dict):
+                if _hoist_list(wrapper, data):
+                    # also hoist metadata if missing at top level
+                    for meta in ("dataset", "model", "summary"):
+                        if data[meta] in ("unknown", "") and meta in wrapper:
+                            data[meta] = wrapper[meta]
+                    break
+                # wrapper itself looks like the FeatureHypothesesSet — merge it up
+                if "dataset" in wrapper or "summary" in wrapper:
+                    for k, v in wrapper.items():
+                        data.setdefault(k, v)
+                    if "feature_hypotheses" in data:
+                        break
+        # 2. Common top-level aliases (LLM used wrong key name)
+        if "feature_hypotheses" not in data:
+            _hoist_list(data, data)
+        # 3. Last resort: if still missing, log the top-level keys for debugging
+        if "feature_hypotheses" not in data:
+            print(
+                f"[DEBUG] _normalize_hypotheses_dict: 'feature_hypotheses' still missing. "
+                f"Top-level keys: {list(data.keys())}. "
+                + (f"'study_context' keys: {list(data['study_context'].keys())}"
+                   if isinstance(data.get('study_context'), dict) else "")
+            )
+
+    for fh in data.get("feature_hypotheses", []):
+        # LLM aliases for feature name
+        if "feature_name" not in fh:
+            for alias in ("feature", "feature_raw", "feature_label", "name", "feature_id"):
+                if alias in fh:
+                    fh["feature_name"] = fh.pop(alias)
+                    break
+
+        # mechanisms: missing → empty list (gap-fill will populate later)
+        fh.setdefault("mechanisms", [])
+
+        # mechanisms: list[str] → list[{description}]
+        mechs = fh.get("mechanisms", [])
+        if mechs and isinstance(mechs[0], str):
+            fh["mechanisms"] = [{"description": m} for m in mechs]
+        # mechanisms: list[dict] with wrong key (e.g. "hypothesis") → {description}
+        elif mechs and isinstance(mechs[0], dict) and "description" not in mechs[0]:
+            normalized_mechs = []
+            for m in mechs:
+                desc = m.get("description") or m.get("hypothesis") or m.get("text") or str(m)
+                normalized_mechs.append({"description": desc})
+            fh["mechanisms"] = normalized_mechs
+
+        # effect_direction: free text → literal; missing → "unclear"
+        if "effect_direction" not in fh or not fh["effect_direction"]:
+            fh["effect_direction"] = "unclear"
+        else:
+            fh["effect_direction"] = _fix_direction(fh["effect_direction"])
+
+        # fill required fields with defaults if absent
+        fh.setdefault("importance_rank", 0)
+        fh.setdefault("shap_value", 0.0)
+        fh.setdefault("clinical_interpretation", "")
+        fh.setdefault("why_important", "")
+        fh.setdefault("subgroup_implications", "")
+        fh.setdefault("validation_suggestions", [])
+        fh.setdefault("caveats", [])
+
+        # Coerce non-string values in string fields → str
+        for str_field in ("feature_name", "clinical_interpretation", "why_important", "subgroup_implications"):
+            if str_field in fh and not isinstance(fh[str_field], str):
+                fh[str_field] = _coerce_to_str(fh[str_field])
+
+        # coerce string → single-element list for list fields
+        for list_field in ("validation_suggestions", "caveats"):
+            if isinstance(fh.get(list_field), str):
+                fh[list_field] = [fh[list_field]]
+
+    # cross_feature_patterns: list → joined string
+    cfp = data.get("cross_feature_patterns")
+    if isinstance(cfp, list):
+        data["cross_feature_patterns"] = " ".join(str(x) for x in cfp)
+    elif cfp is not None and not isinstance(cfp, str):
+        data["cross_feature_patterns"] = _coerce_to_str(cfp)
+
+    return data
+
+
+def _normalize_verification_dict(data: dict) -> dict:
+    """Normalize a raw LLM dict to match FeatureVerificationOutput schema."""
+    _VERDICT3 = {"app": "approve", "rev": "revise", "rej": "reject"}
+    _PLAUS = {"high": "high", "mod": "moderate", "low": "low", "imp": "implausible"}
+    _QUALITY = {"str": "strong", "mod": "moderate", "wea": "weak"}
+    _CONF = {"low": "low", "med": "medium", "hig": "high"}
+
+    def _fix3(val: str, mapping: dict, default: str) -> str:
+        parts = (val or "").lower().split()
+        if not parts:
+            return default
+        v = parts[0].rstrip(".,;:(").strip("-_ ")
+        for prefix, canonical in mapping.items():
+            if v.startswith(prefix):
+                return canonical
+        return default
+
+    # overall_verdict: free text → literal
+    data["overall_verdict"] = _fix3(data.get("overall_verdict", ""), _VERDICT3, "revise")
+
+    # per_feature: dict keyed by feature_name → list
+    pf = data.get("per_feature", [])
+    if isinstance(pf, dict):
+        items = []
+        for fname, val in pf.items():
+            if isinstance(val, dict):
+                val.setdefault("feature_name", fname)
+                items.append(val)
+            else:
+                items.append({"feature_name": fname, "verdict": "approve"})
+        data["per_feature"] = items
+        pf = items
+
+    for review in pf:
+        if not isinstance(review, dict):
+            continue
+        review.setdefault("feature_name", "unknown")
+        review["verdict"] = _fix3(review.get("verdict", ""), _VERDICT3, "approve")
+        review["mechanism_quality"] = _fix3(review.get("mechanism_quality", ""), _QUALITY, "moderate")
+        review["confidence"] = _fix3(review.get("confidence", ""), _CONF, "medium")
+        review.setdefault("issues", [])
+        review.setdefault("per_mechanism", [])
+        # per_mechanism normalisation
+        for mr in review.get("per_mechanism", []):
+            if not isinstance(mr, dict):
+                continue
+            mr["verdict"] = _fix3(mr.get("verdict", ""), _VERDICT3, "approve")
+            mr["plausibility"] = _fix3(mr.get("plausibility", ""), _PLAUS, "moderate")
+            mr.setdefault("comments", "")
+
+    # revised field: if present, normalise as hypotheses set
+    if isinstance(data.get("revised"), dict):
+        data["revised"] = _normalize_hypotheses_dict(data["revised"])
+
+    return data
+
+
+def _repair_truncated_json(text: str) -> str:
+    """Attempt to repair JSON truncated by token limits.
+
+    Strips trailing incomplete strings/values, then closes any open brackets
+    and braces so json.loads can succeed on partial output.
+    """
+    # Remove trailing incomplete string (un-closed quote)
+    text = re.sub(r',?\s*"[^"]*$', '', text)
+    # Remove trailing key without value  e.g.  , "some_key":
+    text = re.sub(r',?\s*"[^"]*"\s*:\s*$', '', text)
+    # Remove trailing comma
+    text = text.rstrip().rstrip(',')
+    # Fix missing commas between strings: "..." "..." → "...", "..."
+    text = re.sub(r'"\s*\n\s*"', '",\n"', text)
+    # Fix missing commas between } and {
+    text = re.sub(r'\}\s*\{', '}, {', text)
+    # Count open vs close brackets/braces and append closers
+    opens = 0
+    brackets = 0
+    for ch in text:
+        if ch == '{':
+            opens += 1
+        elif ch == '}':
+            opens -= 1
+        elif ch == '[':
+            brackets += 1
+        elif ch == ']':
+            brackets -= 1
+    # Close in reverse order — approximate but works for most truncations
+    text += ']' * max(brackets, 0)
+    text += '}' * max(opens, 0)
+    return text
+
+
+def _extract_json_from_content(content: str, response_format: Type[_T]) -> _T:
+    """Extract and validate a Pydantic model from raw LLM text content."""
+    # Strip <think>...</think> reasoning blocks (Qwen3 / DeepSeek-R1 style)
+    content = re.sub(r"<think>[\s\S]*?</think>", "", content, flags=re.DOTALL).strip()
+    # Unwrap markdown code fences if present
+    fence = re.search(r"```(?:json)?\s*([\s\S]*?)```", content, flags=re.DOTALL)
+    if fence:
+        content = fence.group(1).strip()
+    # Find outermost JSON object (prefer object over array since all our schemas are objects)
+    obj_match = re.search(r"\{[\s\S]*\}", content, flags=re.DOTALL)
+    arr_match = re.search(r"\[[\s\S]*\]", content, flags=re.DOTALL)
+    if obj_match and arr_match:
+        content = obj_match.group(0) if obj_match.start() <= arr_match.start() else arr_match.group(0)
+    elif obj_match:
+        content = obj_match.group(0)
+    elif arr_match:
+        content = arr_match.group(0)
+    # Strip trailing commas before ] or } (common Qwen issue)
+    content = re.sub(r',\s*([\]\}])', r'\1', content)
+    # Parse to dict and normalise before Pydantic validation
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        # Try to repair truncated JSON by closing open brackets/braces
+        repaired = _repair_truncated_json(content)
+        try:
+            data = json.loads(repaired)
+        except json.JSONDecodeError:
+            # last resort: let Pydantic try and surface a useful error
+            return response_format.model_validate_json(content)
+    if isinstance(data, dict) and response_format is FeatureHypothesesSet:
+        data = _normalize_hypotheses_dict(data)
+    elif isinstance(data, dict) and response_format is FeatureVerificationOutput:
+        data = _normalize_verification_dict(data)
+    return response_format.model_validate(data)
+
+
+def _parse_structured(
+    client: OpenAI,
+    model_name: str,
+    messages: list,
+    response_format: Type[_T],
+) -> _T:
+    """Call beta.chat.completions.parse and return the parsed Pydantic model.
+
+    Falls back to a plain chat.completions.create call with manual JSON
+    extraction for providers (e.g. OpenRouter + Qwen) that do not support
+    OpenAI-style structured outputs or return thinking blocks before JSON.
+    """
+    is_openrouter = getattr(client, '_base_url', None) and 'openrouter' in str(client._base_url)
+    is_medgemma = getattr(client, '_is_medgemma', False)
+    # Models known to NOT support OpenAI-style structured outputs via OpenRouter
+    _no_structured = ('qwen', 'deepseek', 'llama', 'mistral', 'mixtral')
+    model_lower = model_name.lower()
+    skip_parse = is_medgemma or (is_openrouter and any(t in model_lower for t in _no_structured))
+
+    # --- Primary: try OpenAI structured outputs (skip for unsupported models) ---
+    if not skip_parse:
+        try:
+            completion = client.beta.chat.completions.parse(
+                model=model_name,
+                messages=messages,
+                response_format=response_format,
+                max_tokens=16384,
+            )
+            parsed = completion.choices[0].message.parsed
+            if parsed is not None:
+                return parsed
+            # .parsed is None but content may have raw JSON
+            content = completion.choices[0].message.content or ""
+            return _extract_json_from_content(content, response_format)
+        except Exception:
+            pass
+
+    # --- Fallback (or primary for OpenRouter): plain create with JSON instructions ---
+    schema = response_format.model_json_schema()
+    top_fields = list(schema.get("properties", {}).keys())
+    fields_hint = ", ".join(f'"{f}"' for f in top_fields)
+    augmented = list(messages)
+    augmented[0] = dict(augmented[0])
+    augmented[0]["content"] = (
+        augmented[0]["content"]
+        + f"\n\nIMPORTANT: Your entire response must be a single valid JSON object with "
+        f"top-level keys: {fields_hint}. Do not include any explanation, markdown, or "
+        f"schema definitions — only the filled JSON instance."
+    )
+    # Disable thinking tokens for models that support it (saves ~1-3K output tokens)
+    extra_body: dict = {}
+    if is_openrouter:
+        extra_body["reasoning"] = {"effort": "none"}
+    kwargs: dict = dict(
+        model=model_name,
+        messages=augmented,
+        max_tokens=16384,
+    )
+    if extra_body:
+        kwargs["extra_body"] = extra_body
+    fallback = client.chat.completions.create(**kwargs)
+    content = fallback.choices[0].message.content or ""
+    return _extract_json_from_content(content, response_format)
+
 
 def _fill_mechanisms_for_feature(
     feature_hypothesis: "FeatureHypothesis",
@@ -298,47 +640,51 @@ def _fill_mechanisms_for_feature(
     client: OpenAI,
     model_name: str,
 ) -> List["MechanismHypothesis"]:
-    """Request additional mechanisms for a feature that was under-generated."""
+    """Request additional hypotheses for a feature that was under-generated."""
 
     existing_descriptions = [m.description for m in (feature_hypothesis.mechanisms or [])]
-    existing_types = [m.mechanism_type for m in (feature_hypothesis.mechanisms or [])]
 
     class _MechanismList(BaseModel):
         mechanisms: List[MechanismHypothesis]
 
     system = (
-        "You are a clinical research expert. Generate additional distinct mechanism hypotheses "
+        "You are a clinical research expert. Generate additional distinct hypotheses "
         "for a specific feature explaining treatment effect heterogeneity. "
-        "Each mechanism must be different in type or focus from the existing ones."
+        "Each hypothesis must be different from the existing ones."
     )
     user_prompt = {
-        "task": f"Generate {count_needed} additional mechanism(s) for feature '{feature_hypothesis.feature_name}'",
+        "task": f"Generate {count_needed} additional hypothesis(es) for feature '{feature_hypothesis.feature_name}'",
         "study_context": study_context,
         "feature_name": feature_hypothesis.feature_name,
         "clinical_interpretation": feature_hypothesis.clinical_interpretation,
-        "existing_mechanisms": [
-            {"type": t, "description": d}
-            for t, d in zip(existing_types, existing_descriptions)
-        ],
+        "existing_hypotheses": existing_descriptions,
         "count_needed": count_needed,
         "instructions": [
-            f"Generate exactly {count_needed} new mechanism(s) DISTINCT from the existing ones above",
-            "Prefer unused mechanism types: biological, pharmacological, statistical/proxy",
-            "Each mechanism must explain how this feature modifies the TREATMENT EFFECT (not just prognosis)",
+            f"Generate exactly {count_needed} new hypothesis(es) DISTINCT from the existing ones above",
+            "Each must explain how this feature modifies the TREATMENT EFFECT (not just prognosis)",
+            "Each description must be framed as a treatment-response INTERACTION (who benefits more/less from treatment and why), "
+            "not as a prognostic statement about the feature's effect on outcome regardless of treatment. "
+            "PRECISION: avoid oversimplified monotone claims — if the interaction depends on additional moderators "
+            "(e.g., age × comorbidity, eGFR × diabetes duration), describe the joint subgroup precisely rather than a blanket directional statement.",
+            "ABSOLUTE CATE: SHAP values measure absolute treatment effect differences (absolute CATE), not relative risk ratios. "
+            "Frame mechanisms as ABSOLUTE benefit modifiers: which subgroup gains more in absolute terms (greater ARR, lower NNT). "
+            "Do not rely solely on relative efficacy claims. "
+            "Example (good): 'Patients with elevated baseline LDL cholesterol derive greater ABSOLUTE benefit from statin therapy "
+            "because their higher baseline event rate translates even a modest relative risk reduction into a larger absolute risk reduction per patient treated.'",
         ],
     }
     try:
-        completion = client.beta.chat.completions.parse(
-            model=model_name,
-            messages=[
+        parsed = _parse_structured(
+            client, model_name,
+            [
                 {"role": "system", "content": system},
                 {"role": "user", "content": json.dumps(user_prompt, indent=2)},
             ],
-            response_format=_MechanismList,
+            _MechanismList,
         )
-        return (completion.choices[0].message.parsed.mechanisms or [])[:count_needed]
+        return (parsed.mechanisms or [])[:count_needed]
     except Exception as e:
-        print(f"    Error in mechanism gap-fill for '{feature_hypothesis.feature_name}': {e}")
+        print(f"    Error in hypothesis gap-fill for '{feature_hypothesis.feature_name}': {e}")
         return []
 
 
@@ -346,7 +692,7 @@ def generate_feature_hypotheses(
     top_features: List[dict],
     study_context: dict,
     client: OpenAI,
-    model_name: str = "gpt-4o-2024-08-06"
+    model_name: str = "gpt-5-mini"
 ) -> Optional[FeatureHypothesesSet]:
 
     feature_label_map = {}
@@ -366,12 +712,11 @@ def generate_feature_hypotheses(
         "(e.g., 'Drug works better in Young people than Old'). -> FOCUS on these.\n"
     )
 
-    # 2. MECHANISM DIVERSITY INSTRUCTION
+    # 2. HYPOTHESIS DIVERSITY INSTRUCTION
     diversity_instruction = (
-        "For each feature, you must propose distinct mechanism types if possible:\n"
-        "   - 'biological': Direct pathophysiological interaction.\n"
-        "   - 'pharmacological': PK/PD, metabolism, drug clearance.\n"
-        "   - 'statistical/proxy': If the feature is likely a proxy for an unmeasured confounder (e.g., 'zip code' -> 'socioeconomic status').\n"
+        "For each feature, propose distinct hypotheses explaining how it modifies the treatment effect.\n"
+        "Each hypothesis should offer a different perspective or mechanism (e.g., direct biological effect, "
+        "proxy/confounding role, pharmacological interaction).\n"
     )
 
     # 3. CONTEXTUAL LOGIC
@@ -414,6 +759,19 @@ def generate_feature_hypotheses(
         "3. grounding: Cite known trials or physiological principles.\n"
         "4. When data_to_interpret provides mapped clinical feature labels, use those labels exactly in feature_name; do not output raw codes alone.\n"
         "5. For each feature, distinguish whether support is established vs exploratory; include caveats when evidence is limited rather than dropping the feature.\n"
+        "6. INTERACTION FRAMING (critical): Every mechanism description MUST be framed as a treatment-response interaction, NOT a prognostic statement. "
+        "BAD (prognostic): 'Older patients have higher mortality.' "
+        "GOOD (interaction): 'Older patients show attenuated benefit from chemotherapy due to reduced tolerability and higher rates of dose-limiting adverse events, "
+        "resulting in smaller net absolute benefit compared to younger patients with equivalent disease burden.' "
+        "Always specify: who benefits more/less, from which treatment, and why the magnitude of benefit differs between subgroups.\n"
+        "7. PRECISION — avoid oversimplified monotone subgroup claims: Real treatment-effect heterogeneity is often conditional on multiple factors. "
+        "If a feature's interaction with treatment depends on a second moderator (e.g., age × comorbidity, eGFR × diabetes duration, LDL × CVD history), "
+        "name that conditionality explicitly rather than stating a blanket directional claim. "
+        "BAD: 'Older patients uniformly benefit less from statin therapy.' "
+        "GOOD: 'Among patients aged ≥75 WITHOUT established CVD, statin therapy yields smaller absolute benefit due to competing mortality risks and shorter life expectancy; "
+        "however, among older patients WITH pre-existing CVD, statin treatment still substantially reduces cardiovascular events — "
+        "indicating the age-treatment interaction is moderated by CVD burden, not a simple monotone attenuation.' "
+        "This level of specificity is required whenever the feature's effect modifier role is likely non-uniform across its range.\n"
     )
 
     # 5. USER PROMPT
@@ -425,21 +783,29 @@ def generate_feature_hypotheses(
         "data_to_interpret": top_features if top_features else "NONE (Blinded Mode)",
         "task_constraints": [
             f"Generate hypotheses for the top {n_features} features.",
-            f"Provide exactly {n_mechanisms} distinct mechanisms per feature.",
-            "Ensure 'effect_direction' describes how the feature changes the TREATMENT BENEFIT (e.g., 'Positive' = Feature increases benefit)."
+            f"For each feature, provide exactly {n_mechanisms} hypothesis description(s) in the 'mechanisms' list.",
+            "Each hypothesis description should explain how the feature modifies the TREATMENT EFFECT.",
+            "Ensure 'effect_direction' describes how the feature changes the TREATMENT BENEFIT (e.g., 'Positive' = Feature increases benefit).",
+            "CRITICAL — interaction framing: each mechanism description must answer 'which subgroup benefits MORE (or LESS) from the treatment and WHY the magnitude of treatment effect differs.' "
+            "It must NOT be a prognostic statement about the feature's effect on outcome regardless of treatment. "
+            "BAD: 'Time from sepsis onset may affect treatment efficacy.' "
+            "GOOD: 'Patients with septic shock treated within 1h of presentation benefit more from broad-spectrum antibiotics because early source control prevents progression to multi-organ failure; delayed treatment beyond 3h allows the systemic inflammatory cascade to become self-sustaining, substantially attenuating the absolute survival benefit.' "
+            "PRECISION: avoid oversimplified monotone claims. If the interaction is moderated by a second factor (e.g., age × comorbidity, eGFR × diabetes duration, LDL × CVD history), "
+            "describe the joint subgroup precisely. "
+            "BAD: 'Older patients benefit less from statin therapy.' "
+            "GOOD: 'Older patients WITHOUT prior CVD benefit less in absolute terms due to competing mortality risks; older patients WITH CVD still benefit substantially — the age-treatment interaction is moderated by CVD burden, not a uniform attenuation.'",
         ]
     }
 
     try:
-        completion = client.beta.chat.completions.parse(
-            model=model_name,
-            messages=[
+        result = _parse_structured(
+            client, model_name,
+            [
                 {"role": "system", "content": system_instructions},
                 {"role": "user", "content": json.dumps(user_prompt, indent=2)},
             ],
-            response_format=FeatureHypothesesSet,
+            FeatureHypothesesSet,
         )
-        result = completion.choices[0].message.parsed
     except Exception as e:
         print(f"Error in hypothesis generation: {e}")
         return None
@@ -536,8 +902,18 @@ def main():
     parser.add_argument(
         "--api_provider",
         default="openai",
-        choices=["openai", "openrouter"],
-        help="API provider to use (default: openai).",
+        choices=["openai", "openrouter", "medgemma"],
+        help="API provider to use (default: openai). Use 'medgemma' for local MedGemma model.",
+    )
+    parser.add_argument(
+        "--medgemma_model",
+        default="google/medgemma-27b-text-it",
+        help="HuggingFace model ID for MedGemma (default: google/medgemma-27b-text-it).",
+    )
+    parser.add_argument(
+        "--medgemma_device",
+        default="cuda",
+        help="Device for MedGemma inference (default: cuda).",
     )
     parser.add_argument(
         "--api_base_url",
@@ -579,7 +955,7 @@ def main():
     # Set verifier model based on flags
     verifier_model = args.model if args.enable_verifier else None
 
-    client = get_model_client(args.api_provider, args.api_base_url)
+    client = get_model_client(args.api_provider, args.api_base_url, medgemma_model=args.medgemma_model, medgemma_device=args.medgemma_device)
 
     # Determine treatment/outcome/population and fetch trial_meta once
     trial_meta = None
@@ -674,11 +1050,21 @@ def main():
                 "- Making subgroup implications more actionable\n"
                 "- Enhancing validation plans with concrete, feasible steps\n"
                 "- Adding important caveats and alternative explanations\n"
+                "- INTERACTION FRAMING: Rewrite any mechanism description that is framed as a prognostic statement into a treatment-response interaction claim. "
+                "Every description must answer: which subgroup benefits more (or less) from treatment, and why the magnitude of treatment effect differs. "
+                "BAD: 'High baseline LDL leads to worse cardiovascular outcomes.' "
+                "GOOD: 'Patients with high baseline LDL (>190 mg/dL) derive greater absolute benefit from statin therapy because their elevated baseline event rate translates even a moderate relative risk reduction into a larger absolute risk reduction per patient treated.' "
+                "If a description does not specify differential treatment response, rewrite it so it does.\n"
+                "- PRECISION CHECK: Flag and rewrite any oversimplified monotone subgroup claim. "
+                "If the feature's interaction with treatment is moderated by a second factor (e.g., age × comorbidity, eGFR × diabetes duration, LDL × CVD history), "
+                "the refined description must capture that conditionality explicitly rather than stating a blanket direction. "
+                "BAD: 'Older patients benefit less from statin therapy.' "
+                "GOOD: 'Among older patients WITHOUT established CVD, statin therapy yields smaller absolute benefit due to competing mortality risks; "
+                "among older patients WITH CVD, statin treatment still substantially reduces events — the age-treatment interaction is moderated by CVD burden, not a simple attenuation.'\n"
                 "\n"
-                "For EACH mechanism:\n"
+                "For EACH hypothesis:\n"
                 "- Assess plausibility (high/moderate/low/implausible)\n"
-                "- Check if claimed evidence level matches actual support\n"
-                "- Suggest specific improvements to mechanism description\n"
+                "- Suggest specific improvements to the description\n"
                 "- Mark for revision if implausible or poorly supported\n"
                 "\n"
                 "If trial article context provided:\n"
@@ -692,9 +1078,9 @@ def main():
                 "even if changes are minor. Build on strengths and fix weaknesses.\n"
                 "Stay grounded in evidence - improve but don't add unsupported claims.\n"
                 "\n"
-                "CRITICAL: You MUST preserve ALL mechanisms for every feature. Never reduce the number of\n"
-                "mechanisms. If the input has 3 mechanisms for a feature, the output must also have exactly\n"
-                "3 mechanisms. Refine or rewrite mechanisms, but do NOT drop or omit any."
+                "CRITICAL: You MUST preserve ALL hypotheses for every feature. Never reduce the number of\n"
+                "hypotheses. If the input has 2 hypotheses for a feature, the output must also have exactly\n"
+                "2 hypotheses. Refine or rewrite descriptions, but do NOT drop or omit any."
                 )
 
             # Use current hypotheses (either original or from previous iteration)
@@ -733,15 +1119,14 @@ def main():
                     "Use trial article to refine mechanisms and interpretations to match trial physiology"
                 )
 
-            v = client.beta.chat.completions.parse(
-                model=verifier_model,
-                messages=[
+            verification_report: FeatureVerificationOutput = _parse_structured(
+                client, verifier_model,
+                [
                     {"role": "system", "content": verifier_system},
                     {"role": "user", "content": json.dumps(verifier_prompt, indent=2)},
                 ],
-                response_format=FeatureVerificationOutput,
+                FeatureVerificationOutput,
             )
-            verification_report: FeatureVerificationOutput = v.choices[0].message.parsed
 
             # Track refinement progress
             if verification_report.revised is not None:

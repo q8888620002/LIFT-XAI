@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Time from injury to TXA administration",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial recorded 'ninjurytime' (time from injury) so the proposed modifier (time-to-TXA) is observed in the dataset. G2: The hypothesis asserts a time-window effect but does not state a concrete biological pathway (e.g., plasminogen/plasmin inhibition, time-course of fibrinolysis or PK/PD changes) so it fails the requirement for a named mechanism; G2 FALSE \u2014 cascade: G3..G5 also FALSE. G3: Because G2 is false, I do not evaluate a specific PD/PK or pathophysiologic modifier here; G3 FALSE per cascade. G4: Because G2 is false, literature support for a specific mechanism\u2013treatment interaction is not being claimed within the hypothesis as stated; G4 FALSE per cascade. G5: Because earlier gates failed, the hypothesis as phrased does not define a mechanistic, operational subgroup for clinical action; G5 FALSE per cascade.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 FAILED \u2014 the hypothesis describes an observed time-window effect but does not name the concrete biological steps (e.g., fibrinolytic time-course or plasmin inhibition) required to meet the biological-coherence gate.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Fibrinolytic phenotype at presentation (hyperfibrinolysis vs fibrinolytic shutdown)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial's measured features do not include point-of-care viscoelastic testing or a direct measure of fibrinolytic phenotype, so the proposed moderator is not observed in the dataset; G1 FALSE \u2014 cascade: G2..G5 also FALSE. G2: Because G1 is false, the biological-coherence gate is not reached in this dataset and is marked FALSE per cascade. G3: Because G1 is false, the claim can't be evaluated as a measured treatment effect modifier in this trial and is FALSE per cascade. G4: Because G1 is false, I do not assess trial-specific literature support here and mark G4 FALSE per cascade. G5: Because earlier gates failed, the hypothesis does not define an actionable subgroup within this trial's measured variables; G5 FALSE per cascade.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": true,
+      "justification": "Decisive gate: G1 FAILED \u2014 fibrinolytic phenotype is not measured in the provided trial dataset, so the hypothesis cannot be evaluated further here (even though the mechanism itself is plausible and relatively underexplored).",
+      "overall_score": 0
+    },
+    {
+      "feature_name": "Severity of shock / physiological derangement (hypotension, high lactate, large base deficit)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: Components of shock severity such as systolic blood pressure ('isbp') and heart rate ('ihr') are recorded in the dataset, so at least part of this composite modifier (hypotension) is observed. G2: The hypothesis states that more shocked patients derive greater benefit but does not articulate a concrete biological pathway (e.g., altered TXA PK, specific fibrinolytic activation patterns) and thus fails the biological-coherence requirement; G2 FALSE \u2014 cascade: G3..G5 also FALSE. G3: Because G2 is false, I do not accept a specific causal PD/PK modifier here and mark G3 FALSE per cascade. G4: Because G2 is false, specific literature support for a named mechanism\u2013treatment interaction is not being claimed in the hypothesis and G4 is FALSE per cascade. G5: Because earlier gates failed, the hypothesis as written does not define a clearly operational mechanistic subgroup for clinical decision-making in this dataset; G5 FALSE per cascade.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 FAILED \u2014 although hypotension is measured (G1 TRUE), the hypothesis lacks a specified biological mechanism (PK/PD or fibrinolytic pathway) linking shock severity to differential TXA effect.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Presence and severity of traumatic brain injury (TBI) / intracranial bleeding",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The dataset contains 'iinjurytype' and 'igcs' (Glasgow Coma Scale), which capture TBI presence and severity, so the proposed modifier is observed. G2: The hypothesis proposes benefit in salvageable intracranial hemorrhage and in mild\u2013moderate TBI but does not articulate a concrete molecular or physiological pathway (e.g., how TXA modulates intracranial fibrinolysis or blood\u2013brain barrier interactions), so it does not meet the strict biological-coherence requirement; G2 FALSE \u2014 cascade: G3..G5 also FALSE. G3: Because G2 is false, the claim is not presented as a specific PD/PK or pathophysiologic interaction in this dataset and G3 is FALSE per cascade. G4: Because the hypothesis fails G2 within the strict framework here, I mark G4 FALSE for a literature-backed specific mechanism in this dataset context per cascade. G5: Because earlier gates failed, the hypothesis as stated does not define a mechanistic, actionable subgroup beyond severity categories in a way that meets our gate rules; G5 FALSE per cascade.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G2 FAILED \u2014 TBI presence and severity are recorded (G1 TRUE) but the hypothesis does not provide the concrete biological steps (specific intracranial fibrinolytic pathway or PD mechanism) required to pass the biological-coherence gate.",
+      "overall_score": 1
+    },
+    {
+      "feature_name": "Pre-injury anticoagulant or antiplatelet therapy and baseline coagulation reserve (including low fibrinogen)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: The trial's measured features do not include pre-injury anticoagulant/antiplatelet status or fibrinogen levels in the provided list, so the proposed modifier is not observed in this dataset; G1 FALSE \u2014 cascade: G2..G5 also FALSE. G2: Because G1 is false, the hypothesis cannot be evaluated as biologically coherent within the trial data and is marked FALSE per cascade. G3: Because G1 is false, I cannot evaluate whether this is a genuine PD/PK modifier in the trial and mark G3 FALSE per cascade. G4: Because G1 is false, trial-specific literature backing cannot be applied here and G4 is FALSE per cascade. G5: Because earlier gates failed, the hypothesis does not define an actionable subgroup within the measured variables of this dataset and G5 FALSE per cascade.",
+      "is_observed_in_data": false,
+      "is_biologically_coherent": false,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G1 FAILED \u2014 pre-injury anticoagulant/antiplatelet status and fibrinogen are not captured in the provided trial features, so the hypothesis cannot be assessed further in this dataset.",
+      "overall_score": 0
+    }
+  ]
+}

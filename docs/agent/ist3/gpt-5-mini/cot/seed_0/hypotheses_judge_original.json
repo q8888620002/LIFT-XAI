@@ -1,0 +1,191 @@
+{
+  "summary": "Overall, the five proposed effect-modifier hypotheses are biologically and clinically plausible and map well to established stroke treatment heterogeneity. Time-to-treatment (onset-to-needle) is the strongest, well-supported and actionable modifier. Baseline imaging markers (ASPECTS / early ischemic change) and presence of a proximal large-vessel occlusion are also plausible and important, but their measurement variability and availability can limit validation. Baseline NIHSS and age are plausible modifiers but statements here are somewhat oversimplified and need more nuance (e.g., relative vs absolute benefit, competing risks). Across hypotheses, the biggest cross-cutting concerns are measurement heterogeneity (ASPECTS, vessel imaging), possible confounding, and the impact of later advances (mechanical thrombectomy) which change the modern relevance of some interactions.",
+  "scored_features": [
+    {
+      "feature_name": "Onset-to-treatment time (onset-to-needle)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Time-dependent tissue salvage / thrombolysis efficacy",
+          "plausibility": 5,
+          "evidence_support": 5,
+          "specificity": 4,
+          "testability": 5,
+          "novelty": 1,
+          "overall_score": 5,
+          "comments": "Strong, well-established biological rationale: faster reperfusion saves ischemic penumbra, reduces infarct growth and increases chance of independence. Multiple RCTs and pooled analyses (including meta-analyses of alteplase trials and IST-3 results) show diminishing treatment effect with increasing onset-to-treatment time."
+        }
+      ],
+      "mechanism_plausibility": 5,
+      "clinical_interpretation": 5,
+      "evidence_alignment": 5,
+      "subgroup_implications": 5,
+      "validation_plan_quality": 5,
+      "caveat_awareness": 3,
+      "novelty": 1,
+      "overall_score": 5,
+      "strengths": [
+        "Very strong biological and trial evidence for earlier treatment producing greater benefit.",
+        "Clear, clinically actionable cutpoints (e.g., <=3 h, <=4.5 h) that align with guidelines and historical trial inclusion windows.",
+        "Highly testable in IST-3 since onset-to-treatment time was recorded."
+      ],
+      "weaknesses": [
+        "Hypothesis statement is simple and omits nuance (e.g., relative vs absolute benefit, nonlinearity across intervals, dependences on stroke severity or occlusion status).",
+        "Does not acknowledge that benefit persists, though attenuated, beyond classical windows for some patients."
+      ],
+      "recommendation": "high_priority",
+      "justification": "This is the best-established effect modifier for IV alteplase. IST-3 and pooled trial data show clear time-dependent decline in benefit; analyses stratified by onset-to-needle are high priority for validation and are directly actionable."
+    },
+    {
+      "feature_name": "Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Large established core reduces salvageable penumbra and increases hemorrhagic risk",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 4,
+          "testability": 4,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "ASPECTS (or visually estimated early hypodensity) is a reasonable proxy for core extent. Trials and observational data show lower ASPECTS associated with worse outcomes and higher sICH risk; benefit of IVT is likely attenuated with large cores. However ASPECTS is reader-dependent and thresholds (6 vs 7) vary in literature."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 4,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 3,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Mechanistically coherent: larger baseline core means less salvageable tissue and higher hemorrhage risk.",
+        "ASPECTS thresholds (e.g., >=7 vs <=6) are used in practice and in stroke literature to stratify risk/benefit."
+      ],
+      "weaknesses": [
+        "Inter-rater variability in ASPECTS and dependence on CT acquisition/quality make operationalization noisy.",
+        "IST-3 may have variable availability/quality of baseline imaging reads; many older CT scans and non-centralized reads could limit validation strength."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Baseline imaging extent is a plausible and clinically useful modifier; pursue if reliable ASPECTS or core estimates are available in the dataset, but account for measurement error and consider sensitivity analyses with different thresholds."
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIH Stroke Scale score)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Severity-dependent absolute benefit and sICH risk",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "NIHSS correlates with prognosis and likely alters absolute benefit (higher baseline risk yields larger absolute benefit for a constant relative effect). Evidence supports heterogeneity by severity, but cutpoints (6-15, <=5) are somewhat arbitrary and evidence that mild strokes have net harm from alteplase is limited; many mild strokes recover spontaneously and some benefit from treatment."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 2,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "NIHSS is a routinely collected, easily operationalized scale and strongly predictive of outcome.",
+        "Severity-based stratification is clinically intuitive and testable in trial data."
+      ],
+      "weaknesses": [
+        "The specific claim that NIHSS <=5 shows minimal net benefit and higher net harm is an oversimplification; trial evidence is mixed and depends on stroke mechanism and imaging.",
+        "Categorical cutpoints are arbitrary; continuous modelling or interaction terms would be preferable."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "NIHSS is worth evaluating for effect modification, but analysis must avoid over-simplistic cutoffs and should examine absolute vs relative effects and possible confounding by stroke subtype and imaging."
+    },
+    {
+      "feature_name": "Age",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Age influences baseline prognosis and sICH susceptibility",
+          "plausibility": 4,
+          "evidence_support": 3,
+          "specificity": 3,
+          "testability": 4,
+          "novelty": 2,
+          "overall_score": 3,
+          "comments": "Older age is associated with worse baseline prognosis and higher sICH risk; however many trials (including pooled analyses) find that relative benefit of alteplase is preserved with age, although absolute benefit may be smaller. The simple cutoff <80 vs >=80 is clinically used but effects are nuanced and confounded by comorbidity and pre-stroke function."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 3,
+      "evidence_alignment": 3,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 4,
+      "caveat_awareness": 2,
+      "novelty": 2,
+      "overall_score": 3,
+      "strengths": [
+        "Age is reliably recorded and clearly related to prognosis and hemorrhagic risk.",
+        "Analysis by age strata is straightforward in trial data and clinically relevant."
+      ],
+      "weaknesses": [
+        "The statement overstates attenuation of benefit in >=80; relative effect often similar, absolute benefit smaller, and pre-morbid status, frailty and comorbidity matter.",
+        "Does not acknowledge interaction with pre-stroke function or competing risks of non-stroke mortality."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Age is a plausible modifier to examine; results should be interpreted with nuance (relative vs absolute effects) and adjusted for pre-stroke function and comorbidities when possible."
+    },
+    {
+      "feature_name": "Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion)",
+      "hypothesis_id": null,
+      "per_mechanism_scores": [
+        {
+          "mechanism_type": "Proximal LVO less likely to recanalize with IVT alone; alters magnitude of functional benefit",
+          "plausibility": 4,
+          "evidence_support": 4,
+          "specificity": 3,
+          "testability": 3,
+          "novelty": 3,
+          "overall_score": 4,
+          "comments": "Physiologically, IV alteplase has lower recanalization rates for proximal LVOs compared with distal occlusions. In the pre-thrombectomy era this translated to smaller net benefit from IVT alone for large proximal occlusions; but presence/absence of vessel imaging may limit validation in IST-3 and modern practice with thrombectomy affects current interpretation."
+        }
+      ],
+      "mechanism_plausibility": 4,
+      "clinical_interpretation": 4,
+      "evidence_alignment": 4,
+      "subgroup_implications": 3,
+      "validation_plan_quality": 3,
+      "caveat_awareness": 3,
+      "novelty": 3,
+      "overall_score": 4,
+      "strengths": [
+        "Clear biological rationale: clot location and burden affect likelihood of IV recanalization.",
+        "Clinically relevant distinction (proximal LVO vs others) that can inform combined strategy with thrombectomy."
+      ],
+      "weaknesses": [
+        "Validation depends on availability and quality of vessel imaging in IST-3; many patients historically did not have CTA/MRA performed or recorded centrally.",
+        "The statement does not account for the era effect: thrombectomy availability changes the contemporary treatment effect landscape."
+      ],
+      "recommendation": "medium_priority",
+      "justification": "Occlusion site is a mechanistically important modifier, but in IST-3-era data vessel imaging may be incomplete; if imaging is available, this is worth analysis with attention to missingness."
+    }
+  ],
+  "top_features": [
+    "Onset-to-treatment time (onset-to-needle)",
+    "Baseline infarct core size / early ischemic change on imaging (CT early hypodensity or ASPECTS)",
+    "Occlusion site / clot burden (presence of proximal large-vessel occlusion vs distal or no occlusion)",
+    "Baseline stroke severity (NIH Stroke Scale score)",
+    "Age"
+  ],
+  "methodological_concerns": [
+    "Measurement availability and quality: ASPECTS and vessel imaging may be missing or variably rated in IST-3; central reads vs local reads matter.",
+    "Inter-rater variability: ASPECTS scoring has known variability which can attenuate observed interactions unless accounted for.",
+    "Confounding and covariate adjustment: many features are correlated (age, NIHSS, ASPECTS, occlusion site), so apparent interactions could be confounded if not modelled jointly.",
+    "Multiplicity and power: subgroup analyses increase false discovery risk; IST-3 may be underpowered for detailed subgroup-by-treatment interactions, especially for rarer strata (e.g., very low ASPECTS).",
+    "Era effects: IST-3 was conducted largely before widespread thrombectomy; LVO effects observed there may not generalize to current practice where thrombectomy is standard for proximal LVO.",
+    "Choice of cutpoints: several hypotheses use discrete thresholds (e.g., NIHSS 6-15, ASPECTS >=7 vs <=6, age 80) which are convenient but may be arbitrary; consider continuous interaction models or sensitivity to cutpoints."
+  ]
+}

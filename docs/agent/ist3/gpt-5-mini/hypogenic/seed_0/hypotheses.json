@@ -1,0 +1,92 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "ist3",
+    "treatment": "IV alteplase (recombinant tissue plasminogen activator)",
+    "outcome": "Alive and independent (Oxford Handicap Score 0-2) at 6 months",
+    "population": "Acute ischemic stroke patients within 6 hours of symptom onset",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 5,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": {
+    "Middle-aged patients (age >= 60 and < 70 years) derive a moderate benefit from IV alteplase because they retain sufficient physiological reserve with moderate vascular comorbidity.": {
+      "hypothesis": "Middle-aged patients (age >= 60 and < 70 years) derive a moderate benefit from IV alteplase because they retain sufficient physiological reserve with moderate vascular comorbidity.",
+      "acc": 0.505,
+      "num_visits": 200,
+      "reward": 0.5863811815359364,
+      "subgroup_rule": {
+        "feature": "age",
+        "operator": ">=",
+        "threshold": 60.0,
+        "description": "age >= 60 years (intended for subgroup 60\u201369)"
+      },
+      "recommendation": "treat"
+    },
+    "In acute ischemic stroke patients treated within 6 hours, those with weight >=90 kg will have a lower probability of being alive and independent (Oxford Handicap Score 0-2) at 6 months when randomized to IV alteplase compared with control.": {
+      "hypothesis": "In acute ischemic stroke patients treated within 6 hours, those with weight >=90 kg will have a lower probability of being alive and independent (Oxford Handicap Score 0-2) at 6 months when randomized to IV alteplase compared with control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "weight",
+        "operator": ">=",
+        "threshold": 90.0,
+        "description": "Patients with weight greater than or equal to 90 kilograms"
+      },
+      "recommendation": "control"
+    },
+    "Acute ischemic stroke patients with admission glucose < 4.0 mmol/L are less likely to achieve independence (OHS 0-2) at 6 months after IV alteplase compared with patients with higher glucose.": {
+      "hypothesis": "Acute ischemic stroke patients with admission glucose < 4.0 mmol/L are less likely to achieve independence (OHS 0-2) at 6 months after IV alteplase compared with patients with higher glucose.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "glucose",
+        "operator": "<",
+        "threshold": 4.0,
+        "description": "Admission blood glucose less than 4.0 mmol/L (hypoglycemia)"
+      },
+      "recommendation": "control"
+    },
+    "Patients with moderate impaired consciousness (GCS 9\u201312) are more likely to be alive and independent at 6 months when treated with IV alteplase within 6 hours compared with patients outside this GCS range.": {
+      "hypothesis": "Patients with moderate impaired consciousness (GCS 9\u201312) are more likely to be alive and independent at 6 months when treated with IV alteplase within 6 hours compared with patients outside this GCS range.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "gcs_score_rand",
+        "operator": "==",
+        "threshold": null,
+        "description": "GCS score between 9 and 12 inclusive"
+      },
+      "recommendation": "treat"
+    },
+    "Among acute ischemic stroke patients treated within 6 hours, those with baseline NIHSS \u2264 7 will have a higher probability of being alive and independent (OHS 0\u20132) at 6 months when treated with IV alteplase compared with control.": {
+      "hypothesis": "Among acute ischemic stroke patients treated within 6 hours, those with baseline NIHSS \u2264 7 will have a higher probability of being alive and independent (OHS 0\u20132) at 6 months when treated with IV alteplase compared with control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "nihss",
+        "operator": "<=",
+        "threshold": 7.0,
+        "description": "mild stroke (NIHSS \u2264 7)"
+      },
+      "recommendation": "treat"
+    }
+  },
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 0.11727623630718728,
+    "avg_accuracy": 0.101
+  }
+}

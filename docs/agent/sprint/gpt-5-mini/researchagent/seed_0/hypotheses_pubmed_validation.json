@@ -1,0 +1,760 @@
+{
+  "dataset": "sprint",
+  "total_mechanisms_analyzed": 15,
+  "total_abstracts_retrieved": 45,
+  "overall_support_count": 0,
+  "overall_conflict_count": 0,
+  "evaluator_model": "gpt-5-mini",
+  "mechanism_results": [
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In A Randomized Trial of Intensive versus Standard Blood-Pressure Control (SPRINT), baseline sbp may modify treatment response through differential baseline cardiovascular risk.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review and meta-analysis of telemedicine/mHealth interventions for systolic blood pressure (SBP) control in stroke survivors. It does not evaluate the intensive versus standard systolic blood pressure target (e.g., <120 mmHg vs <140 mmHg) as a randomized treatment strategy (the intervention tested is telemedicine/mHealth, not an intensive BP target as in SPRINT). The outcome reported is change in SBP (a surrogate) rather than major cardiovascular events or all-cause mortality, and while the abstract reports subgroup results by baseline SBP (\u2265140 mmHg), it does not assess whether baseline SBP modifies the clinical treatment effect of an intensive SBP target on cardiovascular events or mortality. Therefore it is not relevant to the proposed SPRINT mechanism question.",
+          "evidence_quote": "\u201cAmong the stroke survivors with ... a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.\u201d",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission SBP as a prognostic factor in patients with non-cardioembolic minor ischemic stroke or high-risk TIA treated with dual antiplatelet therapy in a prospective real-world cohort. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target as a randomized intervention (SPRINT-style comparison). The mechanism under test concerns effect modification of an intensive BP-target intervention; this study instead examines baseline SBP association with outcomes after DAPT (a different intervention and clinical context). Although SBP is explicitly analyzed and shows associations with outcomes, the intervention, population, and trial design do not match the SPRINT BP-target mechanism, so the abstract is not relevant evidence for that mechanism.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033). Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a nonprespecified subgroup analysis of SPRINT stratified by baseline diastolic blood pressure (DBP) and hs-cTnT, not by baseline systolic blood pressure (Sbp). Although the trial compared intensive (<120 mmHg) versus standard (<140 mmHg) systolic BP targets (so the intervention is relevant), the presented subgroup analyses and interaction tests involve DBP and hs-cTnT. The TARGET FEATURE (Sbp) is not explicitly analyzed as a modifier of treatment effect, so the abstract does not provide evidence for the proposed mechanism that baseline Sbp modifies treatment response.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70 mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different sbp levels may show heterogeneous benefit due to variation in baseline disease burden.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review and meta-analysis of telemedicine and mHealth interventions versus usual care in stroke survivors, with the reported outcome being change in systolic blood pressure (SBP). It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (<140 mmHg) as the treatment strategy (failed Treatment Check and Intervention Match). The primary outcomes of interest in the hypothesis are major cardiovascular events and all-cause mortality (or their direct surrogates related to a BP-target trial like SPRINT), but this study reports SBP reduction as the clinical endpoint of the telemedicine intervention rather than cardiovascular events or mortality (Outcome Alignment mismatch). Although SBP is explicitly analyzed (including a subgroup with baseline SBP \u2265140 mm Hg), the trial question and intervention do not test the intensive BP target mechanism under evaluation, so the abstract is not relevant to supporting or refuting the proposed mechanism regarding heterogeneous benefit of an intensive SBP target. Therefore the appropriate classification is IRRELEVANT.",
+          "evidence_quote": "\u201cAmong the stroke survivors ... with a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.\u201d",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "Although the abstract explicitly analyzes admission SBP and its association with short-term vascular outcomes, it does not test the intensive systolic blood pressure target (<120 mmHg) versus standard target as an intervention. The study evaluates admission SBP as a prognostic/explanatory variable in patients receiving dual antiplatelet therapy (DAPT) for minor ischemic stroke or high-risk TIA in a prospective real-world cohort. The hypothesis to be evaluated concerns effect modification of an intensive BP-lowering treatment (SPRINT-style: <120 mmHg vs <140 mmHg). Because this abstract reports observational associations of baseline SBP with outcomes after DAPT rather than randomized comparisons of different BP-target treatments (or treatment effect heterogeneity of an intensive BP-lowering arm), it fails the intervention/experimental-match gates and is therefore irrelevant to the proposed mechanism.",
+          "evidence_quote": "We aimed to assess the impact of admission SBP on the short-term outcomes after DAPT in patients with non-cardioembolic MIS or high-risk TIA. We selected SBP = 124 mm Hg as cut-off point for the IPW weighting. After IPW, patients with admission SBP \u2265124 mm Hg versus <124 mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 ...).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary (nonprespecified) subgroup analysis of SPRINT comparing intensive vs standard systolic BP targets and evaluates cardiovascular events and all-cause mortality, so treatment and outcomes are appropriate. However, the TARGET FEATURE is 'Sbp' (systolic blood pressure) and the abstract does not analyze heterogeneity by baseline systolic BP. Instead, participants are stratified by baseline diastolic BP (DBP) and hs-cTnT. Because the feature of interest (Sbp) is not explicitly analyzed as a modifier of treatment effect, the abstract is irrelevant to the submitted mechanism.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in sbp may alter event risk trajectories, changing absolute treatment benefit.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a systematic review/meta-analysis of telemedicine and mHealth interventions that lower systolic blood pressure in stroke survivors. However, it does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (<140 mmHg) as the treatment comparison, nor does it report effects on the specified clinical outcomes (major cardiovascular events or all-cause mortality) or test whether baseline Sbp modifies treatment benefit on those outcomes. Although Sbp is measured and reduced by the interventions, the study addresses BP-management interventions and BP change as an outcome, not the hypothesized mechanism that differences in achieved SBP between intensive vs standard BP-target arms alter event-risk trajectories and absolute treatment benefit. Therefore it fails the relevance gates for the proposed mechanism.",
+          "evidence_quote": "In general, telemedicine and mHealth reduced the systolic blood pressure of stroke survivors by an average of 5.49 mm Hg compared with usual care.",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports a prospective observational analysis of admission SBP as a predictor of short-term outcomes after dual antiplatelet therapy in minor ischemic stroke/TIA patients. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target as an intervention arm (the key intervention in the SPRINT-context mechanism). Therefore it cannot provide evidence that differences in achieved SBP targets modify treatment benefit between randomized BP-target arms. Although SBP is analyzed and associated with outcomes, this is a prognostic association in a different clinical context (acute stroke patients on DAPT), not an interaction test of intensive vs standard SBP targets on major cardiovascular events or all-cause mortality.",
+          "evidence_quote": "\"We selected SBP\u2009=\u2009124\u2009mm Hg as cut-off point for the IPW weighting... patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).\"",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "While the trial (SPRINT) tests intensive versus standard systolic BP targets and reports major cardiovascular events and mortality (so treatment and outcomes are relevant), the abstract does not analyze baseline systolic blood pressure (Sbp) as a feature or effect modifier. Instead, participants were stratified by baseline diastolic BP (DBP) and hs-cTnT; subgroup results and interaction tests are reported for DBP/hs-cTnT strata, not for Sbp. The hypothesis concerns differences in Sbp altering absolute treatment benefit, but the abstract contains no subgroup or interaction analysis by Sbp, so it cannot provide evidence for or against the proposed Sbp-based mechanism.",
+          "evidence_quote": "A total of 8828 participants in SPRINT (Systolic Blood Pressure Intervention Trial) were stratified by baseline DBP.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "The association between sbp and outcome may interact with treatment intensity in the trial population.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review and meta-analysis of telemedicine/mHealth interventions to lower systolic blood pressure in stroke survivors. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target, nor does it report major cardiovascular events or all-cause mortality or any interaction between SBP and treatment intensity. While SBP is the measured endpoint (change in mm Hg), the study tests a delivery/intervention strategy (telemedicine vs usual care) in stroke patients rather than the SPRINT-style intensive vs standard BP target comparison required by the hypothesis. Therefore it is not relevant to the proposed mechanism (interaction between SBP and treatment intensity on major CV events/mortality).",
+          "evidence_quote": "\"In general, telemedicine and mHealth reduced the systolic blood pressure of stroke survivors by an average of 5.49 mm Hg compared with usual care.\"",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission systolic blood pressure (SBP) as a prognostic variable in patients with minor ischemic stroke or high-risk TIA who received dual antiplatelet therapy. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target as a randomized treatment arm (or equivalent), nor does it test how treatment intensity of BP lowering modifies treatment effect. The population (acute stroke/TIA patients started on DAPT) and the primary intervention (antiplatelet therapy) differ fundamentally from the SPRINT context (hypertensive adults randomized to intensive vs standard SBP targets). Although SBP is explicitly analyzed and shown to interact with factors like sex and time to DAPT, the abstract provides no evidence about an interaction between baseline SBP and randomized BP treatment intensity affecting major cardiovascular events or all-cause mortality. Therefore it is not relevant to the proposed mechanism concerning intensive SBP target effects.",
+          "evidence_quote": "We selected SBP = 124 mm Hg as cut-off point for the IPW weighting... After IPW, patients with admission SBP \u2265124 mm Hg versus <124 mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events... Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Two key gates fail: the TARGET FEATURE is systolic blood pressure (Sbp), but the abstract reports subgroup analyses by baseline diastolic blood pressure (DBP) and hs-cTnT, not by baseline systolic BP or its interaction with treatment. While the trial (SPRINT) does test an intensive systolic BP target (<120 mmHg) and reports relevant outcomes (cardiovascular events and all-cause mortality) in a hypertensive, high-risk population, the analysis does not evaluate Sbp as a modifier of treatment effect. Because the feature (Sbp) is missing as an analyzed effect modifier, the abstract is irrelevant to the specific mechanism claiming an interaction between baseline Sbp and treatment intensity.",
+          "evidence_quote": "A total of 8828 participants in SPRINT (Systolic Blood Pressure Intervention Trial) were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Variation in sbp may identify subgroups with different competing-risk profiles under treatment.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "Fails relevance gates. (A/D) The abstract evaluates telemedicine/mHealth interventions to lower systolic BP in stroke survivors, not an intensive systolic BP target (<120 mmHg) versus standard (<140 mmHg) trial. (B) Outcomes assessed are systolic blood pressure control, not major cardiovascular events or all-cause mortality. (C) Although Sbp is measured as the trial outcome, it is not analyzed as a feature that modifies treatment effect on clinical events (no interaction between Sbp and major outcomes is reported). Population (stroke survivors) differs from the SPRINT context of general hypertensive adults at elevated CV risk, further reducing direct relevance. Therefore the abstract does not provide evidence for the proposed mechanism about Sbp identifying competing-risk subgroups under the intensive BP treatment.",
+          "evidence_quote": "In total, 9 RCTs ... Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "Fails relevance gates. Although SBP is explicitly analyzed and associated with outcomes, the study evaluates dual antiplatelet therapy (DAPT) in patients with minor ischemic stroke/TIA rather than testing an intensive systolic blood pressure target (<120 mmHg) versus standard target as the primary intervention. The hypothesis concerns differential treatment effects (competing-risk profiles) under an intensive SBP target (SPRINT-like intervention) on major cardiovascular events/all-cause mortality. This abstract studies a different intervention (DAPT), in a different clinical population (acute non-cardioembolic stroke/TIA), and focuses on short-term recurrent stroke, neurological deterioration, and bleeding. Therefore it does not provide evidence for or against the proposed mechanism relating to intensive SBP-target treatment effects.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033) and of 24-h early neurological deterioration (adjusted risk difference: 1.91% (95% CI 0.60%-3.41%); p = 0.006).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the abstract reports results from SPRINT (intensive vs standard systolic BP targets) and assesses major cardiovascular events and all-cause mortality, it does not analyze systolic blood pressure (Sbp) variation as a feature or subgroup. Instead the analysis stratified participants by baseline diastolic blood pressure (DBP) and hs-cTnT. The target mechanistic claim concerns variation in Sbp identifying subgroups with different competing-risk profiles; because Sbp is not examined as a subgroup or effect modifier in the abstract, the report does not provide evidence for or against the proposed mechanism and is therefore irrelevant to that specific hypothesis.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Trial abstract context suggests sbp could act as an effect modifier for clinical outcomes.",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review and meta-analysis of telemedicine/mHealth interventions to lower systolic blood pressure in stroke survivors. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (<140 mmHg) (Relevance Gate A fails), nor does it report clinical outcomes of interest (major cardiovascular events or all-cause mortality) \u2014 it reports SBP change as the primary outcome (Relevance Gate B fails). Although baseline SBP (\u2265140 mmHg) is used in a subgroup analysis, that pertains to the magnitude of SBP reduction with telemedicine interventions, not to SBP acting as an effect modifier of the effect of an intensive BP-target strategy on major clinical outcomes. Therefore the abstract is irrelevant to the specified mechanism (Sbp as an effect modifier of intensive vs standard BP target on major CV events/mortality).",
+          "evidence_quote": "\u201cAmong the stroke survivors ... a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26) ... telemedicine and mHealth reduced the systolic blood pressure of stroke survivors by an average of 5.49 mm Hg compared with usual care.\u201d",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract reports an observational, prospective multicenter cohort analyzing the association between admission systolic blood pressure (SBP) and short-term outcomes after dual antiplatelet therapy (DAPT) in patients with minor ischemic stroke or high-risk TIA. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target as an intervention or randomized arm, so it cannot test whether an intensive SBP target modifies treatment effect (the mechanism under consideration). Although SBP is explicitly analyzed and shown to be prognostic (higher admission SBP associated with worse outcomes) and appears in subgroup interactions with sex and time-to-DAPT, these findings are prognostic/associative within an observational DAPT cohort and do not provide evidence that an intensive SBP treatment strategy (<120 mmHg) alters the efficacy or safety of an intervention compared to a control. Therefore, per the relevance gates (intervention mismatch), the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a nonprespecified subgroup analysis of SPRINT comparing intensive versus standard systolic BP targets (A and D pass) and reports cardiovascular and mortality outcomes (B pass). However, the target feature requested ('Sbp' \u2014 baseline or subgroup analysis by systolic blood pressure) is not analyzed as an effect modifier. Instead, participants were stratified by baseline diastolic blood pressure (DBP) and hs-cTnT; all subgroup comparisons and interaction tests refer to DBP/hs-cTnT strata, not to systolic BP. Because the abstract does not evaluate Sbp as a modifier of treatment effect, it fails the feature check and is irrelevant to the proposed SBP-based mechanism.",
+          "evidence_quote": "\"A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.\"",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In A Randomized Trial of Intensive versus Standard Blood-Pressure Control (SPRINT), baseline sbp may modify treatment response through differential baseline cardiovascular risk. (variant 7)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review/meta-analysis of telemedicine/mHealth interventions to reduce systolic blood pressure in stroke survivors. It does analyze systolic blood pressure (Sbp) as an outcome and even reports a subgroup with baseline SBP \u2265140 mmHg, but it does NOT evaluate the SPRINT-style intervention (an intensive systolic BP target of <120 mmHg versus <140 mmHg) nor does it report the required clinical outcomes (major cardiovascular events or all-cause mortality). The intervention tested is telemedicine/mHealth, not randomized BP-target strategies like SPRINT. The population (stroke survivors) and endpoints (change in SBP) are therefore not comparable to the SPRINT mechanism question, so the abstract cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51). ... Among the stroke survivors with an intervention interval \u22641 week (MD -6.51; 95% CI -9.36 to -3.66; P<.001; 95% PI -12.91 to -0.10) or a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract studies the association of admission SBP with short-term outcomes after dual antiplatelet therapy (DAPT) in patients with minor ischemic stroke or high-risk TIA in a prospective real-world cohort (READAPT). It does not evaluate an intensive versus standard systolic blood pressure target (<120 vs <140 mmHg) as an intervention or compare treatment arms like SPRINT. The exposure (admission SBP) is analyzed as a prognostic/stratifying variable in the context of DAPT, not as a modifier of randomized BP-target treatment effects. The population (acute ischemic stroke/TIA patients starting DAPT) and primary intervention (antiplatelet therapy) are not comparable to SPRINT's hypertensive adults randomized to BP targets. Although SBP is explicitly linked to outcomes in this abstract, the study does not test whether baseline SBP modifies the effect of intensive BP lowering vs standard care, so it is irrelevant to the specified SPRINT mechanism.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the trial (SPRINT) compares intensive versus standard systolic BP targets and reports cardiovascular and mortality outcomes (so treatment and outcome gates pass), the abstract does not analyze baseline systolic blood pressure (SBP) as a modifier. Instead, the subgroup analyses are based on baseline diastolic blood pressure (DBP) and hs-cTnT. The proposed mechanism specifically concerns baseline Sbp modifying treatment response; because SBP is not examined as a feature linked to differential treatment effect in the abstract, the report is irrelevant to the stated mechanism.",
+          "evidence_quote": "A total of 8828 participants in SPRINT (Systolic Blood Pressure Intervention Trial) were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different sbp levels may show heterogeneous benefit due to variation in baseline disease burden. (variant 8)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a systematic review/meta-analysis of telemedicine and mHealth interventions versus usual care to improve systolic blood pressure (SBP) control in stroke survivors. It does NOT evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (or equivalent), nor does it report the pre-specified clinical outcomes of interest (major cardiovascular events or all-cause mortality). Although SBP is measured and a baseline-SBP subgroup (\u2265140 mm Hg) is reported, that pertains to response to a delivery-mode intervention (telemedicine/mHealth) and SBP change as an intermediate outcome \u2014 not to heterogeneous benefit of an intensive BP target on major CV events/mortality. Therefore the abstract is not relevant to the proposed mechanism about intensive SBP targets.",
+          "evidence_quote": "Among the stroke survivors with an intervention interval \u22641 week (MD -6.51; 95% CI -9.36 to -3.66; P<.001; 95% PI -12.91 to -0.10) or a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission systolic blood pressure (SBP) as a prognostic predictor of outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or high\u2011risk TIA (a prospective real\u2011world cohort), but it does NOT evaluate an intensive SBP target (<120 mmHg) versus standard target as an intervention arm (the key treatment contrast in SPRINT). Thus it fails the Treatment Check / Intervention Match gate: there is no randomized or primary comparison of an intensive BP target. While SBP is explicitly linked to outcomes (a prognostic main effect), the study does not test whether baseline SBP modifies the treatment effect of an intensive systolic BP target, so it cannot provide evidence for the proposed mechanism about heterogeneous benefit of an intensive SBP target in SPRINT-like interventions.",
+          "evidence_quote": "We selected SBP\u2009=\u2009124\u2009mm Hg as cut-off point for the IPW weighting. After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a nonprespecified subgroup analysis of SPRINT randomizing intensive vs standard systolic BP targets (so the intervention and outcomes are relevant), but all subgrouping and effect-modifier analyses are by baseline DBP and hs-cTnT\u2014not by baseline systolic blood pressure (Sbp). The target feature 'Sbp' is not analyzed as a modifier of treatment effect (it appears only implicitly as the trial intervention), so the abstract cannot provide evidence for the mechanism that baseline Sbp levels produce heterogeneous benefit. Therefore it fails the Feature Check and is irrelevant for the specific Sbp-based interaction hypothesis.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in sbp may alter event risk trajectories, changing absolute treatment benefit. (variant 9)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract reports a systematic review and meta-analysis of telemedicine/mHealth interventions to lower systolic blood pressure (SBP) in stroke survivors. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (e.g., SPRINT-style comparison), nor does it report the prespecified clinical outcomes (major cardiovascular events or all-cause mortality). Although SBP is explicitly measured and reduced by the intervention, the study tests a delivery intervention (telemedicine/mHealth), not an intensive BP-target strategy, and it does not link SBP strata to differences in treatment effect on the clinical outcomes of interest. Therefore it is irrelevant to the specified mechanism (whether differences in SBP modify absolute treatment benefit for major CV events/mortality in an intensive vs standard BP-target trial).",
+          "evidence_quote": "Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission systolic blood pressure (SBP) as an observational predictor of short-term outcomes after dual antiplatelet therapy in minor ischemic stroke/TIA patients from a prospective real-world cohort (READAPT). It does not evaluate an intensive systolic blood pressure treatment strategy (e.g., target <120 mmHg vs <140 mmHg) as a randomized intervention or primary arm. Although SBP is explicitly linked to outcomes, the study design and intervention do not match the SPRINT-style intensive BP target mechanism under evaluation, so it is irrelevant to the proposed mechanism test.",
+          "evidence_quote": "\u201cAfter IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).\u201d",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the trial compares intensive (<120 mmHg) versus standard (<140 mmHg) systolic BP targets (passes Treatment and Intervention checks) and reports cardiovascular and mortality outcomes (passes Outcome check), the abstract does not analyze baseline systolic blood pressure (Sbp) as a feature modifying treatment effect. The subgrouping and interaction tests are reported by diastolic BP (DBP) and hs-cTnT, not by Sbp. Because the TARGET FEATURE 'Sbp' is not explicitly analyzed for association with outcome or treatment effect, the abstract is irrelevant to the proposed mechanism that differences in Sbp alter event risk trajectories and absolute treatment benefit.",
+          "evidence_quote": "\"A total of 8828 participants in SPRINT (Systolic Blood Pressure Intervention Trial) were stratified by baseline DBP.\"",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "The association between sbp and outcome may interact with treatment intensity in the trial population. (variant 10)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a meta-analysis of telemedicine/mHealth interventions to lower systolic blood pressure in stroke survivors. It does analyze Sbp (as the outcome) but does NOT evaluate an intensive systolic blood pressure target (<120 mmHg) versus standard target (<140 mmHg) as the trial intervention or comparator, nor does it report major cardiovascular events or all-cause mortality. The mechanism under evaluation (interaction between baseline Sbp and treatment intensity in SPRINT-like intensive vs standard BP targets) therefore is not tested here. Although Sbp is central to the paper, the intervention, trial context, and outcomes do not match the SPRINT intensive-target mechanism, so the abstract is irrelevant to the proposed mechanism.",
+          "evidence_quote": "Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract does analyze admission SBP and its association with outcomes, but it does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target as an intervention (SPRINT-like comparison). Instead it is a prospective observational study of patients with minor ischemic stroke or high-risk TIA treated with dual antiplatelet therapy. The population (acute cerebrovascular patients on DAPT) and the exposure (baseline SBP as a prognostic factor) differ fundamentally from a trial testing randomized BP treatment targets in hypertensive adults. Although SBP predicts worse outcomes here, the study does not test whether treatment intensity (intensive vs standard SBP target) interacts with SBP to modify treatment benefit, so it cannot provide evidence for the proposed mechanism.",
+          "evidence_quote": "Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract is a post\u2011hoc subgroup analysis of SPRINT (intensive vs standard systolic BP targets), so the trial and outcomes are relevant. However the manuscript stratifies participants by baseline diastolic blood pressure (DBP) and hs\u2011cTnT and reports treatment effects across those DBP/hs\u2011cTnT strata. It does not analyze or report SBP (the TARGET FEATURE) as a predictor or effect modifier of treatment benefit. Because the feature 'Sbp' is not examined in relation to outcome or treatment interaction, the abstract cannot provide evidence for the proposed mechanism involving SBP and treatment intensity.",
+          "evidence_quote": "\"Among individuals with hypertension and low diastolic blood pressure (DBP), the optimal BP target remains controversial... Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs\u2011cTnT (\u226514\u2009ng/L) at baseline.\"",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Variation in sbp may identify subgroups with different competing-risk profiles under treatment. (variant 11)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract describes a systematic review and meta-analysis of telemedicine/mHealth interventions to reduce systolic blood pressure (SBP) among stroke survivors. It does not evaluate an intensive systolic blood pressure target (e.g., <120 mmHg) versus a standard target as in SPRINT (Treatment Check and Intervention Match fail). The reported outcomes are change in SBP, not major cardiovascular events or all-cause mortality (Outcome Alignment fails). Although SBP is explicitly analyzed (Feature present), it is evaluated as an intermediate physiological endpoint (mean SBP reduction) rather than as a subgroup-defining feature modifying the effect of an intensive vs standard BP target on clinical events. Therefore the abstract is not relevant evidence for the proposed mechanism about variation in SBP identifying competing-risk subgroups under intensive BP treatment.",
+          "evidence_quote": "Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission SBP as a prognostic predictor in patients with non-cardioembolic minor ischemic stroke or high-risk TIA who received dual antiplatelet therapy (DAPT). It does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target (the SPRINT-style intervention) as a randomized treatment arm, nor does it report treatment-by-SBP interaction for intensive BP lowering. The population (acute stroke/TIA patients on DAPT) and intervention (antiplatelet therapy) are fundamentally different from the SPRINT context (hypertensive patients randomized to BP target strategies). Although SBP is explicitly analyzed and associated with outcomes, the study does not test the proposed mechanism (that variation in SBP identifies subgroups with different competing-risk profiles under the intensive BP treatment). Therefore it is not relevant to the hypothesized SPRINT mechanism.",
+          "evidence_quote": "Elevated baseline systolic blood pressure (SBP) was associated with poor outcomes following dual antiplatelet therapy (DAPT) ... We selected SBP = 124 mm Hg as cut-off point for the IPW weighting. After IPW, patients with admission SBP \u2265124 mm Hg versus <124 mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary/subgroup analysis of SPRINT stratified by baseline diastolic blood pressure (DBP) and hs-cTnT, not by systolic blood pressure (Sbp). Although the trial compares intensive (<120 mmHg) versus standard (<140 mmHg) systolic BP targets, the putative mechanism specifically concerns variation in Sbp as the target feature; the abstract does not analyze Sbp variation or report treatment effect modification by baseline Sbp. Therefore it does not provide evidence for or against the proposed mechanism that variation in Sbp identifies subgroups with different competing-risk profiles under treatment.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70 mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Trial abstract context suggests sbp could act as an effect modifier for clinical outcomes. (variant 12)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "unknown"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This abstract does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus standard target and does not report the clinical outcomes of interest (major cardiovascular events or all-cause mortality). Instead, it is a meta-analysis of telemedicine/mHealth interventions versus usual care with systolic blood pressure (SBP) as the measured outcome. SBP is reported as the endpoint of the intervention, not as an effect modifier of treatment on major CV events or mortality. Therefore it fails the Treatment Check (A), Outcome Alignment (B), Feature Check for effect-modification on the clinical outcomes (C), and Intervention Match (D).",
+          "evidence_quote": "\"telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).\"",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract analyzes admission SBP as an exposure in a prospective observational cohort of patients with minor ischemic stroke or high-risk TIA who received dual antiplatelet therapy. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) as a randomized treatment arm or primary intervention (required by the hypothesis context of SPRINT). Although SBP is explicitly analyzed and shown to interact with sex and time-to-treatment, the study context (acute stroke patients on DAPT) and observational design differ fundamentally from a trial testing intensive vs standard SBP targets in hypertensive adults at increased cardiovascular risk. Therefore it is not relevant evidence for the proposed mechanism that intensive SBP target (<120 mmHg) modifies treatment effect on major cardiovascular events/all-cause mortality.",
+          "evidence_quote": "Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the trial compares intensive versus standard systolic BP targets (SPRINT), the abstract does not analyze baseline systolic blood pressure (Sbp) as a feature or effect modifier. The subgrouping and interaction analyses are by baseline diastolic BP (DBP) and hs-cTnT; no results are reported stratified by or testing interaction with baseline Sbp. Because the target feature 'Sbp' is not explicitly evaluated for association with treatment effect or outcomes, the abstract is irrelevant to the hypothesis that Sbp acts as an effect modifier.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline. The effects of intensive versus standard BP lowering on a cardiovascular disease composite end point, all-cause death, and 1-year change in hs-cTnT were determined.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "In A Randomized Trial of Intensive versus Standard Blood-Pressure Control (SPRINT), baseline sbp may modify treatment response through differential baseline cardiovascular risk. (variant 13)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract is a systematic review and meta-analysis of telemedicine/mHealth interventions to reduce systolic blood pressure in stroke survivors. It does not evaluate the SPRINT intervention (intensive systolic blood pressure target <120 mmHg vs <140 mmHg) nor the clinical outcomes of interest (major cardiovascular events or all-cause mortality). Although baseline SBP subgroups (e.g., \u2265140 mm Hg) are reported for BP reduction, this addresses BP lowering efficacy of telemedicine interventions, not whether baseline SBP modifies the clinical treatment effect of intensive vs standard BP targets on cardiovascular events or mortality as hypothesized for SPRINT. Therefore it fails the Treatment Check and Outcome Alignment gates and is irrelevant to the proposed mechanism.",
+          "evidence_quote": "\u201cAmong the stroke survivors ... with a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001; 95% PI -13.55 to 1.26), the control of systolic blood pressure using telemedicine and mHealth was better than that of usual care.\u201d",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract does analyze SBP and reports that higher admission SBP (\u2265124 mm Hg) is associated with worse short-term outcomes after dual antiplatelet therapy. However it does NOT evaluate an intensive systolic blood pressure target (<120 mmHg) or compare randomized BP-target arms as in SPRINT. The intervention under study is dual antiplatelet therapy in patients with minor ischemic stroke/TIA (an acute cerebrovascular population), not randomized BP targets in hypertensive adults at increased cardiovascular risk. Therefore the abstract cannot provide evidence about whether baseline SBP modifies the treatment effect of intensive vs standard BP targets (the SPRINT mechanism), so it is irrelevant to the specified mechanism despite analyzing SBP as a prognostic factor.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124\u2009mm Hg versus <124\u2009mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary (nonprespecified) subgroup analysis of SPRINT evaluating intensive vs standard systolic BP targets and outcomes (cardiovascular composite and all-cause death). However, the proposed TARGET FEATURE ('Sbp' = baseline systolic blood pressure) is not analyzed as a modifier of treatment effect. Instead, participants were stratified by baseline diastolic blood pressure (DBP) and hs-cTnT; the paper reports subgroup effects by DBP/hs-cTnT, not by baseline SBP. Because the mechanism claim specifically concerns baseline SBP modifying treatment response, and the abstract does not provide subgroup or interaction results based on baseline SBP, it is irrelevant to the tested mechanism despite otherwise appropriate population, intervention, and outcomes.",
+          "evidence_quote": "\"A total of 8828 participants in SPRINT (Systolic Blood Pressure Intervention Trial) were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.\"",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Patients with different sbp levels may show heterogeneous benefit due to variation in baseline disease burden. (variant 14)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "positive"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "The abstract reports a meta-analysis of telemedicine/mHealth interventions versus usual care for lowering systolic blood pressure in stroke survivors. It does analyze Sbp as an outcome and reports subgroup SBP results, but it does not evaluate an intensive systolic blood pressure target (<120 mmHg) versus a standard target nor does it report effects on major cardiovascular events or all-cause mortality. The hypothesis concerns heterogeneous treatment benefit of an intensive BP target (SPRINT-style) on major CV events/mortality by baseline Sbp; this study tests a different intervention and outcome, so it is not relevant to the proposed mechanism.",
+          "evidence_quote": "\u201cCompared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001...). Among the stroke survivors... a baseline systolic blood pressure \u2265140 mm Hg (MD -6.15; 95% CI -9.44 to -2.86; P<.001...)\u201d",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract evaluates the association of admission SBP with outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or high-risk TIA \u2014 an observational analysis of baseline SBP strata. It does not evaluate an intensive systolic blood pressure target (<120 mmHg) as a treatment arm or compare intensive vs standard BP targets (the specific intervention required by the hypothesis). The outcome set (short-term ischemic events, neurological deterioration, bleeding) and the population (acute stroke/TIA) are different from SPRINT's hypertensive adults at cardiovascular risk and the prespecified outcomes (major cardiovascular events and all-cause mortality). Although SBP is explicitly analyzed and shows prognostic associations and interactions with other variables, the study does not test whether an intensive SBP target modifies treatment benefit, so it is irrelevant to the proposed mechanism about differential benefit from intensive SBP lowering.",
+          "evidence_quote": "After IPW, patients with admission SBP \u000261;124 mm Hg versus <124 mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033). Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "The abstract reports a secondary (nonprespecified) subgroup analysis of SPRINT stratified by baseline diastolic blood pressure (DBP) and hs-cTnT, not by baseline systolic blood pressure (SBP). The mechanism target feature is 'Sbp' (baseline systolic BP) and the hypothesis requires explicit analysis of SBP subgroups or SBP-by-treatment interaction. Although the trial tests intensive (<120 mmHg) vs standard (<140 mmHg) systolic BP targets and reports relevant outcomes (CVD composite and all-cause mortality) in an appropriate hypertensive population, the abstract does not analyze or report treatment effect modification by baseline SBP. Therefore it does not provide evidence for or against the proposed SBP-based heterogeneity mechanism and must be classified as irrelevant for this mechanism.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline.",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "mechanism": {
+        "mechanism_type": "hypothesis_mechanism",
+        "description": "Differences in sbp may alter event risk trajectories, changing absolute treatment benefit. (variant 15)",
+        "evidence_level": "hypothesis_generating",
+        "effect_direction": "negative"
+      },
+      "query": "((\"intensive blood pressure control\" OR \"intensive systolic blood pressure\" OR \"systolic blood pressure target\" OR \"tight blood pressure control\" OR \"aggressive blood pressure lowering\" OR \"blood pressure management\" OR \"intensive antihypertensive therapy\" OR \"antihypertensive intensification\" OR SPRINT) AND (hypertension OR \"blood pressure\" OR cardiovascular)) AND (\"baseline systolic blood pressure\" OR \"pre-randomization SBP\" OR \"initial SBP\" OR \"J-curve\" OR \"SBP threshold\") AND (\"effect modification\"[tiab] OR \"treatment effect heterogeneity\"[tiab] OR \"heterogeneous treatment effect\"[tiab] OR \"treatment interaction\"[tiab] OR \"interaction effect\"[tiab] OR \"subgroup analysis\"[tiab] OR \"differential treatment effect\"[tiab] OR \"treatment-by\"[tiab] OR \"predictive factor\"[tiab] OR \"interaction term\"[tiab] OR \"forest plot\"[tiab] OR HTE[tiab])",
+      "query_tier_used": "tier_3_broad_fallback",
+      "total_abstracts": 3,
+      "support_count": 0,
+      "conflict_count": 0,
+      "neutral_count": 3,
+      "abstracts_analyzed": [
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "systematic_review_meta_analysis",
+          "reasoning": "This meta-analysis examines telemedicine/mHealth interventions versus usual care for lowering systolic blood pressure in stroke survivors and reports mean SBP reductions. It does not evaluate an intensive systolic BP target (e.g., <120 mmHg) as the trial intervention/comparator, nor does it report effects on the prespecified outcomes (major cardiovascular events or all-cause mortality) or test whether baseline or on\u2011treatment SBP modifies treatment benefit for those outcomes. Although SBP is the measured endpoint, it is the outcome of the telemedicine interventions rather than an analyzed effect modifier of clinical event risk or absolute treatment benefit as required by the mechanism hypothesis. Therefore the abstract is not relevant to the proposed mechanism linking differences in SBP to changes in absolute treatment benefit for major CV events/mortality.",
+          "evidence_quote": "Compared with the usual care, telemedicine and mHealth had a significantly greater impact on the control of systolic blood pressure (MD -5.49; 95% CI -7.87 to -3.10; P<.001; 95% PI -10.46 to -0.51).",
+          "stance": "neutral",
+          "pmid": "34114961",
+          "title": "Effects of Telemedicine and mHealth on Systolic Blood Pressure Management in Stroke Patients: Systematic Review and Meta-Analysis of Randomized Controlled Trials.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "prospective_cohort",
+          "reasoning": "The abstract evaluates admission systolic blood pressure as a prognostic factor in patients with minor ischemic stroke or high-risk TIA treated with dual antiplatelet therapy (DAPT). It does not test an intensive systolic blood pressure target (<120 mmHg) versus a standard target as an intervention arm (the hypothesized mechanism pertains specifically to treatment effect modification by an intensive BP-target intervention such as in SPRINT). Although SBP is analyzed and predicts outcomes, the study assesses SBP as a baseline prognostic marker in a stroke population receiving DAPT rather than whether an intensive SBP treatment strategy alters absolute treatment benefit for major cardiovascular events or all-cause mortality. Therefore it fails the intervention-match gate and is not relevant to the proposed mechanism.",
+          "evidence_quote": "After IPW, patients with admission SBP \u2a7e124 mm Hg versus <124 mm Hg had a significantly higher risk of 90-day ischemic stroke or other vascular events (adjusted HR: 2.14 (95% CI 1.07%-4.98%); p = 0.033). Subgroup analysis showed a significant interaction between admission SBP, sex, and time to DAPT start in predicting 90-day new vascular events (p for interaction <0.001 and 0.007, respectively).",
+          "stance": "neutral",
+          "pmid": "40322263",
+          "title": "Admission systolic blood pressure and short-term outcomes after dual antiplatelet therapy in patients with minor ischemic stroke or transient ischemic attack.",
+          "analysis_method": "llm_strict_v2"
+        },
+        {
+          "classification": "IRRELEVANT",
+          "confidence": "high",
+          "study_design": "rct_secondary",
+          "reasoning": "Although the trial intervention (intensive vs standard SBP target) and outcomes (cardiovascular events and all-cause mortality) match the trial context, the abstract does not analyze or report subgroup effects by the TARGET FEATURE (Sbp). Instead, the analysis stratifies participants by baseline diastolic blood pressure (DBP) and hs-cTnT. Because the mechanism to be tested specifically concerns baseline systolic blood pressure (Sbp) modifying absolute treatment benefit, the absence of any SBP-based subgroup or interaction analysis means the abstract cannot provide evidence for or against the proposed Sbp-related mechanism. The study is a nonprespecified subgroup analysis of SPRINT (an RCT), so while relevant overall, it is irrelevant for the specific Sbp mechanism.",
+          "evidence_quote": "A total of 8828 participants in SPRINT ... were stratified by baseline DBP. Those with low DBP (<70\u2009mm\u2009Hg) were further stratified by elevated hs-cTnT (\u226514\u2009ng/L) at baseline. Randomization to intensive versus standard BP lowering led to similar reductions in cardiovascular disease risk among individuals with low DBP/high hs-cTnT ..., low DBP/low hs-cTnT ..., and DBP \u226570\u2009mm\u2009Hg (P for interaction=0.20).",
+          "stance": "neutral",
+          "pmid": "38497469",
+          "title": "Intensive Blood Pressure Lowering in Individuals With Low Diastolic Blood Pressure and Elevated Troponin Levels in SPRINT.",
+          "analysis_method": "llm_strict_v2"
+        }
+      ]
+    }
+  ]
+}

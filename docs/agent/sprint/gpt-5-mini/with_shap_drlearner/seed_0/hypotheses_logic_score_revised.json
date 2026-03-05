@@ -1,0 +1,69 @@
+{
+  "scored_features": [
+    {
+      "feature_name": "Sub cvd (sub cvd) (Sub cvd (sub_cvd))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'Sub cvd (sub_cvd)' is listed among the trial_measured_features so the feature is observed in the dataset. G2: TRUE \u2014 the hypothesis specifies plausible pathophysiologic mechanisms (fixed atherothrombotic/pump-failure events less responsive to BP lowering and increased susceptibility to hypotension-related ischemia/decompensation). G3: TRUE \u2014 the hypothesis claims the treatment acts differently (attenuated benefit and increased harm) in patients with prior/active CVD rather than simply more baseline risk, i.e., a plausible effect-modifying pathophysiology is proposed. G4: FALSE \u2014 large RCT subgroup analyses (including SPRINT reports) have not demonstrated robust, consistent treatment-by-prior-CVD interactions for the primary CV composite, so specific trial-backed interaction evidence is lacking; G4 FALSE \u2014 cascade: G5 also FALSE. G5: FALSE \u2014 because G4 failed, there is insufficient literature support to justify a clearly actionable, evidence-based subgroup policy in routine practice.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 FALSE \u2014 although the mechanism is biologically plausible (G2,G3 TRUE), RCT subgroup evidence for a meaningful CVD-by-treatment interaction is lacking, so it fails at the literature-evidence gate.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Sub ckd (sub ckd) (Sub ckd (sub_ckd))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'Sub ckd (sub_ckd)' is present in the trial_measured_features. G2: TRUE \u2014 the mechanism names concrete pathophysiology (eGFR/albuminuria strata, perfusion-pressure\u2013mediated AKI and GFR decline) linking kidney status to differential treatment effects. G3: TRUE \u2014 the hypothesis asserts genuine effect modification (moderate CKD may gain greater CV benefit while advanced CKD may suffer renal harms and reduced net benefit) rather than a pure arithmetic absolute-risk amplifier. G4: FALSE \u2014 existing trial data (including SPRINT CKD subgroup analyses) document increased renal events with intensive lowering but do not provide robust, stage-specific evidence that moderate CKD gains more net CV benefit while advanced CKD is harmed; therefore specific interaction is not well-established; G4 FALSE \u2014 cascade: G5 also FALSE. G5: FALSE \u2014 without solid RCT evidence for a stage-dependent interaction, the subgroup recommendations are not fully evidence-backed for clinical decision rules.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 FALSE \u2014 although CKD-related mechanisms and plausible stage-dependent effects are described (G2/G3 TRUE), the trial literature does not convincingly confirm the specific stage-by-treatment interaction proposed.",
+      "overall_score": 3
+    },
+    {
+      "feature_name": "Race black (race black) (Race black (race_black))",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'Race black (race_black)' is included among measured features. G2: TRUE \u2014 the hypothesis names concrete mediators (medication-class responsiveness, achieved SBP separation, adherence/access) that link race to differential delivery and effect of intensive therapy. G3: FALSE \u2014 the proposal primarily frames race as an aggregate social/implementation marker whose apparent interaction is mediated by achieved BP separation, medication class, and access/adherence rather than asserting a distinct PD/PK or intrinsic biological pathway by which the drug acts differently; therefore this is largely a mediated/absolute-risk/implementation effect rather than a direct treatment effect modifier; G3 FALSE \u2014 cascade: G4 and G5 also FALSE. G4: FALSE \u2014 because G3 failed, the stricter claim of a race-by-treatment biological interaction is not supported by RCT subgroup evidence that isolates an intrinsic differential drug action. G5: FALSE \u2014 without a direct, literature-backed biologic interaction, there is not a clear, evidence-based race-specific treatment rule beyond addressing mediators.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G3 FALSE \u2014 the hypothesis correctly emphasizes mediators (achieved BP, medication class, access) rather than a direct PD/PK difference, so it does not meet the standard for a genuine treatment effect modifier in this framework.",
+      "overall_score": 2
+    },
+    {
+      "feature_name": "Systolic blood pressure (sbp)",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 baseline systolic blood pressure (sbp) is in the trial_measured_features. G2: TRUE \u2014 the hypothesis gives physiologic mechanisms (greater achievable BP reduction, pressure-sensitive event types, arterial stiffness/frailty altering harm thresholds) linking baseline SBP to differential treatment effects. G3: FALSE \u2014 most of the proposed interaction operates through achievable on\u2011treatment SBP separation and baseline absolute risk (an absolute\u2011risk amplifier/mediator) rather than a distinct PD/PK change in how the treatment pharmacologically acts, so it does not clearly qualify as a genuine treatment effect modifier under the strict gate definition; G3 FALSE \u2014 cascade: G4 and G5 also FALSE. G4: FALSE \u2014 RCTs show larger absolute benefits at higher baseline risk/pressure largely explained by greater BP lowering, but they do not robustly demonstrate a biological treatment-by-baseline-SBP interaction beyond this mediator effect. G5: FALSE \u2014 without a specific, literature-proven biological interaction, prescriptive SBP-based treatment rules beyond usual clinical judgment are not fully evidence-backed by RCT interaction data.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": false,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G3 FALSE \u2014 the interaction is primarily driven by achievable BP lowering and baseline absolute risk (mediators), so it fails the requirement for a distinct biological effect-modifying mechanism.",
+      "overall_score": 2
+    },
+    {
+      "feature_name": "age",
+      "hypothesis_id": null,
+      "gate_reasoning": "G1: TRUE \u2014 'age' is a recorded feature in the trial dataset. G2: TRUE \u2014 the hypothesis specifies biologic and physiologic pathways (frailty, physiologic reserve, susceptibility to adverse events like falls/syncope/AKI, competing mortality) that mechanistically link age/frailty to differential net treatment effect. G3: TRUE \u2014 the hypothesis claims a genuine effect modification whereby fitter older adults have greater absolute benefit while frail elders may incur more harms and less benefit, i.e., age operates via physiologic tolerance and competing risks to change the net effect rather than being only an absolute-risk amplifier. G4: FALSE \u2014 although RCTs (including SPRINT) show benefit in older adults overall, robust RCT evidence isolating a consistent age-by-treatment interaction that is moderated specifically by frailty/life expectancy is limited, so the precise age/frailty interaction is not convincingly established in the literature; G4 FALSE \u2014 cascade: G5 also FALSE. G5: FALSE \u2014 because of limited high-quality trial evidence tying age+frailty to differential net benefit, the hypothesis does not yet support a definitive, widely-applicable age-based treatment rule without adding frailty measures and further evidence.",
+      "is_observed_in_data": true,
+      "is_biologically_coherent": true,
+      "is_causally_plausible": true,
+      "is_literature_backed": false,
+      "is_clinically_actionable": false,
+      "is_novel": false,
+      "justification": "Decisive gate: G4 FALSE \u2014 age/frailty mechanisms are plausible and likely modify net effect (G2/G3 TRUE), but RCT evidence specifically confirming an age-by-frailty treatment interaction sufficient to underpin clinical rules is limited.",
+      "overall_score": 3
+    }
+  ]
+}

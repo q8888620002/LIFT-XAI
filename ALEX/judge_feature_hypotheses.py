@@ -31,6 +31,8 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 from src.agent_schemas import ArticleExtraction
 from src.agent_utils import (
+    _convert_hypogenic_to_feature_format,
+    _is_hypogenic_format,
     get_model_client,
     get_trial_metadata,
     infer_revised_path,
@@ -85,6 +87,10 @@ class MechanismScore(BaseModel):
 
 class FeatureHypothesisScoreWithMechanisms(BaseModel):
     feature_name: str = Field(..., description="Feature being scored")
+    hypothesis_id: Optional[str] = Field(
+        None,
+        description="Unique identifier for this hypothesis (used when multiple hypotheses target the same feature)",
+    )
     per_mechanism_scores: List[MechanismScore] = Field(
         ..., description="Scores for each individual mechanism"
     )
@@ -164,9 +170,9 @@ def _build_study_context(
     evidence: dict,
 ) -> dict:
     feature_hypotheses = hypotheses_payload.get("feature_hypotheses", [])
-    n_features = len(feature_hypotheses)
-    n_hypotheses_per_feature = 0
-    if feature_hypotheses:
+    n_features = hypotheses_payload.get("n_unique_features", len({f.get("feature_name") for f in feature_hypotheses}))
+    n_hypotheses_per_feature = hypotheses_payload.get("n_hypotheses_per_feature", 0)
+    if not n_hypotheses_per_feature and feature_hypotheses:
         n_hypotheses_per_feature = max(
             len((feature_hypotheses[0] or {}).get("mechanisms", []) or []),
             0,
@@ -215,7 +221,12 @@ def score_feature_hypotheses(
         "Evaluate each hypothesis on multiple dimensions using a 1-5 scale.\n"
         "Be objective, fair, and constructive.\n"
         "\n"
-        "IMPORTANT: Each hypothesis includes an 'importance_rank' field (1=most important feature).\n"
+        "IMPORTANT: Score EACH hypothesis entry INDIVIDUALLY. Entries may share the same\n"
+        "feature_name when multiple hypotheses target the same feature (e.g. different subgroups).\n"
+        "In your output, copy the 'hypothesis_id' field from each input entry so every scored\n"
+        "result can be traced back to its source hypothesis.\n"
+        "\n"
+        "Each hypothesis includes an 'importance_rank' field (1=most important feature).\n"
         "When evaluating Evidence Alignment, consider whether the RELATIVE RANKING aligns with\n"
         "clinical knowledge. Features ranked higher should be more established effect modifiers\n"
         "according to literature. A mismatch between model ranking and clinical knowledge should\n"
@@ -369,7 +380,11 @@ def main() -> None:
     revised_path = args.revised_json or infer_revised_path(args.hypotheses_json)
 
     hypotheses_payload = load_json_file(args.hypotheses_json)
+    if _is_hypogenic_format(hypotheses_payload):
+        hypotheses_payload = _convert_hypogenic_to_feature_format(hypotheses_payload)
     revised_payload = load_json_file(revised_path) if revised_path and os.path.exists(revised_path) else None
+    if revised_payload and _is_hypogenic_format(revised_payload):
+        revised_payload = _convert_hypogenic_to_feature_format(revised_payload)
 
     trial_meta = get_trial_metadata(args.trial_name) if args.trial_name else None
 
