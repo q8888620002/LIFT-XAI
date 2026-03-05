@@ -2,27 +2,27 @@
 // DO NOT SHARE THIS MAPPING WITH RATERS
 const methodMapping = {
     crash_2: {
-        method_a: 'with_shap_drlearner',
-        method_b: 'hypogenic',
-        method_c: 'cot',
-        method_d: 'researchagent'
+        method_a: 'researchagent',
+        method_b: 'with_shap_drlearner',
+        method_c: 'hypogenic',
+        method_d: 'cot'
     },
     ist3: {
-        method_a: 'cot',
-        method_b: 'with_shap_drlearner',
-        method_c: 'researchagent',
-        method_d: 'hypogenic'
+        method_a: 'hypogenic',
+        method_b: 'cot',
+        method_c: 'with_shap_drlearner',
+        method_d: 'researchagent'
     },
     sprint: {
-        method_a: 'researchagent',
-        method_b: 'cot',
-        method_c: 'hypogenic',
-        method_d: 'with_shap_drlearner'
-    },
-    accord: {
-        method_a: 'hypogenic',
+        method_a: 'cot',
         method_b: 'researchagent',
         method_c: 'with_shap_drlearner',
+        method_d: 'hypogenic'
+    },
+    accord: {
+        method_a: 'with_shap_drlearner',
+        method_b: 'hypogenic',
+        method_c: 'researchagent',
         method_d: 'cot'
     }
 };
