@@ -132,32 +132,27 @@ function getDisplayFeatureName(featureName) {
     return featureNameMap[featureName] || featureName;
 }
 
-// Rating criteria: 5 cascading robustness gates + novelty bonus
+// Rating criteria: 4 robustness gates + novelty bonus
 // Aligned with judge_evaluation.py gate logic
 const ratingGates = [
     {
-        id: 'is_observed_in_data',
-        label: 'Gate 1: Measurement Validity',
-        description: 'Is the hypothesis based on features actively measured in the trial? (TRUE if the proposed feature appears in the trial dataset; FALSE if inferred, derived, or not collected.)'
-    },
-    {
         id: 'is_biologically_coherent',
-        label: 'Gate 2: Biological Logic',
-        description: 'Does the hypothesis name a concrete biological pathway (receptor, enzyme, PK/PD change, cell pathway) that mechanistically connects the feature to differential drug action? FALSE if only a statistical/epidemiological claim, circular reasoning, or biologically incorrect.'
+        label: 'Gate 1: Logical Coherence',
+        description: 'Is the proposed mechanism logically coherent? Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? FALSE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
     },
     {
         id: 'is_causally_plausible',
-        label: 'Gate 3: Genuine HTE vs Statistical Artifact',
+        label: 'Gate 2: Genuine HTE vs Statistical Artifact',
         description: 'Is this a true treatment effect modifier — the drug works differently in this subgroup — rather than a statistical artifact? FALSE if the sole argument is absolute-risk amplification (higher baseline risk × constant RRR), post-treatment variable, reverse causality, or trivial severity proxy.'
     },
     {
         id: 'is_clinically_actionable',
-        label: 'Gate 4: Practical Utility',
+        label: 'Gate 3: Practical Utility',
         description: 'Does this propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
         id: 'is_literature_backed',
-        label: 'Gate 5: External Evidence',
+        label: 'Gate 4: External Evidence',
         description: 'Is this specific feature × treatment interaction supported by published clinical literature (ideally RCT subgroup analyses or meta-analyses)?'
     }
 ];
