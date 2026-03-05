@@ -153,14 +153,14 @@ const ratingGates = [
     {
         id: 'is_literature_backed',
         label: 'Gate 4: External Evidence',
-        description: 'Is this specific feature × treatment interaction supported by published clinical literature (ideally RCT subgroup analyses or meta-analyses)?'
+        description: 'Based on your knowledge, is this specific feature × treatment interaction supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? TRUE if you are aware of supporting evidence; FALSE if you have never encountered this interaction in the literature or clinical practice.'
     }
 ];
 
 const noveltyBonus = {
     id: 'is_novel',
     label: 'Novelty Bonus',
-    description: 'Does this hypothesis identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews? (Does not affect overall score.)'
+    description: 'Does this hypothesis identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
 };
 
 
