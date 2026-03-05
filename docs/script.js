@@ -249,11 +249,39 @@ function normalizeHypotheses(data, method) {
         }));
     }
     // ALEX, CoT, ResearchAgent all use feature_hypotheses array
-    return (data.feature_hypotheses || []).map((h, i) => ({
+    let hypotheses = (data.feature_hypotheses || []).map((h, i) => ({
         feature_name: h.feature_name,
         mechanisms: (h.mechanisms || []).map(m => ({ description: m.description })),
         importance_rank: h.importance_rank || i + 1
     }));
+
+    // For ResearchAgent, split each mechanism into its own card, deduplicate, then sample 5
+    if (method === 'researchagent') {
+        const seen = new Set();
+        const split = [];
+        for (const h of hypotheses) {
+            for (const m of h.mechanisms) {
+                const desc = m.description.trim();
+                if (!seen.has(desc)) {
+                    seen.add(desc);
+                    split.push({
+                        feature_name: h.feature_name,
+                        mechanisms: [{ description: desc }],
+                        importance_rank: 0
+                    });
+                }
+            }
+        }
+        // Shuffle and pick 5
+        for (let i = split.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [split[i], split[j]] = [split[j], split[i]];
+        }
+        hypotheses = split.slice(0, 5);
+        hypotheses.forEach((h, i) => h.importance_rank = i + 1);
+    }
+
+    return hypotheses;
 }
 
 function displayTrialInfo(cohort) {
