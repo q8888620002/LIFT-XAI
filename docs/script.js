@@ -46,7 +46,7 @@ const featureNameMap = {
     'age': 'Age',
     'weight': 'Weight',
     'glucose': 'Blood Glucose',
-    'gcs_score_rand': 'Glasgow Coma Scale Score',
+    'gcs_score_rand': 'GCS',
     'sbprand': 'Systolic Blood Pressure',
     'dbprand': 'Diastolic Blood Pressure',
     'gender': 'Female Gender',
