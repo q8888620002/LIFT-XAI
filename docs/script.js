@@ -24,6 +24,13 @@ const trialInfo = {
         link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939"
     },
     accord: {
+        treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
+        outcome: "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+        population: "Adults with type 2 diabetes and high cardiovascular risk",
+        description: "ACCORD-BP was a randomised trial (N=4,733) embedded within the ACCORD study, comparing intensive systolic BP target (<120 mmHg) to standard target (<140 mmHg) in adults with type 2 diabetes and high cardiovascular risk, conducted at 77 clinical sites across the United States and Canada.",
+        link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286"
+    },
+    accord_glycemia: {
         treatment: "Intensive glycemic control (HbA1c target <6.0%)",
         outcome: "Composite major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
         population: "Adults with type 2 diabetes at high cardiovascular risk",
