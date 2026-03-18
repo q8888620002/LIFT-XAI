@@ -173,8 +173,8 @@ async function loadHypotheses() {
     const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
-    const email = document.getElementById('email-input').value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const raterId = document.getElementById('rater-id-input').value.trim();
+    const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
     if (!cohort) {
         alert('Please select a trial cohort');
@@ -191,8 +191,8 @@ async function loadHypotheses() {
         return;
     }
 
-    if (!email || !emailPattern.test(email)) {
-        alert('Please enter a valid email address');
+    if (!raterId || !raterIdPattern.test(raterId)) {
+        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -)');
         return;
     }
 
@@ -209,7 +209,7 @@ async function loadHypotheses() {
         const hypotheses = normalizeHypotheses(data, ALEX_METHOD);
 
         displayTrialInfo(cohort);
-        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty, email);
+        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty, raterId);
 
     } catch (error) {
         const container = document.getElementById('hypotheses-container');
@@ -283,12 +283,12 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-info').style.display = 'block';
 }
 
-function displayHypotheses(hypotheses, cohort, method, expertise, specialty, email) {
+function displayHypotheses(hypotheses, cohort, method, expertise, specialty, raterId) {
     currentHypotheses = hypotheses;
     ratings = {
         expertise: expertise,
         specialty: specialty,
-        rater_email: email,
+        rater_id: raterId,
         cohort: cohort,
         method: method,
         timestamp: new Date().toISOString(),
@@ -415,8 +415,8 @@ document.getElementById('submit-btn').addEventListener('click', submitRatings);
 function collectRatingsPayload() {
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
-    const email = document.getElementById('email-input').value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const raterId = document.getElementById('rater-id-input').value.trim();
+    const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
     if (!expertise) {
         alert('Please select your clinical expertise level');
@@ -428,12 +428,12 @@ function collectRatingsPayload() {
         return null;
     }
 
-    if (!email || !emailPattern.test(email)) {
-        alert('Please enter a valid email address');
+    if (!raterId || !raterIdPattern.test(raterId)) {
+        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -)');
         return null;
     }
 
-    ratings.rater_email = email;
+    ratings.rater_id = raterId;
 
     // Collect all gate ratings
     ratings.ratings = currentHypotheses.map((hyp, index) => {

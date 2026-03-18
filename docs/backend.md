@@ -2,7 +2,7 @@
 
 This docs UI can submit ratings directly to a backend endpoint, so users do not need to download JSON files.
 
-This setup uses typed email identity only (no auth login flow). Users enter their email in the form, and that value is included as `rater_email` in each submission.
+This setup uses anonymous ID only (no auth login flow). Users enter an anonymous ID in the form, and that value is included as `rater_id` in each submission.
 
 ## Minimal backend for GitHub Pages
 
@@ -71,7 +71,7 @@ python tools/ratings_server.py --out-dir data/ratings_submissions
 - API base URL is configured in [docs/config.js](config.js).
 - Local default is `http://localhost:8000`.
 - For github.io, set this to your HTTPS worker URL.
-- Required payload fields include: `cohort`, `method`, `expertise`, `specialty`, `rater_email`, and `ratings`.
+- Required payload fields include: `cohort`, `method`, `expertise`, `specialty`, `rater_id`, and `ratings`.
 
 ```js
 window.RATINGS_API_BASE_URL = "https://your-api-host";

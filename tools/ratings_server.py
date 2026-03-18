@@ -31,8 +31,8 @@ def _safe_slug(text: str) -> str:
     return cleaned or "unknown"
 
 
-def _is_valid_email(value: str) -> bool:
-    return bool(re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", value))
+def _is_valid_rater_id(value: str) -> bool:
+    return bool(re.match(r"^[a-zA-Z0-9_-]{3,64}$", value))
 
 
 class RatingsAPIHandler(BaseHTTPRequestHandler):
@@ -87,7 +87,7 @@ class RatingsAPIHandler(BaseHTTPRequestHandler):
             self._write_json(HTTPStatus.BAD_REQUEST, {"error": "Request body must be valid JSON"})
             return
 
-        required = ["cohort", "method", "expertise", "specialty", "rater_email", "ratings"]
+        required = ["cohort", "method", "expertise", "specialty", "rater_id", "ratings"]
         missing = [key for key in required if key not in data]
         if missing:
             self._write_json(
@@ -96,8 +96,8 @@ class RatingsAPIHandler(BaseHTTPRequestHandler):
             )
             return
 
-        if not _is_valid_email(str(data.get("rater_email", ""))):
-            self._write_json(HTTPStatus.BAD_REQUEST, {"error": "Invalid rater_email"})
+        if not _is_valid_rater_id(str(data.get("rater_id", ""))):
+            self._write_json(HTTPStatus.BAD_REQUEST, {"error": "Invalid rater_id"})
             return
 
         submission_id = str(uuid.uuid4())

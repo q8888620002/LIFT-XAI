@@ -1,6 +1,6 @@
 export default {
   async fetch(request, env) {
-    const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || ""));
+    const isValidRaterId = (value) => /^[a-zA-Z0-9_-]{3,64}$/.test(String(value || ""));
 
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
@@ -33,7 +33,7 @@ export default {
         });
       }
 
-      const required = ["cohort", "method", "expertise", "specialty", "rater_email", "ratings"];
+      const required = ["cohort", "method", "expertise", "specialty", "rater_id", "ratings"];
       const missing = required.filter((k) => !(k in data));
       if (missing.length > 0) {
         return new Response(
@@ -42,8 +42,8 @@ export default {
         );
       }
 
-      if (!isValidEmail(data.rater_email)) {
-        return new Response(JSON.stringify({ error: "Invalid rater_email" }), {
+      if (!isValidRaterId(data.rater_id)) {
+        return new Response(JSON.stringify({ error: "Invalid rater_id" }), {
           status: 400,
           headers: corsHeaders,
         });
