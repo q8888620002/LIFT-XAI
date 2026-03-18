@@ -435,6 +435,8 @@ function collectRatingsPayload() {
 
     ratings.rater_id = raterId;
 
+    const missingQuestions = [];
+
     // Collect all gate ratings
     ratings.ratings = currentHypotheses.map((hyp, index) => {
         const featureRating = {
@@ -443,7 +445,6 @@ function collectRatingsPayload() {
         };
 
         // Collect gate values
-        let allRated = true;
         ratingGates.forEach(gate => {
             const trueBtn = document.getElementById(`${gate.id}-${index}-true`);
             if (trueBtn.classList.contains('active')) {
@@ -454,7 +455,12 @@ function collectRatingsPayload() {
                     featureRating[gate.id] = false;
                 } else {
                     featureRating[gate.id] = null;
-                    allRated = false;
+                    missingQuestions.push({
+                        index,
+                        gateId: gate.id,
+                        label: gate.label,
+                        featureName: getDisplayFeatureName(hyp.feature_name),
+                    });
                 }
             }
         });
@@ -468,6 +474,12 @@ function collectRatingsPayload() {
             featureRating[noveltyBonus.id] = false;
         } else {
             featureRating[noveltyBonus.id] = null;
+            missingQuestions.push({
+                index,
+                gateId: noveltyBonus.id,
+                label: noveltyBonus.label,
+                featureName: getDisplayFeatureName(hyp.feature_name),
+            });
         }
 
         // Collect comments
@@ -478,6 +490,20 @@ function collectRatingsPayload() {
 
         return featureRating;
     });
+
+    if (missingQuestions.length > 0) {
+        const firstMissing = missingQuestions[0];
+        const targetEl = document.getElementById(`${firstMissing.gateId}-${firstMissing.index}-status`);
+        if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        alert(
+            `Please answer all questions before submitting. ` +
+            `First missing: ${firstMissing.label} for ${firstMissing.featureName}.`
+        );
+        return null;
+    }
 
     return ratings;
 }
