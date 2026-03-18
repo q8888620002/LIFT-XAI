@@ -158,6 +158,8 @@ const noveltyBonus = {
     description: 'Does this hypothesis identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
 };
 
+const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
+
 
 
 let currentHypotheses = [];
@@ -171,6 +173,8 @@ async function loadHypotheses() {
     const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
+    const email = document.getElementById('email-input').value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!cohort) {
         alert('Please select a trial cohort');
@@ -187,6 +191,11 @@ async function loadHypotheses() {
         return;
     }
 
+    if (!email || !emailPattern.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+
     const filePath = `agent/${cohort}/gpt-5-mini/${ALEX_METHOD}/seed_0/hypotheses.json`;
 
     try {
@@ -200,7 +209,7 @@ async function loadHypotheses() {
         const hypotheses = normalizeHypotheses(data, ALEX_METHOD);
 
         displayTrialInfo(cohort);
-        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty);
+        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty, email);
 
     } catch (error) {
         const container = document.getElementById('hypotheses-container');
@@ -274,11 +283,12 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-info').style.display = 'block';
 }
 
-function displayHypotheses(hypotheses, cohort, method, expertise, specialty) {
+function displayHypotheses(hypotheses, cohort, method, expertise, specialty, email) {
     currentHypotheses = hypotheses;
     ratings = {
         expertise: expertise,
         specialty: specialty,
+        rater_email: email,
         cohort: cohort,
         method: method,
         timestamp: new Date().toISOString(),
@@ -399,22 +409,31 @@ function setGate(gateId, hypIndex, value) {
     falseBtn.dataset.value = value ? '' : 'false';
 }
 
-// Export ratings
-document.getElementById('export-btn').addEventListener('click', exportRatings);
+// Submit ratings
+document.getElementById('submit-btn').addEventListener('click', submitRatings);
 
-function exportRatings() {
+function collectRatingsPayload() {
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
+    const email = document.getElementById('email-input').value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!expertise) {
         alert('Please select your clinical expertise level');
-        return;
+        return null;
     }
 
     if (!specialty) {
         alert('Please enter your specialty');
-        return;
+        return null;
     }
+
+    if (!email || !emailPattern.test(email)) {
+        alert('Please enter a valid email address');
+        return null;
+    }
+
+    ratings.rater_email = email;
 
     // Collect all gate ratings
     ratings.ratings = currentHypotheses.map((hyp, index) => {
@@ -460,17 +479,43 @@ function exportRatings() {
         return featureRating;
     });
 
-    // Create download
-    const dataStr = JSON.stringify(ratings, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
+    return ratings;
+}
 
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ratings_${ratings.cohort}_${ratings.method}_${Date.now()}.json`;
-    link.click();
+async function submitRatings() {
+    const payload = collectRatingsPayload();
+    if (!payload) {
+        return;
+    }
 
-    URL.revokeObjectURL(url);
+    const submitBtn = document.getElementById('submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
 
-    alert('Ratings exported successfully! Please submit the downloaded JSON file.');
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/ratings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const body = await response.text();
+            throw new Error(`Submit failed (${response.status}): ${body}`);
+        }
+
+        const result = await response.json();
+        alert(`Ratings submitted successfully. Submission ID: ${result.submission_id}`);
+    } catch (error) {
+        alert(
+            `Could not submit ratings to backend at ${API_BASE_URL}. ` +
+            `Please make sure the ratings server is running.\n\nError: ${error.message}`
+        );
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
 }

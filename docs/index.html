@@ -48,6 +48,11 @@
                 </select>
             </div>
 
+            <div class="control-group">
+                <label for="email-input">Email:</label>
+                <input type="email" id="email-input" placeholder="name@example.com" required>
+            </div>
+
             <button id="load-btn" class="btn btn-primary">Load Hypotheses</button>
         </div>
 
@@ -63,11 +68,12 @@
         <div id="hypotheses-container"></div>
 
         <div id="summary-section" style="display: none;">
-            <button id="export-btn" class="btn btn-success">Export Ratings as JSON</button>
-            <p class="help-text">Click to download your ratings for submission</p>
+            <button id="submit-btn" class="btn btn-success">Submit Ratings</button>
+            <p class="help-text">Click to submit your ratings directly</p>
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
