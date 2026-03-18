@@ -1,10 +1,14 @@
+import os
 import pickle
 
 import numpy as np
 from catenets.datasets import load as catenets_load
 
 from src.interpretability.datasets.news.process_news import process_news
-from src.interpretability.datasets.tcga.process_tcga import process_tcga
+from src.interpretability.datasets.tcga.download_and_preprocess import download_and_preprocess
+
+# Project-relative TCGA directory
+_TCGA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "data", "tcga")
 
 
 def normalize_data(X):
@@ -15,21 +19,24 @@ def normalize_data(X):
 
 def load(dataset_name: str, train_ratio: float = 1.0, val_set: bool = False):
     if "tcga" in dataset_name:
+        # e.g. dataset_name = "tcga_100" or "tcga_10"
+        tcga_path = os.path.join(_TCGA_DIR, dataset_name + ".p")
+        # Extract gene count from name (default 100)
+        max_genes = int(dataset_name.split("_")[-1]) if "_" in dataset_name else 100
+        if not os.path.exists(tcga_path):
+            download_and_preprocess(max_genes=max_genes, out_dir=_TCGA_DIR)
+
         try:
-            tcga_dataset = pickle.load(
-                open(
-                    "/data/tcga/" + str(dataset_name) + ".p",
-                    "rb",
-                )
-            )
-        except:
-            process_tcga(max_num_genes=100, file_location="/data/tcga/")
-            tcga_dataset = pickle.load(
-                open(
-                    "/data/tcga/tcga_100.p",
-                    "rb",
-                )
-            )
+            with open(tcga_path, "rb") as f:
+                tcga_dataset = pickle.load(f)
+        except (EOFError, pickle.UnpicklingError):
+            # Parallel preprocessing can leave a stale/corrupt artifact from older runs.
+            # Rebuild once and retry loading.
+            if os.path.exists(tcga_path):
+                os.remove(tcga_path)
+            download_and_preprocess(max_genes=max_genes, out_dir=_TCGA_DIR)
+            with open(tcga_path, "rb") as f:
+                tcga_dataset = pickle.load(f)
         X_raw = tcga_dataset["rnaseq"]
     elif "news" in dataset_name:
         try:

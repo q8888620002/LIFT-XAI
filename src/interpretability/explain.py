@@ -27,6 +27,26 @@ from torch import nn
 # DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
+class _SqueezeWrapper(nn.Module):
+    """Wraps a model that outputs [N, 1] to output [N] for captum compatibility."""
+
+    def __init__(self, model: nn.Module):
+        super().__init__()
+        self.model = model
+
+    def forward(self, *args, **kwargs):
+        # Force eval mode so BatchNorm works with any batch size.
+        # Do NOT use torch.no_grad() — gradient-based methods need grads.
+        was_training = self.model.training
+        self.model.eval()
+        out = self.model(*args, **kwargs)
+        if was_training:
+            self.model.train()
+        if out.dim() > 1 and out.shape[-1] == 1:
+            out = out.squeeze(-1)
+        return out
+
+
 class Explainer:
     """Explainer instance."""
 
@@ -43,16 +63,26 @@ class Explainer:
             "lime",
         ],
         n_steps: int = 500,
-        perturbations_per_eval: int = 1,
-        n_samples: int = 1000,
+        perturbations_per_eval: int = 50,
+        n_samples: int = 2500,
+        n_baselines: int = 25,
         kernel_width: float = 1.0,
         baseline: Optional[torch.Tensor] = None,
+        x_train: Optional[np.ndarray] = None,
     ) -> None:
 
-        self.device = model.device
+        # Infer device from model parameters; fall back to CPU
+        try:
+            self.device = next(model.parameters()).device
+        except (StopIteration, AttributeError):
+            self.device = torch.device("cpu")
         self.baseline = baseline
+        self.x_train = x_train
         self.explainer_list = explainer_list
         self.feature_names = feature_names
+
+        # Wrap model so output is [N] instead of [N, 1] for captum
+        model = _SqueezeWrapper(model)
 
         # Feature ablation
         feature_ablation_model = FeatureAblation(model)
@@ -165,11 +195,9 @@ class Explainer:
             with torch.no_grad():
                 x_hat = model.predict(x_test).flatten().detach().cpu().numpy()
                 score = qini_auc_score(self.y_test, x_hat, self.w_test)
-                import ipdb
 
-                ipdb.set_trace()
                 score = self._check_tensor(score)
-                return score
+                return score  # pragma: no cover – unused legacy code
 
         # Initialize Shapley Value Sampling model
         # shapley_value_sampling_model = ShapleyValueSampling(qini_score_wrapper)
@@ -187,16 +215,36 @@ class Explainer:
                 show_progress=True,
             )
 
-        # Marginal shapley value sampling
+        # Marginal shapley value sampling — average over n_baselines
 
         def marginal_shapley_value_sampling_cbk(x_test: torch.Tensor) -> torch.Tensor:
-            return shapley_value_sampling_model.attribute(
-                x_test,
-                n_samples=n_samples,
-                perturbations_per_eval=perturbations_per_eval,
-                baselines=self.baseline,
-                show_progress=True,
-            )
+            if self.x_train is None:
+                # Fall back to single zero-baseline call
+                return shapley_value_sampling_model.attribute(
+                    x_test,
+                    n_samples=n_samples,
+                    perturbations_per_eval=perturbations_per_eval,
+                    baselines=self.baseline,
+                    show_progress=True,
+                )
+
+            # Average attributions over n_baselines sampled from training data
+            n_test = x_test.shape[0]
+            accum = torch.zeros_like(x_test)
+            for b in range(n_baselines):
+                indices = np.random.choice(len(self.x_train), size=n_test, replace=True)
+                train_baselines = self._check_tensor(
+                    torch.from_numpy(np.asarray(self.x_train[indices])).float()
+                )
+                attr = shapley_value_sampling_model.attribute(
+                    x_test,
+                    n_samples=n_samples,
+                    perturbations_per_eval=perturbations_per_eval,
+                    baselines=train_baselines,
+                    show_progress=True,
+                )
+                accum += attr
+            return accum / n_baselines
 
         # Kernel SHAP
         kernel_shap_model = KernelShap(model)
@@ -269,18 +317,18 @@ class Explainer:
         else:
             return torch.from_numpy(np.asarray(X)).float().to(self.device)
 
-    def explain(self, X: torch.Tensor, W: torch.Tensor, Y: torch.Tensor) -> Dict:
+    def explain(self, X: torch.Tensor, W: torch.Tensor = None, Y: torch.Tensor = None) -> Dict:
         output = {}
-
-        if self.baseline is None:
-            self.baseline = torch.zeros(
-                X.shape
-            )  # Zero tensor as baseline if no baseline specified
-        else:
-            self.baseline = self._check_tensor(self.baseline)
 
         x_test = self._check_tensor(X)
         x_test.requires_grad_()
+
+        if self.baseline is None:
+            self.baseline = torch.zeros(
+                x_test.shape, device=self.device
+            )  # Zero tensor as baseline if no baseline specified
+        else:
+            self.baseline = self._check_tensor(self.baseline)
 
         self.w_test = W
         self.y_test = Y

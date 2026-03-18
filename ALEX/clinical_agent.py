@@ -460,6 +460,14 @@ def _normalize_verification_dict(data: dict) -> dict:
     # overall_verdict: free text → literal
     data["overall_verdict"] = _fix3(data.get("overall_verdict", ""), _VERDICT3, "revise")
 
+    # summary: required string — default to empty string if missing
+    if not data.get("summary"):
+        data["summary"] = ""
+
+    # per_feature: required list — default to empty list if missing/None
+    if data.get("per_feature") is None:
+        data["per_feature"] = []
+
     # per_feature: dict keyed by feature_name → list
     pf = data.get("per_feature", [])
     if isinstance(pf, dict):
@@ -568,6 +576,23 @@ def _extract_json_from_content(content: str, response_format: Type[_T]) -> _T:
     return response_format.model_validate(data)
 
 
+def _token_limit_kwarg(model_name: str, client: OpenAI, limit: int = 16384) -> dict:
+    """Return the correct max-token parameter for the model/provider.
+
+    Newer OpenAI models (gpt-5*, o1*, o3*, o4*) require 'max_completion_tokens'.
+    Older models, OpenRouter, and MedGemma still use 'max_tokens'.
+    """
+    is_openrouter = getattr(client, '_base_url', None) and 'openrouter' in str(client._base_url)
+    is_medgemma = getattr(client, '_is_medgemma', False)
+    model_lower = model_name.lower()
+
+    # Use max_completion_tokens for native OpenAI models that require it
+    _new_style = ('gpt-5', 'gpt-4.1', 'o1', 'o3', 'o4')
+    if not is_openrouter and not is_medgemma and any(model_lower.startswith(p) for p in _new_style):
+        return {"max_completion_tokens": limit}
+    return {"max_tokens": limit}
+
+
 def _parse_structured(
     client: OpenAI,
     model_name: str,
@@ -594,7 +619,7 @@ def _parse_structured(
                 model=model_name,
                 messages=messages,
                 response_format=response_format,
-                max_tokens=16384,
+                **_token_limit_kwarg(model_name, client),
             )
             parsed = completion.choices[0].message.parsed
             if parsed is not None:
@@ -624,7 +649,7 @@ def _parse_structured(
     kwargs: dict = dict(
         model=model_name,
         messages=augmented,
-        max_tokens=16384,
+        **_token_limit_kwarg(model_name, client),
     )
     if extra_body:
         kwargs["extra_body"] = extra_body
@@ -778,23 +803,46 @@ def generate_feature_hypotheses(
     n_mechanisms = study_context.get("n_hypotheses_per_feature", 3)
     n_features = study_context.get("n_features", len(top_features) if top_features else 5)
 
+    # Check if SHAP directional info is available
+    has_shap_direction = (
+        top_features
+        and any(
+            item.get("shap_mean") is not None and item.get("shap_mean") != 0
+            for item in top_features
+        )
+    )
+
+    task_constraints = [
+        f"Generate hypotheses for the top {n_features} features.",
+        f"For each feature, provide exactly {n_mechanisms} hypothesis description(s) in the 'mechanisms' list.",
+        "Each hypothesis description should explain how the feature modifies the TREATMENT EFFECT.",
+        "Ensure 'effect_direction' describes how the feature changes the TREATMENT BENEFIT (e.g., 'Positive' = Feature increases benefit).",
+    ]
+
+    if has_shap_direction:
+        task_constraints.append(
+            "DIRECTIONAL CONSISTENCY: Each feature in data_to_interpret has a 'shap_mean' (signed) field. "
+            "A negative shap_mean means higher values of the feature are associated with a MORE NEGATIVE treatment effect (less benefit or more harm from treatment). "
+            "A positive shap_mean means higher values are associated with a MORE POSITIVE treatment effect (more benefit from treatment). "
+            "Your hypothesis direction MUST be consistent with the shap_mean sign. "
+            "For example, if shap_mean is negative for serum creatinine, your hypothesis should explain why HIGHER creatinine leads to LESS benefit from treatment (not more)."
+        )
+
+    task_constraints.extend([
+        "CRITICAL — interaction framing: each mechanism description must answer 'which subgroup benefits MORE (or LESS) from the treatment and WHY the magnitude of treatment effect differs.' "
+        "It must NOT be a prognostic statement about the feature's effect on outcome regardless of treatment. "
+        "BAD: 'Time from sepsis onset may affect treatment efficacy.' "
+        "GOOD: 'Patients with septic shock treated within 1h of presentation benefit more from broad-spectrum antibiotics because early source control prevents progression to multi-organ failure; delayed treatment beyond 3h allows the systemic inflammatory cascade to become self-sustaining, substantially attenuating the absolute survival benefit.' "
+        "PRECISION: avoid oversimplified monotone claims. If the interaction is moderated by a second factor (e.g., age × comorbidity, eGFR × diabetes duration, LDL × CVD history), "
+        "describe the joint subgroup precisely. "
+        "BAD: 'Older patients benefit less from statin therapy.' "
+        "GOOD: 'Older patients WITHOUT prior CVD benefit less in absolute terms due to competing mortality risks; older patients WITH CVD still benefit substantially — the age-treatment interaction is moderated by CVD burden, not a uniform attenuation.'",
+    ])
+
     user_prompt = {
         "study_context": study_context,
         "data_to_interpret": top_features if top_features else "NONE (Blinded Mode)",
-        "task_constraints": [
-            f"Generate hypotheses for the top {n_features} features.",
-            f"For each feature, provide exactly {n_mechanisms} hypothesis description(s) in the 'mechanisms' list.",
-            "Each hypothesis description should explain how the feature modifies the TREATMENT EFFECT.",
-            "Ensure 'effect_direction' describes how the feature changes the TREATMENT BENEFIT (e.g., 'Positive' = Feature increases benefit).",
-            "CRITICAL — interaction framing: each mechanism description must answer 'which subgroup benefits MORE (or LESS) from the treatment and WHY the magnitude of treatment effect differs.' "
-            "It must NOT be a prognostic statement about the feature's effect on outcome regardless of treatment. "
-            "BAD: 'Time from sepsis onset may affect treatment efficacy.' "
-            "GOOD: 'Patients with septic shock treated within 1h of presentation benefit more from broad-spectrum antibiotics because early source control prevents progression to multi-organ failure; delayed treatment beyond 3h allows the systemic inflammatory cascade to become self-sustaining, substantially attenuating the absolute survival benefit.' "
-            "PRECISION: avoid oversimplified monotone claims. If the interaction is moderated by a second factor (e.g., age × comorbidity, eGFR × diabetes duration, LDL × CVD history), "
-            "describe the joint subgroup precisely. "
-            "BAD: 'Older patients benefit less from statin therapy.' "
-            "GOOD: 'Older patients WITHOUT prior CVD benefit less in absolute terms due to competing mortality risks; older patients WITH CVD still benefit substantially — the age-treatment interaction is moderated by CVD burden, not a uniform attenuation.'",
-        ]
+        "task_constraints": task_constraints,
     }
 
     try:

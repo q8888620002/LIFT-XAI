@@ -113,6 +113,35 @@ DATASET_KNOWN_FEATURES: Dict[str, List[str]] = {
         "cpk",
         "uacr",
     ],
+    "accord_glycemia": [
+        "baseline_age",
+        "bmi",
+        "hba1c",
+        "yrsdiab",
+        "sbp",
+        "dbp",
+        "hr",
+        "fpg",
+        "alt",
+        "cpk",
+        "potassium",
+        "gfr",
+        "uacr",
+        "trig",
+        "ldl",
+        "hdl",
+        "bp_med",
+        "dm_med",
+        "female",
+        "raceclass",
+        "cvd_hx_baseline",
+        "insulin",
+        "statin",
+        "aspirin",
+        "antiarrhythmic",
+        "anti_coag",
+        "x4smoke",
+    ],
 }
 
 
@@ -238,6 +267,12 @@ def get_trial_metadata(trial_name: str) -> dict:
             "population": "Adults with type 2 diabetes and high cardiovascular risk",
             "article_query": "ACCORD BP trial intensive blood pressure control diabetes 2010",
         },
+        "accord_glycemia": {
+            "treatment": "Intensive glycemic control (target HbA1c <6.0%)",
+            "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+            "population": "Adults with type 2 diabetes and high cardiovascular risk",
+            "article_query": "ACCORD glycemia trial intensive glucose lowering type 2 diabetes 2008",
+        },
         "txa": {
             "treatment": "Pre-hospital tranexamic acid (TXA) administration",
             "outcome": "Survival (in-hospital mortality status)",
@@ -286,11 +321,17 @@ class _MedGemmaCompletions:
     def create(self, *, model: str = "", messages: list, max_tokens: int = 4096, **kwargs) -> _MedGemmaCompletion:
         # Cap max_new_tokens to a practical limit for local inference
         capped_tokens = min(max_tokens, 8192)
+        # Use sampling with temperature=1.0 to match the stochastic behaviour of
+        # API-based models (GPT, Gemini, Qwen).  Pass through an optional seed so
+        # callers can control reproducibility per run.
+        seed = kwargs.get("seed", None)
         output = self._pipe(
             messages,
             max_new_tokens=capped_tokens,
             return_full_text=False,
-            do_sample=False,          # greedy decoding for reliable JSON
+            do_sample=True,
+            temperature=1.0,
+            **({"seed": seed} if seed is not None else {}),
         )
         # HF pipeline returns list; last generated message is assistant reply
         generated = output[0]["generated_text"]
@@ -489,6 +530,7 @@ def search_and_extract_article(
         "crash_2": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(10)60835-5/fulltext",
         "sprint": "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939",
         "accord": "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286",
+        "accord_glycemia": "https://www.nejm.org/doi/full/10.1056/NEJMoa0802743",
     }
 
     trial_lower = trial_name.lower()

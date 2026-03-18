@@ -9,7 +9,6 @@ import pandas as pd
 import seaborn as sns
 import torch
 import xgboost as xgb
-from catenets.models.torch import pseudo_outcome_nets
 from matplotlib.lines import Line2D
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.metrics import mean_squared_error
@@ -241,7 +240,7 @@ def attribution_accuracy(
 def attribution_insertion_deletion(
     x_test: np.ndarray,
     rank_indices: list,
-    pate_model: pseudo_outcome_nets.PseudoOutcomeLearnerMask,
+    pate_model,  # expects a model with .predict(X=..., M=...) interface
 ) -> tuple:
     """
     Compute partial average treatment effect (PATE) with feature subsets by insertion and deletion

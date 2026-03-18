@@ -105,6 +105,19 @@ def resolve_seeded_output_path(output_path: str, seed: int) -> str:
 _T = TypeVar("_T")
 _NO_STRUCTURED = ('qwen', 'deepseek', 'llama', 'mistral', 'mixtral')
 
+# Models that require max_completion_tokens instead of max_tokens
+_NEW_OPENAI_PREFIXES = ('gpt-5', 'gpt-4.1', 'o1', 'o3', 'o4')
+
+def _token_limit_kwarg(model_name: str, client, limit: int = 16384) -> dict:
+    """Return the right token-limit kwarg for the model."""
+    is_openrouter = getattr(client, '_base_url', None) and 'openrouter' in str(client._base_url)
+    is_medgemma = getattr(client, '_is_medgemma', False)
+    if not is_openrouter and not is_medgemma:
+        ml = model_name.lower()
+        if any(ml.startswith(p) for p in _NEW_OPENAI_PREFIXES):
+            return {"max_completion_tokens": limit}
+    return {"max_tokens": limit}
+
 
 def _fix_unescaped_quotes(text: str) -> str:
     """Escape double-quotes that appear *inside* JSON string values.
@@ -390,7 +403,7 @@ def _parse_structured(
                 model=model_name,
                 messages=messages,
                 response_format=response_format,
-                max_tokens=16384,
+                **_token_limit_kwarg(model_name, client),
             )
             parsed = completion.choices[0].message.parsed
             if parsed is not None:
@@ -414,7 +427,7 @@ def _parse_structured(
     extra_body: dict = {}
     if is_openrouter:
         extra_body["reasoning"] = {"effort": "none"}
-    kwargs: dict = dict(model=model_name, messages=augmented, max_tokens=16384)
+    kwargs: dict = dict(model=model_name, messages=augmented, **_token_limit_kwarg(model_name, client))
     if extra_body:
         kwargs["extra_body"] = extra_body
     fallback = client.chat.completions.create(**kwargs)
@@ -554,6 +567,11 @@ def get_trial_metadata(trial_name: str) -> dict:
         },
         "accord": {
             "treatment": "Intensive blood pressure control (systolic BP target <120 mmHg)",
+            "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+            "population": "Adults with type 2 diabetes and high cardiovascular risk",
+        },
+        "accord_glycemia": {
+            "treatment": "Intensive glycemic control (target HbA1c <6.0%)",
             "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
             "population": "Adults with type 2 diabetes and high cardiovascular risk",
         },

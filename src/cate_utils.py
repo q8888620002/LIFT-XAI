@@ -107,6 +107,8 @@ def qini_score(
     test_data: tuple,
     teacher,
     model_type: str,
+    tau_tr: np.ndarray = None,
+    tau_te: np.ndarray = None,
 ):
     """
     Distill teacher CATE onto top-k features and return:
@@ -120,9 +122,11 @@ def qini_score(
     if idx.size == 0 or idx.min() < 0 or idx.max() >= p:
         raise ValueError(f"Invalid feature indices: {idx}")
 
-    # 1) Teacher targets (fixed)
-    tau_tr = _predict_teacher(teacher, x_tr, model_type)
-    tau_te = _predict_teacher(teacher, x_te, model_type)
+    # 1) Teacher targets (precompute once outside when calling in a loop)
+    if tau_tr is None:
+        tau_tr = _predict_teacher(teacher, x_tr, model_type)
+    if tau_te is None:
+        tau_te = _predict_teacher(teacher, x_te, model_type)
 
     # 2) Student: Ridge regression on teacher targets (no w_tr / y_tr)
     student = make_pipeline(

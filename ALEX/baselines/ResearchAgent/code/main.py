@@ -38,6 +38,13 @@ TRIAL_PAPERS = {
             'ACCORD BP compared intensive versus standard blood pressure targets in high-risk adults with type 2 diabetes. '
             'It evaluated major cardiovascular outcomes and mortality and reported subgroup-relevant heterogeneity patterns.'
         )
+    },
+    'accord_glycemia': {
+        'title': 'Effects of Intensive Glucose Lowering in Type 2 Diabetes (ACCORD Glycemia)',
+        'abstract': (
+            'ACCORD Glycemia compared intensive versus standard glycemic control (HbA1c <6.0% vs 7.0-7.9%) in high-risk adults with type 2 diabetes. '
+            'It evaluated major cardiovascular outcomes and mortality and reported treatment effect heterogeneity across baseline characteristics.'
+        )
     }
 }
 
@@ -47,6 +54,7 @@ DEFAULT_FEATURE_BY_TRIAL = {
     'crash_2': 'ninjurytime',
     'sprint': 'sbp',
     'accord': 'sbp',
+    'accord_glycemia': 'hba1c',
 }
 
 
@@ -91,6 +99,18 @@ FEATURE_CUES_BY_TRIAL = {
         'fpg': ['fasting plasma glucose', 'fpg'],
         'sub_cvd': ['cvd', 'cardiovascular disease'],
         'sub_ckd': ['ckd', 'chronic kidney disease'],
+    },
+    'accord_glycemia': {
+        'hba1c': ['hba1c', 'glycated hemoglobin', 'glycemic control'],
+        'baseline_age': ['age', 'elderly', 'older'],
+        'bmi': ['bmi', 'body mass index', 'obesity'],
+        'yrsdiab': ['diabetes duration', 'years of diabetes'],
+        'sbp': ['systolic blood pressure', 'sbp', 'blood pressure'],
+        'fpg': ['fasting plasma glucose', 'fpg', 'glucose'],
+        'gfr': ['gfr', 'egfr', 'renal function'],
+        'insulin': ['insulin', 'insulin therapy'],
+        'dm_med': ['diabetes medication', 'oral hypoglycemic'],
+        'cvd_hx_baseline': ['cvd history', 'cardiovascular history', 'prior cardiovascular'],
     },
 }
 

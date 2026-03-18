@@ -1,31 +1,4 @@
-// Blinded method mapping (randomized per cohort to prevent systematic bias)
-// DO NOT SHARE THIS MAPPING WITH RATERS
-const methodMapping = {
-    crash_2: {
-        method_a: 'researchagent',
-        method_b: 'with_shap_drlearner',
-        method_c: 'hypogenic',
-        method_d: 'cot'
-    },
-    ist3: {
-        method_a: 'hypogenic',
-        method_b: 'cot',
-        method_c: 'with_shap_drlearner',
-        method_d: 'researchagent'
-    },
-    sprint: {
-        method_a: 'cot',
-        method_b: 'researchagent',
-        method_c: 'with_shap_drlearner',
-        method_d: 'hypogenic'
-    },
-    accord: {
-        method_a: 'with_shap_drlearner',
-        method_b: 'hypogenic',
-        method_c: 'researchagent',
-        method_d: 'cot'
-    }
-};
+const ALEX_METHOD = 'with_shap_drlearner';
 
 // Trial metadata
 const trialInfo = {
@@ -51,11 +24,11 @@ const trialInfo = {
         link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939"
     },
     accord: {
-        treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
-        outcome: "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
-        population: "Adults with type 2 diabetes and high cardiovascular risk",
-        description: "ACCORD-BP was a randomised trial (N=4,733) embedded within the ACCORD study, comparing intensive systolic BP target (<120 mmHg) to standard target (<140 mmHg) in adults with type 2 diabetes and high cardiovascular risk, conducted at 77 clinical sites across the United States and Canada.",
-        link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286"
+        treatment: "Intensive glycemic control (HbA1c target <6.0%)",
+        outcome: "Composite major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+        population: "Adults with type 2 diabetes at high cardiovascular risk",
+        description: "ACCORD Glycemia was a randomized trial evaluating intensive glucose lowering (target HbA1c <6.0%) versus standard therapy in adults with type 2 diabetes at high cardiovascular risk, with planned follow-up for cardiovascular outcomes.",
+        link: "https://www.nejm.org/doi/full/10.1056/NEJMoa0802743"
     }
 };
 
@@ -188,7 +161,7 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
     const cohort = document.getElementById('cohort-select').value;
-    const methodBlind = document.getElementById('method-select').value;
+    const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
 
@@ -207,9 +180,7 @@ async function loadHypotheses() {
         return;
     }
 
-    // Map blinded label to actual method based on cohort
-    const method = methodMapping[cohort][methodBlind];
-    const filePath = `agent/${cohort}/gpt-5-mini/${method}/seed_0/hypotheses.json`;
+    const filePath = `agent/${cohort}/gpt-5-mini/${ALEX_METHOD}/seed_0/hypotheses.json`;
 
     try {
         const response = await fetch(filePath);
@@ -219,10 +190,10 @@ async function loadHypotheses() {
         const data = await response.json();
 
         // Normalize different JSON formats into unified hypothesis list
-        const hypotheses = normalizeHypotheses(data, method);
+        const hypotheses = normalizeHypotheses(data, ALEX_METHOD);
 
         displayTrialInfo(cohort);
-        displayHypotheses(hypotheses, cohort, methodBlind, expertise, specialty);
+        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty);
 
     } catch (error) {
         const container = document.getElementById('hypotheses-container');

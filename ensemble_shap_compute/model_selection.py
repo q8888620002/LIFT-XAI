@@ -255,7 +255,7 @@ if __name__ == "__main__":
         Y_dev = np.concatenate([y_train, y_val])
 
         nuisance_functions = NuisanceFunctions(
-            rct=(data.cohort_name in ["crash_2", "ist3", "sprint", "accord"])
+            rct=(data.cohort_name in ["crash_2", "ist3", "sprint", "accord", "accord_glycemia"])
         )
         nuisance_functions.fit(X_dev, Y_dev, W_dev)
 

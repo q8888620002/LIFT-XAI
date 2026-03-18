@@ -69,6 +69,40 @@ class PubMedMechanismValidator:
                      # sub_ckd and dbp queries. Not a CKD×BP-lowering RCT subgroup.
     }
 
+    # PMIDs from each trial and its direct secondary analyses.
+    # Excluded ONLY when validating hypotheses derived from that same trial
+    # (prevents circular validation: a paper cannot corroborate a hypothesis
+    # that was generated from the very same dataset).
+    TRIAL_SOURCE_PMIDS: Dict[str, set] = {
+        "crash_2": {
+            "20554319",  # CRASH-2 main RCT (Lancet 2010)
+            "23477634",  # CRASH-2 economic evaluation / extended trial report
+            "21439633",  # CRASH-2: early treatment exploratory analysis
+            "28143564",  # CRASH-2: exploration of benefits and harms (secondary)
+        },
+        "sprint": {
+            "26551272",  # SPRINT main RCT (NEJM 2015)
+            # "31637971",  # SPRINT: albuminuria subgroup secondary analysis
+            # "33460256",  # SPRINT: heterogeneity of treatment effect by age
+            # "35254390",  # SPRINT MIND: cerebral blood flow secondary analysis
+            # "37105717",  # SPRINT: elderly patients secondary analysis
+            # "41159258",  # SPRINT: cerebral small vessel disease by age
+        },
+        "ist3": {
+            "23859425",  # IST-3 main RCT (Lancet 2012)
+        },
+        "accord": {
+            "20228401",  # ACCORD-BP main RCT (NEJM 2010)
+            "39628286",  # ACCORD: HbA1c variability and intensive BP control
+            "41159258",  # SPRINT+ACCORD bi-cohort: cerebral small vessel disease by age (contains ACCORD data)
+        },
+        "accord_glycemia": {
+            "18539917",  # ACCORD glycemia main RCT (NEJM 2008)
+            "25887355",  # ACCORD: hemoglobin glycation index secondary analysis
+            "23114538",  # ACCORD: platelet function and tight glycemic control
+        },
+    }
+
     def __init__(self, email: str = "research@example.com", api_key: str = None, max_abstracts: int = 30, model: str = "gpt-5-mini", api_provider: str = "openai", api_base_url: str = None, llm_delay: float = 0.5, full_text: bool = False):
         if Entrez:
             Entrez.email = email
@@ -118,11 +152,23 @@ class PubMedMechanismValidator:
                 'comparator': 'placebo/no TXA',
                 'outcome': 'death due to bleeding / mortality outcomes'
             },
+            'txa': {
+                'population': 'adult pre-hospital trauma patients',
+                'treatment': 'pre-hospital tranexamic acid (TXA)',
+                'comparator': 'no pre-hospital TXA / usual care',
+                'outcome': 'survival (in-hospital mortality status)'
+            },
             'sprint': {
                 'population': 'hypertensive adults at increased cardiovascular risk',
                 'treatment': 'intensive systolic blood pressure target (<120 mmHg)',
                 'comparator': 'standard systolic blood pressure target (<140 mmHg)',
                 'outcome': 'major cardiovascular events and all-cause mortality'
+            },
+            'accord_glycemia': {
+                'population': 'type 2 diabetes patients at high cardiovascular risk',
+                'treatment': 'intensive glycemic control (target HbA1c <6.0%)',
+                'comparator': 'standard glycemic control (target HbA1c 7.0-7.9%)',
+                'outcome': 'major cardiovascular outcomes and mortality'
             }
         }
         return contexts.get(dataset, {
@@ -198,6 +244,13 @@ class PubMedMechanismValidator:
         generated_key = self._generated_name_to_feature_key(feature_name)
         if generated_key and generated_key in feature_map: return feature_map[generated_key]
 
+        # 2b. Extract raw key from parenthetical notation e.g. "Bp med (bp_med)" → "bp_med"
+        paren_match = re.search(r'\(([a-z][a-z0-9_]*)\)\s*$', feature_name)
+        if paren_match:
+            raw_key = paren_match.group(1)
+            if raw_key in feature_map:
+                return feature_map[raw_key]
+
         # 3. Handle "feature:value"
         if ':' in feature_name:
             base_name = feature_name.split(':', 1)[0].strip().lower()
@@ -210,13 +263,14 @@ class PubMedMechanismValidator:
             ('time_to_treatment', ['time to treatment', 'onset to treatment', 'treatment delay']),
             ('ninjurytime', ['time from injury', 'injury to treatment', 'treatment delay']),
             ('age', ['age', 'elderly', 'older']),
+            ('baseline_age', ['age', 'elderly', 'older', 'baseline age']),
             ('iage', ['age', 'elderly', 'older']),
             ('sbprand', ['systolic blood pressure']),
             ('sbp', ['systolic blood pressure']),
             ('isbp', ['systolic blood pressure', 'initial blood pressure', 'hypotension']),
             ('dbprand', ['diastolic blood pressure', 'dbprand', 'diastolic bp']),
             ('dbp', ['diastolic blood pressure']),
-            ('hba1c', ['hba1c', 'glycated hemoglobin']),
+            ('hba1c', ['hba1c', 'hemoglobin a1c', 'glycated hemoglobin']),
             ('gfr', ['gfr', 'egfr', 'renal function']),
             ('egfr', ['gfr', 'egfr', 'renal function']),
             ('glucose', ['glucose', 'hyperglycemia']),
@@ -229,6 +283,7 @@ class PubMedMechanismValidator:
             ('umalcr', ['umalcr', 'uacr', 'albumin creatinine ratio', 'albuminuria']),
             ('igcs', ['glasgow coma scale', 'gcs', 'consciousness']),
             ('irr', ['respiratory rate']),
+            ('hr', ['heart rate', 'tachycardia', 'bradycardia']),
             ('ihr', ['heart rate', 'tachycardia', 'bradycardia']),
             ('iinjurytype', ['injury type', 'blunt', 'penetrating', 'mechanism of injury']),
             ('icc', ['capillary refill', 'injury classification code', 'circulation code', 'peripheral perfusion']),
@@ -237,7 +292,17 @@ class PubMedMechanismValidator:
             ('cvd_hx_baseline', ['history of cardiovascular disease', 'prior cardiovascular', 'cvd history']),
             ('prior stroke history', ['prior stroke', 'history of stroke', 'previous stroke']),
             ('sub_cvd', ['cardiovascular disease', 'cvd', 'heart disease']),
-            ('sub_ckd', ['chronic kidney disease', 'ckd', 'renal impairment'])
+            ('sub_ckd', ['chronic kidney disease', 'ckd', 'renal impairment']),
+            ('bp_med', ['bp med', 'blood pressure medication', 'antihypertensive']),
+            ('dm_med', ['dm med', 'diabetes medication', 'oral hypoglycemic', 'antidiabetic']),
+            ('anti_coag', ['anti coag', 'anticoagulant', 'anticoagulation', 'warfarin', 'heparin']),
+            ('antiarrhythmic', ['antiarrhythmic', 'anti arrhythmic', 'rhythm control']),
+            ('insulin', ['insulin', 'insulin therapy', 'insulin use']),
+            ('yrsdiab', ['yrsdiab', 'diabetes duration', 'years of diabetes']),
+            ('bmi', ['bmi', 'body mass index', 'obesity']),
+            ('potassium', ['potassium', 'hyperkalemia', 'hypokalemia']),
+            ('alt', ['alt', 'alanine aminotransferase', 'liver function']),
+            ('cpk', ['cpk', 'creatine phosphokinase', 'creatine kinase']),
         ]
         for canonical_key, cues in alias_checks:
             if canonical_key in feature_map and any(cue in normalized_feature for cue in cues):
@@ -305,11 +370,14 @@ class PubMedMechanismValidator:
                     'bmi': 'BMI OR obesity OR "body mass index" OR "body mass" OR overweight OR adiposity OR "abdominal obesity" OR "waist circumference" OR "weight status"',
                     'duration': '"diabetes duration" OR "disease duration"',
                     'fpg': '"fasting plasma glucose" OR FPG OR glucose OR hyperglycemia',
+                    'glur': '"fasting plasma glucose" OR FPG OR glucose OR glycemia OR hyperglycemia',
                     'gfr': 'GFR OR eGFR OR "renal function"',
                     'screat': 'creatinine OR "serum creatinine"',
                     'uacr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
+                    'umalcr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
                     'chol': 'cholesterol OR "total cholesterol"',
                     'trig': 'triglyceride OR triglycerides',
+                    'trr': 'triglyceride OR triglycerides',
                     'vldl': 'VLDL OR lipoprotein',
                     'ldl': 'LDL OR "low density lipoprotein"',
                     'hdl': 'HDL OR "high density lipoprotein"',
@@ -317,10 +385,13 @@ class PubMedMechanismValidator:
                     'bp_med': '"blood pressure medication" OR antihypertensive',
                     'female': 'female OR sex OR gender',
                     'raceclass': '"Continental Population Groups"[Mesh] OR "Black"[tiab] OR "White"[tiab] OR race[tiab]',
+                    'race_black': '"Continental Population Groups"[Mesh] OR "Black"[tiab] OR "White"[tiab] OR race[tiab]',
                     'statin': 'statin OR lipid-lowering',
                     'aspirin': 'aspirin OR antiplatelet',
                     'x4smoke': 'smoking OR smoker OR tobacco',
+                    'smoke_3cat': 'smoking OR smoker OR tobacco',
                     'cvd_hx_baseline': '"history of cardiovascular disease" OR "prior cardiovascular disease" OR "prior MI" OR "prior stroke"',
+                    'sub_cvd': '"history of cardiovascular disease" OR "prior cardiovascular disease" OR "prior MI" OR "prior stroke"',
                     'anti_coag': 'anticoagulant OR anticoagulation OR warfarin OR heparin OR "blood thinner" OR coagulation OR "anticoagulant therapy" OR "oral anticoagulant" OR apixaban OR rivaroxaban OR dabigatran OR "thrombin inhibitor" OR "factor Xa inhibitor" OR "coagulation status" OR "thrombotic risk" OR "antithrombotic"'
                 }
             },
@@ -341,6 +412,82 @@ class PubMedMechanismValidator:
                     'iinjurytype_2': '"penetrating injury" OR "penetrating trauma" OR gunshot OR stabbing'
                 }
             },
+            'txa': {
+                'context_terms': [
+                    'trauma',
+                    'bleeding',
+                    'hemorrhage',
+                    'survival',
+                    'mortality',
+                    '"in-hospital mortality"',
+                    '"pre-hospital"',
+                    '"prehospital"',
+                    'EMS',
+                    '"emergency medical services"',
+                ],
+                'treatment_terms': [
+                    '"tranexamic acid"',
+                    'TXA',
+                    '"anti-fibrinolytic"',
+                    '"pre-hospital TXA"',
+                    '"prehospital TXA"',
+                    '"prehospital tranexamic acid"',
+                ],
+                # Reuse CRASH-2 feature query templates for harmonized TXA features.
+                'features': {
+                    'iage': 'age OR elderly OR geriatric',
+                    'isbp': '"systolic blood pressure" OR "initial blood pressure" OR hypotension OR "hemorrhagic shock" OR "shock index"',
+                    'irr': '"respiratory rate" OR breathing OR tachypnea',
+                    'icc': '"capillary refill" OR perfusion OR shock OR "peripheral perfusion" OR "shock severity"',
+                    'ihr': '"heart rate" OR pulse OR tachycardia OR bradycardia',
+                    'ninjurytime': '"time from injury" OR "injury-to-treatment time" OR "treatment delay" OR "time to treatment" OR "early treatment" OR "delayed treatment" OR "treatment timing"',
+                    'igcs': 'GCS OR "Glasgow Coma Scale" OR "consciousness level"',
+                    'isex': 'sex OR gender OR male OR female',
+                    'iinjurytype': '"injury type" OR "penetrating injury" OR "blunt trauma" OR "mechanism of injury" OR "penetrating trauma" OR "blunt injury" OR "injury mechanism" OR "injury pattern"',
+                    'iinjurytype_1': '"blunt trauma" OR "blunt injury"',
+                    'iinjurytype_2': '"penetrating injury" OR "penetrating trauma" OR gunshot OR stabbing'
+                }
+            },
+            'accord_glycemia': {
+                'context_terms': ['diabetes', '"type 2 diabetes"', 'cardiovascular'],
+                'treatment_terms': [
+                    '"intensive glycemic control"',
+                    '"intensive glucose lowering"',
+                    '"intensive glucose control"',
+                    '"tight glycemic control"',
+                    '"aggressive glycemic control"',
+                    '"HbA1c target"',
+                ],
+                'features': {
+                    'baseline_age': 'age OR elderly OR geriatric',
+                    'bmi': 'BMI OR obesity OR "body mass index" OR overweight OR adiposity',
+                    'hba1c': '"baseline HbA1c" OR "baseline A1c" OR "entry HbA1c" OR "initial HbA1c" OR "presenting HbA1c" OR "baseline glycated hemoglobin" OR HbA1c[tiab]',
+                    'yrsdiab': '"diabetes duration" OR "disease duration" OR "years of diabetes"',
+                    'sbp': '"systolic blood pressure" OR hypertension',
+                    'dbp': '"diastolic blood pressure" OR hypertension',
+                    'hr': '"heart rate" OR pulse OR tachycardia OR bradycardia',
+                    'fpg': '"fasting plasma glucose" OR FPG OR glucose OR hyperglycemia',
+                    'alt': 'ALT OR "alanine aminotransferase" OR "liver function"',
+                    'cpk': 'CPK OR "creatine phosphokinase" OR "creatine kinase" OR rhabdomyolysis',
+                    'potassium': 'potassium OR hyperkalemia OR hypokalemia OR electrolyte',
+                    'gfr': 'GFR OR eGFR OR "renal function" OR "kidney function"',
+                    'uacr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
+                    'trig': 'triglyceride OR triglycerides',
+                    'ldl': 'LDL OR "low density lipoprotein"',
+                    'hdl': 'HDL OR "high density lipoprotein"',
+                    'bp_med': '"blood pressure medication" OR antihypertensive',
+                    'dm_med': '"diabetes medication" OR "oral hypoglycemic" OR "antidiabetic"',
+                    'female': 'female OR sex OR gender',
+                    'raceclass': '"Continental Population Groups"[Mesh] OR "Black"[tiab] OR "White"[tiab] OR race[tiab]',
+                    'cvd_hx_baseline': '"history of cardiovascular disease" OR "prior cardiovascular disease" OR "prior MI" OR "prior stroke"',
+                    'insulin': 'insulin OR "insulin therapy" OR "insulin use" OR "exogenous insulin"',
+                    'statin': 'statin OR lipid-lowering',
+                    'aspirin': 'aspirin OR antiplatelet',
+                    'antiarrhythmic': 'antiarrhythmic OR "anti-arrhythmic" OR "rhythm control"',
+                    'anti_coag': 'anticoagulant OR anticoagulation OR warfarin OR heparin',
+                    'x4smoke': 'smoking OR smoker OR tobacco',
+                }
+            },
             'sprint': {
                 'context_terms': ['hypertension', '"blood pressure"', 'cardiovascular'],
                 'treatment_terms': [
@@ -355,7 +502,7 @@ class PubMedMechanismValidator:
                     'SPRINT'
                 ],
                 'features': {
-                    'age': 'age OR elderly OR geriatric OR "older adults"',
+                    'age': 'age OR elderly OR geriatric OR "older adults" OR "older patients" OR frailty OR "frail older"',
                     'sbp': '"baseline systolic blood pressure" OR "pre-randomization SBP" OR "initial SBP" OR "J-curve" OR "SBP threshold"',
                     'dbp': '"baseline diastolic blood pressure" OR "low diastolic BP" OR "pulse pressure" OR "diastolic J-curve" OR "DBP threshold"',
                     'n_agents': '"number of antihypertensive agents" OR polypharmacy OR antihypertensive',
@@ -368,7 +515,7 @@ class PubMedMechanismValidator:
                     'umalcr': 'UACR OR albuminuria OR "albumin creatinine ratio"',
                     'bmi': 'BMI OR obesity OR "body mass index" OR "body mass" OR overweight OR adiposity OR "abdominal obesity" OR "waist circumference" OR "weight status"',
                     'female': 'female OR sex OR gender',
-'                   race_black': '"African Americans"[Mesh] OR "Black"[tiab] OR "African American"[tiab]',
+                    'race_black': '"African Americans"[Mesh] OR "Black"[tiab] OR "African American"[tiab]',
                     'smoke_3cat': 'smoking OR smoker OR tobacco',
                     'aspirin': 'aspirin OR antiplatelet',
                     'statin': 'statin OR lipid-lowering',
@@ -391,6 +538,8 @@ class PubMedMechanismValidator:
                         '"epsilon-aminocaproic"[tiab]', 'fibrinogen[tiab]'],
             'accord':  ['fenofibrate[tiab]', '"intensive glycemic"[tiab]',
                         '"glycemic arm"[tiab]'],
+            'accord_glycemia': ['fenofibrate[tiab]', '"intensive blood pressure"[tiab]',
+                        '"blood pressure arm"[tiab]'],
             'sprint':  [],
         }
 
@@ -425,7 +574,11 @@ class PubMedMechanismValidator:
                 '"interaction effect"[tiab]', '"subgroup analysis"[tiab]',
                 '"differential treatment effect"[tiab]', '"treatment-by"[tiab]',
                 '"predictive factor"[tiab]', '"interaction term"[tiab]',
-                '"forest plot"[tiab]', 'HTE[tiab]' # Added common abbreviation and visualization
+                '"forest plot"[tiab]', 'HTE[tiab]',
+                '"prespecified subgroup"[tiab]', '"pre-specified subgroup"[tiab]',
+                '"subgroup"[tiab]', '"effect modifier"[tiab]',
+                '"interaction p"[tiab]', '"p for interaction"[tiab]',
+                '"moderator"[tiab]', '"treatment-covariate"[tiab]'
             ]
             query_parts.append(f"({' OR '.join(interaction_terms)})")
         full_query = ' AND '.join(query_parts)
@@ -867,8 +1020,9 @@ class PubMedMechanismValidator:
                 query = tier_query
                 break
 
-        # Remove permanently blacklisted PMIDs before fetching
-        pmids = [p for p in pmids if p not in self.PMID_BLACKLIST]
+        # Remove permanently blacklisted PMIDs and source-trial PMIDs before fetching
+        _trial_pmids = self.TRIAL_SOURCE_PMIDS.get(dataset, set())
+        pmids = [p for p in pmids if p not in self.PMID_BLACKLIST and p not in _trial_pmids]
 
         if not pmids:
             return {'feature_name': feature_name, 'mechanism': mechanism, 'total_abstracts': 0,
@@ -905,7 +1059,7 @@ class PubMedMechanismValidator:
                 extra_found = self.search_pubmed(
                     next_tier_query, max_results=self.max_abstracts
                 )
-                extra_pmids = [p for p in extra_found if p not in seen_pmids and p not in self.PMID_BLACKLIST]
+                extra_pmids = [p for p in extra_found if p not in seen_pmids and p not in self.PMID_BLACKLIST and p not in _trial_pmids]
                 if not extra_pmids:
                     continue
                 seen_pmids.update(extra_pmids)
@@ -1023,10 +1177,13 @@ def main():
 
     results = validator.validate_all_mechanisms(args.input, use_llm=True)
 
-    # Default output path: same directory as input file, independent of eval model
+    # Default output path: same directory as input file.
+    # When a non-default judge model is used, the model name is appended so
+    # results from different judge models coexist without overwriting each other.
+    judge_suffix = f"__{args.model}" if args.model != "gpt-5-mini" else ""
     output_path = args.output or os.path.join(
         os.path.dirname(os.path.abspath(args.input)),
-        "hypotheses_pubmed_validation.json"
+        f"hypotheses_pubmed_validation{judge_suffix}.json"
     )
     validator.generate_report(results, output_path)
 

@@ -578,6 +578,10 @@ def parse_args() -> argparse.Namespace:
                    help="Keep seed runs separate instead of collapsing to mean")
     p.add_argument("--with-s2", action="store_true",
                    help="Also include hypotheses_s2_validation.json files (excluded by default)")
+    p.add_argument("--judge_model", default="gpt-5-mini",
+                   help="Judge model used for PubMed validation (default: gpt-5-mini). "
+                        "Selects hypotheses_pubmed_validation.json for the default, "
+                        "or hypotheses_pubmed_validation__{judge_model}.json for others.")
     p.add_argument("--out_csv",    default=None,
                    help="Write aggregated rows to this CSV path")
     return p.parse_args()
@@ -588,7 +592,8 @@ def main() -> None:
     root = Path(args.root)
 
     # Collect validation files
-    patterns = ["**/hypotheses_pubmed_validation.json"]
+    judge_suffix = f"__{args.judge_model}" if args.judge_model != "gpt-5-mini" else ""
+    patterns = [f"**/hypotheses_pubmed_validation{judge_suffix}.json"]
     if args.with_s2:
         patterns.append("**/hypotheses_s2_validation.json")
 

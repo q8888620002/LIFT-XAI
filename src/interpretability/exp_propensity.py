@@ -8,7 +8,7 @@ import pandas as pd
 import torch
 import xgboost as xgb
 from sklearn import metrics
-from utilities import subgroup_identification
+from src.cate_utils import subgroup_identification
 
 module_path = os.path.abspath(os.path.join("./CATENets/"))
 
@@ -161,52 +161,7 @@ class PropensitySensitivity:
             selection_types = ["if_pehe", "pseudo_outcome_r", "pseudo_outcome_dr"]
             log.info("Fitting and explaining learners...")
             learners = {
-                # "TLearner": cate_models.torch.TLearner(
-                #     x_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_out=2,
-                #     n_units_out=100,
-                #     batch_size=1024,
-                #     n_iter=self.n_iter,
-                #     batch_norm=False,
-                #     nonlin="relu",
-                # ),
-                # "SLearner": cate_models.torch.SLearner(
-                #     x_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_out=2,
-                #     n_units_out=100,
-                #     n_iter=self.n_iter,
-                #     batch_size=1024,
-                #     batch_norm=False,
-                #     nonlin="relu",
-                # ),
-                # "TARNet": cate_models.torch.TARNet(
-                #     x_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_r=1,
-                #     n_layers_out=1,
-                #     n_units_out=100,
-                #     n_units_r=100,
-                #     batch_size=1024,
-                #     n_iter=self.n_iter,
-                #     batch_norm=False,
-                #     nonlin="relu",
-                # ),
-                # "DRLearner": pseudo_outcome_nets.DRLearner(
-                #     x_train.shape[1],
-                #     binary_y=(len(np.unique(Y_train)) == 2),
-                #     n_layers_out=2,
-                #     n_units_out=100,
-                #     n_iter=self.n_iter,
-                #     batch_size=self.batch_size,
-                #     batch_norm=False,
-                #     lr=1e-3,
-                #     patience=10,
-                #     nonlin="relu",
-                #     device= "cuda:1"
-                # ),
-                "XLearner": pseudo_outcome_nets.XLearner(
+                "DRLearner": cate_models.torch.DRLearner(
                     x_train.shape[1],
                     binary_y=(len(np.unique(Y_train)) == 2),
                     n_layers_out=2,
@@ -217,7 +172,6 @@ class PropensitySensitivity:
                     batch_size=self.batch_size,
                     batch_norm=False,
                     nonlin="relu",
-                    device="cuda:1",
                 ),
                 # "CFRNet_0.01": cate_models.torch.TARNet(
                 #     x_train.shape[1],
@@ -404,7 +358,7 @@ class PropensitySensitivity:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity/insertion_deletion/{self.synthetic_simulator_type}/{self.propensity_type}"
+            / f"propensity_sensitivity/insertion_deletion/{self.synthetic_simulator_type}/{self.propensity_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -606,7 +560,6 @@ class PropensityAssignment:
                     batch_size=self.batch_size,
                     batch_norm=False,
                     nonlin="relu",
-                    device="cuda:1",
                 ),
                 # "CFRNet_0.01": cate_models.torch.TARNet(
                 #     x_train.shape[1],
@@ -925,7 +878,7 @@ class PropensityAssignment:
 
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity/assignment/model_performance/{self.synthetic_simulator_type}/{self.propensity_type}"
+            / f"propensity_sensitivity/assignment/model_performance/{self.synthetic_simulator_type}/{self.propensity_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():
@@ -941,7 +894,7 @@ class PropensityAssignment:
         )
         results_path = (
             self.save_path
-            / f"results/propensity_sensitivity/assignment/assignment/{self.synthetic_simulator_type}/{self.propensity_type}"
+            / f"propensity_sensitivity/assignment/assignment/{self.synthetic_simulator_type}/{self.propensity_type}"
         )
         log.info(f"Saving results in {results_path}...")
         if not results_path.exists():

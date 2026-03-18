@@ -1,6 +1,18 @@
 import argparse
 import sys
+from pathlib import Path
 from typing import Any
+
+
+def _str2bool(v: str) -> bool:
+    """Argparse-safe boolean parser (bool('False') is True in Python)."""
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ("true", "1", "yes"):
+        return True
+    if v.lower() in ("false", "0", "no"):
+        return False
+    raise argparse.ArgumentTypeError(f"Boolean value expected, got '{v}'")
 
 import src.interpretability.logger as log
 from src.interpretability.exp_linear import (
@@ -33,21 +45,21 @@ def init_arg() -> Any:
         "--dataset_list",
         nargs="+",
         type=str,
-        default=["twins", "acic", "news_100"],
+        default=["twins", "acic", "tcga_100", "news_100"],
     )
 
     parser.add_argument(
         "--num_important_features_list",
         nargs="+",
         type=int,
-        default=[8, 10, 20],
+        default=[8, 10, 20, 20],
     )
 
     parser.add_argument(
         "--binary_outcome_list",
         nargs="+",
-        type=bool,
-        default=[False, False, False],
+        type=_str2bool,
+        default=[False, False, False, False],
     )
 
     parser.add_argument(
@@ -103,9 +115,11 @@ def init_arg() -> Any:
         default=[
             # "feature_ablation",
             # "feature_permutation",
+            "lime",
+            "smooth_grad",
             "saliency",
             "integrated_gradients",
-            "marginal_shapley_value_sampling",
+            # "marginal_shapley_value_sampling",
             "baseline_shapley_value_sampling",
             # "explain_with_missingness"
         ],
@@ -119,6 +133,7 @@ def init_arg() -> Any:
 if __name__ == "__main__":
     log.add(sink=sys.stderr, level="INFO")
     args = init_arg()
+    save_path = Path(args.run_name)
     for seed in args.seed_list:
         log.info(
             f"Experiment {args.experiment_name} with simulator {args.synthetic_simulator_type}, explainer limit {args.explainer_limit} and seed {seed}."
@@ -128,6 +143,7 @@ if __name__ == "__main__":
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -148,6 +164,7 @@ if __name__ == "__main__":
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -169,6 +186,7 @@ if __name__ == "__main__":
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -189,6 +207,7 @@ if __name__ == "__main__":
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -209,6 +228,7 @@ if __name__ == "__main__":
                 seed=seed,
                 explainer_limit=args.explainer_limit,
                 synthetic_simulator_type=args.synthetic_simulator_type,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -227,7 +247,8 @@ if __name__ == "__main__":
 
         elif args.experiment_name == "nonlinearity_sensitivity":
             exp = NonLinearitySensitivity(
-                seed=seed, explainer_limit=args.explainer_limit
+                seed=seed, explainer_limit=args.explainer_limit,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -247,7 +268,8 @@ if __name__ == "__main__":
                 )
         elif args.experiment_name == "nonlinearity_loss":
             exp = NonlinearitySensitivityLoss(
-                seed=seed, explainer_limit=args.explainer_limit
+                seed=seed, explainer_limit=args.explainer_limit,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -268,7 +290,8 @@ if __name__ == "__main__":
 
         elif args.experiment_name == "nonlinearity_heldout":
             exp = NonLinearityHeldOutOne(
-                seed=seed, explainer_limit=args.explainer_limit
+                seed=seed, explainer_limit=args.explainer_limit,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -288,7 +311,8 @@ if __name__ == "__main__":
                 )
         elif args.experiment_name == "nonlinearity_heldout_mask":
             exp = NonLinearityHeldOutOneMask(
-                seed=seed, explainer_limit=args.explainer_limit
+                seed=seed, explainer_limit=args.explainer_limit,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -308,7 +332,8 @@ if __name__ == "__main__":
                 )
         elif args.experiment_name == "nonlinearity_assignment":
             exp = NonLinearityAssignment(
-                seed=seed, explainer_limit=args.explainer_limit
+                seed=seed, explainer_limit=args.explainer_limit,
+                save_path=save_path,
             )
             for experiment_id in range(len(args.dataset_list)):
                 log.info(
@@ -333,6 +358,7 @@ if __name__ == "__main__":
                     explainer_limit=args.explainer_limit,
                     synthetic_simulator_type=args.synthetic_simulator_type,
                     propensity_type=propensity_type,
+                    save_path=save_path,
                 )
                 for experiment_id in range(len(args.dataset_list)):
                     log.info(
@@ -359,6 +385,7 @@ if __name__ == "__main__":
                     explainer_limit=args.explainer_limit,
                     synthetic_simulator_type=args.synthetic_simulator_type,
                     propensity_type=propensity_type,
+                    save_path=save_path,
                 )
                 for experiment_id in range(len(args.dataset_list)):
                     log.info(

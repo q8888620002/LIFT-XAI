@@ -99,9 +99,11 @@ def _normalize_cot_dict(data: dict) -> dict:
     - mechanisms as list[str] → list[{description}]
     - Missing mechanisms → empty list
     """
-    # --- Top-level defaults ---
-    data.setdefault("dataset", "unknown")
-    data.setdefault("model", "unknown")
+    # --- Top-level defaults (also replace None values from LLM null outputs) ---
+    if not data.get("dataset"):
+        data["dataset"] = "unknown"
+    if not data.get("model"):
+        data["model"] = "unknown"
 
     # --- feature_hypotheses missing: try to rescue from nested wrapper keys ---
     def _hoist_list(src: dict, dst: dict) -> bool:
@@ -180,6 +182,17 @@ def _extract_json_from_content(content: str, response_format: Type[_T]) -> _T:
     return response_format.model_validate(data)
 
 
+def _token_limit_kwarg(model_name: str, client: OpenAI, limit: int = 16384) -> dict:
+    """Return the correct max-token parameter for the model/provider."""
+    is_openrouter = getattr(client, '_base_url', None) and 'openrouter' in str(client._base_url)
+    is_medgemma = getattr(client, '_is_medgemma', False)
+    model_lower = model_name.lower()
+    _new_style = ('gpt-5', 'gpt-4.1', 'o1', 'o3', 'o4')
+    if not is_openrouter and not is_medgemma and any(model_lower.startswith(p) for p in _new_style):
+        return {"max_completion_tokens": limit}
+    return {"max_tokens": limit}
+
+
 def _parse_structured(
     client: OpenAI,
     model_name: str,
@@ -197,7 +210,7 @@ def _parse_structured(
                 model=model_name,
                 messages=messages,
                 response_format=response_format,
-                max_tokens=16384,
+                **_token_limit_kwarg(model_name, client),
             )
             parsed = completion.choices[0].message.parsed
             if parsed is not None:
@@ -221,7 +234,7 @@ def _parse_structured(
     extra_body: dict = {}
     if is_openrouter:
         extra_body["reasoning"] = {"effort": "none"}
-    kwargs: dict = dict(model=model_name, messages=augmented, max_tokens=16384)
+    kwargs: dict = dict(model=model_name, messages=augmented, **_token_limit_kwarg(model_name, client))
     if extra_body:
         kwargs["extra_body"] = extra_body
     fallback = client.chat.completions.create(**kwargs)

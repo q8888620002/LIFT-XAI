@@ -46,6 +46,7 @@ class SemanticScholarMechanismValidator(PubMedMechanismValidator):
     # Anchor PMIDs for primary trial publications
     ANCHOR_PMIDS: Dict[str, str] = {
         "accord":  "18539917",   # Effects of intensive glucose lowering in type 2 diabetes
+        "accord_glycemia": "18539917",  # Same primary ACCORD trial (glycemia arm)
         "sprint":  "26551272",   # Randomized Trial of Intensive vs Standard Blood-Pressure Control
         "ist3":    "22632908",   # Benefits and harms of intravenous thrombolysis
         "crash_2": "20554319",   # Effects of tranexamic acid on death / vascular occlusive events
@@ -173,16 +174,25 @@ class SemanticScholarMechanismValidator(PubMedMechanismValidator):
                 "gfr":             'GFR OR eGFR OR "renal function"',
                 "screat":          'creatinine OR "serum creatinine"',
                 "uacr":            'UACR OR albuminuria OR "albumin creatinine ratio"',
+                "umalcr":          'UACR OR albuminuria OR "albumin creatinine ratio"',
                 "chol":            'cholesterol OR "total cholesterol"',
                 "trig":            "triglyceride OR triglycerides",
+                "trr":             "triglyceride OR triglycerides",
                 "vldl":            "VLDL OR lipoprotein",
                 "ldl":             'LDL OR "low density lipoprotein"',
                 "hdl":             'HDL OR "high density lipoprotein"',
+                "glur":            '"fasting plasma glucose" OR FPG OR glucose OR glycemia OR hyperglycemia',
                 "hr":              '"heart rate" OR pulse OR tachycardia',
+                "female":          'female OR sex OR gender',
+                "race_black":      '"Continental Population Groups"[Mesh] OR "Black"[tiab] OR "White"[tiab] OR race[tiab]',
+                "smoke_3cat":      "smoking OR smoker OR tobacco",
+                "aspirin":         "aspirin OR antiplatelet",
+                "statin":          "statin OR lipid-lowering",
                 "cvd_hx_baseline": (
                     '"history of cardiovascular disease" OR '
                     '"prior cardiovascular disease" OR "prior MI"'
                 ),
+                "sub_cvd":         '"history of cardiovascular disease" OR "prior cardiovascular disease" OR "prior MI" OR "prior stroke"',
             },
             "sprint": {
                 "age":    "age OR elderly OR geriatric",
@@ -216,6 +226,27 @@ class SemanticScholarMechanismValidator(PubMedMechanismValidator):
                 "ihr":         '"heart rate" OR pulse OR tachycardia',
                 "iinjurytype": (
                     '"injury type" OR "penetrating injury" OR "blunt trauma"'
+                ),
+            },
+            "accord_glycemia": {
+                "baseline_age":    "age OR elderly OR geriatric",
+                "bmi":             'BMI OR obesity OR "body mass index"',
+                "hba1c":           'HbA1c OR "glycated hemoglobin" OR "glycemic control"',
+                "yrsdiab":         '"diabetes duration" OR "years of diabetes"',
+                "sbp":             '"systolic blood pressure" OR hypertension',
+                "dbp":             '"diastolic blood pressure" OR hypertension',
+                "hr":              '"heart rate" OR pulse OR tachycardia',
+                "fpg":             '"fasting plasma glucose" OR FPG OR glucose',
+                "gfr":             'GFR OR eGFR OR "renal function"',
+                "uacr":            'UACR OR albuminuria OR "albumin creatinine ratio"',
+                "trig":            "triglyceride OR triglycerides",
+                "ldl":             'LDL OR "low density lipoprotein"',
+                "hdl":             'HDL OR "high density lipoprotein"',
+                "insulin":         'insulin OR "insulin therapy"',
+                "dm_med":          '"diabetes medication" OR "oral hypoglycemic"',
+                "cvd_hx_baseline": (
+                    '"history of cardiovascular disease" OR '
+                    '"prior cardiovascular disease" OR "prior MI"'
                 ),
             },
         }

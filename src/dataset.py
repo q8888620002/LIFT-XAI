@@ -36,6 +36,8 @@ class Dataset:
             self.data = self._load_sprint_data()
         elif cohort_name == "accord":
             self.data = self._load_accord_data()
+        elif cohort_name == "accord_glycemia":
+            self.data = self._load_accord_glycemia_data()
         elif cohort_name == "sprint_filter":
             self.data = self._load_sprint_filter_data()
         elif cohort_name == "accord_filter":
@@ -370,6 +372,7 @@ class Dataset:
             # "n_agents",
             # "egfr",  # dropped: retrieves irrelevant nephrology papers; CKD signal captured by sub_ckd
             # "screat",
+            # "ualb",  # not present in sprint baseline CSV
             "chr",
             "glur",
             "hdl",
@@ -471,19 +474,30 @@ class Dataset:
 
         data = pd.read_csv("data/accord/accord.csv")
 
+        # ── add baseline HbA1c ─────────────────────────────────────────
+        hba = pd.read_csv("data/accord/hba1c.csv")
+        hba_bl = hba[hba["Visit"] == "BLR"][["MaskID", "hba1c"]]
+        data = data.merge(hba_bl, on="MaskID", how="inner")
+
+        # ── add years of diabetes ──────────────────────────────────────
+        phys = pd.read_csv("data/accord/baselinehistoryphysicalexam.csv")
+        data = data.merge(phys[["MaskID", "yrsdiab"]], on="MaskID", how="inner")
+
         self.outcome = "censor_po"
         self.treatment = "treatment"
 
         self.continuous_vars = [
             "baseline_age",
             "bmi",
+            "hba1c",
+            "yrsdiab",
             "sbp",
             "dbp",
             "hr",
             "fpg",
-            "alt",
-            "cpk",
-            "potassium",
+            # "alt",
+            # "cpk",
+            # "potassium",
             # "screat",
             "gfr",
             # 'ualb',
@@ -503,8 +517,8 @@ class Dataset:
             "cvd_hx_baseline",
             "statin",
             "aspirin",
-            "antiarrhythmic",
-            "anti_coag",
+            # "antiarrhythmic",
+            # "anti_coag",
             # 'dm_med',
             # 'cv_med',
             # 'lipid_med',
@@ -518,6 +532,132 @@ class Dataset:
         )
         data["raceclass"] = np.where(data["raceclass"] == "Black", 1, 0)
         data["x4smoke"] = np.where(data["x4smoke"] == 1, 1, 0)
+
+        data = data[
+            self.continuous_vars
+            + self.categorical_vars
+            + self.binary_vars
+            + [self.treatment]
+            + [self.outcome]
+        ]
+
+        data = pd.get_dummies(data, columns=self.categorical_vars)
+
+        return data
+
+    def _load_accord_glycemia_data(self):
+        """Load ACCORD glycemic-control arm (all 10 251 participants).
+
+        Treatment: Intensive Glycemia = 1, Standard Glycemia = 0.
+        Baseline covariates are reconstructed from the raw ACCORD tables
+        because the pre-built accord.csv only contains the BP-trial subset.
+        """
+
+        # ── treatment & demographics from the key file ──────────────────
+        key = pd.read_csv("data/accord/accord_key.csv")
+        key["treatment"] = np.where(
+            key["treatment"].str.contains("Intensive G", na=False), 1, 0
+        )
+        key["raceclass"] = np.where(key["raceclass"] == "Black", 1, 0)
+
+        # ── outcome ─────────────────────────────────────────────────────
+        cvd = pd.read_csv("data/accord/cvdoutcomes.csv")
+
+        # ── baseline HbA1c ─────────────────────────────────────────────
+        hba = pd.read_csv("data/accord/hba1c.csv")
+        hba_bl = hba[hba["Visit"] == "BLR"][["MaskID", "hba1c"]]
+
+        # ── baseline physical exam (BMI, smoking, years of diabetes) ───
+        phys = pd.read_csv("data/accord/baselinehistoryphysicalexam.csv")
+        phys["bmi"] = phys["wt_kg"] / (phys["ht_cm"] / 100) ** 2
+        # cigarett: 1 = current smoker, 2 = not current
+        phys["x4smoke"] = np.where(phys["cigarett"] == 1, 1, 0)
+
+        # ── baseline labs ──────────────────────────────────────────────
+        labs = pd.read_csv("data/accord/otherlabs.csv")
+        labs_bl = labs[labs["Visit"] == "BLR"].drop(columns=["Visit"])
+
+        # ── baseline blood pressure ────────────────────────────────────
+        bp = pd.read_csv("data/accord/bloodpressure.csv")
+        bp_bl = bp[bp["Visit"] == "BLR"].drop(columns=["Visit"])
+
+        # ── baseline lipids ────────────────────────────────────────────
+        lip = pd.read_csv("data/accord/lipids.csv")
+        lip_bl = lip[lip["Visit"] == "BLR"].drop(columns=["Visit"])
+
+        # ── baseline medications ───────────────────────────────────────
+        meds = pd.read_csv("data/accord/concomitantmeds.csv")
+        meds_bl = meds[meds["Visit"] == "BLR"].drop(columns=["Visit"])
+        bp_med_cols = [
+            "loop", "thiazide", "ksparing", "a2rb", "acei",
+            "dhp_ccb", "nondhp_ccb", "alpha_blocker", "central_agent",
+            "beta_blocker", "vasodilator", "reserpine", "other_bpmed",
+        ]
+        meds_bl["bp_med"] = meds_bl[bp_med_cols].sum(axis=1)
+        dm_med_cols = [
+            "sulfonylurea", "biguanide", "meglitinide", "ag_inhibitor",
+            "nphl_insulin", "tzd", "reg_insulin", "la_insulin",
+            "othbol_insulin", "premix_insulin", "other_diabmed",
+        ]
+        meds_bl["dm_med"] = meds_bl[dm_med_cols].sum(axis=1)
+        insulin_cols = [
+            "nphl_insulin", "reg_insulin", "la_insulin",
+            "othbol_insulin", "premix_insulin",
+        ]
+        meds_bl["insulin"] = (meds_bl[insulin_cols].sum(axis=1) > 0).astype(int)
+
+        # ── merge everything on MaskID ─────────────────────────────────
+        data = (
+            key[["MaskID", "treatment", "female", "baseline_age",
+                 "raceclass", "cvd_hx_baseline"]]
+            .merge(cvd[["MaskID", "censor_po"]], on="MaskID", how="inner")
+            .merge(hba_bl, on="MaskID", how="inner")
+            .merge(phys[["MaskID", "bmi", "x4smoke", "yrsdiab"]], on="MaskID", how="inner")
+            .merge(bp_bl, on="MaskID", how="inner")
+            .merge(labs_bl, on="MaskID", how="inner")
+            .merge(lip_bl[["MaskID", "trig", "ldl", "hdl"]], on="MaskID", how="inner")
+            .merge(meds_bl[["MaskID", "bp_med", "dm_med", "insulin", "statin",
+                           "aspirin", "antiarrhythmic", "anti_coag"]],
+                   on="MaskID", how="inner")
+        )
+
+        self.outcome = "censor_po"
+        self.treatment = "treatment"
+
+        self.continuous_vars = [
+            "baseline_age",
+            "bmi",
+            "hba1c",
+            "yrsdiab",
+            "sbp",
+            "dbp",
+            "hr",
+            "fpg",
+            "alt",
+            "cpk",
+            "potassium",
+            "gfr",
+            "uacr",
+            "trig",
+            "ldl",
+            "hdl",
+            "bp_med",
+            "dm_med",
+        ]
+
+        self.binary_vars = [
+            "female",
+            "raceclass",
+            "cvd_hx_baseline",
+            "insulin",
+            "statin",
+            "aspirin",
+            "antiarrhythmic",
+            "anti_coag",
+            "x4smoke",
+        ]
+
+        self.categorical_vars = []
 
         data = data[
             self.continuous_vars
@@ -788,13 +928,25 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
         infer_datetime_format=True,
         errors="coerce",
     )
-    all_year["injurydatetime"] = pd.to_datetime(
+    all_year["injurydatetime_ref"] = pd.to_datetime(
         all_year["injurydate"].astype(str) + " " + all_year["injurytime"].astype(str),
         infer_datetime_format=True,
         errors="coerce",
     )
 
-    txa = pd.merge(txa, all_year[["registryid", "iss"]], on="registryid", how="left")
+    txa = pd.merge(
+        txa,
+        all_year[["registryid", "iss", "injurydatetime_ref"]],
+        on="registryid",
+        how="left",
+    )
+
+    if "injurydatetime" in txa.columns:
+        txa["injurydatetime"] = txa["injurydatetime"].fillna(txa["injurydatetime_ref"])
+    else:
+        txa["injurydatetime"] = txa["injurydatetime_ref"]
+
+    txa = txa.drop(columns=["injurydatetime_ref"])
 
     txa["time_to_injury"] = (
         txa["medatetime"] - txa["injurydatetime"]
@@ -887,22 +1039,31 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
         ]
     )
 
-    # Combine and scale
-    all_data = pd.concat([txa, crash2])
-    all_data_scaled = scaler.fit_transform(all_data)
+    # Fit preprocessing on CRASH-2 only, then apply to both cohorts.
+    crash2_scaled = scaler.fit_transform(crash2)
+    txa_scaled = scaler.transform(txa)
 
-    # Impute
+    # Imputation is also fit on CRASH-2 reference distribution.
     imp = SimpleImputer(missing_values=np.nan, strategy="mean")
-    imp.fit(all_data_scaled)
-    all_data_imputed = imp.transform(all_data_scaled)
-
-    # Split back data
-    txa = all_data_imputed[: len(txa)]
-    crash2 = all_data_imputed[len(txa) :]
+    imp.fit(crash2_scaled)
+    crash2 = imp.transform(crash2_scaled)
+    txa = imp.transform(txa_scaled)
 
     # Propensity matching for TXA.
     X = txa[:, :-2]
     y = txa[:, -2]
+
+    def _mean_abs_smd(group_a, group_b):
+        """Return mean/max absolute standardized mean difference across covariates."""
+        if len(group_a) == 0 or len(group_b) == 0:
+            return np.nan, np.nan
+
+        mean_diff = np.mean(group_a, axis=0) - np.mean(group_b, axis=0)
+        var_pool = (np.var(group_a, axis=0, ddof=1) + np.var(group_b, axis=0, ddof=1)) / 2
+        denom = np.sqrt(np.where(var_pool > 1e-12, var_pool, np.nan))
+        smd = np.abs(mean_diff / denom)
+        smd = np.nan_to_num(smd, nan=0.0, posinf=0.0, neginf=0.0)
+        return float(np.mean(smd)), float(np.max(smd))
 
     # Propensity model using Logistic Regression
     model = LogisticRegression(max_iter=1000)
@@ -915,20 +1076,47 @@ def obtain_txa_baselines(unnorm=False) -> np.ndarray:
     # Separate treated and control groups based on treatment column (-2 index)
     treated_indices = np.where(txa[:, -2] == 1)[0]
     control_indices = np.where(txa[:, -2] == 0)[0]
+    treated_pre = txa[treated_indices, :-2]
+    control_pre = txa[control_indices, :-2]
     txa = np.hstack([txa, propensity_score_logit[:, np.newaxis]])
 
     treated = txa[treated_indices, :]
     control = txa[control_indices, :]
     caliper = np.std(propensity_score_logit) * 0.25
 
-    nbrs = NearestNeighbors(n_neighbors=1, radius=caliper)
+    nbrs = NearestNeighbors(n_neighbors=1)
     nbrs.fit(control[:, -1].reshape(-1, 1))  # Propensity score is the last column
 
-    # Find nearest neighbors for treated group
-    _, indices = nbrs.kneighbors(treated[:, -1].reshape(-1, 1))
+    # Find nearest neighbors for treated group and enforce caliper explicitly.
+    distances, indices = nbrs.kneighbors(treated[:, -1].reshape(-1, 1))
+    valid_mask = distances[:, 0] <= caliper
 
-    # Extract matched controls using the indices found
-    matched_control = control[indices.flatten()]
+    treated = treated[valid_mask]
+    matched_control = control[indices[valid_mask, 0]]
+
+    if len(treated) == 0:
+        raise ValueError("No treated samples have a control match within caliper.")
+
+    treated_post = treated[:, :-3]
+    control_post = matched_control[:, :-3]
+    mean_smd_pre, max_smd_pre = _mean_abs_smd(treated_pre, control_pre)
+    mean_smd_post, max_smd_post = _mean_abs_smd(treated_post, control_post)
+
+    treated_total = len(valid_mask)
+    treated_kept = int(valid_mask.sum())
+    treated_dropped = treated_total - treated_kept
+    unique_controls = int(np.unique(indices[valid_mask, 0]).shape[0])
+
+    print("[obtain_txa_baselines] caliper matching diagnostics")
+    print(f"  treated before: {treated_total}")
+    print(f"  treated kept: {treated_kept}")
+    print(f"  treated dropped: {treated_dropped} ({treated_dropped / max(treated_total, 1):.2%})")
+    print(f"  matched controls (rows): {matched_control.shape[0]}")
+    print(f"  unique matched controls: {unique_controls}")
+    print(f"  mean abs SMD pre-match: {mean_smd_pre:.4f}")
+    print(f"  mean abs SMD post-match: {mean_smd_post:.4f}")
+    print(f"  max abs SMD pre-match: {max_smd_pre:.4f}")
+    print(f"  max abs SMD post-match: {max_smd_post:.4f}")
 
     matched_txa = np.vstack([treated, matched_control])
     matched_txa = np.delete(matched_txa, -1, axis=1)
@@ -1095,14 +1283,12 @@ def obtain_accord_baselines() -> np.ndarray:
 
     accord = pd.read_csv("data/accord/accord.csv")
 
+    # Keep only features that have clear ACCORD↔SPRINT overlap.
     continuous_vars_accord = [
         "baseline_age",
         "sbp",
         "dbp",
-        "bp_med",
         "gfr",
-        "screat",
-        "chol",
         "fpg",
         "hdl",
         "trig",
@@ -1129,7 +1315,20 @@ def obtain_accord_baselines() -> np.ndarray:
         continuous_vars_accord + binary_vars_accord + [treatment] + [outcome]
     ]
     accord["treatment"] = np.where(
-        accord["treatment"].str.contains("Intensive BP"), 1, 0
+        accord["treatment"].str.contains("Intensive BP", na=False), 1, 0
+    )
+
+    accord = accord.rename(
+        columns={
+            "baseline_age": "age",
+            "gfr": "egfr",
+            "fpg": "glur",
+            "trig": "trr",
+            "uacr": "umalcr",
+            "raceclass": "race_black",
+            "x4smoke": "smoke_3cat",
+            "cvd_hx_baseline": "sub_cvd",
+        }
     )
 
     outcome = pd.read_csv("data/sprint/outcomes.csv")
@@ -1148,10 +1347,7 @@ def obtain_accord_baselines() -> np.ndarray:
         "age",
         "sbp",
         "dbp",
-        "n_agents",
         "egfr",
-        "screat",
-        "chr",
         "glur",
         "hdl",
         "trr",
@@ -1182,7 +1378,7 @@ def obtain_accord_baselines() -> np.ndarray:
         np.concatenate(
             (
                 sprint[continuous_vars_sprint].values,
-                accord[continuous_vars_accord].values,
+                accord[continuous_vars_sprint].values,
             ),
             axis=0,
         )
@@ -1191,8 +1387,8 @@ def obtain_accord_baselines() -> np.ndarray:
     sprint[continuous_vars_sprint] = scaler.transform(
         sprint[continuous_vars_sprint].values
     )
-    accord[continuous_vars_accord] = scaler.transform(
-        accord[continuous_vars_accord].values
+    accord[continuous_vars_sprint] = scaler.transform(
+        accord[continuous_vars_sprint].values
     )
 
     imp = SimpleImputer(missing_values=np.nan, strategy="mean")
@@ -1227,14 +1423,12 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
 
     accord = pd.read_csv("data/accord/accord.csv")
 
+    # Keep only features that have clear ACCORD↔SPRINT overlap.
     continuous_vars_accord = [
         "baseline_age",
         "sbp",
         "dbp",
-        "bp_med",
         "gfr",
-        "screat",
-        "chol",
         "fpg",
         "hdl",
         "trig",
@@ -1261,7 +1455,20 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
         continuous_vars_accord + binary_vars_accord + [treatment] + [outcome]
     ]
     accord["treatment"] = np.where(
-        accord["treatment"].str.contains("Intensive BP"), 1, 0
+        accord["treatment"].str.contains("Intensive BP", na=False), 1, 0
+    )
+
+    accord = accord.rename(
+        columns={
+            "baseline_age": "age",
+            "gfr": "egfr",
+            "fpg": "glur",
+            "trig": "trr",
+            "uacr": "umalcr",
+            "raceclass": "race_black",
+            "x4smoke": "smoke_3cat",
+            "cvd_hx_baseline": "sub_cvd",
+        }
     )
 
     outcome = pd.read_csv("data/sprint/outcomes.csv")
@@ -1280,10 +1487,7 @@ def obtain_unnorm_accord_baselines() -> np.ndarray:
         "age",
         "sbp",
         "dbp",
-        "n_agents",
         "egfr",
-        "screat",
-        "chr",
         "glur",
         "hdl",
         "trr",

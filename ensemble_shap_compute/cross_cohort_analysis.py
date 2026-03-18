@@ -6,7 +6,7 @@ import pickle
 
 import numpy as np
 import torch
-from captum.attr import ShapleyValueSampling
+from captum.attr import KernelShap
 
 import src.CATENets.catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
 from src.dataset import Dataset, obtain_accord_baselines, obtain_txa_baselines
@@ -54,15 +54,15 @@ def translate_feature_name(feature_name):
 
 
 def compute_shap_values(model, data_sample, data_baseline):
-    """Function for shapley value sampling"""
-    shapley_model = ShapleyValueSampling(model)
+    """Function for KernelSHAP attribution."""
+    shapley_model = KernelShap(model)
     shap_values = (
         shapley_model.attribute(
             torch.tensor(data_sample).to(DEVICE),
-            n_samples=1000,
+            n_samples=512,
             baselines=torch.tensor(data_baseline.reshape(1, -1)).to(DEVICE),
             perturbations_per_eval=10,
-            show_progress=True,
+            show_progress=False,
         )
         .detach()
         .cpu()
@@ -178,7 +178,7 @@ def export_json_summary(cohort_name, cohort_x, cohort_shap, cohort_pred, feature
         "metadata": {
             "dataset": cohort_name,
             "learner": "DRLearner",
-            "explainer": "ShapleyValueSampling",
+            "explainer": "KernelShap",
             "trials_completed": num_trials,
             "baseline_mode": baseline_mode,
             "analysis_type": "cross_cohort",
@@ -207,6 +207,7 @@ def main(args):
     trials = args["num_trials"]
     bshap = args["baseline"]
     cohort_name = args["cohort_name"]
+    target_cohort = args.get("target_cohort")
 
     print("Baselines shapley:", bshap)
     baseline_mode = "baseline_swapped" if bshap else "random_sample"
@@ -216,17 +217,43 @@ def main(args):
         cohort1 = "sprint"
         cohort2 = "accord"
 
-        dataset1 = Dataset("sprint_filter", 0)
-        dataset2 = Dataset("accord_filter", 0)
+        # Shared overlap schema returned by obtain_accord_baselines()
+        # Order must match the returned array columns exactly.
+        shared_feature_names = [
+            "age",
+            "sbp",
+            "dbp",
+            "egfr",
+            "glur",
+            "hdl",
+            "trr",
+            "umalcr",
+            "bmi",
+            "female",
+            "race_black",
+            "smoke_3cat",
+            "aspirin",
+            "statin",
+            "sub_cvd",
+        ]
+        shared_categorical_indices = {}
+        shared_discrete_indices = {
+            "female": [9],
+            "race_black": [10],
+            "smoke_3cat": [11],
+            "aspirin": [12],
+            "statin": [13],
+            "sub_cvd": [14],
+        }
         feature_meta1 = {
-            "feature_names": list(dataset1.get_feature_names()),
-            "categorical_indices": dataset1.categorical_indices,
-            "discrete_indices": dataset1.discrete_indices,
+            "feature_names": shared_feature_names,
+            "categorical_indices": shared_categorical_indices,
+            "discrete_indices": shared_discrete_indices,
         }
         feature_meta2 = {
-            "feature_names": list(dataset2.get_feature_names()),
-            "categorical_indices": dataset2.categorical_indices,
-            "discrete_indices": dataset2.discrete_indices,
+            "feature_names": shared_feature_names,
+            "categorical_indices": shared_categorical_indices,
+            "discrete_indices": shared_discrete_indices,
         }
 
         (
@@ -234,8 +261,8 @@ def main(args):
             cohort1_w,
             cohort1_y,
             cohort2_x,
-            _,
-            _,
+            cohort2_w,
+            cohort2_y,
         ) = obtain_accord_baselines()
 
     elif cohort_name == "crash2_txa":
@@ -274,8 +301,8 @@ def main(args):
             cohort1_w,
             cohort1_y,
             cohort2_x,
-            _,
-            _,
+            cohort2_w,
+            cohort2_y,
         ) = obtain_txa_baselines()
 
     cohort1_predict_results = np.zeros((trials, len(cohort1_x)))
@@ -283,6 +310,156 @@ def main(args):
 
     cohort2_predict_results = np.zeros((trials, len(cohort2_x)))
     cohort2_average_shap = np.zeros((trials, cohort2_x.shape[0], cohort2_x.shape[1]))
+
+    # Targeted mode: train and explain ONLY one cohort, while using swapped baseline
+    # from the other cohort when --baseline is enabled.
+    if target_cohort is not None:
+        if target_cohort not in [cohort1, cohort2]:
+            raise ValueError(
+                f"target_cohort must be one of {[cohort1, cohort2]}, got {target_cohort}"
+            )
+
+        if target_cohort == cohort1:
+            x_target, w_target, y_target = cohort1_x, cohort1_w, cohort1_y
+            meta_target = feature_meta1
+            other_name, x_other, meta_other = cohort2, cohort2_x, feature_meta2
+        else:
+            x_target, w_target, y_target = cohort2_x, cohort2_w, cohort2_y
+            meta_target = feature_meta2
+            other_name, x_other, meta_other = cohort1, cohort1_x, feature_meta1
+
+        target_predict_results = np.zeros((trials, len(x_target)))
+        target_average_shap = np.zeros((trials, x_target.shape[0], x_target.shape[1]))
+        target_average_shap_in_cohort = None
+        if bshap:
+            target_average_shap_in_cohort = np.zeros(
+                (trials, x_target.shape[0], x_target.shape[1])
+            )
+
+        for i in range(trials):
+            sampled_indices = np.random.choice(
+                len(x_target), size=len(x_target), replace=True
+            )
+
+            x_sampled = x_target[sampled_indices]
+            y_sampled = y_target[sampled_indices]
+            w_sampled = w_target[sampled_indices]
+
+            model = pseudo_outcome_nets.DRLearner(
+                x_sampled.shape[1],
+                binary_y=(len(np.unique(y_sampled)) == 2),
+                n_layers_out=2,
+                n_units_out=100,
+                batch_size=128,
+                n_iter=1000,
+                nonlin="relu",
+                device=DEVICE,
+                seed=i,
+            )
+
+            model.fit(x_sampled, y_sampled, w_sampled)
+            target_predict_results[i] = (
+                model.predict(X=x_target).detach().cpu().numpy().flatten()
+            )
+
+            if bshap:
+                # Start with the median for continuous variables
+                baseline = np.median(x_other, axis=0)
+
+                for _, idx_lst in meta_other["discrete_indices"].items():
+                    if len(idx_lst) == 1:
+                        # Binary variables: Use the mode (equivalent to rounding the mean for 0/1)
+                        baseline[idx_lst] = np.round(x_other[:, idx_lst].mean())
+                    else:
+                        # One-hot categorical variables: Find the most frequent category and set only that to 1
+                        category_means = x_other[:, idx_lst].mean(axis=0)
+                        most_frequent_idx = np.argmax(category_means)
+                        
+                        # Zero out the group, then set the most frequent to 1
+                        baseline[idx_lst] = 0.0
+                        baseline[idx_lst[most_frequent_idx]] = 1.0
+            else:
+                baseline_index = np.random.choice(len(x_target), 1)
+                baseline = x_target[baseline_index]
+
+            target_average_shap[i] = compute_shap_values(model, x_target, baseline)
+
+            # Also compute an in-cohort baseline explanation for direct comparison.
+            if bshap and target_average_shap_in_cohort is not None:
+                baseline_in_cohort = np.median(x_target, axis=0)
+                for _, idx_lst in meta_target["discrete_indices"].items():
+                    if len(idx_lst) == 1:
+                        baseline_in_cohort[idx_lst] = np.round(x_target[:, idx_lst].mean())
+                    else:
+                        category_means = x_target[:, idx_lst].mean(axis=0)
+                        most_frequent_idx = np.argmax(category_means)
+                        baseline_in_cohort[idx_lst] = 0.0
+                        baseline_in_cohort[idx_lst[most_frequent_idx]] = 1.0
+
+                target_average_shap_in_cohort[i] = compute_shap_values(
+                    model, x_target, baseline_in_cohort
+                )
+
+        # In targeted mode, save to results/<pair_name>/ to match pipeline pair naming.
+        save_path = os.path.join("results", cohort_name)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        with open(
+            os.path.join(save_path, f"{target_cohort}_predict_results_{bshap}.pkl"), "wb"
+        ) as output_file:
+            pickle.dump(target_predict_results, output_file)
+
+        with open(
+            os.path.join(save_path, f"{target_cohort}_shap_bootstrapped_{bshap}.pkl"), "wb"
+        ) as output_file:
+            pickle.dump(target_average_shap, output_file)
+
+        if bshap and target_average_shap_in_cohort is not None:
+            with open(
+                os.path.join(
+                    save_path,
+                    f"{target_cohort}_shap_bootstrapped_in_cohort_baseline.pkl",
+                ),
+                "wb",
+            ) as output_file:
+                pickle.dump(target_average_shap_in_cohort, output_file)
+
+        print("\nExporting JSON summaries for clinical agent...")
+        json_target = export_json_summary(
+            target_cohort,
+            x_target,
+            target_average_shap,
+            target_predict_results,
+            meta_target,
+            baseline_mode,
+            trials,
+            save_path,
+        )
+
+        json_in_cohort = None
+        if bshap and target_average_shap_in_cohort is not None:
+            json_in_cohort = export_json_summary(
+                target_cohort,
+                x_target,
+                target_average_shap_in_cohort,
+                target_predict_results,
+                meta_target,
+                "baseline_in_cohort",
+                trials,
+                save_path,
+            )
+
+        print(f"\nTargeted cross-cohort analysis complete for {target_cohort}")
+        if bshap:
+            print(f"  {target_cohort} explained with swapped baseline from {other_name}")
+            print(f"  {target_cohort} explained with in-cohort baseline")
+        else:
+            print(f"  {target_cohort} explained with random in-cohort baseline")
+        print(f"\nJSON summaries:\n  - {json_target}")
+        if json_in_cohort is not None:
+            print(f"  - {json_in_cohort}")
+        return
 
     for i in range(trials):
         # Model training
@@ -322,11 +499,12 @@ def main(args):
 
             for _, idx_lst in feature_meta2["discrete_indices"].items():
                 if len(idx_lst) == 1:
-                    # setting binary vars to population proportion
-                    baseline[idx_lst] = cohort2_x[:, idx_lst].mean()
+                    baseline[idx_lst] = np.round(cohort2_x[:, idx_lst].mean())
                 else:
-                    # setting categorical baseline to population proportions
-                    baseline[idx_lst] = cohort2_x[:, idx_lst].mean(axis=0)
+                    category_means = cohort2_x[:, idx_lst].mean(axis=0)
+                    most_frequent_idx = np.argmax(category_means)
+                    baseline[idx_lst] = 0.0
+                    baseline[idx_lst[most_frequent_idx]] = 1.0
         else:
             baseline_index = np.random.choice(len(cohort1_x), 1)
             baseline = cohort1_x[baseline_index]
@@ -338,11 +516,12 @@ def main(args):
 
             for _, idx_lst in feature_meta1["discrete_indices"].items():
                 if len(idx_lst) == 1:
-                    # setting binary vars to population proportion
-                    baseline[idx_lst] = cohort1_x[:, idx_lst].mean()
+                    baseline[idx_lst] = np.round(cohort1_x[:, idx_lst].mean())
                 else:
-                    # setting categorical baseline to population proportions
-                    baseline[idx_lst] = cohort1_x[:, idx_lst].mean(axis=0)
+                    category_means = cohort1_x[:, idx_lst].mean(axis=0)
+                    most_frequent_idx = np.argmax(category_means)
+                    baseline[idx_lst] = 0.0
+                    baseline[idx_lst[most_frequent_idx]] = 1.0
         else:
             baseline_index = np.random.choice(len(cohort2_x), 1)
             baseline = cohort2_x[baseline_index]
@@ -413,6 +592,15 @@ if __name__ == "__main__":
         help="whether using baseline",
         default=True,
         action="store_false",
+    )
+    parser.add_argument(
+        "--target_cohort",
+        help=(
+            "Optional: train and explain only this cohort using swapped baseline "
+            "from the other cohort (for baseline mode)."
+        ),
+        default=None,
+        type=str,
     )
 
     args = vars(parser.parse_args())

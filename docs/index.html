@@ -21,17 +21,7 @@
                     <option value="crash_2">CRASH-2 (Tranexamic Acid)</option>
                     <option value="ist3">IST-3 (Alteplase for Stroke)</option>
                     <option value="sprint">SPRINT (Intensive BP Control)</option>
-                    <option value="accord">ACCORD-BP (Intensive BP Control in Diabetes)</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label for="method-select">Method:</label>
-                <select id="method-select">
-                    <option value="method_a">Method A</option>
-                    <option value="method_b">Method B</option>
-                    <option value="method_c">Method C</option>
-                    <option value="method_d">Method D</option>
+                    <option value="accord">ACCORD (Glycemia)</option>
                 </select>
             </div>
 
@@ -39,8 +29,6 @@
                 <label for="expertise-select">Clinical Expertise:</label>
                 <select id="expertise-select">
                     <option value="">-- Select Expertise Level --</option>
-                    <option value="medical_student">Medical Student</option>
-                    <option value="pgy">PGY (Resident)</option>
                     <option value="attending_1-5">Attending (1-5 years)</option>
                     <option value="attending_5plus">Attending (5+ years)</option>
                 </select>
@@ -48,7 +36,15 @@
 
             <div class="control-group">
                 <label for="specialty-input">Specialty:</label>
-                <input type="text" id="specialty-input" placeholder="e.g., Emergency Medicine, Neurology">
+                <select id="specialty-input">
+                    <option value="">-- Select Specialty --</option>
+                    <option value="Emergency">Emergency</option>
+                    <option value="Surgery">Surgery</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Internal Medicine">Internal Medicine</option>
+                    <option value="Endocrinology and Metabolism">Endocrinology and Metabolism</option>
+                    <option value="Neurology">Neurology</option>
+                </select>
             </div>
 
             <button id="load-btn" class="btn btn-primary">Load Hypotheses</button>

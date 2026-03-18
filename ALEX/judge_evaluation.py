@@ -428,8 +428,9 @@ def main() -> None:
     )
 
     base, ext = os.path.splitext(args.hypotheses_json)
-    out_judge_original = args.out_judge_original or f"{base}_logic_score{ext}"
-    out_judge_revised = args.out_judge_revised or f"{base}_logic_score_revised{ext}"
+    judge_suffix = f"__{args.model}" if args.model != "gpt-5-mini" else ""
+    out_judge_original = args.out_judge_original or f"{base}_logic_score{judge_suffix}{ext}"
+    out_judge_revised = args.out_judge_revised or f"{base}_logic_score_revised{judge_suffix}{ext}"
 
     print("Scoring original feature hypotheses...")
     judge_report = score_feature_hypotheses(

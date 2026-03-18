@@ -14,13 +14,13 @@ from scipy import stats
 from tqdm import tqdm
 
 import src.CATENets.catenets.models as cate_models
-from src.cate_utils import qini_score, qini_score_cal
+from src.cate_utils import _predict_teacher, qini_score, qini_score_cal
 from src.CATENets.catenets.models.torch import pseudo_outcome_nets
 from src.dataset import Dataset
 from src.interpretability.explain import Explainer
 from src.model_utils import NuisanceFunctions
 from src.permucate.importance import compute_variable_importance
-from src.utils import ablate, attribution_ranking, insertion_deletion
+from src.utils import attribution_ranking, insertion_deletion
 
 
 class EnsembleTeacher:
@@ -107,7 +107,6 @@ if __name__ == "__main__":
     selection_types = ["if_pehe", "pseudo_outcome_r", "pseudo_outcome_dr"]
 
     data = Dataset(cohort_name, 10)
-    names = data.get_feature_names()
 
     x_train, _, _ = data.get_data("train")
     x_test, _, _ = data.get_data("test")
@@ -119,20 +118,10 @@ if __name__ == "__main__":
         "loco",
         "permucate",
         # Local methods
-        "saliency",
-        "smooth_grad",
-        # "gradient_shap",
-        "lime",
-        # "baseline_lime",
-        "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling",
-        "integrated_gradients",
-        # "baseline_integrated_gradients",
-
         "random",
         "saliency",
         "smooth_grad",
-        "gradient_shap",
+        # "gradient_shap",
         "lime",
         "baseline_lime",
         "baseline_shapley_value_sampling",
@@ -142,10 +131,6 @@ if __name__ == "__main__":
         "kernel_shap"
         # "marginal_shap"
     ]
-
-    top_n_results = {e: [] for e in explainers}
-
-    result_sign = {e: np.zeros((trials, feature_size)) for e in explainers}
 
     results_train = np.zeros((trials, len(x_train)))
     results_test = np.zeros((trials, len(x_test)))
@@ -179,108 +164,108 @@ if __name__ == "__main__":
         # y_test[test_indices], w_test[test_indices]
 
         models = {
-            "XLearner": pseudo_outcome_nets.XLearner(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_out=2,
-                n_units_out=100,
-                batch_size=128,
-                n_iter=1000,
-                nonlin="relu",
-                device=DEVICE,
-                seed=i,
-            ),
-            "SLearner": cate_models.torch.SLearner(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_out=2,
-                n_units_out=100,
-                batch_size=128,
-                n_iter=1000,
-                nonlin="relu",
-                device=DEVICE,
-                seed=i,
-            ),
-            "RLearner": pseudo_outcome_nets.RLearner(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_out=2,
-                n_units_out=100,
-                n_iter=1000,
-                lr=1e-3,
-                patience=10,
-                batch_size=128,
-                batch_norm=False,
-                nonlin="relu",
-                device=DEVICE,
-                seed=i,
-            ),
-            "RALearner": pseudo_outcome_nets.RALearner(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_out=2,
-                n_units_out=100,
-                n_iter=1000,
-                lr=1e-3,
-                patience=10,
-                batch_size=128,
-                batch_norm=False,
-                nonlin="relu",
-                device=DEVICE,
-                seed=i,
-            ),
-            "TLearner": cate_models.torch.TLearner(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_out=2,
-                n_units_out=100,
-                batch_size=128,
-                n_iter=1000,
-                nonlin="relu",
-                device=DEVICE,
-            ),
-            "TARNet": cate_models.torch.TARNet(
-                x_train.shape[1],
-                binary_y=True,
-                n_layers_r=1,
-                n_layers_out=1,
-                n_units_out=100,
-                n_units_r=100,
-                batch_size=128,
-                n_iter=1000,
-                batch_norm=False,
-                early_stopping=True,
-                nonlin="relu",
-            ),
-            "CFRNet_0.01": cate_models.torch.TARNet(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_r=2,
-                n_layers_out=2,
-                n_units_out=100,
-                n_units_r=100,
-                batch_size=128,
-                n_iter=1000,
-                lr=1e-3,
-                batch_norm=False,
-                nonlin="relu",
-                penalty_disc=0.01,
-            ),
-            "CFRNet_0.001": cate_models.torch.TARNet(
-                x_train.shape[1],
-                binary_y=(len(np.unique(y_train)) == 2),
-                n_layers_r=2,
-                n_layers_out=2,
-                n_units_out=100,
-                n_units_r=100,
-                lr=1e-5,
-                batch_size=128,
-                n_iter=1000,
-                batch_norm=False,
-                nonlin="relu",
-                penalty_disc=0.001,
-                seed=i,
-            ),
+            # "XLearner": pseudo_outcome_nets.XLearner(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     nonlin="relu",
+            #     device=DEVICE,
+            #     seed=i,
+            # ),
+            # "SLearner": cate_models.torch.SLearner(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     nonlin="relu",
+            #     device=DEVICE,
+            #     seed=i,
+            # ),
+            # "RLearner": pseudo_outcome_nets.RLearner(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     n_iter=1000,
+            #     lr=1e-3,
+            #     patience=10,
+            #     batch_size=128,
+            #     batch_norm=False,
+            #     nonlin="relu",
+            #     device=DEVICE,
+            #     seed=i,
+            # ),
+            # "RALearner": pseudo_outcome_nets.RALearner(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     n_iter=1000,
+            #     lr=1e-3,
+            #     patience=10,
+            #     batch_size=128,
+            #     batch_norm=False,
+            #     nonlin="relu",
+            #     device=DEVICE,
+            #     seed=i,
+            # ),
+            # "TLearner": cate_models.torch.TLearner(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     nonlin="relu",
+            #     device=DEVICE,
+            # ),
+            # "TARNet": cate_models.torch.TARNet(
+            #     x_train.shape[1],
+            #     binary_y=True,
+            #     n_layers_r=1,
+            #     n_layers_out=1,
+            #     n_units_out=100,
+            #     n_units_r=100,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     batch_norm=False,
+            #     early_stopping=True,
+            #     nonlin="relu",
+            # ),
+            # "CFRNet_0.01": cate_models.torch.TARNet(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_r=2,
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     n_units_r=100,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     lr=1e-3,
+            #     batch_norm=False,
+            #     nonlin="relu",
+            #     penalty_disc=0.01,
+            # ),
+            # "CFRNet_0.001": cate_models.torch.TARNet(
+            #     x_train.shape[1],
+            #     binary_y=(len(np.unique(y_train)) == 2),
+            #     n_layers_r=2,
+            #     n_layers_out=2,
+            #     n_units_out=100,
+            #     n_units_r=100,
+            #     lr=1e-5,
+            #     batch_size=128,
+            #     n_iter=1000,
+            #     batch_norm=False,
+            #     nonlin="relu",
+            #     penalty_disc=0.001,
+            #     seed=i,
+            # ),
             "DRLearner": pseudo_outcome_nets.DRLearner(
                 x_train.shape[1],
                 binary_y=(len(np.unique(y_train)) == 2),
@@ -307,7 +292,8 @@ if __name__ == "__main__":
         nuisance_functions.fit(x_val, y_val, w_val)
 
         model = models[learner]
-        baseline = np.mean(x_train, axis=0)
+        del models  # free memory for the 8 unused models
+        baseline = np.median(x_train, axis=0)
 
         for _, idx_lst in data.discrete_indices.items():
             if len(idx_lst) == 1:
@@ -338,28 +324,27 @@ if __name__ == "__main__":
             baseline=baseline.reshape(1, -1),
         )
         learner_explanations[learner] = learner_explainers[learner].explain(
-            x_test, w_test, y_test
+            x_test[:explainer_limit], w_test[:explainer_limit], y_test[:explainer_limit]
         )
+
+        # Precompute nuisance quantities shared by loco and permucate
+        x_cols = [f"x{j}" for j in range(feature_size)]
+        df_train = pd.DataFrame(x_train, columns=x_cols)
+        df_train["y"] = y_train
+        df_train["a"] = w_train
+        df_test_vim = pd.DataFrame(x_test, columns=x_cols)
+        df_test_vim["y"] = y_test
+        df_test_vim["a"] = w_test
+        pi_hat = nuisance_functions.predict_propensity(x_test)
+        mu0_hat = nuisance_functions.predict_mu_0(x_test)
+        mu1_hat = nuisance_functions.predict_mu_1(x_test)
+        m_hat = pi_hat * mu1_hat + (1 - pi_hat) * mu0_hat
 
         for global_att in explainers:
             if global_att in ["loco", "permucate"]:
-                # Calculate feature importance with LOCO or PermuCate
-                x_cols = [f"x{j}" for j in range(feature_size)]
-                df_train = pd.DataFrame(x_train, columns=x_cols)
-                df_train["y"] = y_train
-                df_train["a"] = w_train
-                df_test = pd.DataFrame(x_test, columns=x_cols)
-                df_test["y"] = y_test
-                df_test["a"] = w_test
-
-                pi_hat = nuisance_functions.predict_propensity(x_test)
-                mu0_hat = nuisance_functions.predict_mu_0(x_test)
-                mu1_hat = nuisance_functions.predict_mu_1(x_test)
-                m_hat = pi_hat * mu1_hat + (1 - pi_hat) * mu0_hat
-
                 vim = compute_variable_importance(
                     df_train=df_train,
-                    df_test=df_test,
+                    df_test=df_test_vim,
                     importance_estimator=model,
                     fitted_learner=model,
                     learner_type=learner,
@@ -371,13 +356,17 @@ if __name__ == "__main__":
                     ),
                     device=DEVICE,
                 )
-                # Store importance results in learner_explanations
                 if global_att == "permucate":
-                    # mean over permutations (d, p, n) -> (n, d)
                     learner_explanations[learner][global_att] = vim.T.mean(1)
                 else:
-                    # (d, n) -> (n, d)
                     learner_explanations[learner][global_att] = vim.T
+
+        # Precompute teacher targets once — reused across all explainers and k
+        tau_tr = _predict_teacher(model, x_train, "CATENets")
+        tau_te = _predict_teacher(model, x_test, "CATENets")
+
+        # Compute zero baseline once
+        baseline_eval = np.zeros(baseline.shape) if zero_baseline else baseline
 
         # Calculate IF-PEHE for insertion and deletion for each explanation methods
 
@@ -401,34 +390,13 @@ if __name__ == "__main__":
                 )
                 global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
-            if zero_baseline:
-                baseline = np.zeros(baseline.shape)
-
-            print("Calculating insertion/deletion and ablation results. ")
+            print("Calculating insertion/deletion results. ")
             insertion_results, deletion_results = insertion_deletion(
-                data.get_data("test"),
+                (x_test[:explainer_limit], w_test[:explainer_limit], y_test[:explainer_limit]),
                 local_rank,
                 model,
-                baseline,
+                baseline_eval,
                 selection_types,
-                nuisance_functions,
-            )
-
-            ablation_pos_results = ablate(
-                data.get_data("test"),
-                learner_explanations[learner][explainer_name],
-                model,
-                baseline,
-                "pos",
-                nuisance_functions,
-            )
-
-            ablation_neg_results = ablate(
-                data.get_data("test"),
-                learner_explanations[learner][explainer_name],
-                model,
-                baseline,
-                "neg",
                 nuisance_functions,
             )
 
@@ -446,7 +414,9 @@ if __name__ == "__main__":
                     (x_train, w_train, y_train),
                     (x_test, w_test, y_test),
                     model,
-                    learner,
+                    "CATENets",
+                    tau_tr=tau_tr,
+                    tau_te=tau_te,
                 )
 
                 train_score_results.append(train_score)
@@ -466,49 +436,29 @@ if __name__ == "__main__":
                     test_mse_results,
                     [qini_score_cal(w_train, y_train, results_train[i])],
                     [qini_score_cal(w_test, y_test, results_test[i])],
-                    ablation_pos_results,
-                    ablation_neg_results,
                 ]
             )
 
-            with open(
-                os.path.join(
-                    f"results/{cohort_name}/",
-                    (
-                        "insertion_deletion_shuffle_"
-                        f"{shuffle}_{learner}_"
-                        f"zero_baseline_{zero_baseline}_"
-                        f"seed_{i}.pkl"
-                    ),
+        with open(
+            os.path.join(
+                f"results/{cohort_name}/",
+                (
+                    "insertion_deletion_shuffle_"
+                    f"{shuffle}_{learner}_"
+                    f"zero_baseline_{zero_baseline}_"
+                    f"seed_{i}.pkl"
                 ),
-                "wb",
-            ) as output_file:
-                pickle.dump(insertion_deletion_data, output_file)
-
-        # Getting top n features
-
-        for explainer_name in explainers:
-
-            ind = np.argpartition(
-                np.abs(learner_explanations[learner][explainer_name]).mean(0),
-                -top_n_features,
-            )[-top_n_features:]
-
-            top_n_results[explainer_name].extend(names[ind].tolist())
-
-            for col in range(feature_size):
-                result_sign[explainer_name][i, col] = stats.pearsonr(
-                    x_test[:, col],
-                    learner_explanations[learner][explainer_name][:, col],
-                )[0]
+            ),
+            "wb",
+        ) as output_file:
+            pickle.dump(insertion_deletion_data, output_file)
 
     ensemble_distillation_data = []
-    ensemble_teacher = EnsembleTeacher(teachers, model_type="CATENets")
+    ensemble_teacher = EnsembleTeacher(teachers, model_type=learner)
 
-    ensemble_train_score_results = []
-    ensemble_test_score_results = []
-    ensemble_train_mse_results = []
-    ensemble_test_mse_results = []
+    # Precompute ensemble teacher targets once
+    tau_tr_ens = ensemble_teacher.predict(x_train)
+    tau_te_ens = ensemble_teacher.predict(x_test)
 
     for m in explainers:
         # 1) per-method global ranking
@@ -528,6 +478,8 @@ if __name__ == "__main__":
                 (x_test, w_test, y_test),
                 teacher=ensemble_teacher,
                 model_type="CATENets",
+                tau_tr=tau_tr_ens,
+                tau_te=tau_te_ens,
             )
             m_train_score.append(tr_sc)
             m_test_score.append(te_sc)
@@ -558,27 +510,6 @@ if __name__ == "__main__":
         "wb",
     ) as output_file:
         pickle.dump(ensemble_distillation_data, output_file)
-
-    for explainer_name in explainers:
-
-        results = collections.Counter(top_n_results[explainer_name])
-        summary = pd.DataFrame(
-            results.items(), columns=["feature", "count (%)"]
-        ).sort_values(by="count (%)", ascending=False)
-
-        summary["count (%)"] = np.round(summary["count (%)"] / (trials), 2) * 100
-
-        indices = [names.tolist().index(i) for i in summary.feature.tolist()]
-        summary["sign"] = np.sign(np.mean(result_sign[explainer_name], axis=0)[indices])
-        filename = (
-            f"{explainer_name}_top_{top_n_features}_features_"
-            f"shuffle_{shuffle}_{learner}.csv"
-        )
-
-        summary.to_csv(f"results/{cohort_name}/{filename}")
-
-
-        summary.to_csv(f"results/{cohort_name}/{filename}")
 
     with open(
         os.path.join(
