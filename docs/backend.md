@@ -11,10 +11,20 @@ This repository includes a Cloudflare Worker example in [backend/cloudflare/work
 
 ### Deploy steps (Cloudflare Worker + KV)
 
-1. Install Wrangler:
+1. Install Wrangler (or use local `npx`):
 
 ```bash
 npm install -g wrangler
+```
+
+If `npm` is not found, install Node.js first (which includes npm), then rerun the command.
+
+Alternative without global install:
+
+```bash
+cd backend/cloudflare
+npm init -y
+npm install --save-dev wrangler
 ```
 
 2. Login:
@@ -36,11 +46,30 @@ wrangler kv namespace create RATINGS --preview
 cp backend/cloudflare/wrangler.toml.example backend/cloudflare/wrangler.toml
 ```
 
+If you use JSONC config, use this instead:
+
+```bash
+cp backend/cloudflare/wrangler.jsonc.example backend/cloudflare/wrangler.jsonc
+```
+
+Important values for either config format:
+
+1. `main` must be `worker.js`
+2. KV binding must be `RATINGS` (matches `env.RATINGS` in worker code)
+3. Set `id` to your production KV namespace ID
+4. Set `preview_id` for local dev (optional but recommended)
+
 5. Deploy:
 
 ```bash
 cd backend/cloudflare
 wrangler deploy
+```
+
+If you installed Wrangler locally, deploy with:
+
+```bash
+npx wrangler deploy
 ```
 
 6. Set frontend API URL in [docs/config.js](config.js):
