@@ -32,9 +32,9 @@ const trialInfo = {
     },
     accord_glycemia: {
         treatment: "Intensive glycemic control (HbA1c target <6.0%)",
-        outcome: "Composite major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+        outcome: "First major cardiovascular event composite (nonfatal MI, nonfatal stroke, or cardiovascular death)",
         population: "Adults with type 2 diabetes at high cardiovascular risk",
-        description: "ACCORD Glycemia was a randomized trial evaluating intensive glucose lowering (target HbA1c <6.0%) versus standard therapy in adults with type 2 diabetes at high cardiovascular risk, with planned follow-up for cardiovascular outcomes.",
+        description: "ACCORD Glycemia was a randomized trial comparing intensive glucose lowering (HbA1c target <6.0%) versus standard control (target 7.0-7.9%) in adults with type 2 diabetes at high cardiovascular risk. The primary composite cardiovascular outcome was nonfatal MI, nonfatal stroke, or cardiovascular death; the intensive glycemia strategy was stopped early because of increased all-cause mortality.",
         link: "https://www.nejm.org/doi/full/10.1056/NEJMoa0802743"
     }
 };
