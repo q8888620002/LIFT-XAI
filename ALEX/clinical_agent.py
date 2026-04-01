@@ -320,7 +320,10 @@ def _normalize_hypotheses_dict(data: dict) -> dict:
     }
 
     def _fix_direction(val: str) -> str:
-        v = (val or "").lower().split()[0].rstrip(".,;:(")
+        parts = (val or "").lower().split()
+        if not parts:
+            return "unclear"
+        v = parts[0].rstrip(".,;:(")
         for prefix, canonical in _DIRECTION_MAP.items():
             if v.startswith(prefix):
                 return canonical
@@ -521,21 +524,18 @@ def _repair_truncated_json(text: str) -> str:
     text = re.sub(r'"\s*\n\s*"', '",\n"', text)
     # Fix missing commas between } and {
     text = re.sub(r'\}\s*\{', '}, {', text)
-    # Count open vs close brackets/braces and append closers
-    opens = 0
-    brackets = 0
+    # Replay the open/close sequence to determine the correct closing order.
+    stack = []
     for ch in text:
-        if ch == '{':
-            opens += 1
-        elif ch == '}':
-            opens -= 1
-        elif ch == '[':
-            brackets += 1
-        elif ch == ']':
-            brackets -= 1
-    # Close in reverse order — approximate but works for most truncations
-    text += ']' * max(brackets, 0)
-    text += '}' * max(opens, 0)
+        if ch in ('{', '['):
+            stack.append(ch)
+        elif ch == '}' and stack and stack[-1] == '{':
+            stack.pop()
+        elif ch == ']' and stack and stack[-1] == '[':
+            stack.pop()
+    # Close in reverse order of opening (innermost first).
+    for opener in reversed(stack):
+        text += ']' if opener == '[' else '}'
     return text
 
 
@@ -627,8 +627,8 @@ def _parse_structured(
             # .parsed is None but content may have raw JSON
             content = completion.choices[0].message.content or ""
             return _extract_json_from_content(content, response_format)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[_parse_structured] structured parse failed, falling back to plain completion: {e}")
 
     # --- Fallback (or primary for OpenRouter): plain create with JSON instructions ---
     schema = response_format.model_json_schema()

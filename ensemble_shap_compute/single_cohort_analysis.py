@@ -7,7 +7,6 @@ import pickle
 
 import numpy as np
 import torch
-import wandb
 from captum.attr import ShapleyValueSampling
 
 import src.CATENets.catenets.models.torch.pseudo_outcome_nets as pseudo_outcome_nets
@@ -15,7 +14,6 @@ from src.dataset import Dataset
 
 # Default device - can be overridden by command line argument
 DEVICE = "cuda:1"
-os.environ["WANDB_API_KEY"] = "a010d8a84d6d1f4afed42df8d3e37058369030c4"
 
 
 def _to_py(x):
@@ -110,12 +108,6 @@ def parse_args():
         action="store_true",
     )
     parser.add_argument(
-        "--wandb",
-        help="whether using baseline",
-        default=True,
-        action="store_true",
-    )
-    parser.add_argument(
         "--relative_change_threshold",
         help="Threshold for stopping based on local SHAP relative change",
         default=0.05,
@@ -153,21 +145,6 @@ def main(args):
     print(args)
     print(f"Using device: {DEVICE}")
 
-    if args.wandb:
-
-        wandb.init(
-            project=f"Convergence for Shapley value {args.cohort_name}",
-            notes=f"Experiment for {args.cohort_name};{args.num_trials}",
-            dir="/data/mingyulu/wandb",
-            config={
-                "num_trials": args.num_trials,
-                "dataset": args.cohort_name,
-                "relative_change_threshold": args.relative_change_threshold,
-                "model": args.learner,
-                "baseline": args.baseline,
-            },
-        )
-
     save_path = f"results/{args.cohort_name}/shapley"  # Define the save directory
 
     if not os.path.exists(save_path):
@@ -178,8 +155,8 @@ def main(args):
 
     cohort_predict_results = []
     cohort_shap_values = []
-    baseline_indices_list = []  # Track baseline indices for reproducibility
-    baseline_outputs_list = []  # Track baseline CATE predictions
+    baseline_indices = []  # Track baseline indices for reproducibility
+    baseline_outputs = []  # Track baseline CATE predictions
     shap_sum_pred_corr = []  # Track SHAP sum vs CATE prediction correlation
 
     for i in range(args.num_trials):
@@ -232,9 +209,9 @@ def main(args):
             baseline = x_train[baseline_index]
         
         # Track baseline metadata
-        baseline_indices_list.append(int(baseline_index[0]) if baseline_index is not None else None)
+        baseline_indices.append(int(baseline_index[0]) if baseline_index is not None else None)
         baseline_output = model.predict(X=baseline.reshape(1, -1)).detach().cpu().numpy().flatten()[0]
-        baseline_outputs_list.append(float(baseline_output))
+        baseline_outputs.append(float(baseline_output))
 
         print(f"Trial {i+1}/{args.num_trials} - Computing SHAP values")
 
@@ -265,15 +242,6 @@ def main(args):
                 mean_shap_values, prev_mean_shap_values
             )
 
-            if args.wandb:
-                wandb.log(
-                    {
-                        "Trials": i + 1,
-                        "Relative Change": avg_relative_change,
-                        "cosine sim": cosine_sim,
-                    }
-                )
-
             print(
                 f"Trial {i+1}: Average Relative Change in Mean Local SHAP Explanations"
                 f" = {avg_relative_change:.6f}"
@@ -282,7 +250,7 @@ def main(args):
 
             if avg_relative_change < args.relative_change_threshold:
                 print(
-                    f"Mean local SHAP explanations stabilized at trial {i}"
+                    f"Mean local SHAP explanations stabilized at trial {i+1}"
                     f". Stopping early."
                 )
                 break
@@ -328,10 +296,6 @@ def main(args):
         "negative_rate": float((pred_pooled < 0).mean()),
     }
     
-    # Baseline metadata
-    baseline_indices = baseline_indices_list
-    baseline_outputs = baseline_outputs_list
-
     # Compute aggregated statistics across trials and samples
     # Mean absolute SHAP value per feature (averaged across samples, then across trials)
     abs_mean_per_trial = np.abs(shap_values_array).mean(axis=1)  # (trials, features)

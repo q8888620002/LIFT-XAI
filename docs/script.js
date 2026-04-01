@@ -133,12 +133,12 @@ const ratingGates = [
     {
         id: 'is_biologically_coherent',
         label: 'Q1: Logical Coherence',
-        description: 'Is the proposed mechanism logically coherent? Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? FALSE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
+        description: 'Is the proposed mechanism logically coherent? Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? DISAGREE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
     },
     {
         id: 'is_causally_plausible',
         label: 'Q2: Causal Plausibility',
-        description: 'Is the proposed mechanism causally plausible? TRUE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." FALSE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also FALSE for post-treatment variables, reverse causality, or trivial severity proxies.'
+        description: 'Is the proposed mechanism causally plausible? AGREE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." DISAGREE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also DISAGREE for post-treatment variables, reverse causality, or trivial severity proxies.'
     },
     {
         id: 'is_clinically_actionable',
@@ -148,7 +148,7 @@ const ratingGates = [
     {
         id: 'is_literature_backed',
         label: 'Q4: External Evidence',
-        description: 'Based on your knowledge, is this specific feature × treatment interaction supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? TRUE if you are aware of supporting evidence; FALSE if you have never encountered this interaction in the literature or clinical practice.'
+        description: 'Based on your knowledge, is this specific feature × treatment interaction supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? AGREE if you are aware of supporting evidence; DISAGREE if you have never encountered this interaction in the literature or clinical practice.'
     }
 ];
 
@@ -332,12 +332,12 @@ function createHypothesisCard(hypothesis, index) {
 
         <div class="rating-section">
             <h4>Your Assessment</h4>
-            <p class="gate-instructions">For each criterion, select TRUE or FALSE.</p>
+            <p class="gate-instructions">For each criterion, select AGREE or DISAGREE.</p>
             ${createGateInputs(index)}
 
             <div class="rating-group">
-                <label class="rating-label">Justification / Comments (optional)</label>
-                <textarea id="comments-${index}" placeholder="Brief reasoning for your gate decisions, or any additional thoughts..."></textarea>
+                <label class="rating-label">Additional comments (optional)</label>
+                <textarea id="comments-${index}" placeholder="Any additional thoughts not captured above..."></textarea>
             </div>
         </div>
     `;
@@ -353,14 +353,20 @@ function createGateInputs(hypIndex) {
             <div class="gate-toggle">
                 <button type="button" class="gate-btn gate-btn-true" id="${gate.id}-${hypIndex}-true"
                     onclick="setGate('${gate.id}', ${hypIndex}, true)">
-                    TRUE
+                    AGREE
                 </button>
                 <button type="button" class="gate-btn gate-btn-false" id="${gate.id}-${hypIndex}-false"
                     onclick="setGate('${gate.id}', ${hypIndex}, false)">
-                    FALSE
+                    DISAGREE
                 </button>
                 <span class="gate-status" id="${gate.id}-${hypIndex}-status">Not rated</span>
             </div>
+            ${['is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id) ? `
+                <div class="rating-group">
+                    <label class="rating-label">Additional comments for ${gate.label} (optional)</label>
+                    <textarea id="${gate.id}-comments-${hypIndex}" placeholder="Optional explanation for your ${gate.label} rating..."></textarea>
+                </div>
+            ` : ''}
         </div>
     `).join('');
 
@@ -371,11 +377,11 @@ function createGateInputs(hypIndex) {
             <div class="gate-toggle">
                 <button type="button" class="gate-btn gate-btn-true" id="${noveltyBonus.id}-${hypIndex}-true"
                     onclick="setGate('${noveltyBonus.id}', ${hypIndex}, true)">
-                    TRUE
+                    AGREE
                 </button>
                 <button type="button" class="gate-btn gate-btn-false" id="${noveltyBonus.id}-${hypIndex}-false"
                     onclick="setGate('${noveltyBonus.id}', ${hypIndex}, false)">
-                    FALSE
+                    DISAGREE
                 </button>
                 <span class="gate-status" id="${noveltyBonus.id}-${hypIndex}-status">Not rated</span>
             </div>
@@ -396,11 +402,11 @@ function setGate(gateId, hypIndex, value) {
 
     if (value) {
         trueBtn.classList.add('active');
-        status.textContent = 'TRUE';
+        status.textContent = 'AGREE';
         status.className = 'gate-status gate-true';
     } else {
         falseBtn.classList.add('active');
-        status.textContent = 'FALSE';
+        status.textContent = 'DISAGREE';
         status.className = 'gate-status gate-false';
     }
 
@@ -461,6 +467,14 @@ function collectRatingsPayload() {
                         label: gate.label,
                         featureName: getDisplayFeatureName(hyp.feature_name),
                     });
+                }
+            }
+
+            if (['is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id)) {
+                const gateCommentEl = document.getElementById(`${gate.id}-comments-${index}`);
+                const gateComment = gateCommentEl ? gateCommentEl.value.trim() : '';
+                if (gateComment) {
+                    featureRating[`${gate.id}_comments`] = gateComment;
                 }
             }
         });

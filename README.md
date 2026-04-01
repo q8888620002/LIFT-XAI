@@ -14,7 +14,7 @@ Computes SHAP values for CATE models on a single cohort using bootstrapped trial
 
 For the current ALEX pipeline, place/expect SHAP summaries under:
 
-`ALEX/results/<cohort>/shapley/<cohort>_shap_summary_<baseline>.json`
+`results/<cohort>/shapley/<cohort>_shap_summary_<baseline>.json`
 
 Example:
 
@@ -22,25 +22,31 @@ Example:
 python ensemble_shap_compute/single_cohort_analysis.py \
     --num_trials 20 \
     --cohort_name crash_2 \
+    --learner DRLearner \
     --baseline \
-    --wandb \
     --relative_change_threshold 0.05 \
-    --top_n_features 15
+    --top_n_features 15 \
+    --device cuda:0
 ```
 
 ### `ALEX/clinical_agent.py`
 
-Generates clinical mechanism hypotheses from SHAP summaries.
+Generates clinical mechanism hypotheses from SHAP summaries using OpenAI, OpenRouter, or local MedGemma models.
 
 Example:
 
 ```bash
 python ALEX/clinical_agent.py \
-    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
     --out_json docs/agent/crash_2/hypotheses_with_shap_XLearner.json \
     --trial_name crash_2 \
     --n_features 15 \
-    --n_hypotheses 8
+    --n_hypotheses 8 \
+    --model gpt-5-mini \
+    --api_provider openai  # choices: openai, openrouter, medgemma
+# Optional: --enable_verifier --retrieve_article --use_data_summary
+# Optional: --verifier_iterations N --fail_on_reject --seed 0
+# MedGemma: --api_provider medgemma --medgemma_model google/medgemma-27b-text-it --medgemma_device cuda
 ```
 
 ### `ensemble_shap_compute/run_clinical_experiments.py`
@@ -52,11 +58,11 @@ Example:
 ```bash
 python ensemble_shap_compute/run_clinical_experiments.py \
     --dataset crash_2 \
-    --shuffle \
     --num_trials 10 \
     --learner XLearner \
     --top_n_features 10 \
     --device cuda:0
+# Optional flags: --shuffle (enable shuffling), --zero_baseline (use zero instead of median baseline)
 ```
 
 ### `summarize_feature_scores.py`
@@ -70,14 +76,15 @@ Summarizes and visualizes feature scores from clinical agent outputs.
 python ensemble_shap_compute/single_cohort_analysis.py \
     --num_trials 20 \
     --cohort_name crash_2 \
+    --learner DRLearner \
     --baseline \
-    --wandb \
     --relative_change_threshold 0.05 \
-    --top_n_features 15
+    --top_n_features 15 \
+    --device cuda:0
 
 # 2) Generate hypotheses (with verifier)
 python ALEX/clinical_agent.py \
-    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
     --out_json docs/agent/crash_2/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses.json \
     --trial_name crash_2 \
     --seed 0 \
@@ -90,7 +97,7 @@ python ALEX/clinical_agent.py \
 # 3) Independent judge scoring
 python ALEX/judge_feature_hypotheses.py \
     --hypotheses_json docs/agent/crash_2/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
-    --shap_json ALEX/results/crash_2/shapley/crash_2_shap_summary_True.json \
+    --shap_json results/crash_2/shapley/crash_2_shap_summary_True.json \
     --trial_name crash_2 \
     --model gpt-5-mini \
     --api_provider openai
@@ -101,8 +108,12 @@ python ALEX/pubmed_mechanism_validator.py \
     --dataset crash_2 \
     --model gpt-5-mini \
     --api-provider openai \
-    --max-abstracts 20
+    --max-abstracts 30
 ```
+
+### `ALEX/judge_evaluation.py`
+
+Alternative judge implementation scoring hypotheses on dimensional scales (plausibility, evidence support, specificity, testability, novelty on 1–5 scales) per mechanism and feature. Same CLI as `judge_feature_hypotheses.py`.
 
 ### `tools/summarize_classification_percentages.py`
 
@@ -150,9 +161,11 @@ Evidence score used in mixed-evidence routing:
 
 Feature-level labels are then computed as the dominant mechanism label per feature (majority vote; ties broken by preferred priority order).
 
-## PubMed Mechanism Validator
+## PubMed Validators
 
-`ALEX/pubmed_mechanism_validator.py` validates hypothesis mechanisms against PubMed literature by:
+### `ALEX/pubmed_mechanism_validator.py`
+
+Validates hypothesis mechanisms against PubMed literature by:
 
 1. Searching PubMed for relevant abstracts
 2. Classifying abstracts as support/conflict/neutral
@@ -179,20 +192,28 @@ python ALEX/pubmed_mechanism_validator.py \
 ### Advanced Usage
 
 ```bash
-# Custom input file
-python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3
-
-# Custom output
+# Custom output path
 python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --output my_validation.json
-
-# LLM analysis (reads OPENAI_API_KEY from environment or .env)
-python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3
 
 # Explicit API key override
 python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --api-key "your-api-key-here"
 
-# More abstracts per mechanism
+# More abstracts per mechanism (default: 30)
 python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --max-abstracts 50
+
+# Fetch full article text from PubMed Central
+python ALEX/pubmed_mechanism_validator.py --input docs/agent/ist3/hypotheses_with_shap_XLearner.json --dataset ist3 --full-text
+```
+
+### `ALEX/pubmed_validation.py`
+
+Extends `pubmed_mechanism_validator.py` with Semantic Scholar citation-graph utilities and Oxford CEBM evidence level (1a–5) assessment per abstract.
+
+```bash
+python ALEX/pubmed_validation.py \
+    --input docs/agent/ist3/gpt-5-mini/with_shap_drlearner/seed_0/hypotheses_revised.json \
+    --dataset ist3 \
+    --s2-api-key "your-semantic-scholar-key"  # optional
 ```
 
 ### Analysis Modes

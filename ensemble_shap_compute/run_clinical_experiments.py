@@ -67,7 +67,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Description of your program")
     parser.add_argument("-d", "--dataset", help="Dataset", required=True)
     parser.add_argument(
-        "-s", "--shuffle", help="shuffle", default=True, action="store_false"
+        "-s", "--shuffle", help="shuffle", default=False, action="store_true"
     )
     parser.add_argument(
         "-t", "--num_trials", help="number of runs ", required=True, type=int
@@ -84,8 +84,8 @@ if __name__ == "__main__":
         "-b",
         "--zero_baseline",
         help="whether to use zero_baseline",
-        default=True,
-        action="store_false",
+        default=False,
+        action="store_true",
     )
 
     parser.add_argument("-device", "--device", help="device", required=True)
@@ -119,16 +119,6 @@ if __name__ == "__main__":
         "loco",
         "permucate",
         # Local methods
-        "saliency",
-        "smooth_grad",
-        # "gradient_shap",
-        "lime",
-        # "baseline_lime",
-        "baseline_shapley_value_sampling",
-        "marginal_shapley_value_sampling",
-        "integrated_gradients",
-        # "baseline_integrated_gradients",
-
         "random",
         "saliency",
         "smooth_grad",
@@ -139,7 +129,7 @@ if __name__ == "__main__":
         "marginal_shapley_value_sampling",
         "integrated_gradients",
         "baseline_integrated_gradients",
-        "kernel_shap"
+        "kernel_shap",
         # "marginal_shap"
     ]
 
@@ -401,15 +391,14 @@ if __name__ == "__main__":
                 )
                 global_rank = np.flip(np.argsort(abs_explanation.mean(0)))
 
-            if zero_baseline:
-                baseline = np.zeros(baseline.shape)
+            effective_baseline = np.zeros(baseline.shape) if zero_baseline else baseline
 
             print("Calculating insertion/deletion and ablation results. ")
             insertion_results, deletion_results = insertion_deletion(
                 data.get_data("test"),
                 local_rank,
                 model,
-                baseline,
+                effective_baseline,
                 selection_types,
                 nuisance_functions,
             )
@@ -418,7 +407,7 @@ if __name__ == "__main__":
                 data.get_data("test"),
                 learner_explanations[learner][explainer_name],
                 model,
-                baseline,
+                effective_baseline,
                 "pos",
                 nuisance_functions,
             )
@@ -427,7 +416,7 @@ if __name__ == "__main__":
                 data.get_data("test"),
                 learner_explanations[learner][explainer_name],
                 model,
-                baseline,
+                effective_baseline,
                 "neg",
                 nuisance_functions,
             )
@@ -503,7 +492,7 @@ if __name__ == "__main__":
                 )[0]
 
     ensemble_distillation_data = []
-    ensemble_teacher = EnsembleTeacher(teachers, model_type="CATENets")
+    ensemble_teacher = EnsembleTeacher(teachers, model_type=learner)
 
     ensemble_train_score_results = []
     ensemble_test_score_results = []
@@ -574,9 +563,6 @@ if __name__ == "__main__":
             f"{explainer_name}_top_{top_n_features}_features_"
             f"shuffle_{shuffle}_{learner}.csv"
         )
-
-        summary.to_csv(f"results/{cohort_name}/{filename}")
-
 
         summary.to_csv(f"results/{cohort_name}/{filename}")
 
