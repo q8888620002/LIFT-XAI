@@ -135,6 +135,44 @@ select:focus, input:focus {
     margin-bottom: 8px;
 }
 
+.study-instructions {
+    border-left-width: 6px;
+    background: linear-gradient(180deg, #eff6ff 0%, var(--card-bg) 75%);
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.08);
+}
+
+.study-instructions h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+}
+
+.study-instructions h3::before {
+    content: "Important";
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.study-instructions p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: #334155;
+}
+
+#trial-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
 .hypothesis-card {
     background: var(--card-bg);
     padding: 25px;
