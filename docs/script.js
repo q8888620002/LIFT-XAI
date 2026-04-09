@@ -189,7 +189,7 @@ const ratingGates = [
 
 const noveltyBonus = {
     id: 'is_novel',
-    label: 'Novelty Bonus',
+    label: 'Novelty',
     description: 'Does this explanation identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
 };
 
