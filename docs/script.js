@@ -457,8 +457,8 @@ function createGateInputs(hypIndex) {
             </div>
             ${['is_biologically_coherent', 'is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id) ? `
                 <div class="rating-group gate-comment-group">
-                    <label class="rating-label">optional explaation for ${(gate.label.match(/^Q\d+/i) || ['this question'])[0]}:</label>
-                    <textarea id="${gate.id}-comments-${hypIndex}" placeholder="Optional explanation for your ${gate.label} rating..."></textarea>
+                    <label class="rating-label">(Optional) Additional comments for ${(gate.label.match(/^Q\d+/i) || ['this question'])[0]}:</label>
+                    <textarea id="${gate.id}-comments-${hypIndex}" placeholder="Optional explanation for your rating..."></textarea>
                 </div>
             ` : ''}
         </div>
@@ -573,7 +573,7 @@ function collectRatingsPayload() {
                 }
             }
 
-            if (['is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id)) {
+            if (['is_biologically_coherent', 'is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id)) {
                 const gateCommentEl = document.getElementById(`${gate.id}-comments-${index}`);
                 const gateComment = gateCommentEl ? gateCommentEl.value.trim() : '';
                 if (gateComment) {
