@@ -455,9 +455,9 @@ function createGateInputs(hypIndex) {
                 </button>
                 <span class="gate-status" id="${gate.id}-${hypIndex}-status">Not rated</span>
             </div>
-            ${['is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id) ? `
+            ${['is_biologically_coherent', 'is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id) ? `
                 <div class="rating-group gate-comment-group">
-                    <label class="rating-label">Additional comments for ${gate.label} (optional)</label>
+                    <label class="rating-label">(optional) Additional comments for ${(gate.label.match(/^Q\d+/i) || ['this question'])[0]}</label>
                     <textarea id="${gate.id}-comments-${hypIndex}" placeholder="Optional explanation for your ${gate.label} rating..."></textarea>
                 </div>
             ` : ''}
