@@ -392,13 +392,39 @@ function displayTrialInfo(cohort) {
     const subgroupAnalysis = info.subgroup_analysis || 'Subgroup analysis text will be added.';
 
     const toHtmlWithLinks = (text) => {
-        const escaped = (text || '')
+        const escapeHtml = (s) => s
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
-        return escaped.replace(/https?:\/\/[^\s)]+/g, (url) =>
-            `<a href="${url}" target="_blank" rel="noopener noreferrer">[link]</a>`
-        );
+
+        const parts = (text || '').split(/(https?:\/\/\S+)/g);
+        return parts.map((part, idx) => {
+            // Even indices are normal text; odd indices are URL candidates.
+            if (idx % 2 === 0) {
+                return escapeHtml(part);
+            }
+
+            let url = part;
+            let trailing = '';
+
+            // Remove only trailing punctuation not part of the URL.
+            while (url.length > 0 && /[),.;!?]$/.test(url)) {
+                const lastChar = url.slice(-1);
+
+                if (lastChar === ')') {
+                    const openCount = (url.match(/\(/g) || []).length;
+                    const closeCount = (url.match(/\)/g) || []).length;
+                    if (closeCount <= openCount) {
+                        break;
+                    }
+                }
+
+                trailing = lastChar + trailing;
+                url = url.slice(0, -1);
+            }
+
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer">[link]</a>${escapeHtml(trailing)}`;
+        }).join('');
     };
 
     document.getElementById('trial-name').textContent = trialDisplayNames[cohort] || cohort;
