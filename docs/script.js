@@ -39,6 +39,37 @@ const trialInfo = {
     }
 };
 
+const specialtyToCohort = {
+    'Emergency': 'crash_2',
+    'Surgery': 'crash_2',
+    'Neurology': 'ist3',
+    'Endocrinology and Metabolism': 'sprint',
+    'Cardiology': 'accord',
+    'Internal Medicine': 'accord_glycemia',
+};
+
+function getCohortForSpecialty(specialty) {
+    return specialtyToCohort[specialty] || '';
+}
+
+function getCohortDisplayName(cohort) {
+    const names = {
+        crash_2: 'CRASH-2 (Tranexamic Acid)',
+        ist3: 'IST-3 (Alteplase for Stroke)',
+        sprint: 'SPRINT (Intensive BP Control)',
+        accord: 'ACCORD-BP (Intensive BP Control in Diabetes)',
+        accord_glycemia: 'ACCORD (Glycemia)',
+    };
+    return names[cohort] || '';
+}
+
+function updateDerivedCohortField() {
+    const specialty = document.getElementById('specialty-input').value;
+    const cohort = getCohortForSpecialty(specialty);
+    const cohortField = document.getElementById('cohort-derived');
+    cohortField.value = cohort ? getCohortDisplayName(cohort) : '';
+}
+
 // Feature name mapping for clean display
 const featureNameMap = {
     // IST-3 features
@@ -165,19 +196,22 @@ const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
 let currentHypotheses = [];
 let ratings = {};
 
+document.getElementById('specialty-input').addEventListener('change', updateDerivedCohortField);
+updateDerivedCohortField();
+
 // Load hypotheses when button is clicked
 document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
-    const cohort = document.getElementById('cohort-select').value;
     const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
+    const cohort = getCohortForSpecialty(specialty);
     const raterId = document.getElementById('rater-id-input').value.trim();
     const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
     if (!cohort) {
-        alert('Please select a trial cohort');
+        alert('Please select a specialty with a mapped trial cohort');
         return;
     }
 
@@ -187,7 +221,7 @@ async function loadHypotheses() {
     }
 
     if (!specialty) {
-        alert('Please enter your specialty');
+        alert('Please select your specialty');
         return;
     }
 
@@ -421,6 +455,7 @@ document.getElementById('submit-btn').addEventListener('click', submitRatings);
 function collectRatingsPayload() {
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value.trim();
+    const cohort = getCohortForSpecialty(specialty);
     const raterId = document.getElementById('rater-id-input').value.trim();
     const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
@@ -430,7 +465,12 @@ function collectRatingsPayload() {
     }
 
     if (!specialty) {
-        alert('Please enter your specialty');
+        alert('Please select your specialty');
+        return null;
+    }
+
+    if (!cohort) {
+        alert('Selected specialty is not mapped to a trial cohort');
         return null;
     }
 
@@ -440,6 +480,8 @@ function collectRatingsPayload() {
     }
 
     ratings.rater_id = raterId;
+    ratings.specialty = specialty;
+    ratings.cohort = cohort;
 
     const missingQuestions = [];
 

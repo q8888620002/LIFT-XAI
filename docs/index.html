@@ -15,14 +15,15 @@
 
         <div class="controls">
             <div class="control-group">
-                <label for="cohort-select">Select Trial Cohort:</label>
-                <select id="cohort-select">
-                    <option value="">-- Select Cohort --</option>
-                    <option value="crash_2">CRASH-2 (Tranexamic Acid)</option>
-                    <option value="ist3">IST-3 (Alteplase for Stroke)</option>
-                    <option value="sprint">SPRINT (Intensive BP Control)</option>
-                    <option value="accord">ACCORD-BP (Intensive BP Control in Diabetes)</option>
-                    <option value="accord_glycemia">ACCORD (Glycemia)</option>
+                <label for="specialty-input">Specialty:</label>
+                <select id="specialty-input">
+                    <option value="">-- Select Specialty --</option>
+                    <option value="Emergency">Emergency</option>
+                    <option value="Surgery">Surgery</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Endocrinology and Metabolism">Endocrinology and Metabolism</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Internal Medicine">Internal Medicine</option>
                 </select>
             </div>
 
@@ -36,16 +37,8 @@
             </div>
 
             <div class="control-group">
-                <label for="specialty-input">Specialty:</label>
-                <select id="specialty-input">
-                    <option value="">-- Select Specialty --</option>
-                    <option value="Emergency">Emergency</option>
-                    <option value="Surgery">Surgery</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Internal Medicine">Internal Medicine</option>
-                    <option value="Endocrinology and Metabolism">Endocrinology and Metabolism</option>
-                    <option value="Neurology">Neurology</option>
-                </select>
+                <label for="cohort-derived">Assigned Trial Cohort:</label>
+                <input type="text" id="cohort-derived" placeholder="Auto-selected from specialty" readonly>
             </div>
 
             <div class="control-group">
