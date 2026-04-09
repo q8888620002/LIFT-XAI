@@ -398,10 +398,15 @@ function displayTrialInfo(cohort) {
             .replace(/>/g, '&gt;');
 
         const parts = (text || '').split(/(https?:\/\/\S+)/g);
-        return parts.map((part, idx) => {
+        const output = [];
+
+        for (let idx = 0; idx < parts.length; idx++) {
+            const part = parts[idx];
+
             // Even indices are normal text; odd indices are URL candidates.
             if (idx % 2 === 0) {
-                return escapeHtml(part);
+                output.push(escapeHtml(part));
+                continue;
             }
 
             let url = part;
@@ -423,8 +428,26 @@ function displayTrialInfo(cohort) {
                 url = url.slice(0, -1);
             }
 
-            return `<a href="${url}" target="_blank" rel="noopener noreferrer">[link]</a>${escapeHtml(trailing)}`;
-        }).join('');
+            let linkText = 'Open link';
+            const prevRaw = parts[idx - 1] || '';
+            const figureMatch = prevRaw.match(/(Figure\s*\d+|Fig\.\s*S?\d+)\s*:\s*$/i);
+            const appendixMatch = prevRaw.match(/(Supplementary Appendix)\s*:\s*$/i);
+
+            if (figureMatch) {
+                // Remove duplicated figure label from plain text and make it the link text.
+                const prevWithoutLabel = prevRaw.slice(0, figureMatch.index);
+                output[output.length - 1] = escapeHtml(prevWithoutLabel);
+                linkText = figureMatch[1];
+            } else if (appendixMatch) {
+                const prevWithoutLabel = prevRaw.slice(0, appendixMatch.index);
+                output[output.length - 1] = escapeHtml(prevWithoutLabel);
+                linkText = appendixMatch[1];
+            }
+
+            output.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(linkText)}</a>${escapeHtml(trailing)}`);
+        }
+
+        return output.join('');
     };
 
     document.getElementById('trial-name').textContent = trialDisplayNames[cohort] || cohort;
