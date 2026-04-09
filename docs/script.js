@@ -391,12 +391,22 @@ function displayTrialInfo(cohort) {
         || `Clinical interpretation: ${info.treatment} evaluated in ${cohort.replace('_', ' ').toUpperCase()} for outcome improvement.`;
     const subgroupAnalysis = info.subgroup_analysis || 'Subgroup analysis text will be added.';
 
+    const toHtmlWithLinks = (text) => {
+        const escaped = (text || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return escaped.replace(/https?:\/\/[^\s)]+/g, (url) =>
+            `<a href="${url}" target="_blank" rel="noopener noreferrer">[link]</a>`
+        );
+    };
+
     document.getElementById('trial-name').textContent = trialDisplayNames[cohort] || cohort;
     document.getElementById('trial-background').textContent = background;
     document.getElementById('trial-methods').textContent = methods;
     document.getElementById('trial-findings').textContent = findings;
     document.getElementById('trial-interpretation').textContent = interpretation;
-    document.getElementById('trial-subgroup').textContent = subgroupAnalysis;
+    document.getElementById('trial-subgroup').innerHTML = toHtmlWithLinks(subgroupAnalysis);
 
     const linkEl = document.getElementById('trial-link');
     linkEl.href = info.link;
