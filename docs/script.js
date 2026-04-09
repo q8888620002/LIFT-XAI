@@ -3,7 +3,7 @@ const ALEX_METHOD = 'with_shap_drlearner';
 // Trial metadata
 const trialInfo = {
     crash_2: {
-        abstract: "Background: Tranexamic acid can reduce bleeding in patients undergoing elective surgery. We assessed the effects of early administration of a short course of tranexamic acid on death, vascular occlusive events, and the receipt of blood transfusion in trauma patients.\n\nMethods: This randomised controlled trial was undertaken in 274 hospitals in 40 countries. 20 211 adult trauma patients with, or at risk of, significant bleeding were randomly assigned within 8 h of injury to either tranexamic acid (loading dose 1 g over 10 min then infusion of 1 g over 8 h) or matching placebo. Randomisation was balanced by centre, with an allocation sequence based on a block size of eight, generated with a computer random number generator. Both participants and study staff (site investigators and trial coordinating centre staff) were masked to treatment allocation. The primary outcome was death in hospital within 4 weeks of injury, and was described with the following categories: bleeding, vascular occlusion (myocardial infarction, stroke and pulmonary embolism), multiorgan failure, head injury, and other. All analyses were by intention to treat. This study is registered as ISRCTN86750102, Clinicaltrials.govNCT00375258, and South African Clinical Trial RegisterDOH-27-0607-1919.\n\nFindings: 10 096 patients were allocated to tranexamic acid and 10 115 to placebo, of whom 10 060 and 10 067, respectively, were analysed. All-cause mortality was significantly reduced with tranexamic acid (1463 [14.5%] tranexamic acid group vs 1613 [16.0%] placebo group; relative risk 0.91, 95% CI 0.85-0.97; p=0.0035). The risk of death due to bleeding was significantly reduced (489 [4.9%] vs 574 [5.7%]; relative risk 0.85, 95% CI 0.76-0.96; p=0.0077).",
+        abstract: "Background: Tranexamic acid can reduce bleeding in patients undergoing elective surgery. We assessed the effects of early administration of a short course of tranexamic acid on death, vascular occlusive events, and the receipt of blood transfusion in trauma patients.\n\nMethods: This randomised controlled trial was undertaken in 274 hospitals in 40 countries. 20 211 adult trauma patients with, or at risk of, significant bleeding were randomly assigned within 8 h of injury to either tranexamic acid (loading dose 1 g over 10 min then infusion of 1 g over 8 h) or matching placebo. Randomisation was balanced by centre, with an allocation sequence based on a block size of eight, generated with a computer random number generator. Both participants and study staff (site investigators and trial coordinating centre staff) were masked to treatment allocation. The primary outcome was death in hospital within 4 weeks of injury, and was described with the following categories: bleeding, vascular occlusion (myocardial infarction, stroke and pulmonary embolism), multiorgan failure, head injury, and other. All analyses were by intention to treat. \n\nFindings: 10 096 patients were allocated to tranexamic acid and 10 115 to placebo, of whom 10 060 and 10 067, respectively, were analysed. All-cause mortality was significantly reduced with tranexamic acid (1463 [14.5%] tranexamic acid group vs 1613 [16.0%] placebo group; relative risk 0.91, 95% CI 0.85-0.97; p=0.0035). The risk of death due to bleeding was significantly reduced (489 [4.9%] vs 574 [5.7%]; relative risk 0.85, 95% CI 0.76-0.96; p=0.0077).",
         interpretation: "Early tranexamic acid appears to reduce all-cause mortality and death due to bleeding in trauma patients when given soon after injury.",
         treatment: "Tranexamic acid (TXA)",
         outcome: "All-cause mortality at 28 days or in-hospital death",
@@ -334,6 +334,14 @@ function normalizeHypotheses(data, method) {
 function displayTrialInfo(cohort) {
     const info = trialInfo[cohort];
 
+    const trialDisplayNames = {
+        crash_2: 'CRASH-2',
+        ist3: 'IST-3',
+        sprint: 'SPRINT',
+        accord: 'ACCORD-BP',
+        accord_glycemia: 'ACCORD Glycemia',
+    };
+
     const extractSection = (abstractText, sectionName) => {
         if (!abstractText) return '';
         const regex = new RegExp(`${sectionName}:\\s*([\\s\\S]*?)(?=\\n\\n(?:Background|Methods|Findings|Interpretation):|$)`, 'i');
@@ -355,6 +363,7 @@ function displayTrialInfo(cohort) {
         || extractSection(info.abstract, 'Interpretation')
         || `Clinical interpretation: ${info.treatment} evaluated in ${cohort.replace('_', ' ').toUpperCase()} for outcome improvement.`;
 
+    document.getElementById('trial-name').textContent = trialDisplayNames[cohort] || cohort;
     document.getElementById('trial-background').textContent = background;
     document.getElementById('trial-methods').textContent = methods;
     document.getElementById('trial-findings').textContent = findings;
