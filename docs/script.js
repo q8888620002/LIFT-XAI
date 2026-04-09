@@ -3,6 +3,8 @@ const ALEX_METHOD = 'with_shap_drlearner';
 // Trial metadata
 const trialInfo = {
     crash_2: {
+        abstract: "Background: Tranexamic acid can reduce bleeding in patients undergoing elective surgery. We assessed the effects of early administration of a short course of tranexamic acid on death, vascular occlusive events, and the receipt of blood transfusion in trauma patients.\n\nMethods: This randomised controlled trial was undertaken in 274 hospitals in 40 countries. 20 211 adult trauma patients with, or at risk of, significant bleeding were randomly assigned within 8 h of injury to either tranexamic acid (loading dose 1 g over 10 min then infusion of 1 g over 8 h) or matching placebo. Randomisation was balanced by centre, with an allocation sequence based on a block size of eight, generated with a computer random number generator. Both participants and study staff (site investigators and trial coordinating centre staff) were masked to treatment allocation. The primary outcome was death in hospital within 4 weeks of injury, and was described with the following categories: bleeding, vascular occlusion (myocardial infarction, stroke and pulmonary embolism), multiorgan failure, head injury, and other. All analyses were by intention to treat. This study is registered as ISRCTN86750102, Clinicaltrials.govNCT00375258, and South African Clinical Trial RegisterDOH-27-0607-1919.\n\nFindings: 10 096 patients were allocated to tranexamic acid and 10 115 to placebo, of whom 10 060 and 10 067, respectively, were analysed. All-cause mortality was significantly reduced with tranexamic acid (1463 [14.5%] tranexamic acid group vs 1613 [16.0%] placebo group; relative risk 0.91, 95% CI 0.85-0.97; p=0.0035). The risk of death due to bleeding was significantly reduced (489 [4.9%] vs 574 [5.7%]; relative risk 0.85, 95% CI 0.76-0.96; p=0.0077).",
+        interpretation: "Early tranexamic acid appears to reduce all-cause mortality and death due to bleeding in trauma patients when given soon after injury.",
         treatment: "Tranexamic acid (TXA)",
         outcome: "All-cause mortality at 28 days or in-hospital death",
         population: "Trauma patients with significant bleeding or at risk of significant hemorrhage",
@@ -10,6 +12,10 @@ const trialInfo = {
         link: "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(10)60835-5/fulltext"
     },
     ist3: {
+        background: "Intravenous alteplase improves outcomes after acute ischemic stroke when given early, but uncertainty remained for broader patient groups and treatment up to 6 hours.",
+        methods: "IST-3 was an international randomized, open-label trial enrolling 3,035 acute ischemic stroke patients across 156 hospitals in 12 countries, comparing IV alteplase (0.9 mg/kg) versus control within 6 hours of symptom onset.",
+        findings: "The trial reported improved odds of being alive and independent at 6 months in selected analyses, with early treatment generally associated with greater benefit and an increased early bleeding risk profile.",
+        interpretation: "Alteplase can provide meaningful functional benefit in acute ischemic stroke, especially when administered promptly, while requiring careful patient selection and bleeding-risk consideration.",
         treatment: "IV alteplase (recombinant tissue plasminogen activator)",
         outcome: "Alive and independent (Oxford Handicap Score 0-2) at 6 months",
         population: "Acute ischemic stroke patients within 6 hours of symptom onset",
@@ -17,6 +23,10 @@ const trialInfo = {
         link: "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(12)60768-5/fulltext"
     },
     sprint: {
+        background: "Whether intensive systolic blood pressure lowering below standard targets improves cardiovascular outcomes in high-risk adults without diabetes was uncertain.",
+        methods: "SPRINT was a multicenter randomized trial (N=9,361) comparing intensive SBP target <120 mmHg versus standard target <140 mmHg in non-diabetic adults aged 50 years or older at elevated cardiovascular risk.",
+        findings: "Intensive treatment reduced major cardiovascular events and all-cause mortality, with trade-offs including higher rates of selected adverse events such as hypotension, electrolyte abnormalities, and acute kidney injury.",
+        interpretation: "For appropriate high-risk, non-diabetic patients, intensive blood pressure control can improve major outcomes, but requires close safety monitoring and individualized implementation.",
         treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
         outcome: "Composite of major cardiovascular events (MI, stroke, heart failure, cardiovascular death)",
         population: "Non-diabetic adults aged ≥50 with hypertension and increased cardiovascular risk",
@@ -24,6 +34,10 @@ const trialInfo = {
         link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939"
     },
     accord: {
+        background: "In adults with type 2 diabetes, it was unclear whether intensive blood pressure lowering below conventional targets would further reduce major cardiovascular events.",
+        methods: "ACCORD-BP was a randomized trial (N=4,733) within ACCORD comparing intensive SBP target <120 mmHg versus standard target <140 mmHg in patients with type 2 diabetes and high cardiovascular risk.",
+        findings: "Intensive blood pressure control did not significantly reduce the primary composite cardiovascular endpoint overall, though some secondary outcomes differed and treatment intensity increased adverse-effect burden.",
+        interpretation: "In type 2 diabetes, routine intensive BP lowering to <120 mmHg is not uniformly superior for major composite outcomes and should be individualized by patient risk and tolerance.",
         treatment: "Intensive blood pressure control (systolic BP target <120 mmHg)",
         outcome: "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
         population: "Adults with type 2 diabetes and high cardiovascular risk",
@@ -31,6 +45,10 @@ const trialInfo = {
         link: "https://www.nejm.org/doi/full/10.1056/NEJMoa1001286"
     },
     accord_glycemia: {
+        background: "Intensive glucose lowering in type 2 diabetes was hypothesized to reduce cardiovascular events, but the overall balance of efficacy and safety was uncertain in high-risk populations.",
+        methods: "ACCORD Glycemia was a randomized trial comparing intensive glycemic control (HbA1c target <6.0%) versus standard control (target 7.0-7.9%) in adults with type 2 diabetes at high cardiovascular risk.",
+        findings: "The intensive strategy did not improve the primary major cardiovascular composite as expected and was stopped early because of increased all-cause mortality.",
+        interpretation: "Very intensive glycemic targets are not broadly beneficial in this high-risk population and glycemic treatment goals should be individualized to optimize benefit-risk trade-offs.",
         treatment: "Intensive glycemic control (HbA1c target <6.0%)",
         outcome: "First major cardiovascular event composite (nonfatal MI, nonfatal stroke, or cardiovascular death)",
         population: "Adults with type 2 diabetes at high cardiovascular risk",
@@ -315,10 +333,33 @@ function normalizeHypotheses(data, method) {
 
 function displayTrialInfo(cohort) {
     const info = trialInfo[cohort];
-    document.getElementById('trial-treatment').textContent = info.treatment;
-    document.getElementById('trial-outcome').textContent = info.outcome;
-    document.getElementById('trial-population').textContent = info.population;
-    document.getElementById('trial-description').textContent = info.description;
+
+    const extractSection = (abstractText, sectionName) => {
+        if (!abstractText) return '';
+        const regex = new RegExp(`${sectionName}:\\s*([\\s\\S]*?)(?=\\n\\n(?:Background|Methods|Findings|Interpretation):|$)`, 'i');
+        const match = abstractText.match(regex);
+        return match ? match[1].trim() : '';
+    };
+
+    const background = info.background
+        || extractSection(info.abstract, 'Background')
+        || info.description
+        || '';
+    const methods = info.methods
+        || extractSection(info.abstract, 'Methods')
+        || `Trial population: ${info.population}.`;
+    const findings = info.findings
+        || extractSection(info.abstract, 'Findings')
+        || `Primary outcome: ${info.outcome}.`;
+    const interpretation = info.interpretation
+        || extractSection(info.abstract, 'Interpretation')
+        || `Clinical interpretation: ${info.treatment} evaluated in ${cohort.replace('_', ' ').toUpperCase()} for outcome improvement.`;
+
+    document.getElementById('trial-background').textContent = background;
+    document.getElementById('trial-methods').textContent = methods;
+    document.getElementById('trial-findings').textContent = findings;
+    document.getElementById('trial-interpretation').textContent = interpretation;
+
     const linkEl = document.getElementById('trial-link');
     linkEl.href = info.link;
     linkEl.textContent = 'View Publication';
