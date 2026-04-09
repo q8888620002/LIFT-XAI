@@ -178,6 +178,28 @@ const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
 let currentHypotheses = [];
 let ratings = {};
 
+function setLoadStatus(message, type = 'info') {
+    const statusEl = document.getElementById('load-status');
+    if (!statusEl) return;
+
+    if (!message) {
+        statusEl.style.display = 'none';
+        statusEl.textContent = '';
+        statusEl.style.color = '';
+        return;
+    }
+
+    statusEl.style.display = 'block';
+    statusEl.textContent = message;
+    if (type === 'error') {
+        statusEl.style.color = '#b00020';
+    } else if (type === 'success') {
+        statusEl.style.color = '#0a7a2f';
+    } else {
+        statusEl.style.color = '';
+    }
+}
+
 // Load explanations when button is clicked
 document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
@@ -190,26 +212,31 @@ async function loadHypotheses() {
     const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
     if (!cohort) {
+        setLoadStatus('Please select a specialty mapped to a trial cohort.', 'error');
         alert('Please select a specialty with a mapped trial cohort');
         return;
     }
 
     if (!expertise) {
+        setLoadStatus('Please select your clinical expertise level.', 'error');
         alert('Please select your clinical expertise level');
         return;
     }
 
     if (!specialty) {
+        setLoadStatus('Please select your specialty.', 'error');
         alert('Please select your specialty');
         return;
     }
 
     if (!raterId || !raterIdPattern.test(raterId)) {
+        setLoadStatus('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -).', 'error');
         alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -)');
         return;
     }
 
     const filePath = `agent/${cohort}/gpt-5-mini/${ALEX_METHOD}/seed_0/hypotheses.json`;
+    setLoadStatus('Loading explanations...');
 
     try {
         const response = await fetch(filePath);
@@ -223,8 +250,10 @@ async function loadHypotheses() {
 
         displayTrialInfo(cohort);
         displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty, raterId);
+        setLoadStatus(`Loaded ${hypotheses.length} explanations.`, 'success');
 
     } catch (error) {
+        setLoadStatus(`Error loading explanations from ${filePath}: ${error.message}`, 'error');
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
