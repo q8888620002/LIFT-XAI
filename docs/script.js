@@ -299,6 +299,10 @@ async function loadHypotheses() {
 
     } catch (error) {
         setLoadStatus(`Error loading explanations from ${filePath}: ${error.message}`, 'error');
+        const explanationsHeading = document.getElementById('explanations-heading');
+        if (explanationsHeading) {
+            explanationsHeading.style.display = 'none';
+        }
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
@@ -482,6 +486,12 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty, rat
         const card = createHypothesisCard(hyp, index);
         container.appendChild(card);
     });
+
+    const explanationsHeading = document.getElementById('explanations-heading');
+    if (explanationsHeading) {
+        explanationsHeading.style.display = 'block';
+        explanationsHeading.textContent = `Explanations to Evaluate (${hypotheses.length})`;
+    }
 
     document.getElementById('summary-section').style.display = 'block';
 }
