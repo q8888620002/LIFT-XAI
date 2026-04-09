@@ -744,7 +744,11 @@ async function submitRatings() {
         }
 
         const result = await response.json();
-        alert(`Ratings submitted successfully. Submission ID: ${result.submission_id}`);
+        alert(
+            `Thank you for completing the survey.\n\n` +
+            `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
+            `You can now close this website.`
+        );
     } catch (error) {
         alert(
             `Could not submit ratings to backend at ${API_BASE_URL}. ` +
