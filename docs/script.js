@@ -132,8 +132,8 @@ const featureNameMap = {
     // ACCORD features
     'baseline_age': 'Age',
     'hr': 'Heart Rate',
-    'hba1c': 'HbA1C',
-    'Hemoglobin A1c': 'HbA1C',
+    'hba1c': 'HbA1c',
+    'Hemoglobin A1c': 'Baseline HbA1c',
     'fpg': 'Fasting Plasma Glucose',
     'alt': 'Alanine Aminotransferase',
     'cpk': 'Creatine Phosphokinase',
@@ -148,7 +148,7 @@ const featureNameMap = {
     'raceclass': 'Race',
     'cvd_hx_baseline': 'History of Cardiovascular Disease',
     'antiarrhythmic': 'Antiarrhythmic Medication Use',
-    'anti_coag': 'Anti-coagulant Usage',
+    'anti_coag': 'Anticoagulant Usage',
     'x4smoke': 'Current Smoker',
 };
 
