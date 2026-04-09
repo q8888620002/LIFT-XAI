@@ -122,7 +122,7 @@ const featureNameMap = {
     'umalcr': 'Urine Albumin-Creatinine Ratio',
     'bmi': 'Body Mass Index',
     'female': 'Female Gender',
-    'race_black': 'Black Race',
+    'race_black': 'Race: Black',
     'smoke_3cat': 'Current Smoker',
     'aspirin': 'Aspirin Use',
     'statin': 'Statin Use',
@@ -143,20 +143,35 @@ const featureNameMap = {
     'vldl': 'VLDL Cholesterol',
     'ldl': 'LDL Cholesterol',
     'bp_med': 'Number of Blood Pressure Medications',
-    'raceclass': 'Black Race',
+    'raceclass': 'Race: Black',
     'cvd_hx_baseline': 'History of Cardiovascular Disease',
     'antiarrhythmic': 'Antiarrhythmic Medication Use',
     'anti_coag': 'Anticoagulant Use',
     'x4smoke': 'Current Smoker',
 };
 
+function normalizeFeatureKey(name) {
+    return (name || '').toLowerCase().replace(/[_\s]+/g, ' ').trim();
+}
+
+const normalizedFeatureNameMap = Object.fromEntries(
+    Object.entries(featureNameMap).map(([key, value]) => [normalizeFeatureKey(key), value])
+);
+
 function getDisplayFeatureName(featureName) {
     // Check direct mapping first
     if (featureNameMap[featureName]) return featureNameMap[featureName];
 
+    // Check normalized mapping to catch variants like "sub CVD" vs "sub_cvd"
+    const normalized = normalizeFeatureKey(featureName);
+    if (normalizedFeatureNameMap[normalized]) return normalizedFeatureNameMap[normalized];
+
     // Strip parenthesized raw variable names, e.g. "Injury classification code (icc)" -> "Injury classification code"
     const stripped = featureName.replace(/\s*\([^)]*\)\s*$/, '').trim();
     if (featureNameMap[stripped]) return featureNameMap[stripped];
+
+    const normalizedStripped = normalizeFeatureKey(stripped);
+    if (normalizedFeatureNameMap[normalizedStripped]) return normalizedFeatureNameMap[normalizedStripped];
 
     // Return the cleaned name (without raw variable in parentheses)
     return stripped;
