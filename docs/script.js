@@ -52,24 +52,6 @@ function getCohortForSpecialty(specialty) {
     return specialtyToCohort[specialty] || '';
 }
 
-function getCohortDisplayName(cohort) {
-    const names = {
-        crash_2: 'CRASH-2 (Tranexamic Acid)',
-        ist3: 'IST-3 (Alteplase for Stroke)',
-        sprint: 'SPRINT (Intensive BP Control)',
-        accord: 'ACCORD-BP (Intensive BP Control in Diabetes)',
-        accord_glycemia: 'ACCORD (Glycemia)',
-    };
-    return names[cohort] || '';
-}
-
-function updateDerivedCohortField() {
-    const specialty = document.getElementById('specialty-input').value;
-    const cohort = getCohortForSpecialty(specialty);
-    const cohortField = document.getElementById('cohort-derived');
-    cohortField.value = cohort ? getCohortDisplayName(cohort) : '';
-}
-
 // Feature name mapping for clean display
 const featureNameMap = {
     // IST-3 features
@@ -174,7 +156,7 @@ const ratingGates = [
     {
         id: 'is_clinically_actionable',
         label: 'Q3: Clinical Actionability',
-        description: 'Is the hypothesis clinically actionable? Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
+        description: 'Is the explanation clinically actionable? Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
         id: 'is_literature_backed',
@@ -186,7 +168,7 @@ const ratingGates = [
 const noveltyBonus = {
     id: 'is_novel',
     label: 'Novelty Bonus',
-    description: 'Does this hypothesis identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
+    description: 'Does this explanation identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
 };
 
 const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
@@ -196,10 +178,7 @@ const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
 let currentHypotheses = [];
 let ratings = {};
 
-document.getElementById('specialty-input').addEventListener('change', updateDerivedCohortField);
-updateDerivedCohortField();
-
-// Load hypotheses when button is clicked
+// Load explanations when button is clicked
 document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
@@ -249,7 +228,7 @@ async function loadHypotheses() {
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
-                <strong>Error loading hypotheses:</strong> ${error.message}<br>
+                <strong>Error loading explanations:</strong> ${error.message}<br>
                 <small>Expected path: ${filePath}</small>
             </div>
         `;
@@ -355,7 +334,7 @@ function createHypothesisCard(hypothesis, index) {
 
         <div class="hypothesis-content">
             <div class="content-section">
-                <h4>Hypotheses</h4>
+                <h4>Explanations</h4>
                 ${hypothesis.mechanisms.map(m => `
                     <div class="mechanism-item">
                         ${m.description}
