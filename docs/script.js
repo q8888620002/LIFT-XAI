@@ -167,23 +167,23 @@ function getDisplayFeatureName(featureName) {
 const ratingGates = [
     {
         id: 'is_biologically_coherent',
-        label: 'Q1: Logical Coherence',
-        description: 'Is the proposed mechanism logically coherent? Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? DISAGREE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
+        label: 'Q1: Is the proposed mechanism logically coherent?',
+        description: 'Logic coherence: Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that mechanistically connects the feature to differential treatment effect? DISAGREE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
     },
     {
         id: 'is_causally_plausible',
-        label: 'Q2: Causal Plausibility',
-        description: 'Is the proposed mechanism causally plausible? AGREE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." DISAGREE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also DISAGREE for post-treatment variables, reverse causality, or trivial severity proxies.'
+        label: 'Q2: Is the proposed mechanism causally plausible?',
+        description: 'Causal Plausibility: AGREE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." DISAGREE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also DISAGREE for post-treatment variables, reverse causality, or trivial severity proxies.'
     },
     {
         id: 'is_clinically_actionable',
-        label: 'Q3: Clinical Actionability',
-        description: 'Is the explanation clinically actionable? Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
+        label: 'Q3: Is the explanation clinically actionable?',
+        description: 'Clinical Actionability: Does it propose clear, operationalisable patient subgroups with distinct treatment recommendations usable in clinical practice?'
     },
     {
         id: 'is_literature_backed',
-        label: 'Q4: External Evidence',
-        description: 'Based on your knowledge, is this specific feature × treatment interaction supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? AGREE if you are aware of supporting evidence; DISAGREE if you have never encountered this interaction in the literature or clinical practice.'
+        label: 'Q4: Is there any evidence base supporting this explanation?',
+        description: 'External Evidence: Based on your knowledge, is this specific explanation supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? AGREE if you are aware of supporting evidence; DISAGREE if you have never encountered this interaction in the literature or clinical practice.'
     }
 ];
 
@@ -411,9 +411,6 @@ function createHypothesisCard(hypothesis, index) {
     card.innerHTML = `
         <div class="hypothesis-header">
             <div class="hypothesis-title">${getDisplayFeatureName(hypothesis.feature_name)}</div>
-            <div>
-                <span class="feature-badge">Rank: ${hypothesis.importance_rank || index + 1}</span>
-            </div>
         </div>
 
         <div class="hypothesis-content">
