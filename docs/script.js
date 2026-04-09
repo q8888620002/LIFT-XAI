@@ -58,16 +58,20 @@ const trialInfo = {
 };
 
 const specialtyToCohort = {
-    'Emergency': 'crash_2',
-    'Surgery': 'crash_2',
-    'Neurology': 'ist3',
-    'Endocrinology and Metabolism': 'sprint',
-    'Cardiology': 'accord',
-    'Internal Medicine': 'accord_glycemia',
+    emergency: 'crash_2',
+    surgery: 'crash_2',
+    neurology: 'ist3',
+    'endocrinology and metabolism': 'sprint',
+    cardiology: 'accord',
+    'internal medicine': 'accord_glycemia',
 };
 
+function normalizeSpecialty(specialty) {
+    return (specialty || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function getCohortForSpecialty(specialty) {
-    return specialtyToCohort[specialty] || '';
+    return specialtyToCohort[normalizeSpecialty(specialty)] || '';
 }
 
 // Feature name mapping for clean display
@@ -224,10 +228,17 @@ document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 async function loadHypotheses() {
     const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
-    const specialty = document.getElementById('specialty-input').value.trim();
-    const cohort = getCohortForSpecialty(specialty);
+    const specialty = document.getElementById('specialty-input').value;
     const raterId = document.getElementById('rater-id-input').value.trim();
     const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
+
+    if (!specialty) {
+        setLoadStatus('Please select your specialty.', 'error');
+        alert('Please select your specialty');
+        return;
+    }
+
+    const cohort = getCohortForSpecialty(specialty);
 
     if (!cohort) {
         setLoadStatus('Please select a specialty mapped to a trial cohort.', 'error');
@@ -238,12 +249,6 @@ async function loadHypotheses() {
     if (!expertise) {
         setLoadStatus('Please select your clinical expertise level.', 'error');
         alert('Please select your clinical expertise level');
-        return;
-    }
-
-    if (!specialty) {
-        setLoadStatus('Please select your specialty.', 'error');
-        alert('Please select your specialty');
         return;
     }
 
@@ -512,8 +517,7 @@ document.getElementById('submit-btn').addEventListener('click', submitRatings);
 
 function collectRatingsPayload() {
     const expertise = document.getElementById('expertise-select').value;
-    const specialty = document.getElementById('specialty-input').value.trim();
-    const cohort = getCohortForSpecialty(specialty);
+    const specialty = document.getElementById('specialty-input').value;
     const raterId = document.getElementById('rater-id-input').value.trim();
     const raterIdPattern = /^[a-zA-Z0-9_-]{3,64}$/;
 
@@ -526,6 +530,8 @@ function collectRatingsPayload() {
         alert('Please select your specialty');
         return null;
     }
+
+    const cohort = getCohortForSpecialty(specialty);
 
     if (!cohort) {
         alert('Selected specialty is not mapped to a trial cohort');
