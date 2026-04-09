@@ -430,7 +430,7 @@ function createHypothesisCard(hypothesis, index) {
             ${createGateInputs(index)}
 
             <div class="rating-group">
-                <label class="rating-label">Additional comments (optional)</label>
+                <label class="rating-label">(Optional) additional comments</label>
                 <textarea id="comments-${index}" placeholder="Any additional thoughts not captured above..."></textarea>
             </div>
         </div>
