@@ -275,8 +275,8 @@ async function loadHypotheses() {
     }
 
     if (!raterId || !raterIdPattern.test(raterId)) {
-        setLoadStatus('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -).', 'error');
-        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -)');
+        setLoadStatus('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -). Do not use a recognizable personal ID.', 'error');
+        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -). Do not use a recognizable personal ID.');
         return;
     }
 
@@ -629,7 +629,7 @@ function collectRatingsPayload() {
     }
 
     if (!raterId || !raterIdPattern.test(raterId)) {
-        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -)');
+        alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -). Do not use a recognizable personal ID.');
         return null;
     }
 
