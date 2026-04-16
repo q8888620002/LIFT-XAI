@@ -299,13 +299,9 @@ async function loadHypotheses() {
 
     } catch (error) {
         setLoadStatus(`Error loading explanations from ${filePath}: ${error.message}`, 'error');
-        const explanationsHeading = document.getElementById('explanations-heading');
-        if (explanationsHeading) {
-            explanationsHeading.style.display = 'none';
-        }
-        const explanationsInstruction = document.getElementById('explanations-instruction');
-        if (explanationsInstruction) {
-            explanationsInstruction.style.display = 'none';
+        const explanationsIntro = document.getElementById('explanations-intro');
+        if (explanationsIntro) {
+            explanationsIntro.style.display = 'none';
         }
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
@@ -491,14 +487,14 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty, rat
         container.appendChild(card);
     });
 
+    const explanationsIntro = document.getElementById('explanations-intro');
+    if (explanationsIntro) {
+        explanationsIntro.style.display = 'block';
+    }
+
     const explanationsHeading = document.getElementById('explanations-heading');
     if (explanationsHeading) {
-        explanationsHeading.style.display = 'block';
         explanationsHeading.textContent = `Explanations to Evaluate (${hypotheses.length})`;
-    }
-    const explanationsInstruction = document.getElementById('explanations-instruction');
-    if (explanationsInstruction) {
-        explanationsInstruction.style.display = 'block';
     }
 
     document.getElementById('summary-section').style.display = 'block';
