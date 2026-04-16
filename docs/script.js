@@ -303,6 +303,10 @@ async function loadHypotheses() {
         if (explanationsHeading) {
             explanationsHeading.style.display = 'none';
         }
+        const explanationsInstruction = document.getElementById('explanations-instruction');
+        if (explanationsInstruction) {
+            explanationsInstruction.style.display = 'none';
+        }
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
@@ -491,6 +495,10 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty, rat
     if (explanationsHeading) {
         explanationsHeading.style.display = 'block';
         explanationsHeading.textContent = `Explanations to Evaluate (${hypotheses.length})`;
+    }
+    const explanationsInstruction = document.getElementById('explanations-instruction');
+    if (explanationsInstruction) {
+        explanationsInstruction.style.display = 'block';
     }
 
     document.getElementById('summary-section').style.display = 'block';
