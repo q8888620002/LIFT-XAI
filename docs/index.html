@@ -15,7 +15,7 @@
 
         <div class="info-box study-instructions">
             <h3>Study Instructions</h3>
-            <p>This survey focuses on validating explanations derived from data-driven subgroup analyses across randomized controlled trials (RCTs).</p>
+            <p>This survey assesses explanations for how specific features influence treatment efficacy within randomized controlled trials (RCTs).</p>
             <p>Based on your clinical expertise, you will be assigned one RCT in a specific specialty. For that trial, you will evaluate five explanations describing patient subgroup characteristics that may lead to different treatment effects.</p>
             <p>Each explanation is rated using four qualitative criteria:</p>
             <ul>
@@ -64,20 +64,19 @@
         </div>
 
         <div id="trial-info" class="info-box" style="display: none;">
+            <p class="help-text">You have been assigned the following randomized controlled trial. Please review the abstract and the reported subgroup analysis below; the explanations you evaluate in the next section are proposed for this specific trial and patient cohort.</p>
             <p class="trial-name-row"><span id="trial-name"></span></p>
             <h3>Study Abstract</h3>
-            <p><strong>Background:</strong> <span id="trial-background"></span></p>
-            <p><strong>Methods:</strong> <span id="trial-methods"></span></p>
-            <p><strong>Findings:</strong> <span id="trial-findings"></span></p>
-            <p><strong>Subgroup Analysis:</strong> <span id="trial-subgroup"></span></p>
-            <p><strong>Interpretation:</strong> <span id="trial-interpretation"></span></p>
+            <p id="trial-abstract"></p>
+            <h3>Subgroup Analysis</h3>
+            <p id="trial-subgroup"></p>
             <p><strong>Publication:</strong> <a id="trial-link" href="#" target="_blank" rel="noopener noreferrer"></a></p>
         </div>
 
         <div id="explanations-section">
             <div id="explanations-intro" style="display: none;">
                 <h3 id="explanations-heading">Explanations to Evaluate</h3>
-                <p id="explanations-instruction" class="help-text">For each proposed explanation below, indicate whether you agree or disagree regarding the following characteristics.</p>
+                <p id="explanations-instruction" class="help-text">Below are five candidate explanations for the subgroup effects observed in the trial above. For each explanation, indicate whether you agree or disagree on each criterion based on this trial's cohort and findings.</p>
             </div>
             <div id="hypotheses-container"></div>
         </div>

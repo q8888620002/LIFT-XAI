@@ -455,10 +455,8 @@ function displayTrialInfo(cohort) {
     };
 
     document.getElementById('trial-name').textContent = trialDisplayNames[cohort] || cohort;
-    document.getElementById('trial-background').textContent = background;
-    document.getElementById('trial-methods').textContent = methods;
-    document.getElementById('trial-findings').textContent = findings;
-    document.getElementById('trial-interpretation').textContent = interpretation;
+    const abstractParts = [background, methods, findings, interpretation].filter(Boolean);
+    document.getElementById('trial-abstract').textContent = abstractParts.join(' ');
     document.getElementById('trial-subgroup').innerHTML = toHtmlWithLinks(subgroupAnalysis);
 
     const linkEl = document.getElementById('trial-link');
