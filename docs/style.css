@@ -145,25 +145,11 @@ select:focus, input:focus {
 }
 
 #explanations-intro {
-    margin: 0 0 20px 0;
-    padding: 0;
-    border: none;
-    background: transparent;
+    margin-bottom: 20px;
 }
 
 #explanations-heading {
-    font-size: var(--fs-lg);
-    color: var(--primary-color);
-    margin: 0 0 8px 0;
-    padding: 0;
-}
-
-#explanations-instruction {
-    font-size: var(--fs-base);
-    color: #334155;
-    margin: 0;
-    padding: 0;
-    line-height: 1.7;
+    margin-top: 0;
 }
 
 .info-box h3 {
@@ -183,34 +169,40 @@ select:focus, input:focus {
     color: #334155;
 }
 
-.study-instructions {
+.study-instructions,
+.explanation-instructions {
     background: var(--card-bg);
 }
 
-.study-instructions h3 {
+.study-instructions h3,
+.explanation-instructions h3 {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: var(--fs-lg);
 }
 
-.study-instructions p {
+.study-instructions p,
+.explanation-instructions p {
     font-size: var(--fs-base);
     line-height: 1.75;
     color: #334155;
 }
 
-.study-instructions p strong {
+.study-instructions p strong,
+.explanation-instructions p strong {
     color: var(--text-primary);
     font-weight: 600;
 }
 
-.study-instructions ul {
+.study-instructions ul,
+.explanation-instructions ul {
     margin: 6px 0 16px 22px;
     color: #334155;
 }
 
-.study-instructions li {
+.study-instructions li,
+.explanation-instructions li {
     margin-bottom: 6px;
     line-height: 1.65;
     font-size: var(--fs-base);
