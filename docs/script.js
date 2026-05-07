@@ -189,30 +189,30 @@ function getDisplayFeatureName(featureName) {
 const ratingGates = [
     {
         id: 'is_biologically_coherent',
-        label: 'Q1: Is the proposed explanation logically coherent?',
-        description: 'Logic coherence: Does it provide a plausible explanation (biological, pharmacological, physiological, or clinical) that explains the connection between the feature and different treatment effects? DISAGREE if only a statistical/epidemiological claim, circular reasoning, or logically inconsistent.'
+        label: 'Q1: Logical Coherence',
+        description: 'Does the explanation make sense and follow a clear line of reasoning? Look for a plausible biological, pharmacological, physiological, or clinical mechanism connecting the feature to different treatment effects. DISAGREE if the explanation is only a statistical/epidemiological claim, uses circular reasoning, or is logically inconsistent.'
     },
     {
         id: 'is_causally_plausible',
-        label: 'Q2: Is the proposed explanation causally plausible?',
-        description: 'Causal Plausibility: Does the proposed explanation causally plausible? AGREE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." DISAGREE example: "Older patients benefit more" when the real reason is simply that older patients have higher baseline event rates (absolute-risk amplification with constant relative risk reduction). Also DISAGREE for post-treatment variables, reverse causality, or trivial severity proxies.'
+        label: 'Q2: Causal Plausibility',
+        description: 'Is the proposed relationship between the patient characteristic and the treatment effect clinically or biologically plausible? AGREE example: "Patients with renal impairment clear the drug more slowly, leading to higher effective exposure and greater benefit." DISAGREE if the explanation collapses to absolute-risk amplification with constant relative risk reduction (e.g., "older patients benefit more" only because they have higher baseline event rates), or relies on post-treatment variables, reverse causality, or trivial severity proxies.'
     },
     {
         id: 'is_clinically_actionable',
-        label: 'Q3: Is the explanation clinically actionable?',
-        description: 'Clinical Actionability: Does it propose a clear rationale and provide a potential patient subgroups with distinct treatment recommendations usable in clinical practice?'
+        label: 'Q3: Clinical Actionability',
+        description: 'Could the explanation help inform clinical interpretation or decision-making? Does it identify a patient subgroup with a distinct treatment recommendation that could be applied in practice?'
     },
     {
         id: 'is_literature_backed',
-        label: 'Q4: Based on your knowledge, is this specific explanation supported by existing evidence?',
-        description: 'External Evidence: Is this specific explanation supported by existing evidence? For example, has it been reported in published RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations? AGREE if you are aware of supporting evidence; DISAGREE if you have never encountered this explanation in the literature or clinical practice.'
+        label: 'Q4: Evidence Quality',
+        description: 'Is the explanation well supported by the information provided and/or relevant clinical evidence? AGREE if you are aware of supporting evidence (RCT subgroup analyses, meta-analyses, clinical guidelines, or well-known clinical observations); DISAGREE if you have never encountered this explanation in the literature or clinical practice.'
     }
 ];
 
 const noveltyBonus = {
     id: 'is_novel',
-    label: 'Novelty',
-    description: 'Does this explanation identify an underexplored mechanism or subgroup not already well-covered in existing clinical guidelines or major reviews?'
+    label: 'Q5: Novelty',
+    description: 'Does this explanation identify an underexplored mechanism or subgroup that is not already well-covered in existing clinical guidelines or major reviews?'
 };
 
 const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
@@ -510,7 +510,6 @@ function createHypothesisCard(hypothesis, index) {
 
         <div class="hypothesis-content">
             <div class="content-section">
-                <h4>Explanations</h4>
                 ${hypothesis.mechanisms.map(m => `
                     <div class="mechanism-item">
                         ${m.description}
@@ -520,13 +519,12 @@ function createHypothesisCard(hypothesis, index) {
         </div>
 
         <div class="rating-section">
-            <h4>Your Assessment</h4>
             <p class="gate-instructions">For each criterion, select AGREE or DISAGREE.</p>
             ${createGateInputs(index)}
 
             <div class="rating-group">
-                <label class="rating-label">(Optional) additional comments</label>
-                <textarea id="comments-${index}" placeholder="Any additional thoughts not captured above..."></textarea>
+                <label class="rating-label">(Optional) Overall comments on this explanation</label>
+                <textarea id="comments-${index}" placeholder="Any additional thoughts not captured by the per-criterion comments above..."></textarea>
             </div>
         </div>
     `;
@@ -548,14 +546,11 @@ function createGateInputs(hypIndex) {
                     onclick="setGate('${gate.id}', ${hypIndex}, false)">
                     DISAGREE
                 </button>
-                <span class="gate-status" id="${gate.id}-${hypIndex}-status">Not rated</span>
             </div>
-            ${['is_biologically_coherent', 'is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id) ? `
-                <div class="rating-group gate-comment-group">
-                    <label class="rating-label">(Optional) Additional comments for ${(gate.label.match(/^Q\d+/i) || ['this question'])[0]}:</label>
-                    <textarea id="${gate.id}-comments-${hypIndex}" placeholder="Explanation for your rating..."></textarea>
-                </div>
-            ` : ''}
+            <div class="rating-group gate-comment-group">
+                <label class="rating-label">(Optional) Additional comments for ${(gate.label.match(/^Q\d+/i) || ['this question'])[0]} &mdash; e.g., explanation for your rating</label>
+                <textarea id="${gate.id}-comments-${hypIndex}"></textarea>
+            </div>
         </div>
     `).join('');
 
@@ -572,7 +567,10 @@ function createGateInputs(hypIndex) {
                     onclick="setGate('${noveltyBonus.id}', ${hypIndex}, false)">
                     DISAGREE
                 </button>
-                <span class="gate-status" id="${noveltyBonus.id}-${hypIndex}-status">Not rated</span>
+            </div>
+            <div class="rating-group gate-comment-group">
+                <label class="rating-label">(Optional) Additional comments for Q5 &mdash; e.g., explanation for your rating</label>
+                <textarea id="${noveltyBonus.id}-comments-${hypIndex}"></textarea>
             </div>
         </div>
     `;
@@ -583,23 +581,11 @@ function createGateInputs(hypIndex) {
 function setGate(gateId, hypIndex, value) {
     const trueBtn = document.getElementById(`${gateId}-${hypIndex}-true`);
     const falseBtn = document.getElementById(`${gateId}-${hypIndex}-false`);
-    const status = document.getElementById(`${gateId}-${hypIndex}-status`);
 
-    // Clear both
     trueBtn.classList.remove('active');
     falseBtn.classList.remove('active');
+    (value ? trueBtn : falseBtn).classList.add('active');
 
-    if (value) {
-        trueBtn.classList.add('active');
-        status.textContent = 'AGREE';
-        status.className = 'gate-status gate-true';
-    } else {
-        falseBtn.classList.add('active');
-        status.textContent = 'DISAGREE';
-        status.className = 'gate-status gate-false';
-    }
-
-    // Store the value
     trueBtn.dataset.value = value ? 'true' : '';
     falseBtn.dataset.value = value ? '' : 'false';
 }
@@ -668,12 +654,10 @@ function collectRatingsPayload() {
                 }
             }
 
-            if (['is_biologically_coherent', 'is_causally_plausible', 'is_clinically_actionable', 'is_literature_backed'].includes(gate.id)) {
-                const gateCommentEl = document.getElementById(`${gate.id}-comments-${index}`);
-                const gateComment = gateCommentEl ? gateCommentEl.value.trim() : '';
-                if (gateComment) {
-                    featureRating[`${gate.id}_comments`] = gateComment;
-                }
+            const gateCommentEl = document.getElementById(`${gate.id}-comments-${index}`);
+            const gateComment = gateCommentEl ? gateCommentEl.value.trim() : '';
+            if (gateComment) {
+                featureRating[`${gate.id}_comments`] = gateComment;
             }
         });
 
@@ -693,6 +677,11 @@ function collectRatingsPayload() {
                 featureName: getDisplayFeatureName(hyp.feature_name),
             });
         }
+        const noveltyCommentEl = document.getElementById(`${noveltyBonus.id}-comments-${index}`);
+        const noveltyComment = noveltyCommentEl ? noveltyCommentEl.value.trim() : '';
+        if (noveltyComment) {
+            featureRating[`${noveltyBonus.id}_comments`] = noveltyComment;
+        }
 
         // Collect comments
         const comments = document.getElementById(`comments-${index}`).value.trim();
@@ -705,7 +694,7 @@ function collectRatingsPayload() {
 
     if (missingQuestions.length > 0) {
         const firstMissing = missingQuestions[0];
-        const targetEl = document.getElementById(`${firstMissing.gateId}-${firstMissing.index}-status`);
+        const targetEl = document.getElementById(`${firstMissing.gateId}-${firstMissing.index}-true`);
         if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
