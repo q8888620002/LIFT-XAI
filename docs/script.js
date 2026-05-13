@@ -66,9 +66,9 @@ const specialtyToCohort = {
     emergency: 'crash_2',
     surgery: 'crash_2',
     neurology: 'ist3',
-    'endocrinology and metabolism': 'sprint',
+    'endocrinology and metabolism': 'accord_glycemia',
     cardiology: 'accord',
-    'internal medicine': 'accord_glycemia',
+    'internal medicine': 'sprint',
 };
 
 function normalizeSpecialty(specialty) {
