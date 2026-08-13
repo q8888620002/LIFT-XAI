@@ -2,7 +2,9 @@
 // The label-to-method assignment is shuffled deterministically per rater+cohort,
 // so the UI never reveals which system produced a set, but the mapping can be
 // reconstructed for analysis (the true method key is stored in each submission).
-const EXPLANATION_METHODS = ['with_shap_drlearner', 'cot', 'hypogenic', 'researchagent'];
+// NOTE: ALEX ('with_shap_drlearner') is hidden in this round -- its explanations
+// were already rated in the previous round. Re-add it here to restore it.
+const EXPLANATION_METHODS = ['cot', 'hypogenic', 'researchagent'];
 
 // Cohorts where only a subset of methods is available on the site.
 const cohortMethodOverrides = {};
@@ -265,10 +267,12 @@ const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
 
 
 let currentHypotheses = [];
-let ratings = {};
 let assignedSets = [];
 let currentSetIndex = -1;
 const submittedSetMethods = new Set();
+// Per-set hypotheses and in-progress answers, keyed by set index, so raters
+// can switch between sets without losing work; everything submits together.
+const setStates = {};
 
 function setLoadStatus(message, type = 'info') {
     const statusEl = document.getElementById('load-status');
@@ -330,25 +334,68 @@ async function loadHypotheses() {
     assignedSets = assignBlindedSets(raterId, cohort);
     currentSetIndex = -1;
     submittedSetMethods.clear();
+    Object.keys(setStates).forEach(k => delete setStates[k]);
     renderSetBar();
-    await selectSet(0, true);
+    await selectSet(0);
 }
 
-function hasUnsubmittedRatings() {
-    if (currentSetIndex < 0 || !assignedSets[currentSetIndex]) return false;
-    if (submittedSetMethods.has(assignedSets[currentSetIndex].method)) return false;
-    return document.querySelector('#hypotheses-container .gate-btn.active') !== null;
+function allGatesList() {
+    return [...ratingGates, noveltyBonus];
 }
 
-async function selectSet(index, skipDirtyCheck = false) {
+// Snapshot the current set's answers from the DOM into setStates
+function saveCurrentSetAnswers() {
+    if (currentSetIndex < 0 || !currentHypotheses.length) return;
+    const state = setStates[currentSetIndex];
+    if (!state) return;
+    state.answers = currentHypotheses.map((hyp, index) => {
+        const entry = {};
+        allGatesList().forEach(gate => {
+            const trueBtn = document.getElementById(`${gate.id}-${index}-true`);
+            const falseBtn = document.getElementById(`${gate.id}-${index}-false`);
+            entry[gate.id] = trueBtn && trueBtn.classList.contains('active') ? true
+                : (falseBtn && falseBtn.classList.contains('active') ? false : null);
+            const commentEl = document.getElementById(`${gate.id}-comments-${index}`);
+            entry[`${gate.id}_comments`] = commentEl ? commentEl.value : '';
+        });
+        const commentsEl = document.getElementById(`comments-${index}`);
+        entry.comments = commentsEl ? commentsEl.value : '';
+        return entry;
+    });
+}
+
+// Re-apply saved answers to the freshly rendered cards of a set
+function restoreSetAnswers(index) {
+    const state = setStates[index];
+    if (!state || !state.answers) return;
+    state.answers.forEach((entry, hypIndex) => {
+        allGatesList().forEach(gate => {
+            if (entry[gate.id] === true || entry[gate.id] === false) {
+                setGate(gate.id, hypIndex, entry[gate.id]);
+            }
+            const commentEl = document.getElementById(`${gate.id}-comments-${hypIndex}`);
+            if (commentEl && entry[`${gate.id}_comments`]) {
+                commentEl.value = entry[`${gate.id}_comments`];
+            }
+        });
+        const commentsEl = document.getElementById(`comments-${hypIndex}`);
+        if (commentsEl && entry.comments) {
+            commentsEl.value = entry.comments;
+        }
+    });
+}
+
+function isSetComplete(index) {
+    const state = setStates[index];
+    if (!state || !state.answers || !state.hypotheses || !state.hypotheses.length) return false;
+    return state.answers.every(entry =>
+        allGatesList().every(gate => entry[gate.id] === true || entry[gate.id] === false)
+    );
+}
+
+async function selectSet(index) {
     if (index === currentSetIndex) return;
-    if (!skipDirtyCheck && hasUnsubmittedRatings()) {
-        const proceed = confirm(
-            'You have unsubmitted ratings for the current set. ' +
-            'Switching sets will discard them. Continue?'
-        );
-        if (!proceed) return;
-    }
+    saveCurrentSetAnswers();
     currentSetIndex = index;
     updateSetBar();
     await loadSet(index);
@@ -376,8 +423,13 @@ async function loadSet(index) {
         const rand = mulberry32(hashString(`${raterId}::${cohort}::${set.method}`));
         const hypotheses = normalizeHypotheses(data, set.method, rand);
 
+        setStates[index] = setStates[index] || {};
+        setStates[index].hypotheses = hypotheses;
+
         displayTrialInfo(cohort);
         displayHypotheses(hypotheses, cohort, set.method, expertise, specialty, raterId, set.label);
+        restoreSetAnswers(index);
+        updateSetBar();
         setLoadStatus(`Loaded ${hypotheses.length} explanations for ${set.label}.`, 'success');
 
     } catch (error) {
@@ -469,10 +521,10 @@ function updateSetBar() {
     assignedSets.forEach((set, i) => {
         const btn = document.getElementById(`set-btn-${i}`);
         if (!btn) return;
-        const submitted = submittedSetMethods.has(set.method);
+        const done = submittedSetMethods.has(set.method) || isSetComplete(i);
         btn.classList.toggle('active', i === currentSetIndex);
-        btn.classList.toggle('submitted', submitted);
-        btn.textContent = submitted ? `${set.label} ✓` : set.label;
+        btn.classList.toggle('submitted', done);
+        btn.textContent = done ? `${set.label} ✓` : set.label;
     });
 }
 
@@ -581,16 +633,6 @@ function displayTrialInfo(cohort) {
 
 function displayHypotheses(hypotheses, cohort, method, expertise, specialty, raterId, setLabel) {
     currentHypotheses = hypotheses;
-    ratings = {
-        expertise: expertise,
-        specialty: specialty,
-        rater_id: raterId,
-        cohort: cohort,
-        method: method,
-        set_label: setLabel || '',
-        timestamp: new Date().toISOString(),
-        ratings: []
-    };
 
     const container = document.getElementById('hypotheses-container');
     container.innerHTML = '';
@@ -704,12 +746,78 @@ function setGate(gateId, hypIndex, value) {
 
     trueBtn.dataset.value = value ? 'true' : '';
     falseBtn.dataset.value = value ? '' : 'false';
+
+    // Keep the saved snapshot and the set-bar checkmarks in sync as the
+    // rater answers questions
+    if (currentSetIndex >= 0 && setStates[currentSetIndex]) {
+        saveCurrentSetAnswers();
+        updateSetBar();
+    }
 }
 
 // Submit ratings
 document.getElementById('submit-btn').addEventListener('click', submitRatings);
 
-function collectRatingsPayload() {
+// Build one submission payload per set (same record shape as previous rounds:
+// one record per method, plus set_label). Returns {missing: ...} if a question
+// is unanswered.
+function buildSetPayload(index, common) {
+    const state = setStates[index];
+    const set = assignedSets[index];
+    if (!state || !state.hypotheses || !state.answers) {
+        return { missing: { setIndex: index, hypIndex: 0, gate: ratingGates[0], featureName: '' } };
+    }
+
+    const ratingsList = [];
+    for (let h = 0; h < state.hypotheses.length; h++) {
+        const hyp = state.hypotheses[h];
+        const entry = state.answers[h] || {};
+        const featureRating = {
+            feature_name: hyp.feature_name,
+            feature_index: h,
+        };
+
+        for (const gate of allGatesList()) {
+            const value = entry[gate.id];
+            if (value !== true && value !== false) {
+                return {
+                    missing: {
+                        setIndex: index,
+                        hypIndex: h,
+                        gate,
+                        featureName: getDisplayFeatureName(hyp.feature_name),
+                    }
+                };
+            }
+            featureRating[gate.id] = value;
+            const gateComment = (entry[`${gate.id}_comments`] || '').trim();
+            if (gateComment) {
+                featureRating[`${gate.id}_comments`] = gateComment;
+            }
+        }
+
+        const comments = (entry.comments || '').trim();
+        if (comments) {
+            featureRating.comments = comments;
+        }
+
+        ratingsList.push(featureRating);
+    }
+
+    return {
+        payload: {
+            ...common,
+            method: set.method,
+            set_label: set.label,
+            timestamp: new Date().toISOString(),
+            ratings: ratingsList,
+        }
+    };
+}
+
+async function submitRatings() {
+    saveCurrentSetAnswers();
+
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value;
     const raterId = document.getElementById('rater-id-input').value.trim();
@@ -717,118 +825,55 @@ function collectRatingsPayload() {
 
     if (!expertise) {
         alert('Please select your clinical expertise level');
-        return null;
+        return;
     }
 
     if (!specialty) {
         alert('Please select your specialty');
-        return null;
+        return;
     }
 
     const cohort = getCohortForSpecialty(specialty);
 
     if (!cohort) {
         alert('Selected specialty is not mapped to a trial cohort');
-        return null;
+        return;
     }
 
     if (!raterId || !raterIdPattern.test(raterId)) {
         alert('Please enter a valid anonymous ID (3-64 chars; letters, numbers, _ or -). Do not use a recognizable personal ID.');
-        return null;
-    }
-
-    ratings.rater_id = raterId;
-    ratings.specialty = specialty;
-    ratings.cohort = cohort;
-
-    const missingQuestions = [];
-
-    // Collect all gate ratings
-    ratings.ratings = currentHypotheses.map((hyp, index) => {
-        const featureRating = {
-            feature_name: hyp.feature_name,
-            feature_index: index,
-        };
-
-        // Collect gate values
-        ratingGates.forEach(gate => {
-            const trueBtn = document.getElementById(`${gate.id}-${index}-true`);
-            if (trueBtn.classList.contains('active')) {
-                featureRating[gate.id] = true;
-            } else {
-                const falseBtn = document.getElementById(`${gate.id}-${index}-false`);
-                if (falseBtn.classList.contains('active')) {
-                    featureRating[gate.id] = false;
-                } else {
-                    featureRating[gate.id] = null;
-                    missingQuestions.push({
-                        index,
-                        gateId: gate.id,
-                        label: gate.label,
-                        featureName: getDisplayFeatureName(hyp.feature_name),
-                    });
-                }
-            }
-
-            const gateCommentEl = document.getElementById(`${gate.id}-comments-${index}`);
-            const gateComment = gateCommentEl ? gateCommentEl.value.trim() : '';
-            if (gateComment) {
-                featureRating[`${gate.id}_comments`] = gateComment;
-            }
-        });
-
-        // Collect novelty bonus
-        const noveltyTrue = document.getElementById(`${noveltyBonus.id}-${index}-true`);
-        const noveltyFalse = document.getElementById(`${noveltyBonus.id}-${index}-false`);
-        if (noveltyTrue.classList.contains('active')) {
-            featureRating[noveltyBonus.id] = true;
-        } else if (noveltyFalse.classList.contains('active')) {
-            featureRating[noveltyBonus.id] = false;
-        } else {
-            featureRating[noveltyBonus.id] = null;
-            missingQuestions.push({
-                index,
-                gateId: noveltyBonus.id,
-                label: noveltyBonus.label,
-                featureName: getDisplayFeatureName(hyp.feature_name),
-            });
-        }
-        const noveltyCommentEl = document.getElementById(`${noveltyBonus.id}-comments-${index}`);
-        const noveltyComment = noveltyCommentEl ? noveltyCommentEl.value.trim() : '';
-        if (noveltyComment) {
-            featureRating[`${noveltyBonus.id}_comments`] = noveltyComment;
-        }
-
-        // Collect comments
-        const comments = document.getElementById(`comments-${index}`).value.trim();
-        if (comments) {
-            featureRating.comments = comments;
-        }
-
-        return featureRating;
-    });
-
-    if (missingQuestions.length > 0) {
-        const firstMissing = missingQuestions[0];
-        const targetEl = document.getElementById(`${firstMissing.gateId}-${firstMissing.index}-true`);
-        if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        alert(
-            `Please answer all questions before submitting. ` +
-            `First missing: ${firstMissing.label} for ${firstMissing.featureName}.`
-        );
-        return null;
-    }
-
-    return ratings;
-}
-
-async function submitRatings() {
-    const payload = collectRatingsPayload();
-    if (!payload) {
         return;
+    }
+
+    const common = {
+        expertise: expertise,
+        specialty: specialty,
+        rater_id: raterId,
+        cohort: cohort,
+    };
+
+    // All sets must be fully rated before anything is submitted
+    const payloads = [];
+    for (let i = 0; i < assignedSets.length; i++) {
+        const result = buildSetPayload(i, common);
+        if (result.missing) {
+            const set = assignedSets[result.missing.setIndex];
+            const where = result.missing.featureName
+                ? `First missing: ${result.missing.gate.label} for ${result.missing.featureName}.`
+                : 'That set has not been rated yet.';
+            alert(
+                `Please complete all ratings for ${set.label} before submitting. ${where}`
+            );
+            await selectSet(result.missing.setIndex);
+            const targetEl = document.getElementById(
+                `${result.missing.gate.id}-${result.missing.hypIndex}-true`
+            );
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
+        payloads.push(result.payload);
     }
 
     const submitBtn = document.getElementById('submit-btn');
@@ -837,51 +882,40 @@ async function submitRatings() {
     submitBtn.textContent = 'Submitting...';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/ratings`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
+        const submissionIds = [];
+        for (let i = 0; i < payloads.length; i++) {
+            const set = assignedSets[i];
+            // Skip sets already stored (retry after a partial failure)
+            if (submittedSetMethods.has(set.method)) continue;
 
-        if (!response.ok) {
-            const body = await response.text();
-            throw new Error(`Submit failed (${response.status}): ${body}`);
-        }
+            const response = await fetch(`${API_BASE_URL}/api/ratings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payloads[i])
+            });
 
-        const result = await response.json();
-
-        if (currentSetIndex >= 0 && assignedSets[currentSetIndex]) {
-            submittedSetMethods.add(assignedSets[currentSetIndex].method);
-            updateSetBar();
-        }
-
-        const remaining = assignedSets.filter(s => !submittedSetMethods.has(s.method));
-        if (remaining.length > 0) {
-            alert(
-                `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
-                `Please continue with the remaining explanation set(s): ` +
-                `${remaining.map(s => s.label).join(', ')}.\n\n` +
-                `Use the set buttons near the top of the page to switch sets.`
-            );
-            const nextIndex = assignedSets.findIndex(s => !submittedSetMethods.has(s.method));
-            if (nextIndex >= 0) {
-                await selectSet(nextIndex, true);
-                const bar = document.getElementById('set-selector');
-                if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (!response.ok) {
+                const body = await response.text();
+                throw new Error(`Submit failed for ${set.label} (${response.status}): ${body}`);
             }
-        } else {
-            alert(
-                `Thank you for completing the survey.\n\n` +
-                `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
-                `You can now close this website.`
-            );
+
+            const result = await response.json();
+            submittedSetMethods.add(set.method);
+            submissionIds.push(result.submission_id);
         }
+
+        alert(
+            `Thank you for completing the survey.\n\n` +
+            `Your ratings for all ${assignedSets.length} explanation set(s) were submitted successfully.\n\n` +
+            `You can now close this website.`
+        );
     } catch (error) {
         alert(
-            `Could not submit ratings to backend at ${API_BASE_URL}. ` +
-            `Please make sure the ratings server is running.\n\nError: ${error.message}`
+            `Could not submit all ratings to the backend. Any sets already submitted ` +
+            `have been saved; click Submit again to retry the remaining ones.\n\n` +
+            `Error: ${error.message}`
         );
     } finally {
         submitBtn.disabled = false;
