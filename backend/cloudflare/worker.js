@@ -53,13 +53,25 @@ export default {
       const now = new Date().toISOString();
       const key = `ratings:${Date.now()}:${submissionId}`;
 
+      // Repeat submissions for the same (rater, cohort, method) are still
+      // stored (append-only, in case two raters chose the same anonymous ID)
+      // but flagged so analysis can deduplicate them.
+      const identity = data.client_submission_id
+        || `${data.rater_id}::${data.cohort}::${data.method}`;
+      const seenKey = `seen:${identity}`;
+      const previousSubmission = await env.RATINGS.get(seenKey);
+
       const payload = {
         submission_id: submissionId,
         received_at: now,
         ...data,
       };
+      if (previousSubmission) {
+        payload.possible_duplicate_of = previousSubmission;
+      }
 
       await env.RATINGS.put(key, JSON.stringify(payload));
+      await env.RATINGS.put(seenKey, submissionId);
 
       return new Response(
         JSON.stringify({

@@ -374,10 +374,33 @@ async function loadHypotheses() {
 
     assignedSets = assignBlindedSets(raterId, cohort);
     currentSetIndex = -1;
-    submittedSetMethods.clear();
     Object.keys(setStates).forEach(k => delete setStates[k]);
+
+    // Restore submitted markers from localStorage so a reload or a second
+    // "Load Explanations" click cannot lead to duplicate submissions
+    submittedSetMethods.clear();
+    assignedSets.forEach(set => {
+        if (localStorage.getItem(submittedStorageKey(raterId, cohort, set.method))) {
+            submittedSetMethods.add(set.method);
+        }
+    });
+
     renderSetBar();
     await selectSet(0);
+
+    if (submittedSetMethods.size === assignedSets.length && assignedSets.length > 0) {
+        setLoadStatus('Our records show you have already submitted ratings for all sets on this device.', 'success');
+    }
+}
+
+// Deterministic per-(rater, cohort, method) submission identity, used both to
+// mark completed submissions locally and to tag payloads for deduplication
+function submissionIdentity(raterId, cohort, method) {
+    return `${raterId}::${cohort}::${method}`;
+}
+
+function submittedStorageKey(raterId, cohort, method) {
+    return `submitted_${submissionIdentity(raterId, cohort, method)}`;
 }
 
 function allGatesList() {
@@ -850,6 +873,9 @@ function buildSetPayload(index, common) {
             ...common,
             method: set.method,
             set_label: set.label,
+            // Deterministic identity so accidental duplicate submissions can
+            // be detected and deduplicated in analysis
+            client_submission_id: submissionIdentity(common.rater_id, common.cohort, set.method),
             timestamp: new Date().toISOString(),
             ratings: ratingsList,
         }
@@ -923,11 +949,16 @@ async function submitRatings() {
     submitBtn.textContent = 'Submitting...';
 
     try {
-        const submissionIds = [];
+        let newlySubmitted = 0;
         for (let i = 0; i < payloads.length; i++) {
             const set = assignedSets[i];
-            // Skip sets already stored (retry after a partial failure)
-            if (submittedSetMethods.has(set.method)) continue;
+            // Skip sets already stored -- both within this session (retry after
+            // a partial failure) and across reloads via localStorage
+            if (submittedSetMethods.has(set.method)
+                || localStorage.getItem(submittedStorageKey(raterId, cohort, set.method))) {
+                submittedSetMethods.add(set.method);
+                continue;
+            }
 
             const response = await fetch(`${API_BASE_URL}/api/ratings`, {
                 method: 'POST',
@@ -944,14 +975,27 @@ async function submitRatings() {
 
             const result = await response.json();
             submittedSetMethods.add(set.method);
-            submissionIds.push(result.submission_id);
+            localStorage.setItem(
+                submittedStorageKey(raterId, cohort, set.method),
+                result.submission_id
+            );
+            newlySubmitted++;
         }
+        updateSetBar();
 
-        alert(
-            `Thank you for completing the survey.\n\n` +
-            `Your ratings for all ${assignedSets.length} explanation set(s) were submitted successfully.\n\n` +
-            `You can now close this website.`
-        );
+        if (newlySubmitted === 0) {
+            alert(
+                `Our records show your ratings were already submitted.\n\n` +
+                `Nothing was submitted again, so there are no duplicates. ` +
+                `If you need to revise your responses, please contact the study team.`
+            );
+        } else {
+            alert(
+                `Thank you for completing the survey.\n\n` +
+                `Your ratings for all ${assignedSets.length} explanation set(s) were submitted successfully.\n\n` +
+                `You can now close this website.`
+            );
+        }
     } catch (error) {
         alert(
             `Could not submit all ratings to the backend. Any sets already submitted ` +
