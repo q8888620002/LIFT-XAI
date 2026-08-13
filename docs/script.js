@@ -296,8 +296,49 @@ function setLoadStatus(message, type = 'info') {
     }
 }
 
+// Persist control selections locally so browser autofill or a reload can't
+// silently clear them (raters reported Specialty resetting after typing an ID)
+const CONTROL_IDS = ['specialty-input', 'expertise-select', 'rater-id-input'];
+
+CONTROL_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const saved = localStorage.getItem(`survey_${id}`);
+    if (saved && !el.value) {
+        el.value = saved;
+    }
+
+    const persist = () => {
+        if (el.value) {
+            localStorage.setItem(`survey_${id}`, el.value);
+        }
+    };
+    el.addEventListener('change', persist);
+    el.addEventListener('input', persist);
+});
+
+// If autofill still clears a select, restore the last saved value
+setInterval(() => {
+    ['specialty-input', 'expertise-select'].forEach(id => {
+        const el = document.getElementById(id);
+        const saved = localStorage.getItem(`survey_${id}`);
+        if (el && saved && !el.value) {
+            el.value = saved;
+        }
+    });
+}, 1000);
+
 // Load explanations when button is clicked
 document.getElementById('load-btn').addEventListener('click', loadHypotheses);
+
+// Pressing Enter in the ID field loads explanations instead of doing nothing
+document.getElementById('rater-id-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        loadHypotheses();
+    }
+});
 
 async function loadHypotheses() {
     const expertise = document.getElementById('expertise-select').value;

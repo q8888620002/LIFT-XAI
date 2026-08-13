@@ -35,7 +35,7 @@
         <div class="controls">
             <div class="control-group">
                 <label for="specialty-input">Specialty:</label>
-                <select id="specialty-input">
+                <select id="specialty-input" autocomplete="off">
                     <option value="">-- Select Specialty --</option>
                     <option value="Emergency">Emergency</option>
                     <option value="Surgery">Surgery</option>
@@ -48,7 +48,7 @@
 
             <div class="control-group">
                 <label for="expertise-select">Clinical Expertise:</label>
-                <select id="expertise-select">
+                <select id="expertise-select" autocomplete="off">
                     <option value="">-- Select Expertise Level --</option>
                     <option value="attending_1-5">Attending (1-5 years)</option>
                     <option value="attending_5-10">Attending (5-10 years)</option>
@@ -58,7 +58,7 @@
 
             <div class="control-group">
                 <label for="rater-id-input">Anonymous ID:</label>
-                <input type="text" id="rater-id-input" placeholder="e.g., clinician_01" required>
+                <input type="text" id="rater-id-input" placeholder="e.g., clinician_01" autocomplete="off" required>
             </div>
 
             <button id="load-btn" class="btn btn-primary">Load Explanations</button>
