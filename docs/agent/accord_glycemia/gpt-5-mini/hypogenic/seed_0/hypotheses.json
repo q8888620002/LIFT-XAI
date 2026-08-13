@@ -1,0 +1,92 @@
+{
+  "method": "HypoGeniC",
+  "study_context": {
+    "dataset": "accord_glycemia",
+    "treatment": "Intensive glycemic control (target HbA1c <6.0%)",
+    "outcome": "Major cardiovascular events (nonfatal MI, nonfatal stroke, cardiovascular death)",
+    "population": "Adults with type 2 diabetes and high cardiovascular risk",
+    "sample_size": 200,
+    "method": "HypoGeniC"
+  },
+  "algorithm_parameters": {
+    "num_init": 30,
+    "top_k": 5,
+    "alpha": 0.5,
+    "num_wrong_scale": 0.8,
+    "update_batch_size": 5,
+    "num_hypotheses_to_update": 5,
+    "update_hypotheses_per_batch": 5
+  },
+  "hypotheses": {
+    "Younger adults with type 2 diabetes (baseline age < 50 years) benefit more from intensive glycemic control because longer remaining lifespan provides more opportunity for reduction in atherosclerotic progression and fewer competing risks from hypoglycemia.": {
+      "hypothesis": "Younger adults with type 2 diabetes (baseline age < 50 years) benefit more from intensive glycemic control because longer remaining lifespan provides more opportunity for reduction in atherosclerotic progression and fewer competing risks from hypoglycemia.",
+      "acc": 0.51,
+      "num_visits": 200,
+      "reward": 0.5913811815359364,
+      "subgroup_rule": {
+        "feature": "baseline_age",
+        "operator": "<",
+        "threshold": 50.0,
+        "description": "Patients with baseline age < 50 years"
+      },
+      "recommendation": "treat"
+    },
+    "In adults with type 2 diabetes and high cardiovascular risk, participants with BMI >= 35 kg/m^2 will experience less reduction in major cardiovascular events from intensive glycemic control (target HbA1c <6.0%) compared with participants with BMI < 35 kg/m^2.": {
+      "hypothesis": "In adults with type 2 diabetes and high cardiovascular risk, participants with BMI >= 35 kg/m^2 will experience less reduction in major cardiovascular events from intensive glycemic control (target HbA1c <6.0%) compared with participants with BMI < 35 kg/m^2.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "bmi",
+        "operator": ">=",
+        "threshold": 35.0,
+        "description": "BMI >= 35 kg/m^2 versus BMI < 35 kg/m^2"
+      },
+      "recommendation": "control"
+    },
+    "Among adults with baseline HbA1c >= 8.0%, intensive glycemic control (target HbA1c <6.0%) will provide little or no reduction in major cardiovascular events compared with standard glycemic control.": {
+      "hypothesis": "Among adults with baseline HbA1c >= 8.0%, intensive glycemic control (target HbA1c <6.0%) will provide little or no reduction in major cardiovascular events compared with standard glycemic control.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "hba1c",
+        "operator": ">=",
+        "threshold": 8.0,
+        "description": "baseline HbA1c greater than or equal to 8.0%"
+      },
+      "recommendation": "control"
+    },
+    "Adults with type 2 diabetes duration <= 5 years will experience greater reduction in major cardiovascular events with intensive glycemic control (target HbA1c <6.0%) compared with those with longer diabetes duration.": {
+      "hypothesis": "Adults with type 2 diabetes duration <= 5 years will experience greater reduction in major cardiovascular events with intensive glycemic control (target HbA1c <6.0%) compared with those with longer diabetes duration.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "yrsdiab",
+        "operator": "<=",
+        "threshold": 5.0,
+        "description": "Diabetes duration of five years or less"
+      },
+      "recommendation": "treat"
+    },
+    "In adults with type 2 diabetes and high cardiovascular risk, baseline systolic blood pressure (SBP) \u2265150 mmHg predicts a reduced benefit from intensive glycemic control (target HbA1c <6.0%) versus usual glycemic control for preventing major cardiovascular events.": {
+      "hypothesis": "In adults with type 2 diabetes and high cardiovascular risk, baseline systolic blood pressure (SBP) \u2265150 mmHg predicts a reduced benefit from intensive glycemic control (target HbA1c <6.0%) versus usual glycemic control for preventing major cardiovascular events.",
+      "acc": 0.0,
+      "num_visits": 0,
+      "reward": 0.0,
+      "subgroup_rule": {
+        "feature": "sbp",
+        "operator": ">=",
+        "threshold": 150.0,
+        "description": "Baseline systolic blood pressure greater than or equal to 150 mmHg"
+      },
+      "recommendation": "control"
+    }
+  },
+  "summary": {
+    "total_hypotheses": 5,
+    "avg_reward": 0.11827623630718728,
+    "avg_accuracy": 0.10200000000000001
+  }
+}

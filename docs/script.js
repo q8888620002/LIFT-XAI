@@ -1,4 +1,49 @@
-const ALEX_METHOD = 'with_shap_drlearner';
+// Explanation sources shown to raters under blinded labels (Set A, Set B, ...).
+// The label-to-method assignment is shuffled deterministically per rater+cohort,
+// so the UI never reveals which system produced a set, but the mapping can be
+// reconstructed for analysis (the true method key is stored in each submission).
+const EXPLANATION_METHODS = ['with_shap_drlearner', 'cot', 'hypogenic', 'researchagent'];
+
+// Cohorts where only a subset of methods is available on the site.
+const cohortMethodOverrides = {};
+
+// FNV-1a hash for deterministic per-rater seeding
+function hashString(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+}
+
+// mulberry32 seeded PRNG
+function mulberry32(seed) {
+    return function () {
+        seed = (seed + 0x6D2B79F5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+function seededShuffle(array, rand) {
+    const out = array.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
+function assignBlindedSets(raterId, cohort) {
+    const methods = cohortMethodOverrides[cohort] || EXPLANATION_METHODS;
+    const rand = mulberry32(hashString(`${raterId}::${cohort}`));
+    return seededShuffle(methods, rand).map((method, i) => ({
+        label: `Set ${String.fromCharCode(65 + i)}`,
+        method: method,
+    }));
+}
 
 // Trial metadata
 const trialInfo = {
@@ -221,6 +266,9 @@ const API_BASE_URL = window.RATINGS_API_BASE_URL || 'http://localhost:8000';
 
 let currentHypotheses = [];
 let ratings = {};
+let assignedSets = [];
+let currentSetIndex = -1;
+const submittedSetMethods = new Set();
 
 function setLoadStatus(message, type = 'info') {
     const statusEl = document.getElementById('load-status');
@@ -248,7 +296,6 @@ function setLoadStatus(message, type = 'info') {
 document.getElementById('load-btn').addEventListener('click', loadHypotheses);
 
 async function loadHypotheses() {
-    const methodLabel = 'alex';
     const expertise = document.getElementById('expertise-select').value;
     const specialty = document.getElementById('specialty-input').value;
     const raterId = document.getElementById('rater-id-input').value.trim();
@@ -280,7 +327,41 @@ async function loadHypotheses() {
         return;
     }
 
-    const filePath = `agent/${cohort}/gpt-5-mini/${ALEX_METHOD}/seed_0/hypotheses.json`;
+    assignedSets = assignBlindedSets(raterId, cohort);
+    currentSetIndex = -1;
+    submittedSetMethods.clear();
+    renderSetBar();
+    await selectSet(0, true);
+}
+
+function hasUnsubmittedRatings() {
+    if (currentSetIndex < 0 || !assignedSets[currentSetIndex]) return false;
+    if (submittedSetMethods.has(assignedSets[currentSetIndex].method)) return false;
+    return document.querySelector('#hypotheses-container .gate-btn.active') !== null;
+}
+
+async function selectSet(index, skipDirtyCheck = false) {
+    if (index === currentSetIndex) return;
+    if (!skipDirtyCheck && hasUnsubmittedRatings()) {
+        const proceed = confirm(
+            'You have unsubmitted ratings for the current set. ' +
+            'Switching sets will discard them. Continue?'
+        );
+        if (!proceed) return;
+    }
+    currentSetIndex = index;
+    updateSetBar();
+    await loadSet(index);
+}
+
+async function loadSet(index) {
+    const set = assignedSets[index];
+    const expertise = document.getElementById('expertise-select').value;
+    const specialty = document.getElementById('specialty-input').value;
+    const raterId = document.getElementById('rater-id-input').value.trim();
+    const cohort = getCohortForSpecialty(specialty);
+
+    const filePath = `agent/${cohort}/gpt-5-mini/${set.method}/seed_0/hypotheses.json`;
     setLoadStatus('Loading explanations...');
 
     try {
@@ -290,15 +371,18 @@ async function loadHypotheses() {
         }
         const data = await response.json();
 
-        // Normalize different JSON formats into unified hypothesis list
-        const hypotheses = normalizeHypotheses(data, ALEX_METHOD);
+        // Normalize different JSON formats into unified hypothesis list;
+        // seed sampling by rater+cohort+method so refreshes show the same items
+        const rand = mulberry32(hashString(`${raterId}::${cohort}::${set.method}`));
+        const hypotheses = normalizeHypotheses(data, set.method, rand);
 
         displayTrialInfo(cohort);
-        displayHypotheses(hypotheses, cohort, methodLabel, expertise, specialty, raterId);
-        setLoadStatus(`Loaded ${hypotheses.length} explanations.`, 'success');
+        displayHypotheses(hypotheses, cohort, set.method, expertise, specialty, raterId, set.label);
+        setLoadStatus(`Loaded ${hypotheses.length} explanations for ${set.label}.`, 'success');
 
     } catch (error) {
-        setLoadStatus(`Error loading explanations from ${filePath}: ${error.message}`, 'error');
+        console.error(`Error loading explanations from ${filePath}:`, error);
+        setLoadStatus(`Error loading explanations for ${set.label}: ${error.message}`, 'error');
         const explanationsIntro = document.getElementById('explanations-intro');
         if (explanationsIntro) {
             explanationsIntro.style.display = 'none';
@@ -306,15 +390,14 @@ async function loadHypotheses() {
         const container = document.getElementById('hypotheses-container');
         container.innerHTML = `
             <div class="error">
-                <strong>Error loading explanations:</strong> ${error.message}<br>
-                <small>Expected path: ${filePath}</small>
+                <strong>Error loading explanations for ${set.label}:</strong> ${error.message}
             </div>
         `;
     }
 }
 
 // Normalize different method JSON formats into a common structure
-function normalizeHypotheses(data, method) {
+function normalizeHypotheses(data, method, rand = Math.random) {
     if (method === 'hypogenic') {
         // HypoGeniC uses a dict keyed by hypothesis text
         return Object.values(data.hypotheses || {}).map((h, i) => ({
@@ -352,7 +435,7 @@ function normalizeHypotheses(data, method) {
         }
         // Shuffle and pick 5
         for (let i = split.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = Math.floor(rand() * (i + 1));
             [split[i], split[j]] = [split[j], split[i]];
         }
         hypotheses = split.slice(0, 5);
@@ -360,6 +443,37 @@ function normalizeHypotheses(data, method) {
     }
 
     return hypotheses;
+}
+
+function renderSetBar() {
+    const bar = document.getElementById('set-selector');
+    const buttonsEl = document.getElementById('set-buttons');
+    if (!bar || !buttonsEl) return;
+
+    buttonsEl.innerHTML = '';
+    assignedSets.forEach((set, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'set-btn';
+        btn.id = `set-btn-${i}`;
+        btn.textContent = set.label;
+        btn.addEventListener('click', () => selectSet(i));
+        buttonsEl.appendChild(btn);
+    });
+
+    bar.style.display = assignedSets.length > 1 ? 'block' : 'none';
+    updateSetBar();
+}
+
+function updateSetBar() {
+    assignedSets.forEach((set, i) => {
+        const btn = document.getElementById(`set-btn-${i}`);
+        if (!btn) return;
+        const submitted = submittedSetMethods.has(set.method);
+        btn.classList.toggle('active', i === currentSetIndex);
+        btn.classList.toggle('submitted', submitted);
+        btn.textContent = submitted ? `${set.label} ✓` : set.label;
+    });
 }
 
 function displayTrialInfo(cohort) {
@@ -465,7 +579,7 @@ function displayTrialInfo(cohort) {
     document.getElementById('trial-info').style.display = 'block';
 }
 
-function displayHypotheses(hypotheses, cohort, method, expertise, specialty, raterId) {
+function displayHypotheses(hypotheses, cohort, method, expertise, specialty, raterId, setLabel) {
     currentHypotheses = hypotheses;
     ratings = {
         expertise: expertise,
@@ -473,6 +587,7 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty, rat
         rater_id: raterId,
         cohort: cohort,
         method: method,
+        set_label: setLabel || '',
         timestamp: new Date().toISOString(),
         ratings: []
     };
@@ -492,7 +607,8 @@ function displayHypotheses(hypotheses, cohort, method, expertise, specialty, rat
 
     const explanationsHeading = document.getElementById('explanations-heading');
     if (explanationsHeading) {
-        explanationsHeading.textContent = `Explanations to Evaluate (${hypotheses.length})`;
+        const setPrefix = (setLabel && assignedSets.length > 1) ? `${setLabel} — ` : '';
+        explanationsHeading.textContent = `${setPrefix}Explanations to Evaluate (${hypotheses.length})`;
     }
 
     document.getElementById('summary-section').style.display = 'block';
@@ -735,11 +851,33 @@ async function submitRatings() {
         }
 
         const result = await response.json();
-        alert(
-            `Thank you for completing the survey.\n\n` +
-            `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
-            `You can now close this website.`
-        );
+
+        if (currentSetIndex >= 0 && assignedSets[currentSetIndex]) {
+            submittedSetMethods.add(assignedSets[currentSetIndex].method);
+            updateSetBar();
+        }
+
+        const remaining = assignedSets.filter(s => !submittedSetMethods.has(s.method));
+        if (remaining.length > 0) {
+            alert(
+                `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
+                `Please continue with the remaining explanation set(s): ` +
+                `${remaining.map(s => s.label).join(', ')}.\n\n` +
+                `Use the set buttons near the top of the page to switch sets.`
+            );
+            const nextIndex = assignedSets.findIndex(s => !submittedSetMethods.has(s.method));
+            if (nextIndex >= 0) {
+                await selectSet(nextIndex, true);
+                const bar = document.getElementById('set-selector');
+                if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } else {
+            alert(
+                `Thank you for completing the survey.\n\n` +
+                `Your responses were submitted successfully (Submission ID: ${result.submission_id}).\n\n` +
+                `You can now close this website.`
+            );
+        }
     } catch (error) {
         alert(
             `Could not submit ratings to backend at ${API_BASE_URL}. ` +

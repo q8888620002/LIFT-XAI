@@ -127,6 +127,48 @@ select:focus, input:focus {
     background-color: #15803d;
 }
 
+.set-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.set-btn {
+    padding: 10px 26px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: var(--fs-base);
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    transition: all 0.15s;
+}
+
+.set-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.set-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.set-btn.submitted {
+    background: #dcfce7;
+    border-color: var(--success-color);
+    color: #166534;
+}
+
+.set-btn.submitted.active {
+    background: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
 .info-box {
     background: var(--card-bg);
     padding: 24px 28px;

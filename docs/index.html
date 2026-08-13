@@ -16,7 +16,7 @@
         <div class="info-box study-instructions">
             <h3>Study Instructions</h3>
             <p>The purpose of this study is to understand how patient characteristics may influence treatment effects in randomized controlled trials (RCTs).</p>
-            <p>You will be assigned to one RCT based on your selected clinical area of expertise. For that trial, you will review five explanations describing patient subgroup characteristics that may be associated with different treatment effects.</p>
+            <p>You will be assigned to one RCT based on your selected clinical area of expertise. For that trial, you will review one or more sets of explanations (up to five explanations per set) describing patient subgroup characteristics that may be associated with different treatment effects. Please rate and submit each set separately.</p>
             <p>For each explanation, you will evaluate five criteria:</p>
             <ul>
                 <li><strong>Logical Coherence</strong> &mdash; Does the explanation make sense and follow a clear line of reasoning?</li>
@@ -28,7 +28,7 @@
             <p>For each criterion, you will indicate whether you agree or disagree. You may also provide an optional brief comment in your own words.</p>
             <p>Your feedback will help us improve the quality of these explanations and support the development of clinical decision-making tools.</p>
             <p>This study (IRB-ID: STUDY00025259) is IRB exempt.</p>
-            <p>Estimated time: ~5 minutes.</p>
+            <p>Estimated time: ~5 minutes per set.</p>
             <p><strong>Please enter a non-identifiable anonymous ID. Do not use any recognizable personal identifier, such as your name, email address, employee ID, or medical record number.</strong></p>
         </div>
 
@@ -65,6 +65,12 @@
             <p id="load-status" class="help-text" style="display: none;"></p>
         </div>
 
+        <div id="set-selector" class="info-box set-selector" style="display: none;">
+            <h3>Explanation Sets</h3>
+            <p>For your assigned trial there are several sets of explanations to evaluate. Please rate and submit each set, one at a time. A checkmark will appear next to each set you have submitted.</p>
+            <div id="set-buttons" class="set-buttons"></div>
+        </div>
+
         <div id="trial-info" class="info-box" style="display: none;">
             <p class="help-text">You have been assigned the following randomized controlled trial. Please review the abstract and the reported subgroup analysis below; the explanations you evaluate in the next section are proposed for this specific trial and patient cohort.</p>
             <p class="trial-name-row"><span id="trial-name"></span></p>
@@ -78,7 +84,7 @@
         <div id="explanations-section">
             <div id="explanations-intro" class="info-box explanation-instructions" style="display: none;">
                 <h3 id="explanations-heading">Explanations to Evaluate</h3>
-                <p id="explanations-instruction">Below are five candidate explanations for the subgroup-specific treatment patterns reported in this trial. These explanations may relate to subgroups with a larger apparent treatment effect, a smaller apparent treatment effect, or no clear difference in treatment effect.</p>
+                <p id="explanations-instruction">Below are the candidate explanations in this set for the subgroup-specific treatment patterns reported in this trial. These explanations may relate to subgroups with a larger apparent treatment effect, a smaller apparent treatment effect, or no clear difference in treatment effect.</p>
                 <p>Please evaluate each explanation independently. Your rating should focus on the quality of the explanation itself, regardless of whether the reported subgroup analysis showed a statistically significant interaction.</p>
                 <p>For each explanation, please rate the following dimensions:</p>
                 <ul>

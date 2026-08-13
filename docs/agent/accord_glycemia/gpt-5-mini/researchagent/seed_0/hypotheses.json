@@ -1,0 +1,53 @@
+{
+  "dataset": "accord_glycemia",
+  "model": "ResearchAgent",
+  "summary": "5 trial-paper-only hypotheses generated for accord_glycemia without external retrieval.",
+  "feature_hypotheses": [
+    {
+      "feature_name": "hba1c",
+      "importance_rank": 1,
+      "shap_value": 0.0,
+      "effect_direction": "negative",
+      "clinical_interpretation": null,
+      "why_important": "Feature selected for trial-paper-only baseline mechanism validation.",
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "In Effects of Intensive Glucose Lowering in Type 2 Diabetes (ACCORD Glycemia), baseline hba1c may modify treatment response through differential baseline cardiovascular risk.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Patients with different hba1c levels may show heterogeneous benefit due to variation in baseline disease burden.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Differences in hba1c may alter event risk trajectories, changing absolute treatment benefit.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "The association between hba1c and outcome may interact with treatment intensity in the trial population.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Variation in hba1c may identify subgroups with different competing-risk profiles under treatment.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ],
+      "subgroup_implications": null,
+      "validation_suggestions": [],
+      "caveats": [
+        "Generated without external retrieval; grounded only in the trial paper context."
+      ]
+    }
+  ],
+  "cross_feature_patterns": null
+}
