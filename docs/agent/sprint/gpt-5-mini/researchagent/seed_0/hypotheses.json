@@ -1,117 +1,183 @@
 {
   "dataset": "sprint",
   "model": "gpt-5-mini",
-  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for sprint, grouped by per-hypothesis feature attribution.",
+  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for sprint, grouped by the characteristic each names.",
   "feature_hypotheses": [
     {
-      "feature_name": "gfr",
+      "feature_name": "Baseline eGFR (creatinine)",
       "importance_rank": 1,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline urine albumin-to-creatinine ratio (uACR) increases the likelihood that an early eGFR decline represents intrinsic glomerular damage rather than a benign hemodynamic fall by indicating preexisting permeability and structural injury that predisposes to persistent loss of filtration.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Lower baseline creatinine\u2011 or cystatin C\u2013based eGFR reflects reduced renal reserve and nephron mass, so the same magnitude of BP\u2011mediated perfusion reduction is more likely to cause irreversible injury and long\u2011term renal events.",
+          "description": "Lower baseline eGFR reflects reduced renal reserve and impaired autoregulation so intensive SBP lowering is more likely to convert an early creatinine rise into persistent eGFR loss via ischemic tubular and nephron loss rather than a benign hemodynamic dip.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline diuretic use or higher diuretic exposure increases the risk that intensive BP lowering will precipitate renal hypoperfusion and ischemic tubular injury, making early eGFR declines more likely to be persistent and to predict sustained renal outcomes.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated baseline urine NGAL normalized to creatinine indicates subclinical tubular injury that lowers the threshold for progression from an initial hemodynamic insult to frank tubular necrosis, so intensive BP lowering in these patients more often leads to persistent eGFR loss.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline plasma cystatin C relative to creatinine suggests underestimated true GFR and reduced filtration capacity, increasing the probability that an early creatinine\u2011based eGFR drop reflects true loss of filtration rather than reversible creatinine kinetics.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated baseline plasma renin or aldosterone denotes activated RAAS physiology that amplifies intrarenal hemodynamic shifts with intensive BP lowering, producing larger functional GFR changes that may either be reversible or, if extreme, precipitate tubular hypoperfusion and injury.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Black race, when accompanied by greater baseline hypertension\u2011related kidney structural change, predisposes to early eGFR declines that reflect preexisting structural injury and therefore a higher probability of persistent loss after intensive BP lowering.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline discordance between cystatin C\u2013based and creatinine\u2011based eGFR (cystatin C indicating worse GFR) identifies patients with lower true filtration reserve who are more likely to convert an early eGFR decline into sustained kidney function loss.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline clinical atherosclerotic vascular disease reflects systemic microvascular and macrovascular stiffening that impairs renal autoregulation, so intensive BP reduction more readily leads to sustained reductions in GFR rather than transient hemodynamic changes.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline anemia or low hemoglobin reduces renal oxygen delivery and predisposes the vulnerable medulla to ischemic tubular injury during episodes of intensive BP\u2011induced hypoperfusion, making early eGFR declines more likely to predict persistent renal outcomes.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
         }
       ]
     },
     {
-      "feature_name": "sbp",
+      "feature_name": "Baseline uACR (albuminuria)",
       "importance_rank": 2,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline use of ACE inhibitor or ARB therapy modifies the effect of intensive SBP lowering by dilating the efferent arteriole and lowering intraglomerular pressure, producing functional creatinine rises that are more often reversible unless accompanied by volume depletion or tubular injury.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline NT\u2011proBNP or clinical markers of venous congestion identify a cardiorenal phenotype in which decongestion or rapid afterload reduction with intensive therapy can cause transient creatinine rises from redistribution of renal perfusion that are often reversible rather than intrinsic tubular injury.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline elevated urine albumin\u2011creatinine ratio signals preexisting glomerular damage that increases the likelihood an early eGFR decline represents intrinsic kidney injury and predicts reduced renal benefit from continued intensive SBP lowering.",
+          "description": "Higher baseline albuminuria indicates preexisting glomerular barrier injury and glomerulosclerosis, which predisposes patients to progression when perfusion falls with intensive BP lowering and thus magnifies the risk that an early eGFR decline represents intrinsic injury.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "age",
+      "feature_name": "ACE inhibitor or ARB use",
       "importance_rank": 3,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Older age is associated with impaired renal autoregulation and lower nephron reserve, so intensiv\ufeffe SBP lowering\u2013related reductions in renal perfusion are more likely to produce structural ischemic injury and persistent decline rather than benign hemodynamic falls.",
+          "description": "Preexisting RAAS blockade reduces efferent arteriolar tone and glomerular filtration pressure, so adding intensive SBP lowering more readily produces a nonreversible drop in GFR through loss of transglomerular pressure rather than a purely functional change.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         }
       ]
     },
     {
-      "feature_name": "umalcr",
+      "feature_name": "Loop diuretic use",
       "importance_rank": 4,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Presence of baseline albuminuria together with elevated tubular markers (e.g., NGAL or KIM\u20111) indicates combined glomerular and tubular pathology that magnifies susceptibility to irreversible injury from intensive BP\u2011related perfusion changes, increasing long\u2011term renal event risk.",
+          "description": "Baseline loop diuretic therapy promotes intravascular volume contraction and tubular hypoperfusion, increasing the likelihood that intensive SBP lowering causes ischemic tubular injury and persistent creatinine elevation rather than transient hemodynamic reduction.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Orthostatic hypotension",
+      "importance_rank": 5,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Presence of orthostatic hypotension signifies impaired systemic and renal autoregulation and episodic hypoperfusion, so intensive BP targets will more frequently translate early eGFR drops into sustained injury through recurrent renal ischemia.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
+        }
+      ]
+    },
+    {
+      "feature_name": "NT\u2011proBNP level",
+      "importance_rank": 6,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Elevated baseline NT\u2011proBNP as a marker of cardiac dysfunction and low forward flow predisposes the kidney to perfusion-dependent injury, such that intensive SBP lowering increases risk of persistent eGFR decline driven by reduced renal perfusion pressure.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Renal artery stenosis",
+      "importance_rank": 7,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Anatomic renal artery stenosis creates perfusion dependence on higher systemic pressure, so intensive SBP reduction is more likely to cause frank ischemic loss of filtration and persistent renal dysfunction rather than reversible hemodynamic change.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Arterial stiffness (pulse wave velocity)",
+      "importance_rank": 8,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Increased arterial stiffness blunts dampening of systolic pressure and impairs microvascular autoregulation, making intensive SBP lowering more apt to cause cortical hypoperfusion and tubular injury with persistent eGFR loss.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Age (older)",
+      "importance_rank": 9,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Advanced age is associated with fewer nephrons and diminished autoregulatory capacity, so older participants are more susceptible to sustained kidney injury from aggressive SBP lowering following an early eGFR decline.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Black race",
+      "importance_rank": 10,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Black race, reflecting differences in hypertension phenotype and higher baseline glomerulosclerosis prevalence in this cohort, may modify response to intensive SBP lowering by increasing risk that an early eGFR fall represents progressive intrinsic kidney disease rather than only hemodynamic change.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Baseline systolic blood pressure",
+      "importance_rank": 11,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Higher baseline systolic BP leads to larger absolute BP reductions with intensification and thus greater acute declines in renal perfusion pressure, increasing the probability that early eGFR drops reflect injurious hypoperfusion rather than benign adjustment.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Established coronary artery disease",
+      "importance_rank": 12,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Underlying coronary artery disease signifies impaired cardiac reserve and episodic low cardiac output states, so intensive BP lowering may more readily precipitate renal hypoperfusion and persistent tubular injury after an early eGFR decline.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Anemia (hemoglobin)",
+      "importance_rank": 13,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Lower baseline hemoglobin reduces renal oxygen delivery and heightens susceptibility to ischemic tubular injury during reductions in renal perfusion caused by intensive SBP lowering, making early eGFR drops more likely to persist.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Chronic NSAID use",
+      "importance_rank": 14,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Regular NSAID exposure impairs prostaglandin\u2011mediated afferent arteriolar vasodilation and renal autoregulation, so intensive SBP lowering in NSAID users more commonly converts early eGFR declines into intrinsic renal injury and sustained loss.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Body mass index (obesity)",
+      "importance_rank": 15,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Higher baseline BMI promotes hyperfiltration and increased intrarenal metabolic demand such that aggressive BP reduction can unmask tubular vulnerability and lead to persistent eGFR decline after an initial drop rather than simple hemodynamic stabilization.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }

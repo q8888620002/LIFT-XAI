@@ -1,111 +1,183 @@
 {
   "dataset": "ist3",
   "model": "gpt-5-mini",
-  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for ist3, grouped by per-hypothesis feature attribution.",
+  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for ist3, grouped by the characteristic each names.",
   "feature_hypotheses": [
     {
-      "feature_name": "age",
+      "feature_name": "Baseline age (years)",
       "importance_rank": 1,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Older age is associated with increased cerebral vessel fragility and blood\u2013brain barrier disruption, which raises symptomatic intracranial haemorrhage risk and reduces attainable functional recovery after alteplase.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline NIH Stroke Scale score reflects a larger ischaemic burden and less salvageable penumbra, reducing the probability of achieving mRS 0\u20132 and increasing risk of haemorrhagic transformation with thrombolysis.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Small ischaemic core on baseline CT or perfusion imaging identifies a large salvageable penumbra that increases the absolute benefit from thrombolysis while lowering haemorrhagic risk.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Presence of a proximal large\u2011vessel occlusion on baseline vascular imaging denotes high clot burden that may resist intravenous lysis and, by altering recanalisation probability, changes the net benefit of alteplase.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline evidence of prior intracranial haemorrhage or multiple cerebral microbleeds on imaging signals impaired vascular integrity and a higher probability of symptomatic ICH with thrombolysis, reducing net benefit.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Pre\u2011stroke disability (non\u2011zero premorbid mRS) reduces the ceiling for functional improvement to mRS 0\u20132, so the absolute benefit from alteplase is smaller and harms weigh more heavily.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Large ischaemic lesions involving the brainstem or bilateral hemispheres carry low potential for functional recovery and high risk of catastrophic haemorrhagic conversion, decreasing net benefit from thrombolysis.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "A hyperdense artery sign or other imaging markers of dense thrombus indicate high thrombus burden that is less likely to recanalise with IV alteplase alone, lowering expected functional benefit.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Marked early cerebral oedema or mass effect on baseline imaging reflects severe tissue injury and raised intracranial pressure, which increases symptomatic ICH risk and limits functional recovery after alteplase.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Extensive chronic small\u2011vessel ischaemic leukoaraiosis on baseline imaging suggests reduced neural reserve and microvascular fragility, diminishing gains in functional independence and increasing haemorrhagic susceptibility after thrombolysis.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Proximal middle cerebral artery occlusion location on baseline imaging denotes a larger ischaemic territory and higher risk of poor outcome and haemorrhagic transformation, altering the net benefit of alteplase.",
+          "description": "Higher baseline age may reduce the net benefit of alteplase because age\u2011related cerebral frailty and comorbidity increase susceptibility to symptomatic intracranial hemorrhage and limit potential for functional recovery after reperfusion.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "time_to_treatment",
+      "feature_name": "Onset-to-treatment time",
       "importance_rank": 2,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Shorter onset\u2011to\u2011treatment time (e.g., \u22643 hours) preserves more penumbral tissue and intact microvasculature, increasing likelihood of functional benefit and lowering net harm from alteplase.",
+          "description": "Longer onset-to-treatment time likely attenuates alteplase benefit because progressive infarct core growth reduces salvageable tissue and raises the probability of hemorrhagic conversion following fibrinolysis.",
           "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Baseline stroke severity (NIHSS)",
+      "importance_rank": 3,
+      "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Longer onset\u2011to\u2011treatment time within the 3\u20136 hour window indicates more established infarction and blood\u2013brain barrier breakdown, diminishing reperfusion benefit and elevating symptomatic intracranial haemorrhage risk.",
+          "description": "Very severe baseline NIHSS may diminish proportional benefit from alteplase because extensive early ischemia leaves less recoverable brain and increases risk of hemorrhagic transformation after thrombolysis.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "infarct",
-      "importance_rank": 3,
+      "feature_name": "Systolic blood pressure",
+      "importance_rank": 4,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Low baseline ASPECTS or extensive early ischaemic change on CT denotes a large infarct core that limits reperfusion benefit and predisposes to haemorrhagic conversion after alteplase.",
+          "description": "Markedly elevated systolic blood pressure at presentation may increase harm from alteplase by promoting blood\u2013brain barrier disruption and hematoma expansion, thereby raising symptomatic intracranial hemorrhage risk.",
           "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Admission blood glucose",
+      "importance_rank": 5,
+      "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Poor angiographic or perfusion collateral circulation indicates rapid infarct progression with limited salvageable tissue, narrowing the therapeutic window and increasing bleeding risk after reperfusion.",
+          "description": "Higher admission blood glucose may reduce alteplase efficacy and increase bleeding complications because hyperglycemia aggravates ischemic injury and contributes to blood\u2013brain barrier breakdown that predisposes to hemorrhage.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Atrial fibrillation status",
+      "importance_rank": 6,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Presence of atrial fibrillation may modify treatment effect because cardioembolic strokes often carry larger clot burden that can confer greater potential benefit from reperfusion but also associate with larger infarcts and higher hemorrhagic conversion risk after thrombolysis.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prestroke disability (mRS)",
+      "importance_rank": 7,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Higher prestroke mRS likely lowers the absolute benefit of alteplase because limited baseline functional reserve reduces the chance of achieving independence despite reperfusion and magnifies the clinical impact of symptomatic hemorrhage.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prestroke antiplatelet therapy",
+      "importance_rank": 8,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Concurrent antiplatelet therapy at baseline may shift the balance toward harm with alteplase by impairing primary hemostasis and increasing the likelihood and severity of intracranial bleeding after fibrinolysis.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prestroke anticoagulant use",
+      "importance_rank": 9,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Therapeutic anticoagulant use at baseline is likely to reduce alteplase safety because systemic anticoagulation potentiates bleeding risk when fibrinolysis is administered, increasing the chance of symptomatic intracranial hemorrhage.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "CT early ischemic change (ASPECTS)",
+      "importance_rank": 10,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Low ASPECTS (extensive early ischemic change) on baseline CT likely diminishes alteplase benefit because a large established infarct core predicts poor functional recovery and greater susceptibility to hemorrhagic transformation after thrombolysis.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Large-vessel occlusion on CTA",
+      "importance_rank": 11,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Presence of a large\u2011vessel occlusion may increase absolute benefit from alteplase through greater opportunity for reperfusion and downstream tissue salvage, while persistent proximal occlusion or large territory risk can also amplify hemorrhagic complications.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Collateral circulation quality",
+      "importance_rank": 12,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Poor collateral circulation on baseline angiography likely reduces alteplase benefit because insufficient collateral flow accelerates core expansion, limiting salvageable tissue and increasing the risk of hemorrhagic conversion once reperfusion occurs.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Platelet count",
+      "importance_rank": 13,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Low platelet count at baseline may amplify harm from alteplase by impairing primary hemostasis and increasing both the likelihood and severity of intracranial bleeding after fibrinolytic therapy.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Renal function (eGFR)",
+      "importance_rank": 14,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Severely reduced eGFR may worsen the hemorrhagic risk profile of alteplase because uremic platelet dysfunction and vascular fragility predispose to bleeding and may blunt post\u2011reperfusion neurological recovery.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Body mass index (BMI)",
+      "importance_rank": 15,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Extremes of body mass index may modify alteplase effect because low BMI can increase effective drug exposure and bleeding risk while obesity\u2011related comorbidity and altered physiological reserve can reduce functional gains from reperfusion.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }

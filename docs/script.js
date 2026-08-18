@@ -549,12 +549,28 @@ function normalizeHypotheses(data, method, rand = Math.random) {
                 }
             }
         }
-        // Shuffle and pick 5
+        // Shuffle, then take round-robin across features so the 5 shown cards cover
+        // as many distinct features as the pool allows. Uniform sampling over a pool
+        // dominated by one feature would repeat the same title on nearly every card.
         for (let i = split.length - 1; i > 0; i--) {
             const j = Math.floor(rand() * (i + 1));
             [split[i], split[j]] = [split[j], split[i]];
         }
-        hypotheses = split.slice(0, 5);
+        const byFeature = new Map();
+        for (const item of split) {
+            if (!byFeature.has(item.feature_name)) byFeature.set(item.feature_name, []);
+            byFeature.get(item.feature_name).push(item);
+        }
+        const queues = Array.from(byFeature.values());
+        const picked = [];
+        while (picked.length < 5 && queues.some(q => q.length)) {
+            for (const q of queues) {
+                if (!q.length) continue;
+                picked.push(q.shift());
+                if (picked.length === 5) break;
+            }
+        }
+        hypotheses = picked;
         hypotheses.forEach((h, i) => h.importance_rank = i + 1);
     }
 

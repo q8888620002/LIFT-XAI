@@ -1,119 +1,185 @@
 {
   "dataset": "crash_2",
   "model": "gpt-5-mini",
-  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for crash_2, grouped by per-hypothesis feature attribution.",
+  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for crash_2, grouped by the characteristic each names.",
   "feature_hypotheses": [
     {
-      "feature_name": "ninjurytime",
+      "feature_name": "Viscoelastic fibrinolysis status",
       "importance_rank": 1,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline viscoelastic evidence of hyperfibrinolysis on point-of-care testing modifies treatment benefit because antifibrinolytic tranexamic acid stabilizes formed fibrin clots and reduces ongoing hemorrhage and mortality.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline viscoelastic evidence of fibrinolytic shutdown modifies treatment harm because tranexamic acid may prevent necessary fibrin turnover and promote pathologic clot persistence, increasing arterial and venous occlusive events.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Long delay from injury to presentation (>3 hours) modifies treatment harm because delayed tranexamic acid administration occurs after the early hyperfibrinolytic phase and may exacerbate thrombotic risk as fibrinolysis wanes.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Concurrent intracranial haemorrhage or severe traumatic brain injury modifies treatment effect because intracranial hyperfibrinolysis contributes to progressive bleeding that tranexamic acid can limit, whereas fibrinolytic shutdown may increase ischaemic cerebral complications.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Pre-injury therapeutic anticoagulation modifies treatment effect because impaired thrombin generation and altered coagulation biochemistry reduce fibrin formation so tranexamic acid alone may fail to restore haemostasis and could shift the balance toward thrombosis once coagulation recovers.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Thrombocytopenia on admission modifies treatment benefit because inadequate platelet-driven clot formation limits the substrate for antifibrinolytic stabilization, reducing the haemostatic efficacy of tranexamic acid.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Biochemical coagulopathy on presentation (prolonged PT/INR) modifies treatment benefit because deficient fibrin network formation undermines the capacity of tranexamic acid to preserve clot integrity and control bleeding.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Severe acidosis on admission modifies treatment effect because acid-mediated suppression of coagulation enzymes reduces fibrin formation and may limit the efficacy of tranexamic acid while altering thrombosis risk.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Requirement for massive transfusion on arrival modifies treatment benefit because ongoing consumptive coagulopathy and active fibrinolysis in massively bleeding patients increase the likelihood that targeted tranexamic acid will reduce mortality and transfusion, whereas untargeted use could expose patients without hyperfibrinolysis to unnecessary risk.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "History of prior venous thromboembolism modifies treatment harm because a baseline prothrombotic phenotype may predispose to thrombus propagation and recurrent venous occlusion when fibrinolysis is inhibited by tranexamic acid.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Pregnancy at baseline modifies treatment effect because the physiologic hypercoagulable state of pregnancy may amplify thrombotic risk from tranexamic acid in the absence of demonstrable hyperfibrinolysis.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Delayed or absent surgical haemorrhage control at the time of tranexamic acid administration modifies treatment benefit because antifibrinolytic clot stabilization is transient and without definitive source control persistent bleeding or rebleeding will negate mortality benefit and prolong transfusion needs.",
+          "description": "Patients with hyperfibrinolysis on point-of-care viscoelastic testing will derive greater mortality and transfusion-sparing benefit from targeted TXA because antifibrinolysis directly arrests pathologic clot breakdown and limits ongoing hemorrhage compared with treating unselected patients.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         }
       ]
     },
     {
-      "feature_name": "isbp",
+      "feature_name": "Time from injury",
       "importance_rank": 2,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Severe hypovolaemic shock on arrival (marked hypotension or elevated lactate) modifies treatment benefit because shock-associated systemic fibrinolytic activation makes antifibrinolytic therapy more effective at controlling bleeding and reducing transfusion requirement.",
+          "description": "Shorter time from injury to TXA administration will increase benefit because early antifibrinolysis prevents progression of trauma-induced coagulopathy and irreversible hemorrhagic shock, whereas delayed treatment may fail to stabilize bleeding and could shift the balance toward thrombotic risk.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Systolic blood pressure (SBP)",
+      "importance_rank": 3,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Marked hypotension on arrival will increase the relative benefit of TXA because severe hypoperfusion promotes fibrinolytic activation and clot instability that antifibrinolytics can counteract to reduce continued bleeding.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Heart rate (tachycardia)",
+      "importance_rank": 4,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Persistent tachycardia indicative of ongoing hemorrhagic shock will modify benefit toward greater efficacy of TXA because sustained sympathetic-driven hypoperfusion amplifies consumptive coagulopathy with hyperfibrinolysis that antifibrinolysis can mitigate.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         }
       ]
     },
     {
-      "feature_name": "iinjurytype",
-      "importance_rank": 3,
+      "feature_name": "Baseline hemoglobin",
+      "importance_rank": 5,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Marked hypothermia at baseline modifies treatment effect because temperature-dependent impairment of platelet function and coagulation enzyme activity alters fibrinolytic dynamics and may blunt or unpredictably shift the balance of benefit versus thrombotic harm with tranexamic acid.",
+          "description": "Severely low hemoglobin at presentation will blunt the relative benefit of TXA because profound blood loss necessitating transfusion limits the capacity of antifibrinolytic therapy alone to restore effective intravascular clotting and oxygen delivery.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Platelet count",
+      "importance_rank": 6,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Thrombocytopenia at baseline will reduce TXA effectiveness because inadequate platelet mass impairs primary haemostasis and preventing fibrin breakdown cannot compensate for failure of platelet plug formation.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
+        }
+      ]
+    },
+    {
+      "feature_name": "International normalized ratio (INR)",
+      "importance_rank": 7,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "A markedly elevated INR on admission will attenuate benefit from TXA because deficiencies in clotting factor\u2013dependent fibrin generation limit formation of stable clots that antifibrinolytics act to preserve.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Base deficit (lactate)",
+      "importance_rank": 8,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "High base deficit indicating severe metabolic acidosis will reduce TXA efficacy because acidemia impairs enzymatic coagulation and fibrin formation, limiting the ability of antifibrinolytics to restore haemostatic competence.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
+        }
+      ]
+    },
+    {
+      "feature_name": "Traumatic brain injury (CT)",
+      "importance_rank": 9,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Large intracranial hemorrhage on initial CT may alter the net effect of TXA because antifibrinolysis can reduce hematoma expansion but may also increase risk of ischemic complications in injured cerebral tissue predisposed to thrombotic occlusion.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "iage",
-      "importance_rank": 4,
+      "feature_name": "Mechanism of injury",
+      "importance_rank": 10,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Advanced age with known atherosclerotic cardiovascular disease modifies treatment harm because pre-existing endothelial dysfunction and a procoagulant vascular milieu increase susceptibility to arterial occlusive events when fibrinolysis is suppressed.",
+          "description": "Penetrating injuries will tend to show greater transfusion- and bleeding-control benefit from TXA because focal vascular disruption often produces high local fibrinolytic activity that antifibrinolytics can stabilize more effectively than diffuse blunt microvascular bleeding.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Pre-injury anticoagulant use",
+      "importance_rank": 11,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Patients on pre-injury anticoagulants will have attenuated benefit and potential harm from TXA because impaired thrombin generation or direct anticoagulant effects limit fibrin formation so antifibrinolytics cannot fully correct coagulopathy and may raise thrombotic risk as anticoagulant levels fall.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Pre-injury antiplatelet therapy",
+      "importance_rank": 12,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Pre-injury antiplatelet agent use will lessen the haemostatic benefit of TXA because platelet dysfunction undermines primary haemostasis and preventing fibrin breakdown cannot substitute for defective platelet plug formation.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
+        }
+      ]
+    },
+    {
+      "feature_name": "Chronic liver disease",
+      "importance_rank": 13,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Chronic liver disease at baseline will unpredictably modify TXA effects because combined reductions in pro- and anticoagulant factors and altered fibrinolytic regulators can make antifibrinolysis less effective for bleeding control and more likely to provoke thrombosis in some patients.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prior venous thromboembolism",
+      "importance_rank": 14,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "A history of prior venous thromboembolism will increase the likelihood of thrombotic harm from nonselective TXA because baseline prothrombotic tendency may be exacerbated by systemic inhibition of fibrinolysis, raising risk of recurrent occlusion.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Massive transfusion requirement",
+      "importance_rank": 15,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Need for massive transfusion on arrival will predict greater benefit from targeted TXA because massive hemorrhage commonly induces hyperfibrinolysis and antifibrinolytic therapy can reduce ongoing clot breakdown and subsequent transfusion needs.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "positive"
         }
       ]
     }

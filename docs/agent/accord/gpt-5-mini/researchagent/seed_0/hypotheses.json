@@ -1,99 +1,183 @@
 {
   "dataset": "accord",
   "model": "gpt-5-mini",
-  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for accord, grouped by per-hypothesis feature attribution.",
+  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for accord, grouped by the characteristic each names.",
   "feature_hypotheses": [
     {
-      "feature_name": "sbp",
+      "feature_name": "High CSVD (WMH/ICV \u226575th)",
       "importance_rank": 1,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline WMH/ICV in the top quartile (high WMH burden) will lead to greater cognitive decline with intensive systolic BP lowering because extensive white\u2011matter injury reduces cerebral perfusion reserve and impairs autoregulation, increasing ischemic vulnerability at lower perfusion pressures.",
+          "description": "High baseline cerebral small\u2011vessel disease burden (WMH/ICV \u226575th) will magnify cognitive decline and increase stroke and functional harms from intensive systolic BP lowering because extensive white\u2011matter injury reflects impaired autoregulation and reduced cerebral perfusion reserve that make the brain susceptible to iatrogenic hypoperfusion.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Lacunes on MRI",
+      "importance_rank": 2,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Presence of lacunar infarcts on baseline MRI will attenuate net cognitive benefit and raise recurrent ischemic risk with intensive BP lowering because prior small subcortical infarction denotes focal loss of microvascular reserve and limited collateral compensation during reduced perfusion.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Cerebral microbleeds",
+      "importance_rank": 3,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Baseline cerebral microbleeds will modify treatment effect toward greater cerebral and functional harm from intensive BP lowering because fragile small\u2011vessel integrity and hemosiderin burden coexist with impaired autoregulation and may coexist with both ischemic vulnerability and bleeding risk under rapid pressure changes.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Elevated PWV (\u226510 m/s)",
+      "importance_rank": 4,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Elevated carotid\u2013femoral pulse\u2011wave velocity (\u226510 m/s) will increase the likelihood of cognitive decline and symptomatic cerebral hypoperfusion with intensive SBP targets because arterial stiffness reduces distal pressure buffering and transmits hemodynamic swings to the cerebral microcirculation.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "High baseline systolic BP",
+      "importance_rank": 5,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Higher pre\u2011randomization systolic BP will tend to preserve net macrovascular benefit and reduce relative cerebral harm from intensive lowering because greater baseline perfusion pressure provides more margin before cerebral blood flow falls below autoregulatory thresholds.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Low baseline diastolic BP",
+      "importance_rank": 6,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Low baseline diastolic pressure will predispose patients to worsened cognition, myocardial ischemia, and syncope under intensive systolic lowering because reduced diastolic perfusion pressure compromises coronary and cerebral flow during further BP reduction.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Wide pulse pressure",
+      "importance_rank": 7,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "A wide baseline pulse pressure will potentiate cognitive decline and fall/syncope risk with intensive BP targets because central arterial stiffening and exaggerated systolic\u2011diastolic disparity impair microvascular perfusion and increase susceptibility to transient hypotension.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Low baseline cognitive score",
+      "importance_rank": 8,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Lower baseline global cognitive z\u2011score will identify patients who experience faster cognitive deterioration and greater functional harms from intensive BP lowering because limited cognitive reserve and existing neuronal injury reduce tolerance for even modest reductions in cerebral perfusion.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Older age (\u226575 years)",
+      "importance_rank": 9,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Older age will amplify cognitive and fall/syncope harms of intensive BP control because age\u2011related declines in autoregulatory capacity, vascular stiffness, and frailty increase vulnerability to hypotension and its cerebral consequences.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Reduced eGFR (<60)",
+      "importance_rank": 10,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Chronic kidney disease with reduced eGFR will increase risk of cognitive decline and mortality under intensive BP lowering because renal impairment coexists with systemic microvascular disease, volume\u2011regulatory instability, and heightened susceptibility to hypotension and end\u2011organ hypoperfusion.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Albuminuria (UACR \u226530 mg/g)",
+      "importance_rank": 11,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Baseline albuminuria will mark patients more likely to suffer cognitive and cerebrovascular harms from intensive BP lowering because glomerular endothelial leak parallels generalized microvascular dysfunction and impaired cerebral autoregulation.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prior stroke/TIA",
+      "importance_rank": 12,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "History of prior clinical stroke or TIA will modify the treatment effect toward greater cognitive decline and recurrent cerebrovascular events with intensive BP lowering because established focal vascular injury reduces collateral perfusion and autoregulatory reserve in affected territories.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
-        },
+        }
+      ]
+    },
+    {
+      "feature_name": "Orthostatic hypotension",
+      "importance_rank": 13,
+      "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Presence of lacunar infarcts on baseline MRI will increase the risk of stroke and accelerated cognitive decline under intensive BP targets because prior small\u2011vessel infarction reflects fragile perforating arterioles and diminished autoregulatory capacity that cannot tolerate aggressive reductions in systolic pressure.",
+          "description": "Baseline orthostatic hypotension or a positive orthostatic BP drop will increase falls, syncope, and cognitive worsening under intensive targets because autonomic failure predisposes to symptomatic cerebral hypoperfusion when systolic BP is driven lower.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
-        },
+        }
+      ]
+    },
+    {
+      "feature_name": "Antihypertensive polytherapy (\u22653 agents)",
+      "importance_rank": 14,
+      "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Presence of cerebral microbleeds at baseline will modify treatment harm by heightening the likelihood of intracerebral hemorrhage and subsequent cognitive worsening with intensive BP lowering, since microvascular fragility and disrupted vessel integrity predispose to bleeding and secondary ischemia when hemodynamics are altered.",
+          "description": "Use of multiple baseline antihypertensive classes (polytherapy \u22653 agents) will raise the risk of symptomatic hypotension, falls, and cognitive harm from intensive BP control because medication burden increases the chance of excessive lowering, drug interactions, and greater on\u2011treatment BP variability.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
-        },
+        }
+      ]
+    },
+    {
+      "feature_name": "Poor glycemic control (HbA1c \u22658%)",
+      "importance_rank": 15,
+      "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "A prespecified high CSVD categorical score (WMH/ICV \u226575th percentile OR \u22651 lacune OR \u22651 microbleed) will magnify cognitive and functional harms from intensive BP lowering because combined markers of small\u2011vessel disease denote severely impaired cerebrovascular reserve and compromised tissue tolerance to lower systemic pressures.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "A medium CSVD burden (WMH/ICV 25\u201375th percentile with \u22641 lacune and \u22641 microbleed) will attenuate net cognitive benefit of intensive BP control because intermediate small\u2011vessel pathology limits the brain\u2019s ability to sustain adequate perfusion during lower systolic targets compared with low\u2011CSVD patients.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Low CSVD at baseline (WMH/ICV <25th percentile with no lacunes or microbleeds) will preserve cognitive trajectories with intensive BP lowering because intact microvasculature and preserved autoregulatory function maintain cerebral perfusion despite reduced systolic pressure, allowing macrovascular benefits to predominate.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated carotid\u2013femoral PWV (\u226510 m/s) at baseline will magnify cognitive decline and functional harm from intensive SBP lowering because arterial stiffness impairs dampening of pulsatile flow and reduces cerebral perfusion reserve during lower systemic pressures.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Concomitant elevated PWV (\u226510 m/s) and high WMH/ICV will synergistically increase risk of adjudicated falls and orthostatic syncope with intensive BP targets because combined large\u2011artery stiffness and diffuse white\u2011matter disease disrupt baroreflex buffering and cerebral autoregulation needed to maintain orthostatic cerebral perfusion.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated PWV in the absence of substantial WMH will still modify treatment effects by increasing hemodynamic instability and thereby attenuating stroke prevention benefits of intensive BP lowering, since central arterial stiffness promotes transmission of pulsatile stress to the cerebral microcirculation despite lower peripheral systolic readings.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Having two or more lacunes at baseline will predispose to greater deterioration in the cognitive slope under intensive BP lowering because multiple prior small\u2011vessel infarcts exhaust neural network reserve and leave limited tolerance to further reductions in cerebral perfusion.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "A single microbleed on baseline MRI will predict disproportionate all\u2011cause mortality with intensive BP lowering due to increased susceptibility to hemorrhagic complications and secondary ischemic injury in a diffusely fragile microvascular bed when systemic pressures are aggressively lowered.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Increasing continuous WMH/ICV burden (modeled as a graded baseline characteristic) will show a dose\u2011dependent decrease in cognitive resilience to intensive BP lowering because progressive white\u2011matter pathology incrementally narrows perfusion reserve and raises susceptibility to ischemia at lower systolic targets.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Discordance characterized by low WMH/ICV but elevated PWV at baseline will modify outcomes by preserving some cognitive resilience while still exposing patients to cardiovascular and hemodynamic risks under intensive BP lowering, since large\u2011artery stiffness impairs central hemodynamic buffering even when parenchymal injury is limited.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline coexistence of microbleeds and lacunes will amplify incident stroke risk with intensive BP lowering because combined hemorrhagic and ischemic small\u2011vessel pathology signifies diffuse vascular fragility that cannot tolerate aggressive reductions in systolic pressure without precipitating new vascular events.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Concurrent high CSVD (WMH/ICV \u226575th percentile or \u22651 lacune or microbleed) together with elevated PWV (\u226510 m/s) at baseline will blunt the reduction in major adverse cardiovascular events with intensive BP lowering because the combination of microvascular dysfunction and central arterial stiffness sustains end\u2011organ hemodynamic stress despite lower peripheral systolic targets.",
+          "description": "Poor baseline glycemic control will exacerbate cognitive decline and cerebrovascular vulnerability with intensive BP lowering because chronic hyperglycemia promotes microvascular damage and endothelial dysfunction, reducing cerebral perfusion resilience to aggressive BP reduction.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         }

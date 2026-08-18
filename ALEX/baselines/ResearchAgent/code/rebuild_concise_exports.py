@@ -34,15 +34,23 @@ BANNED_TERMS = [
 ]
 
 
-def _distill_clinical_hypotheses(context: dict, api_client: OpenAIClient, target_count: int) -> list[str]:
+def _distill_clinical_hypotheses(context: dict, api_client: OpenAIClient, target_count: int) -> list[dict]:
     paper = context.get('paper', {}) or {}
     prompt = (
-        f"Generate exactly {target_count} distinct clinical mechanism hypotheses as a JSON array "
-        "of strings, about which patient characteristics modify this trial's treatment effect and "
-        "through what biological or clinical mechanism.\n\n"
+        f"Generate exactly {target_count} distinct clinical mechanism hypotheses about which "
+        "patient characteristics modify this trial's treatment effect and through what biological "
+        "or clinical mechanism.\n\n"
+        'Return a JSON array of objects, each {"characteristic": "...", "hypothesis": "..."}, '
+        'where "characteristic" is the short clinical name of the baseline patient characteristic '
+        'that hypothesis is about (2-6 words, e.g. "Baseline stroke severity (NIHSS)", '
+        '"Platelet count", "Time from injury to treatment").\n\n'
         "Requirements:\n"
         "- Each item is ONE sentence naming a concrete baseline patient characteristic and the "
         "physiological or clinical mechanism by which it changes treatment benefit or harm.\n"
+        "- Cover as many DIFFERENT baseline characteristics as you can: no characteristic should "
+        "appear in more than two of the hypotheses. Span demographics, vital signs, laboratory "
+        "values, imaging findings, comorbidities, and concomitant medications where the trial "
+        "population makes them relevant.\n"
         "- Write for a practising clinician. Use only clinical and physiological language.\n"
         "- Do NOT mention statistical methodology, estimators, or analysis plans (no TMLE, CATE, "
         "estimands, causal forests, meta-learners, cross-fitting, SHAP, Bayesian models, effect "
@@ -61,18 +69,30 @@ def _distill_clinical_hypotheses(context: dict, api_client: OpenAIClient, target
         ]
     )
 
+    text = raw.strip()
+    if text.startswith('```'):
+        text = re.sub(r'^```(?:json)?\s*|\s*```$', '', text, flags=re.DOTALL)
     try:
-        parsed = json.loads(raw)
-        if isinstance(parsed, list):
-            return [str(x).strip() for x in parsed if str(x).strip()][:target_count]
+        parsed = json.loads(text)
     except Exception:
-        pass
+        match = re.search(r'\[.*\]', text, re.DOTALL)
+        if not match:
+            return []
+        try:
+            parsed = json.loads(match.group(0))
+        except Exception:
+            return []
 
+    if not isinstance(parsed, list):
+        return []
     out = []
-    for line in raw.splitlines():
-        cleaned = re.sub(r'^\s*(?:[-*]|\d+[\.)])\s*', '', line).strip().strip('",')
-        if len(cleaned) > 40:
-            out.append(cleaned)
+    for item in parsed:
+        if not isinstance(item, dict):
+            continue
+        hypothesis = str(item.get('hypothesis', '')).strip()
+        characteristic = str(item.get('characteristic', '')).strip()
+        if hypothesis and characteristic:
+            out.append({'characteristic': characteristic, 'hypothesis': hypothesis})
     return out[:target_count]
 
 
@@ -110,34 +130,38 @@ def rebuild(cohort: str, ideas_path: str, out_path: str, client: OpenAIClient, n
     ideas = [json.loads(line) for line in open(ideas_path)]
     context = ideas[-1]
 
-    sentences: list[str] = []
+    items: list[dict] = []
     seen = set()
     rejected = 0
     attempts = 0
-    while len(sentences) < n and attempts < 5:
+    while len(items) < n and attempts < 5:
         batch = _distill_clinical_hypotheses(context=context, api_client=client, target_count=n)
-        for s in batch:
-            s = s.strip()
-            key = s.lower()
-            if not key or key in seen:
+        for item in batch:
+            key = item['hypothesis'].lower()
+            if key in seen:
                 continue
-            if has_jargon(s):
+            if has_jargon(item['hypothesis']) or has_jargon(item['characteristic']):
                 rejected += 1
                 continue
             seen.add(key)
-            sentences.append(s)
+            items.append(item)
         attempts += 1
-    sentences = sentences[:n]
-    if len(sentences) < n:
-        print(f'[{cohort}] WARNING: only {len(sentences)}/{n} clean hypotheses generated')
+    items = items[:n]
+    if len(items) < n:
+        print(f'[{cohort}] WARNING: only {len(items)}/{n} clean hypotheses generated')
     if rejected:
         print(f'[{cohort}] dropped {rejected} hypotheses containing methodology jargon')
 
-    default_feature = DEFAULT_FEATURE_BY_TRIAL.get(cohort, 'feature')
+    # Group by the characteristic the model itself named. Fall back to trial-cue
+    # matching only for the rare item with no usable label — the old cue-only path
+    # stamped anything its 7-8 cues missed with the trial default feature, which
+    # made every card in a set carry the same title.
     by_feature: dict[str, list[str]] = {}
-    for s in sentences:
-        feature = attribute_feature(s, cohort) or default_feature
-        by_feature.setdefault(feature, []).append(s)
+    for item in items:
+        feature = item['characteristic'] or attribute_feature(
+            item['hypothesis'], cohort
+        ) or DEFAULT_FEATURE_BY_TRIAL.get(cohort, 'feature')
+        by_feature.setdefault(feature, []).append(item['hypothesis'])
 
     feature_hypotheses = []
     for rank, (feature, texts) in enumerate(
@@ -162,8 +186,8 @@ def rebuild(cohort: str, ideas_path: str, out_path: str, client: OpenAIClient, n
         'dataset': cohort,
         'model': client.model,
         'summary': (
-            f'{len(sentences)} concise trial-paper-only hypotheses distilled from the '
-            f'ResearchAgent run for {cohort}, grouped by per-hypothesis feature attribution.'
+            f'{len(items)} concise trial-paper-only hypotheses distilled from the '
+            f'ResearchAgent run for {cohort}, grouped by the characteristic each names.'
         ),
         'feature_hypotheses': feature_hypotheses,
     })

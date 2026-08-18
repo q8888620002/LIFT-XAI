@@ -1,137 +1,185 @@
 {
   "dataset": "accord_glycemia",
   "model": "gpt-5-mini",
-  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for accord_glycemia, grouped by per-hypothesis feature attribution.",
+  "summary": "15 concise trial-paper-only hypotheses distilled from the ResearchAgent run for accord_glycemia, grouped by the characteristic each names.",
   "feature_hypotheses": [
     {
-      "feature_name": "hba1c",
+      "feature_name": "Age (years)",
       "importance_rank": 1,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Female sex: sex\u2011specific differences in body composition and autonomic hypoglycemia responses may increase hypoglycemia vulnerability and modify the balance of intensive glycemic control toward greater harm in some women.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline HbA1c: patients with markedly elevated baseline HbA1c may derive greater absolute microvascular benefit from large glucose reductions but are also at higher short\u2011term risk of hypoglycemia and hemodynamic instability during rapid intensification, shifting net benefit depending on competing risks.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Prior clinical cardiovascular disease: established coronary and cerebrovascular disease limits reversibility of macrovascular risk so intensive glycemic lowering produces less incremental MACE prevention while hypoglycemia\u2011triggered ischemia or arrhythmia may increase harm.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline albuminuria: presence of albuminuria signals widespread endothelial and microvascular dysfunction that increases baseline CV risk yet predicts limited macrovascular benefit from short\u2011term intensive glycemic lowering while heightening vulnerability to adverse events.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "History of prior severe hypoglycemia: prior severe events indicate impaired awareness and defective counterregulation, markedly raising the likelihood of recurrent severe hypoglycemia and associated mortality with an intensive strategy.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Frailty or functional impairment proxies: low physiologic reserve and multimorbidity increase the likelihood that treatment complexity and hypoglycemia lead to disability, hospitalization, or death, tipping the balance toward net harm with intensive targets.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Absence of baseline SGLT2i/GLP\u20111 RA exposure (ACCORD-era medication profile): lack of contemporary cardioprotective agents means intensive glycemic lowering must bear more of the cardiovascular risk management burden, increasing the relative impact of hypoglycemia\u2011related harms on overall outcomes.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Shorter diabetes duration: preserved beta\u2011cell function and less established macrovascular disease increase the plausibility that intensive early glycemic control yields greater reduction in future CV events compared with long\u2011standing disease.",
+          "description": "Older age reduces physiologic reserve and increases susceptibility to hypoglycemia\u2011triggered arrhythmia and frailty, so intensive glycemic lowering is more likely to increase mortality and severe hypoglycaemia harm in older participants.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "fpg",
+      "feature_name": "Sex (male vs female)",
       "importance_rank": 2,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Reduced eGFR/advanced CKD stage: impaired renal insulin clearance and altered pharmacokinetics of glucose\u2011lowering drugs raise hypoglycemia frequency and competing noncardiovascular mortality, reducing net benefit of intensive targets.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline use of multiple glucose\u2011lowering agents (polytherapy): requirement for combination therapy at baseline reflects advanced dysglycemia and increases complexity and hypoglycemia risk during intensification, potentially reducing net benefit from tighter targets.",
+          "description": "Biologic sex differences in myocardial ischemic tolerance and autonomic responses alter vulnerability to hypoglycemia and ischemia, so males and females may experience different balance of cardiovascular benefit versus hypoglycaemia\u2011related harm from intensive control.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "baseline_age",
+      "feature_name": "Diabetes duration (years)",
       "importance_rank": 3,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Older age: reduced physiologic reserve and blunted counterregulatory hormonal responses increase susceptibility to severe hypoglycemia and noncardiovascular mortality, thereby magnifying harm and attenuating net cardiovascular benefit from intensive HbA1c lowering.",
+          "description": "Longer diabetes duration is associated with more advanced, largely irreversible atherosclerosis and impaired counterregulation, reducing potential cardiovascular benefit of intensive lowering while increasing the risk of severe hypoglycaemia and related adverse outcomes.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "yrsdiab",
+      "feature_name": "Baseline HbA1c (%)",
       "importance_rank": 4,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Longer diabetes duration: greater cumulative atherosclerotic burden and autonomic neuropathy reduce the potential for intensive glycemic lowering to prevent MACE while increasing hypoglycemia risk due to impaired endogenous glucose regulation.",
+          "description": "Higher baseline HbA1c affords greater absolute glycaemic reduction with intensive strategy and therefore larger potential reduction in glucose\u2011related vascular risk, but rapid or large reductions also increase hypoglycaemia risk and short\u2011term harm.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "insulin",
+      "feature_name": "Insulin use (baseline)",
       "importance_rank": 5,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline insulin therapy: prior insulin use identifies patients with limited endogenous insulin reserve and greater hypoglycemia risk when intensifying control, and exogenous insulin\u2013related weight gain or fluid retention may blunt cardiovascular benefit.",
+          "description": "Preexisting insulin therapy predisposes to hypoglycaemia through dose escalation and reduced counterregulation, amplifying the likelihood of severe hypoglycaemia and associated cardiovascular events under an intensive target.",
           "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
+          "effect_direction": "unknown"
         }
       ]
     },
     {
-      "feature_name": "bmi",
+      "feature_name": "Prior cardiovascular disease",
       "importance_rank": 6,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "High body mass index (obesity): marked insulin resistance in obese patients necessitates higher drug doses or multiple agents to reach targets, limiting achievable HbA1c reductions and increasing metabolic and hemodynamic stress that can attenuate cardiovascular benefit.",
+          "description": "Established prior CVD increases baseline MACE risk and the likelihood that hypoglycaemia will precipitate ischemia or fatal arrhythmia, so patients with prior CVD may have altered net benefit, depending on whether modest glycaemic gains reduce recurrent events enough to offset hypoglycaemia harm.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "sbp",
+      "feature_name": "eGFR / CKD stage",
       "importance_rank": 7,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated baseline systolic blood pressure: coexistent hypertensive hemodynamic burden amplifies cardiovascular risk such that glucose lowering alone yields smaller incremental MACE prevention, and autonomic perturbations from hypoglycemia may destabilize blood pressure and precipitate events.",
+          "description": "Reduced eGFR impairs renal clearance of hypoglycaemic agents and blunts gluconeogenesis, increasing severe hypoglycaemia risk and competing non\u2011cardiovascular mortality, thereby diminishing net benefit and increasing harm from intensive therapy.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Albuminuria (UACR)",
+      "importance_rank": 8,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Albuminuria marks endothelial and microvascular damage and higher baseline cardiovascular risk, so it could increase absolute benefit from glycaemic lowering while simultaneously indicating systemic vulnerability that magnifies harm from hypoglycaemia.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Body mass index (BMI)",
+      "importance_rank": 9,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Lower BMI and sarcopenia reduce glycogen stores and insulin sensitivity leading to higher hypoglycaemia susceptibility and mortality risk with tight glycaemic targets, whereas higher BMI may modify the balance of metabolic benefit versus hypoglycaemia harm.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Systolic blood pressure",
+      "importance_rank": 10,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Elevated systolic blood pressure raises baseline cardiovascular risk and end\u2011organ strain, altering the absolute potential benefit of glycaemic lowering while severe hypertension may synergize with hypoglycaemia to provoke ischemic events under intensive treatment.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Prior severe hypoglycaemia",
+      "importance_rank": 11,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "A history of severe hypoglycaemia indicates impaired hypoglycaemia awareness and autonomic failure, which increases the risk of recurrent severe episodes and hypoglycaemia\u2011related mortality when pursuing intensive glycaemic targets.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Sulfonylurea use (baseline)",
+      "importance_rank": 12,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Baseline use of sulfonylureas increases insulin\u2011independent insulin secretion and the risk of prolonged hypoglycaemia, thereby magnifying severe hypoglycaemia and potential cardiovascular harm from an intensive strategy.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Smoking status (current)",
+      "importance_rank": 13,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Current smoking accelerates atherothrombosis and endothelial dysfunction, increasing baseline MACE risk and making hypoglycaemia\u2011induced ischemia more likely, thus changing the net balance of benefit versus harm from intensive control.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Heart failure history",
+      "importance_rank": 14,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Preexisting heart failure predisposes to fluid and autonomic instability and arrhythmic susceptibility, so intensive glycaemic lowering may trigger decompensation or increase mortality risk via hypoglycaemia\u2011induced cardiovascular stress.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "Autonomic neuropathy (presence)",
+      "importance_rank": 15,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Cardiac or autonomic neuropathy blunts adrenergic warning symptoms and counterregulatory responses to hypoglycaemia, increasing frequency and severity of unrecognized hypoglycaemia and associated cardiovascular events with intensive therapy.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "unknown"
         }
       ]
     }
