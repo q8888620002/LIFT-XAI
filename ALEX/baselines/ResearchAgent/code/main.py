@@ -248,12 +248,20 @@ def infer_feature_from_generated_hypothesis(
             if isinstance(item, dict):
                 texts.extend([item.get('problem', ''), item.get('method', ''), item.get('experiment', ''), item.get('rationale', '')])
 
-    combined = "\n".join([t for t in texts if t]).lower()
+    # Normalize hyphens (ASCII and unicode dashes) so cues like "time to treatment"
+    # match "time-to-treatment"/"time‑to‑treatment", and require word boundaries so
+    # "age" does not match inside "haemorrhage".
+    combined = re.sub(r'[-‐-―−]', ' ', "\n".join([t for t in texts if t]).lower())
 
     best_feature = None
     best_score = 0
     for feature_key, feature_cues in cues.items():
-        score = sum(1 for cue in feature_cues if cue in combined)
+        # Frequency-weighted: total cue occurrences, so the dominant topic wins
+        # rather than whichever feature has the most distinct cue phrases.
+        score = sum(
+            len(re.findall(r'\b' + re.escape(cue.lower().replace('-', ' ')) + r'\b', combined))
+            for cue in feature_cues
+        )
         if score > best_score:
             best_feature = feature_key
             best_score = score
