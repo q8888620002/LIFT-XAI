@@ -9,67 +9,67 @@
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Advanced age attenuates individualized benefit because pooled hierarchical CATE estimates from IST\u20113 and meta\u2011analysis identify smaller \u0394_i and lower Prob(NB>0) in older strata promoted by stability selection.",
+          "description": "Older age is associated with increased cerebral vessel fragility and blood\u2013brain barrier disruption, which raises symptomatic intracranial haemorrhage risk and reduces attainable functional recovery after alteplase.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Higher baseline NIH Stroke Scale score reflects a larger ischaemic burden and less salvageable penumbra, reducing the probability of achieving mRS 0\u20132 and increasing risk of haemorrhagic transformation with thrombolysis.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Small ischaemic core on baseline CT or perfusion imaging identifies a large salvageable penumbra that increases the absolute benefit from thrombolysis while lowering haemorrhagic risk.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Presence of a proximal large\u2011vessel occlusion on baseline vascular imaging denotes high clot burden that may resist intravenous lysis and, by altering recanalisation probability, changes the net benefit of alteplase.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Adverse baseline CT imaging markers (low ASPECTS or hypodensity indicators) increase individualized sICH probability in the harm model and thereby reduce expected utility and net benefit for affected patients.",
+          "description": "Baseline evidence of prior intracranial haemorrhage or multiple cerebral microbleeds on imaging signals impaired vascular integrity and a higher probability of symptomatic ICH with thrombolysis, reducing net benefit.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher pre\u2011morbid mRS reduces the individualized expected\u2011utility gain from alteplase because utility\u2011mapped TMLE estimates show smaller absolute improvements in 90\u2011day independence for patients with worse baseline function.",
+          "description": "Pre\u2011stroke disability (non\u2011zero premorbid mRS) reduces the ceiling for functional improvement to mRS 0\u20132, so the absolute benefit from alteplase is smaller and harms weigh more heavily.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Concurrent antiplatelet or anticoagulant treatment elevates individualized \u0394_sICH_i in pooled harm models and mediates a reduction in net benefit despite similar estimated \u0394_mRS for some patients.",
+          "description": "Large ischaemic lesions involving the brainstem or bilateral hemispheres carry low potential for functional recovery and high risk of catastrophic haemorrhagic conversion, decreasing net benefit from thrombolysis.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Study\u2011level heterogeneity and trial epoch shift individualized \u0394_i via hierarchical random effects, so that transportability analyses show different apparent benefit patterns between IST\u20113 and later registry cohorts (e.g., pre\u2011EVT vs EVT\u2011era).",
+          "description": "A hyperdense artery sign or other imaging markers of dense thrombus indicate high thrombus burden that is less likely to recanalise with IV alteplase alone, lowering expected functional benefit.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "positive"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "The joint posterior dependence between sICH occurrence and final 90\u2011day mRS explains part of the reduction in expected utility for some patients, such that joint modeling yields different NB estimates than assuming independence.",
+          "description": "Marked early cerebral oedema or mass effect on baseline imaging reflects severe tissue injury and raised intracranial pressure, which increases symptomatic ICH risk and limits functional recovery after alteplase.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Extensive chronic small\u2011vessel ischaemic leukoaraiosis on baseline imaging suggests reduced neural reserve and microvascular fragility, diminishing gains in functional independence and increasing haemorrhagic susceptibility after thrombolysis.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "unknown"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Patients with simultaneously high predicted \u0394_mRS and high predicted \u0394_sICH (from combined TMLE and Bayesian pipelines) represent preference\u2011sensitive cases where the clinician\u2011elicited w_sICH determines whether net benefit is positive.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Low effective sample size (ESS) regions in covariate space produce unstable individualized \u0394_i that are pulled toward the pooled mean by hierarchical pooling, potentially masking true local benefit or harm mechanisms.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Time\u2011by\u2011age interactions detected in stability selection generate subgroups where the negative impact of delayed treatment on \u0394_i is disproportionately larger in older patients, reducing individualized net benefit beyond additive expectations.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Patients rated as low\u2011benefit by the distilled interpretable rule nevertheless show residual TMLE posterior heterogeneity, implying that nonlinear combinations of covariates captured by the flexible ensemble drive subtle mechanisms of benefit absent from simple scores.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "In registries with higher contemporary EVT availability, secular changes alter baseline control arm outcomes and thereby reduce observed \u0394_i and recalibrate net\u2011benefit predictions relative to IST\u20113 RCT\u2011based estimates, reflecting a mechanism of altered transportability.",
+          "description": "Proximal middle cerebral artery occlusion location on baseline imaging denotes a larger ischaemic territory and higher risk of poor outcome and haemorrhagic transformation, altering the net benefit of alteplase.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
@@ -81,37 +81,31 @@
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Within the 6\u2011hour window, individualized absolute benefit (\u0394_i) from alteplase decreases as onset\u2011to\u2011treatment time increases, consistent with HTE discovery and pooled CATE estimates showing smaller \u0394_i for later treatment times.",
+          "description": "Shorter onset\u2011to\u2011treatment time (e.g., \u22643 hours) preserves more penumbral tissue and intact microvasculature, increasing likelihood of functional benefit and lowering net harm from alteplase.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "An interaction between imaging (ASPECTS) and onset\u2011to\u2011treatment time creates strata in which very early treatment yields substantial \u0394_expected_utility_mRS whereas delayed treatment in the same imaging strata increases \u0394_sICH_i and flips net\u2011benefit thresholds.",
+          "description": "Longer onset\u2011to\u2011treatment time within the 3\u20136 hour window indicates more established infarction and blood\u2013brain barrier breakdown, diminishing reperfusion benefit and elevating symptomatic intracranial haemorrhage risk.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "nihss",
+      "feature_name": "infarct",
       "importance_rank": 3,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline NIHSS produces greater heterogeneity in \u0394_i with some patients showing amplified absolute benefit yet concurrently higher individualized sICH risk according to the Bayesian harm model, creating a benefit\u2013harm tradeoff in net\u2011benefit calculations.",
+          "description": "Low baseline ASPECTS or extensive early ischaemic change on CT denotes a large infarct core that limits reperfusion benefit and predisposes to haemorrhagic conversion after alteplase.",
           "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        }
-      ]
-    },
-    {
-      "feature_name": "sbprand",
-      "importance_rank": 4,
-      "mechanisms": [
+          "effect_direction": "positive"
+        },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated baseline glucose and uncontrolled blood pressure act as effect modifiers by associating with both lower \u0394_i and higher \u0394_sICH_i in pooled models, leading to a reduced probability that net benefit exceeds zero.",
+          "description": "Poor angiographic or perfusion collateral circulation indicates rapid infarct progression with limited salvageable tissue, narrowing the therapeutic window and increasing bleeding risk after reperfusion.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }

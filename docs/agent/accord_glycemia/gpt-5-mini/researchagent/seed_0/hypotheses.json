@@ -9,109 +9,67 @@
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Assignment to the intensive glycemic\u2011control strategy (target HbA1c <6.0%) increases the incidence of trial\u2011adjudicated severe hypoglycemia, which mediates part of the observed excess all\u2011cause mortality.",
+          "description": "Female sex: sex\u2011specific differences in body composition and autonomic hypoglycemia responses may increase hypoglycemia vulnerability and modify the balance of intensive glycemic control toward greater harm in some women.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Greater achieved HbA1c reduction under the intensive strategy mediates a reduction in MACE for a subset of participants who can safely attain lower glycemia.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "positive"
-        },
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "A history of prior severe hypoglycemia predisposes participants randomized to intensive control to recurrent severe hypoglycemia, which in turn increases their risk of subsequent mortality.",
+          "description": "Higher baseline HbA1c: patients with markedly elevated baseline HbA1c may derive greater absolute microvascular benefit from large glucose reductions but are also at higher short\u2011term risk of hypoglycemia and hemodynamic instability during rapid intensification, shifting net benefit depending on competing risks.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline HbA1c magnifies the degree of achievable HbA1c lowering under intensive assignment and therefore increases the likelihood of individualized MACE benefit compared with those with lower baseline HbA1c.",
+          "description": "Prior clinical cardiovascular disease: established coronary and cerebrovascular disease limits reversibility of macrovascular risk so intensive glycemic lowering produces less incremental MACE prevention while hypoglycemia\u2011triggered ischemia or arrhythmia may increase harm.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher baseline albuminuria marks participants who derive different cardiovascular benefit/harm balances from intensive control, with albuminuria modifying the mediated effect via achieved glycemic change or hypoglycemia.",
+          "description": "Baseline albuminuria: presence of albuminuria signals widespread endothelial and microvascular dysfunction that increases baseline CV risk yet predicts limited macrovascular benefit from short\u2011term intensive glycemic lowering while heightening vulnerability to adverse events.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Differential adherence and treatment crossovers dilute ITT estimates so that per\u2011protocol/CACE analyses reveal that the causal effect of actually achieved intensive glycemic intensity on outcomes operates through achieved HbA1c and hypoglycemia pathways.",
+          "description": "History of prior severe hypoglycemia: prior severe events indicate impaired awareness and defective counterregulation, markedly raising the likelihood of recurrent severe hypoglycemia and associated mortality with an intensive strategy.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "unknown"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Era and background therapy composition (trial\u2011era medications vs contemporary SGLT2i/GLP\u20111 RA use) alter the causal pathway such that the net effect of intensive assignment on mortality and MACE is transportable only after accounting for these treatment\u2011era modifiers.",
+          "description": "Frailty or functional impairment proxies: low physiologic reserve and multimorbidity increase the likelihood that treatment complexity and hypoglycemia lead to disability, hospitalization, or death, tipping the balance toward net harm with intensive targets.",
           "evidence_level": "hypothesis_generating",
-          "effect_direction": "unknown"
+          "effect_direction": "negative"
         },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "More intensive visit cadence and medication intensification behaviors (as captured in the emulated intensive\u2011like definitions) change monitoring and management of hypoglycemia, thereby modifying the observed incidence of severe hypoglycemia and subsequent outcome risks.",
+          "description": "Absence of baseline SGLT2i/GLP\u20111 RA exposure (ACCORD-era medication profile): lack of contemporary cardioprotective agents means intensive glycemic lowering must bear more of the cardiovascular risk management burden, increasing the relative impact of hypoglycemia\u2011related harms on overall outcomes.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        },
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Shorter diabetes duration: preserved beta\u2011cell function and less established macrovascular disease increase the plausibility that intensive early glycemic control yields greater reduction in future CV events compared with long\u2011standing disease.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
       ]
     },
     {
-      "feature_name": "cvd_hx_baseline",
+      "feature_name": "fpg",
       "importance_rank": 2,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline prior cardiovascular disease modifies the intensive versus standard treatment effect such that participants with prior CVD experience less net cardiovascular benefit and greater net harm from intensive control.",
+          "description": "Reduced eGFR/advanced CKD stage: impaired renal insulin clearance and altered pharmacokinetics of glucose\u2011lowering drugs raise hypoglycemia frequency and competing noncardiovascular mortality, reducing net benefit of intensive targets.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
-        }
-      ]
-    },
-    {
-      "feature_name": "gfr",
-      "importance_rank": 3,
-      "mechanisms": [
+        },
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Reduced baseline kidney function (lower eGFR/advanced CKD stage) amplifies the risk of severe hypoglycemia under intensive control, thereby increasing mortality and offsetting any MACE benefit.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        }
-      ]
-    },
-    {
-      "feature_name": "insulin",
-      "importance_rank": 4,
-      "mechanisms": [
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Baseline insulin use interacts with randomized assignment so that participants on insulin under the intensive strategy have higher severe hypoglycemia rates and different achieved HbA1c trajectories that alter net benefit/harm.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        }
-      ]
-    },
-    {
-      "feature_name": "yrsdiab",
-      "importance_rank": 5,
-      "mechanisms": [
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Longer diabetes duration attenuates the potential MACE reduction from intensive glycemic lowering while simultaneously increasing susceptibility to harms from intensive control.",
-          "evidence_level": "hypothesis_generating",
-          "effect_direction": "negative"
-        }
-      ]
-    },
-    {
-      "feature_name": "sbp",
-      "importance_rank": 6,
-      "mechanisms": [
-        {
-          "mechanism_type": "hypothesis_mechanism",
-          "description": "Elevated baseline systolic blood pressure modifies the effect of intensive glycemic control on MACE and mortality, producing heterogeneous absolute risk differences across blood\u2011pressure strata.",
+          "description": "Baseline use of multiple glucose\u2011lowering agents (polytherapy): requirement for combination therapy at baseline reflects advanced dysglycemia and increases complexity and hypoglycemia risk during intensification, potentially reducing net benefit from tighter targets.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
@@ -119,11 +77,35 @@
     },
     {
       "feature_name": "baseline_age",
-      "importance_rank": 7,
+      "importance_rank": 3,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Older age amplifies vulnerability to harms from intensive glycemic assignment, producing larger absolute increases in mortality or severe hypoglycemia compared with younger participants.",
+          "description": "Older age: reduced physiologic reserve and blunted counterregulatory hormonal responses increase susceptibility to severe hypoglycemia and noncardiovascular mortality, thereby magnifying harm and attenuating net cardiovascular benefit from intensive HbA1c lowering.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "yrsdiab",
+      "importance_rank": 4,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Longer diabetes duration: greater cumulative atherosclerotic burden and autonomic neuropathy reduce the potential for intensive glycemic lowering to prevent MACE while increasing hypoglycemia risk due to impaired endogenous glucose regulation.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "insulin",
+      "importance_rank": 5,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Baseline insulin therapy: prior insulin use identifies patients with limited endogenous insulin reserve and greater hypoglycemia risk when intensifying control, and exogenous insulin\u2013related weight gain or fluid retention may blunt cardiovascular benefit.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
@@ -131,11 +113,23 @@
     },
     {
       "feature_name": "bmi",
-      "importance_rank": 8,
+      "importance_rank": 6,
       "mechanisms": [
         {
           "mechanism_type": "hypothesis_mechanism",
-          "description": "Higher body mass index modifies the relationship between randomized intensive control, achieved glycemic response, and resultant absolute risks of MACE and severe hypoglycemia.",
+          "description": "High body mass index (obesity): marked insulin resistance in obese patients necessitates higher drug doses or multiple agents to reach targets, limiting achievable HbA1c reductions and increasing metabolic and hemodynamic stress that can attenuate cardiovascular benefit.",
+          "evidence_level": "hypothesis_generating",
+          "effect_direction": "negative"
+        }
+      ]
+    },
+    {
+      "feature_name": "sbp",
+      "importance_rank": 7,
+      "mechanisms": [
+        {
+          "mechanism_type": "hypothesis_mechanism",
+          "description": "Elevated baseline systolic blood pressure: coexistent hypertensive hemodynamic burden amplifies cardiovascular risk such that glucose lowering alone yields smaller incremental MACE prevention, and autonomic perturbations from hypoglycemia may destabilize blood pressure and precipitate events.",
           "evidence_level": "hypothesis_generating",
           "effect_direction": "negative"
         }
